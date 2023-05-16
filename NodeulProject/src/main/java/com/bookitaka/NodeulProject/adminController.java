@@ -1,4 +1,4 @@
-package bookitaka;
+package com.bookitaka.NodeulProject;
 
 import org.springframework.stereotype.Controller;
 
