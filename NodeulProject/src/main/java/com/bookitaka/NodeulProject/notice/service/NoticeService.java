@@ -15,6 +15,6 @@ public class NoticeService {
     /*게시글 생성*/
     @Transactional
     public Integer savePost(NoticeDto noticeDto){
-        return noticeRepository.save(noticeDto.toEntity()).getNotice_no();
+        return noticeRepository.save(noticeDto.toEntity()).getNoticeNo();
     }
 }

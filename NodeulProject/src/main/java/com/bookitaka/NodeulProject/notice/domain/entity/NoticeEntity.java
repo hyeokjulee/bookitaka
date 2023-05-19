@@ -11,19 +11,19 @@ import javax.persistence.*;
 public class NoticeEntity extends TimeEntity{
 
     @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer notice_no;
+    private Integer noticeNo;
 
     @Column(length = 100, nullable = false)
-    private String notice_title;
+    private String noticeTitle;
     @Column(columnDefinition = "TEXT", nullable = false)
-    private String notice_content;
+    private String noticeContent;
 
 
 
     @Builder
-    public NoticeEntity(Integer notice_no, String notice_title, String notice_content) {
-        this.notice_no = notice_no;
-        this.notice_title = notice_title;
-        this.notice_content = notice_content;
+    public NoticeEntity(Integer noticeNo, String noticeTitle, String noticeContent) {
+        this.noticeNo = noticeNo;
+        this.noticeTitle = noticeTitle;
+        this.noticeContent = noticeContent;
     }
 }

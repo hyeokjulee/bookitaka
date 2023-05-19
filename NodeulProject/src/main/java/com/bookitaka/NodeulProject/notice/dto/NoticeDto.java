@@ -10,28 +10,28 @@ import java.time.LocalDateTime;
 @ToString
 @NoArgsConstructor
 public class NoticeDto {
-    private Integer notice_no;
-    private String notice_title;
-    private String notice_content;
-    private Integer notice_hit;
-    private LocalDateTime notice_regdate;
-    private LocalDateTime notice_moddate;
+    private Integer noticeNo;
+    private String noticeTitle;
+    private String noticeContent;
+    private Integer noticeHit;
+    private LocalDateTime noticeRegdate;
+    private LocalDateTime noticeModdate;
 
     public NoticeEntity toEntity(){
         NoticeEntity noticeEntity= NoticeEntity.builder()
-                .notice_no(notice_no)
-                .notice_title(notice_title)
-                .notice_content(notice_content)
+                .noticeNo(noticeNo)
+                .noticeTitle(noticeTitle)
+                .noticeContent(noticeContent)
                 .build();
         return noticeEntity;
     }
 
     @Builder
-    public NoticeDto(Integer notice_no, String notice_title, String notice_content, LocalDateTime notice_regdate, LocalDateTime notice_moddate) {
-        this.notice_no = notice_no;
-        this.notice_title = notice_title;
-        this.notice_content = notice_content;
-        this.notice_regdate = notice_regdate;
-        this.notice_moddate = notice_moddate;
+    public NoticeDto(Integer noticeNo, String noticeTitle, String noticeContent, LocalDateTime noticeRegdate, LocalDateTime noticeModdate) {
+        this.noticeNo = noticeNo;
+        this.noticeTitle = noticeTitle;
+        this.noticeContent = noticeContent;
+        this.noticeRegdate = noticeRegdate;
+        this.noticeModdate = noticeModdate;
     }
 }
