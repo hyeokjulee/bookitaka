@@ -4,10 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Data
@@ -27,8 +24,13 @@ public class SheetUpdateDto {
     private String sheetBookimgename;
     private String sheetFileuuid;
     private String sheetFilename;
-    private Integer sheetAgegroupNo;
-    private Integer sheetGenreNo;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn (name = "sheetAgegroupNo")
+    private SheetAgegroup sheetAgegroup;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn (name = "sheetGrenreNo")
+    private SheetGenre sheetGenre;
     private String sheetContent;
     private Date sheetModdate;
 

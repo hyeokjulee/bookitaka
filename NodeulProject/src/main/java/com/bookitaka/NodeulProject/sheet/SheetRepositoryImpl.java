@@ -25,8 +25,12 @@ public class SheetRepositoryImpl implements SheetRepository{
     }
 
     @Override
-    public List<Sheet> findAllSheetByGenre(String genre) {
+    public List<Sheet> findAllSheet() {
+        return null;
+    }
 
+    @Override
+    public List<Sheet> findAllSheetByGenre(String genre) {
         return null;
     }
 
@@ -42,33 +46,35 @@ public class SheetRepositoryImpl implements SheetRepository{
     }
 
     @Override
-    public int updateSheet(int sheetNo, SheetUpdateDto sheetUpdateDto) {
+    public boolean updateSheet(int sheetNo, SheetUpdateDto sheetUpdateDto) {
         Sheet findSheet = em.find(Sheet.class, sheetNo);
+
         if (findSheet !=null) {
             findSheet.setSheetBooktitle(sheetUpdateDto.getSheetBooktitle());
             findSheet.setSheetBookauthor(sheetUpdateDto.getSheetBookauthor());
-            findSheet.setSheetPublisher(sheetUpdateDto.getSheetPublisher());
+            findSheet.setSheetBookpublisher(sheetUpdateDto.getSheetPublisher());
             findSheet.setSheetBookisbn(sheetUpdateDto.getSheetBookisbn());
-            findSheet.setPrice(sheetUpdateDto.getPrice());
+            findSheet.setSheetPrice(sheetUpdateDto.getPrice());
             findSheet.setSheetBookimguuid(sheetUpdateDto.getSheetBookimguuid());
-            findSheet.setSheetBookimgename(sheetUpdateDto.getSheetBookimgename());
+            findSheet.setSheetBookimgname(sheetUpdateDto.getSheetBookimgename());
             findSheet.setSheetFilename(sheetUpdateDto.getSheetFilename());
             findSheet.setSheetFilename(sheetUpdateDto.getSheetFilename());
-            findSheet.setSheetGenreNo(sheetUpdateDto.getSheetGenreNo());
-            findSheet.setSheetAgegroupNo(sheetUpdateDto.getSheetAgegroupNo());
+            findSheet.setSheetGenre(sheetUpdateDto.getSheetGenre());
+            findSheet.setSheetAgegroup(sheetUpdateDto.getSheetAgegroup());
             findSheet.setSheetContent(sheetUpdateDto.getSheetContent());
-            return 1;
+
+            return true;
         }
-        return 0;
+        return false;
     }
 
     @Override
-    public int deleteSheet(int sheetNo) {
+    public boolean deleteSheet(int sheetNo) {
         Sheet findSheet = em.find(Sheet.class, sheetNo);
         if (findSheet !=null) {
             em.remove(findSheet);
-            return 1;
+            return true;
         }
-        return 0;
+        return false;
     }
 }

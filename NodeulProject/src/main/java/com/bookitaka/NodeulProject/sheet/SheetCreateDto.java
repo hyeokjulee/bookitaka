@@ -1,12 +1,21 @@
 package com.bookitaka.NodeulProject.sheet;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import javax.persistence.*;
 import java.util.Date;
 
+@Data
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class SheetCreateDto {
 
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int sheetNo;
     private String sheetBooktitle;
     private String sheetBookauthor;
@@ -17,8 +26,19 @@ public class SheetCreateDto {
     private String sheetBookimgename;
     private String sheetFileuuid;
     private String sheetFilename;
-    private Integer sheetAgegroupNo;
-    private Integer sheetGenreNo;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn (name = "sheetAgegroupNo")
+    private SheetAgegroup sheetAgegroup;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn (name = "sheetGenreNo")
+    private SheetGenre sheetGenre;
+
     private String sheetContent;
+
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private Date sheetRegdate;
 
 }

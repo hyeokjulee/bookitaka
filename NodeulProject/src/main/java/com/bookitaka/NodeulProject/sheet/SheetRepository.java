@@ -9,14 +9,17 @@ public interface SheetRepository {
 
     public Sheet createSheet(Sheet sheet);
 
+
+    public List<Sheet> findAllSheet();
+
     public List<Sheet> findAllSheetByGenre(String genre);
 
     public List<Sheet> findAllSheetByAgeGroup(String ageGroup);
 
     public Optional<Sheet> findSheetByNo(int sheetNo);
 
-    public int updateSheet(int sheetNo ,SheetUpdateDto sheetUpdateDto);
+    public boolean updateSheet(int sheetNo ,SheetUpdateDto sheetUpdateDto);
 
-    public int deleteSheet(int sheetNo);
+    public boolean deleteSheet(int sheetNo);
 
 }
