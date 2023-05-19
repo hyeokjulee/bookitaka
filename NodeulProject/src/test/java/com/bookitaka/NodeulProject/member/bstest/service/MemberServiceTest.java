@@ -2,14 +2,11 @@ package com.bookitaka.NodeulProject.member.bstest.service;
 
 import com.bookitaka.NodeulProject.member.bstest.model.Member;
 import com.bookitaka.NodeulProject.member.bstest.repository.MemberRepository;
-import com.bookitaka.NodeulProject.member.bstest.service.MemberService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
@@ -34,8 +31,8 @@ public class MemberServiceTest {
         member.setMemberName("asd");
         member.setMemberPhone("0101");
         member.setMemberGender("male");
-        member.setMemberBirthday(new Date());
         member.setMemberRole("asd");
+//        member.setMemberJoindate(new Date());
 
         //when
         Integer savedId =  memberService.join(member);
