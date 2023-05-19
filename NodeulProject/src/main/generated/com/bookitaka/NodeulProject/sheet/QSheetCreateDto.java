@@ -7,7 +7,6 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.processing.Generated;
 import com.querydsl.core.types.Path;
-import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -18,13 +17,9 @@ public class QSheetCreateDto extends EntityPathBase<SheetCreateDto> {
 
     private static final long serialVersionUID = 181065657L;
 
-    private static final PathInits INITS = PathInits.DIRECT2;
-
     public static final QSheetCreateDto sheetCreateDto = new QSheetCreateDto("sheetCreateDto");
 
-    public final NumberPath<Integer> price = createNumber("price", Integer.class);
-
-    public final QSheetAgegroup sheetAgegroup;
+    public final StringPath sheetAgegroupName = createString("sheetAgegroupName");
 
     public final StringPath sheetBookauthor = createString("sheetBookauthor");
 
@@ -42,34 +37,26 @@ public class QSheetCreateDto extends EntityPathBase<SheetCreateDto> {
 
     public final StringPath sheetFileuuid = createString("sheetFileuuid");
 
-    public final QSheetGenre sheetGenre;
+    public final StringPath sheetGenre = createString("sheetGenre");
 
     public final NumberPath<Integer> sheetNo = createNumber("sheetNo", Integer.class);
+
+    public final NumberPath<Integer> sheetPrice = createNumber("sheetPrice", Integer.class);
 
     public final StringPath sheetPublisher = createString("sheetPublisher");
 
     public final DateTimePath<java.util.Date> sheetRegdate = createDateTime("sheetRegdate", java.util.Date.class);
 
     public QSheetCreateDto(String variable) {
-        this(SheetCreateDto.class, forVariable(variable), INITS);
+        super(SheetCreateDto.class, forVariable(variable));
     }
 
     public QSheetCreateDto(Path<? extends SheetCreateDto> path) {
-        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
+        super(path.getType(), path.getMetadata());
     }
 
     public QSheetCreateDto(PathMetadata metadata) {
-        this(metadata, PathInits.getFor(metadata, INITS));
-    }
-
-    public QSheetCreateDto(PathMetadata metadata, PathInits inits) {
-        this(SheetCreateDto.class, metadata, inits);
-    }
-
-    public QSheetCreateDto(Class<? extends SheetCreateDto> type, PathMetadata metadata, PathInits inits) {
-        super(type, metadata, inits);
-        this.sheetAgegroup = inits.isInitialized("sheetAgegroup") ? new QSheetAgegroup(forProperty("sheetAgegroup")) : null;
-        this.sheetGenre = inits.isInitialized("sheetGenre") ? new QSheetGenre(forProperty("sheetGenre")) : null;
+        super(SheetCreateDto.class, metadata);
     }
 
 }

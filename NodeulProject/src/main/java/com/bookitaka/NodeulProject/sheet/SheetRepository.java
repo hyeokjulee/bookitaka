@@ -22,4 +22,6 @@ public interface SheetRepository {
 
     public boolean deleteSheet(int sheetNo);
 
+    public Long countSheet();
+
 }

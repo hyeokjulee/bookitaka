@@ -21,19 +21,15 @@ public class SheetCreateDto {
     private String sheetBookauthor;
     private String sheetPublisher;
     private String sheetBookisbn;
-    private Integer price;
+    private Integer sheetPrice;
     private String sheetBookimguuid;
     private String sheetBookimgename;
     private String sheetFileuuid;
     private String sheetFilename;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn (name = "sheetAgegroupNo")
-    private SheetAgegroup sheetAgegroup;
+    private String sheetAgegroupName;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn (name = "sheetGenreNo")
-    private SheetGenre sheetGenre;
+    private String sheetGenre;
 
     private String sheetContent;
 

@@ -3,6 +3,7 @@ package com.bookitaka.NodeulProject.sheet;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -52,17 +53,16 @@ public class SheetRepositoryImpl implements SheetRepository{
         if (findSheet !=null) {
             findSheet.setSheetBooktitle(sheetUpdateDto.getSheetBooktitle());
             findSheet.setSheetBookauthor(sheetUpdateDto.getSheetBookauthor());
-            findSheet.setSheetBookpublisher(sheetUpdateDto.getSheetPublisher());
+            findSheet.setSheetBookpublisher(sheetUpdateDto.getSheetBookpublisher());
             findSheet.setSheetBookisbn(sheetUpdateDto.getSheetBookisbn());
-            findSheet.setSheetPrice(sheetUpdateDto.getPrice());
+            findSheet.setSheetPrice(sheetUpdateDto.getSheetPrice());
             findSheet.setSheetBookimguuid(sheetUpdateDto.getSheetBookimguuid());
-            findSheet.setSheetBookimgname(sheetUpdateDto.getSheetBookimgename());
+            findSheet.setSheetBookimgname(sheetUpdateDto.getSheetBookimgname());
             findSheet.setSheetFilename(sheetUpdateDto.getSheetFilename());
             findSheet.setSheetFilename(sheetUpdateDto.getSheetFilename());
-            findSheet.setSheetGenre(sheetUpdateDto.getSheetGenre());
-            findSheet.setSheetAgegroup(sheetUpdateDto.getSheetAgegroup());
+            findSheet.setSheetGenre(new SheetGenre(sheetUpdateDto.getSheetGenreName()));
+            findSheet.setSheetAgegroup(new SheetAgegroup(sheetUpdateDto.getSheetAgegroupName()));
             findSheet.setSheetContent(sheetUpdateDto.getSheetContent());
-
             return true;
         }
         return false;
@@ -76,5 +76,12 @@ public class SheetRepositoryImpl implements SheetRepository{
             return true;
         }
         return false;
+    }
+
+    @Override
+    public Long countSheet() {
+        Query query = em.createQuery("SELECT COUNT(*) FROM Sheet");
+        return (Long) query.getSingleResult();
+        //카운트 하는법 고민중...
     }
 }

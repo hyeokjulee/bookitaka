@@ -16,4 +16,10 @@ public class SheetAgegroup {
 
     private String SheetAgegroupName;
 
+    public SheetAgegroup() {
+    }
+
+    public SheetAgegroup(String sheetAgegroupName) {
+        SheetAgegroupName = sheetAgegroupName;
+    }
 }

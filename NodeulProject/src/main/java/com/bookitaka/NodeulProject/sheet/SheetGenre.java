@@ -16,4 +16,11 @@ public class SheetGenre {
 
     private String SheetGenreName;
 
+    public SheetGenre() {
+    }
+
+    public SheetGenre(String sheetGenreName) {
+        SheetGenreName = sheetGenreName;
+    }
+
 }
