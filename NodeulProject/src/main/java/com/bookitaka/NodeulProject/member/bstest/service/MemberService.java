@@ -23,9 +23,9 @@ public class MemberService {
   private final JwtTokenProvider jwtTokenProvider;
   private final AuthenticationManager authenticationManager;
 
-  public String signin(String memberEmail, String password) {
+  public String signin(String memberEmail, String memberPassword) {
     try {
-      authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(memberEmail, password));
+      authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(memberEmail, memberPassword));
       return jwtTokenProvider.createToken(memberEmail, memberRepository.findByMemberEmail(memberEmail).getMemberRole());
     } catch (AuthenticationException e) {
       throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);

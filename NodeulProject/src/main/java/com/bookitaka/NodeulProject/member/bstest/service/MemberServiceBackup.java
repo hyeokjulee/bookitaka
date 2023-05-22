@@ -1,7 +1,7 @@
 package com.bookitaka.NodeulProject.member.bstest.service;
 
 import com.bookitaka.NodeulProject.member.bstest.model.Member;
-import com.bookitaka.NodeulProject.member.bstest.repository.MemberRepositoryTest;
+import com.bookitaka.NodeulProject.member.bstest.repository.MemberRepositoryBackup;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,13 +11,13 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor //final이 있는 속성들만 생성자에 자동적으로 넣어주는 Lombok annotation
-public class MemberServiceTest {
+public class MemberServiceBackup {
 
     /*@Autowired
     private MemberRepository memberRepository;*/
 
     //좀 더 나은 Injection 방법 Constructor Injection
-    private final MemberRepositoryTest memberRepository; //final을 넣으면 컴파일 시점에 주입이 제대로 되는지 확인이 가능하다.
+    private final MemberRepositoryBackup memberRepository; //final을 넣으면 컴파일 시점에 주입이 제대로 되는지 확인이 가능하다.
 
     /**
      * 회원 가입

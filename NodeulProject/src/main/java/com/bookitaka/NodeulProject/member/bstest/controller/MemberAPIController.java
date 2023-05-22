@@ -6,17 +6,19 @@ import com.bookitaka.NodeulProject.member.bstest.model.Member;
 import com.bookitaka.NodeulProject.member.bstest.service.MemberService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+@Slf4j
 @RestController
-@RequestMapping("/users")
-@Api(tags = "users")
+@RequestMapping("/member")
+@Api(tags = "member")
 @RequiredArgsConstructor
-public class UserController {
+public class MemberAPIController {
 
   private final MemberService memberService;
   private final ModelMapper modelMapper;
@@ -27,9 +29,12 @@ public class UserController {
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 422, message = "Invalid username/password supplied")})
   public String login(//
-      @ApiParam("Username") @RequestParam String username, //
-      @ApiParam("Password") @RequestParam String password) {
-    return memberService.signin(username, password);
+      @ApiParam("MemberEmail") @RequestParam("memberEmail") String memberEmail, //
+      @ApiParam("MemberPassword") @RequestParam("memberPassword") String memberPassword) {
+    log.info("==========================Login");
+    log.info("memberEmail: {}", memberEmail);
+    log.info("memberPassword: {}", memberPassword);
+    return memberService.signin(memberEmail, memberPassword);
   }
 
   @PostMapping("/signup")

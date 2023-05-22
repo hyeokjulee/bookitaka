@@ -58,6 +58,26 @@ public class MemberServiceTest {
         memberService.delete(memberEmail);
     }
 
+    @Test
+    @Rollback(false)
+    public void 회원가입() throws Exception{
+        /* 회원가입 */
+        //given
+        Member member = new Member();
+        member.setMemberEmail("qwer@qwer.com");
+        member.setMemberPassword("0000");
+        member.setMemberName("John");
+        member.setMemberPhone("0101");
+        member.setMemberGender("Male");
+        member.setMemberRole("MEMBER_ROLE");
+
+        //when
+        String signupToken = memberService.signup(member);
+        log.info("signupToken: {}", signupToken);
+        //then
+//        assertEquals(member, memberRepository.findOne(savedId));
+    }
+
 //    @Test(expected = IllegalStateException.class)
 //    public void 중복_회원_예외() throws Exception{
 //        //given

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<h2>Login</h2>
+<form>
+    <div>
+        <label for="memberEmail">Email:</label>
+        <input type="text" id="memberEmail" name="memberEmail" required/>
+    </div>
+    <div>
+        <label for="memberPassword">Password:</label>
+        <input type="password" id="memberPassword" name="memberPassword" required/>
+    </div>
+    <div>
+        <button type="button" id="loginBtn">Login</button>
+    </div>
+    <hr>
+    <div>
+        <button type="button" id="checkTokenBtn">토큰 확인</button>
+        <button type="button" id="removeTokenBtn">토큰 제거</button>
+        <button type="button" id="testTokenBtn">토큰으로 인가 확인</button>
+    </div>
+</form>
+<script>
+    // 로그인 버튼 클릭 이벤트 처리
+    document.getElementById("loginBtn").addEventListener("click", function() {
+        let formData = {
+            memberEmail: document.getElementById("memberEmail").value,
+            memberPassword: document.getElementById("memberPassword").value
+        }
+        fetch("/member/signin", {
+            method: 'POST',
+            body: new URLSearchParams(formData)
+        })
+            .then((response) => response.text())
+            .then((token) => {
+                console.log(token);
+                storeToken(token);
+            });
+    });
+
+    // 토큰 확인 버튼 클릭 이벤트 처리
+    document.getElementById("checkTokenBtn").addEventListener("click", function() {
+        alert("현재 스토리지 토큰 : " + getToken())
+    });
+    // 토큰 제거 버튼 클릭 이벤트 처리
+    document.getElementById("removeTokenBtn").addEventListener("click", function() {
+        if(confirm("정말로 제거하시겠습니까? (로그아웃)")) {
+            removeToken();
+        }
+    });
+    // 토큰 확인 페이지로 이동 버튼 클릭 이벤트 처리
+    document.getElementById("testTokenBtn").addEventListener("click", function() {
+        const jwtToken = getToken();
+
+        // JWT 토큰이 존재하는 경우에만 헤더에 추가하여 뷰를 이동
+        if (jwtToken) {
+            // HTTP 요청 헤더에 JWT 토큰 추가
+            const headers = new Headers();
+            headers.append('Authorization', `Bearer ${jwtToken}`);
+
+            // 새로운 요청을 생성하여 헤더를 설정
+            const request = new Request('/members/test', {
+                method: 'GET',
+                headers: headers
+            });
+
+            // 뷰로 이동
+            window.location.href = request.url;
+        } else {
+            // JWT 토큰이 없는 경우에는 그냥 기본 URL로 이동
+            window.location.href = '/members/login';
+        }
+    });
+
+    // JWT 토큰을 저장하는 함수 예시
+    function storeToken(token) {
+        localStorage.setItem('jwtToken', token);
+    }
+
+    // JWT 토큰을 로컬 스토리지에서 가져오는 함수 예시
+    function getToken() {
+        return localStorage.getItem('jwtToken');
+    }
+
+    // JWT 토큰을 로컬 스토리지에서 제거하는 함수 예시
+    function removeToken() {
+        localStorage.removeItem('jwtToken');
+    }
+</script>
+</body>
+</html>
