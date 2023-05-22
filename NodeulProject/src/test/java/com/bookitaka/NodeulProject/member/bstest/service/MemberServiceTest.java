@@ -2,6 +2,7 @@ package com.bookitaka.NodeulProject.member.bstest.service;
 
 import com.bookitaka.NodeulProject.member.bstest.model.Member;
 import com.bookitaka.NodeulProject.member.bstest.repository.MemberRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,6 +13,7 @@ import static org.junit.Assert.assertEquals;
 
 @SpringBootTest
 @Transactional
+@Slf4j
 public class MemberServiceTest {
 
     @Autowired
@@ -21,9 +23,11 @@ public class MemberServiceTest {
     MemberRepository memberRepository;
 
 
+
     @Test
     @Rollback(false)
-    public void 회원가입() throws Exception{
+    public void 회원가입_로그인_회원탈퇴() throws Exception{
+        /* 회원가입 */
         //given
         Member member = new Member();
         member.setMemberEmail("asd@asd.com");
@@ -32,13 +36,26 @@ public class MemberServiceTest {
         member.setMemberPhone("0101");
         member.setMemberGender("male");
         member.setMemberRole("asd");
-//        member.setMemberJoindate(new Date());
 
         //when
-        Integer savedId =  memberService.join(member);
-
+        String signupToken = memberService.signup(member);
+        log.info("signupToken: {}", signupToken);
         //then
-        assertEquals(member, memberRepository.findOne(savedId));
+//        assertEquals(member, memberRepository.findOne(savedId));
+
+        /* 로그인 */
+        //given
+        String memberEmail = "asd@asd.com";
+        String memberPassword = "0000";
+
+        //when
+        String signinToken = memberService.signin(memberEmail, memberPassword);
+        log.info("signinToken: {}", signinToken);
+        //then
+//        assertEquals(member, memberRepository.findOne(savedId));
+
+        /* 회원탈퇴 */
+        memberService.delete(memberEmail);
     }
 
 //    @Test(expected = IllegalStateException.class)

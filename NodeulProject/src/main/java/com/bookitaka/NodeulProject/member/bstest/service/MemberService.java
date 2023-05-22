@@ -1,52 +1,65 @@
 package com.bookitaka.NodeulProject.member.bstest.service;
 
+import com.bookitaka.NodeulProject.member.bstest.exception.CustomException;
 import com.bookitaka.NodeulProject.member.bstest.model.Member;
 import com.bookitaka.NodeulProject.member.bstest.repository.MemberRepository;
+import com.bookitaka.NodeulProject.member.bstest.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 @Service
-@Transactional
-@RequiredArgsConstructor //final이 있는 속성들만 생성자에 자동적으로 넣어주는 Lombok annotation
+@RequiredArgsConstructor
 public class MemberService {
 
-    /*@Autowired
-    private MemberRepository memberRepository;*/
+  private final MemberRepository memberRepository;
+  private final PasswordEncoder passwordEncoder;
+  private final JwtTokenProvider jwtTokenProvider;
+  private final AuthenticationManager authenticationManager;
 
-    //좀 더 나은 Injection 방법 Constructor Injection
-    private final MemberRepository memberRepository; //final을 넣으면 컴파일 시점에 주입이 제대로 되는지 확인이 가능하다.
-
-    /**
-     * 회원 가입
-     * @param member
-     * @return
-     */
-    @Transactional
-    public Integer join(Member member){
-        validateDuplicateMember(member); //중복 회원 검사
-        memberRepository.save(member);
-        return member.getMemberNo();
+  public String signin(String memberEmail, String password) {
+    try {
+      authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(memberEmail, password));
+      return jwtTokenProvider.createToken(memberEmail, memberRepository.findByMemberEmail(memberEmail).getMemberRole());
+    } catch (AuthenticationException e) {
+      throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
     }
+  }
 
-    private void validateDuplicateMember(Member member) {
-        List<Member> findMembers = memberRepository.findByMemberEmail(member.getMemberEmail());
-        if(!findMembers.isEmpty()){
-            throw new IllegalStateException("이미 존재하는 회원입니다.");
-        }
-        //Exception
+  public String signup(Member member) {
+    if (!memberRepository.existsByMemberEmail(member.getMemberEmail())) {
+      member.setMemberPassword(passwordEncoder.encode(member.getMemberPassword()));
+      memberRepository.save(member);
+      return jwtTokenProvider.createToken(member.getMemberEmail(), member.getMemberRole());
+    } else {
+      throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
     }
+  }
 
-    //회원 전체 조회
-    @Transactional(readOnly = true) //조회만 하는 service에서 readOnly설정을 해주면 좀 더 최적화와 성능개선을 기대할 수 있다.
-    public List<Member> findMembers(){
-        return memberRepository.findAll();
-    }
+  public void delete(String memberEmail) {
+    memberRepository.deleteByMemberEmail(memberEmail);
+  }
 
-    @Transactional(readOnly = true)
-    public Member findOne(Integer memberId){
-        return memberRepository.findOne(memberId);
+  public Member search(String memberEmail) {
+    Member member = memberRepository.findByMemberEmail(memberEmail);
+    if (member == null) {
+      throw new CustomException("The user doesn't exist", HttpStatus.NOT_FOUND);
     }
+    return member;
+  }
+
+  public Member whoami(HttpServletRequest req) {
+    return memberRepository.findByMemberEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+  }
+
+  public String refresh(String username) {
+    return jwtTokenProvider.createToken(username, memberRepository.findByMemberEmail(username).getMemberRole());
+  }
+
 }

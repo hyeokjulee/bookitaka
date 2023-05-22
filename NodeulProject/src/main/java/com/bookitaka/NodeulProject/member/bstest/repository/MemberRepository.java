@@ -1,32 +1,17 @@
 package com.bookitaka.NodeulProject.member.bstest.repository;
 
 import com.bookitaka.NodeulProject.member.bstest.model.Member;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.List;
+import javax.transaction.Transactional;
 
-@Repository
-public class MemberRepository {
+public interface MemberRepository extends JpaRepository<Member, Integer> {
 
-    @PersistenceContext
-    private EntityManager em;
+  boolean existsByMemberEmail(String memberEmail);
 
-    public void save(Member member){em.persist(member);}
+  Member findByMemberEmail(String memberEmail);
 
-    public Member findOne(Integer id){
-        return em.find(Member.class, id);
-    }
-
-    public List<Member> findAll(){
-        return em.createQuery("select m from Member m", Member.class).getResultList();
-    }
-
-    public List<Member> findByMemberEmail(String name){
-        return em.createQuery("select m from Member m where m.memberEmail = :name", Member.class)
-                .setParameter("name", name)
-                .getResultList();
-    }
+  @Transactional
+  void deleteByMemberEmail(String memberEmail);
 
 }
