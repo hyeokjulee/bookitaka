@@ -7,7 +7,7 @@ import java.util.List;
 @Service
 public interface SheetService {
 
-    public Sheet registerSheet(Sheet sheet);
+    public Sheet registerSheet(SheetRegDto sheetRegDto);
 
     public Sheet getSheet(int sheetNo);
 

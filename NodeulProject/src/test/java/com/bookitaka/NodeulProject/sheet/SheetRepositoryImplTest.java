@@ -115,7 +115,6 @@ class SheetRepositoryImplTest {
         sheet.setSheetBookpublisher("updatedPub");
         sheet.setSheetBookisbn("updatedIsbn");
         sheet.setSheetPrice(0000);
-        sheet.setSheetBookimguuid("updatedImguuid");
         sheet.setSheetBookimgname("updatedImgname");
         sheet.setSheetFilename("updatedFileuuid");
         sheet.setSheetFilename("updatedFileName");

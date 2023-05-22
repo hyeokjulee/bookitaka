@@ -10,7 +10,7 @@ public interface SheetRepository {
     public Sheet createSheet(Sheet sheet);
 
 
-    public List<Sheet> findAllSheet();
+    public List<Sheet> findAllSheet(SheetCri cri);
 
     public List<Sheet> findAllSheetByGenre(String genre);
 
@@ -23,5 +23,13 @@ public interface SheetRepository {
     public boolean deleteSheet(int sheetNo);
 
     public Long countSheet();
+
+    public SheetGenre findSheetGenreByName(String genreName);
+
+    public SheetAgegroup findSheetAgeGroupByName(String ageGroupName);
+
+    public List<String> findAllAgeGroup();
+
+    public List<String> findAllGenre();
 
 }
