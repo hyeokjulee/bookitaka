@@ -26,7 +26,6 @@
         <tr>
             <th class="one wide">번호</th>
             <th class="ten wide">글제목</th>
-            <th class="two wide">작성자</th>
             <th class="three wide">작성일</th>
         </tr>
         </thead>
@@ -35,15 +34,15 @@
         <!-- CONTENTS !-->
         <tr th:each="notice : ${noticeList}">
             <td>
-                <span th:text="${notice.notice_no}"></span>
+                <span th:text="${notice.noticeNo}"></span>
             </td>
             <td>
-                <a th:href="@{'/post/' + ${notice.notice_no}}">
-                    <span th:text="${notice.notice_title}"></span>
+                <a th:href="@{'/post/' + ${notice.noticeNo}}">
+                    <span th:text="${notice.noticeTitle}"></span>
                 </a>
             </td>
             <td>
-                <span th:text="${#temporals.format(notice.notice_regdate, 'yyyy-MM-dd HH:mm')}"></span>
+                <span th:text="${#temporals.format(notice.noticeRegdate, 'yyyy-MM-dd HH:mm')}"></span>
             </td>
         </tr>
         </tbody>

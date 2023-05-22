@@ -1,6 +1,6 @@
 package com.bookitaka.NodeulProject.notice.dto;
 
-import com.bookitaka.NodeulProject.notice.domain.entity.NoticeEntity;
+import com.bookitaka.NodeulProject.notice.domain.entity.Notice;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -17,20 +17,21 @@ public class NoticeDto {
     private LocalDateTime noticeRegdate;
     private LocalDateTime noticeModdate;
 
-    public NoticeEntity toEntity(){
-        NoticeEntity noticeEntity= NoticeEntity.builder()
+    public Notice toEntity(){
+        Notice notice = Notice.builder()
                 .noticeNo(noticeNo)
                 .noticeTitle(noticeTitle)
                 .noticeContent(noticeContent)
                 .build();
-        return noticeEntity;
+        return notice;
     }
 
     @Builder
-    public NoticeDto(Integer noticeNo, String noticeTitle, String noticeContent, LocalDateTime noticeRegdate, LocalDateTime noticeModdate) {
+    public NoticeDto(Integer noticeNo, String noticeTitle, String noticeContent, Integer noticeHit,LocalDateTime noticeRegdate, LocalDateTime noticeModdate) {
         this.noticeNo = noticeNo;
         this.noticeTitle = noticeTitle;
         this.noticeContent = noticeContent;
+        this.noticeHit = noticeHit;
         this.noticeRegdate = noticeRegdate;
         this.noticeModdate = noticeModdate;
     }
