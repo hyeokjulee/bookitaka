@@ -1,4 +1,4 @@
-package com.bookitaka.NodeulProject.member.bstest.security;
+package com.bookitaka.NodeulProject.member.security;
 
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

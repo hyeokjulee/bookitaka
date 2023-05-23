@@ -1,4 +1,4 @@
-package com.bookitaka.NodeulProject.member.bstest.configuration;
+package com.bookitaka.NodeulProject.member.configuration;
 
 import com.google.common.base.Predicates;
 import org.springframework.context.annotation.Bean;

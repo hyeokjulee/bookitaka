@@ -1,4 +1,4 @@
-package com.bookitaka.NodeulProject.member.bstest.model;
+package com.bookitaka.NodeulProject.member.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

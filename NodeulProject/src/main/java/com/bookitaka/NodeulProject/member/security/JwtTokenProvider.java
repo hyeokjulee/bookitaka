@@ -1,7 +1,6 @@
-package com.bookitaka.NodeulProject.member.bstest.security;
+package com.bookitaka.NodeulProject.member.security;
 
-import com.bookitaka.NodeulProject.member.bstest.model.Member;
-import com.bookitaka.NodeulProject.member.bstest.exception.CustomException;
+import com.bookitaka.NodeulProject.member.exception.CustomException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -12,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -20,9 +18,6 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component

@@ -1,4 +1,4 @@
-package com.bookitaka.NodeulProject.member.bstest.security;
+package com.bookitaka.NodeulProject.member.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

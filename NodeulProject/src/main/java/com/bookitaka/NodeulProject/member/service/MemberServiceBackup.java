@@ -1,7 +1,7 @@
-package com.bookitaka.NodeulProject.member.bstest.service;
+package com.bookitaka.NodeulProject.member.service;
 
-import com.bookitaka.NodeulProject.member.bstest.model.Member;
-import com.bookitaka.NodeulProject.member.bstest.repository.MemberRepositoryBackup;
+import com.bookitaka.NodeulProject.member.model.Member;
+import com.bookitaka.NodeulProject.member.repository.MemberRepositoryBackup;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

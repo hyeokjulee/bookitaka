@@ -1,7 +1,8 @@
 package com.bookitaka.NodeulProject.member.bstest.service;
 
-import com.bookitaka.NodeulProject.member.bstest.model.Member;
-import com.bookitaka.NodeulProject.member.bstest.repository.MemberRepository;
+import com.bookitaka.NodeulProject.member.model.Member;
+import com.bookitaka.NodeulProject.member.repository.MemberRepository;
+import com.bookitaka.NodeulProject.member.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

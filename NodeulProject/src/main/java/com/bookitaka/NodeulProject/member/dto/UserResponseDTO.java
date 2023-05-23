@@ -1,29 +1,24 @@
-package com.bookitaka.NodeulProject.member.bstest.dto;
+package com.bookitaka.NodeulProject.member.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
-public class UserDataDTO {
+public class UserResponseDTO {
 
   @ApiModelProperty(position = 0)
   private String memberEmail;
   @ApiModelProperty(position = 1)
-  private String memberPassword;
-  @ApiModelProperty(position = 2)
   private String memberName;
-  @ApiModelProperty(position = 3)
+  @ApiModelProperty(position = 2)
   private String memberPhone;
-  @ApiModelProperty(position = 4)
+  @ApiModelProperty(position = 3)
   private String memberGender;
-  @ApiModelProperty(position = 5)
+  @ApiModelProperty(position = 4)
   private Date memberBirthday;
-  @ApiModelProperty(position = 6)
+  @ApiModelProperty(position = 5)
   private String memberRole;
-
 }

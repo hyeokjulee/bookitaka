@@ -1,7 +1,7 @@
-package com.bookitaka.NodeulProject.member.bstest.security;
+package com.bookitaka.NodeulProject.member.security;
 
-import com.bookitaka.NodeulProject.member.bstest.model.Member;
-import com.bookitaka.NodeulProject.member.bstest.repository.MemberRepository;
+import com.bookitaka.NodeulProject.member.model.Member;
+import com.bookitaka.NodeulProject.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

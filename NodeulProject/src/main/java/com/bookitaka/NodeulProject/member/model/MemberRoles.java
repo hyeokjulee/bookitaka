@@ -1,4 +1,4 @@
-package com.bookitaka.NodeulProject.member.bstest.model;
+package com.bookitaka.NodeulProject.member.model;
 
 public enum MemberRoles {
     ROLE_ADMIN,

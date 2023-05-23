@@ -1,6 +1,6 @@
-package com.bookitaka.NodeulProject.member.bstest.repository;
+package com.bookitaka.NodeulProject.member.repository;
 
-import com.bookitaka.NodeulProject.member.bstest.model.Member;
+import com.bookitaka.NodeulProject.member.model.Member;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

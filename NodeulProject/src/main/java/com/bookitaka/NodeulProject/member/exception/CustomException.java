@@ -1,4 +1,4 @@
-package com.bookitaka.NodeulProject.member.bstest.exception;
+package com.bookitaka.NodeulProject.member.exception;
 
 import org.springframework.http.HttpStatus;
 

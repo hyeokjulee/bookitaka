@@ -1,4 +1,4 @@
-package com.bookitaka.NodeulProject.member.bstest.controller;
+package com.bookitaka.NodeulProject.member.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;

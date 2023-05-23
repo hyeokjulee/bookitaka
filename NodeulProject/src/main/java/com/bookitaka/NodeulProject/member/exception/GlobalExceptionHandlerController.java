@@ -1,4 +1,4 @@
-package com.bookitaka.NodeulProject.member.bstest.exception;
+package com.bookitaka.NodeulProject.member.exception;
 
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;

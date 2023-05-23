@@ -1,9 +1,9 @@
-package com.bookitaka.NodeulProject.member.bstest.service;
+package com.bookitaka.NodeulProject.member.service;
 
-import com.bookitaka.NodeulProject.member.bstest.exception.CustomException;
-import com.bookitaka.NodeulProject.member.bstest.model.Member;
-import com.bookitaka.NodeulProject.member.bstest.repository.MemberRepository;
-import com.bookitaka.NodeulProject.member.bstest.security.JwtTokenProvider;
+import com.bookitaka.NodeulProject.member.exception.CustomException;
+import com.bookitaka.NodeulProject.member.model.Member;
+import com.bookitaka.NodeulProject.member.repository.MemberRepository;
+import com.bookitaka.NodeulProject.member.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
