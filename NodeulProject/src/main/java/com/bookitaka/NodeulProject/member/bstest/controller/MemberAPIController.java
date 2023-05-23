@@ -31,9 +31,6 @@ public class MemberAPIController {
   public String login(//
       @ApiParam("MemberEmail") @RequestParam("memberEmail") String memberEmail, //
       @ApiParam("MemberPassword") @RequestParam("memberPassword") String memberPassword) {
-    log.info("==========================Login");
-    log.info("memberEmail: {}", memberEmail);
-    log.info("memberPassword: {}", memberPassword);
     return memberService.signin(memberEmail, memberPassword);
   }
 
@@ -73,7 +70,7 @@ public class MemberAPIController {
   }
 
   @GetMapping(value = "/me")
-  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
   @ApiOperation(value = "${UserController.me}", response = UserResponseDTO.class, authorizations = { @Authorization(value="apiKey") })
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong"), //
@@ -84,7 +81,7 @@ public class MemberAPIController {
   }
 
   @GetMapping("/refresh")
-  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
   public String refresh(HttpServletRequest req) {
     return memberService.refresh(req.getRemoteUser());
   }

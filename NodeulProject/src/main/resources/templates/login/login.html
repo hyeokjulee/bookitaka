@@ -57,24 +57,20 @@
     document.getElementById("testTokenBtn").addEventListener("click", function() {
         const jwtToken = getToken();
 
-        // JWT 토큰이 존재하는 경우에만 헤더에 추가하여 뷰를 이동
-        if (jwtToken) {
-            // HTTP 요청 헤더에 JWT 토큰 추가
-            const headers = new Headers();
-            headers.append('Authorization', `Bearer ${jwtToken}`);
-
-            // 새로운 요청을 생성하여 헤더를 설정
-            const request = new Request('/members/test', {
-                method: 'GET',
-                headers: headers
+        fetch("/members/test", {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${jwtToken}`
+            }
+        })
+            .then((response) => response.text())
+            .then((data) => {
+                console.log(data);
+                var newWindow = window.open('', '_self');
+                newWindow.document.open();
+                newWindow.document.write(data);
+                newWindow.document.close();
             });
-
-            // 뷰로 이동
-            window.location.href = request.url;
-        } else {
-            // JWT 토큰이 없는 경우에는 그냥 기본 URL로 이동
-            window.location.href = '/members/login';
-        }
     });
 
     // JWT 토큰을 저장하는 함수 예시

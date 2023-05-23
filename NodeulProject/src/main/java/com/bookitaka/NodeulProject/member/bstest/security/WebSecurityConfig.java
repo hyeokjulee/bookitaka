@@ -32,7 +32,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     // Entry points
     http.authorizeRequests()//
-        .antMatchers("/").hasAnyRole("ROLE_ADMIN", "ROLE_CLIENT")//
         .antMatchers("/member/signin").permitAll()//
         .antMatchers("/member/signup").permitAll()//
         .antMatchers("/members/login").permitAll()

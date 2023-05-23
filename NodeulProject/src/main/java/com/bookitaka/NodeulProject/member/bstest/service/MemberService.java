@@ -55,7 +55,7 @@ public class MemberService {
   }
 
   public Member whoami(HttpServletRequest req) {
-    return memberRepository.findByMemberEmail(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)));
+    return memberRepository.findByMemberEmail(jwtTokenProvider.getMemberEmail(jwtTokenProvider.resolveToken(req)));
   }
 
   public String refresh(String username) {
