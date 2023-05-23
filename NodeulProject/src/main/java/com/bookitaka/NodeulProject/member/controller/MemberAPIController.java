@@ -24,7 +24,7 @@ public class MemberAPIController {
   private final ModelMapper modelMapper;
 
   @PostMapping("/signin")
-  @ApiOperation(value = "${UserController.signin}")
+  @ApiOperation(value = "${MemberController.signin}")
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 422, message = "Invalid username/password supplied")})
@@ -35,7 +35,7 @@ public class MemberAPIController {
   }
 
   @PostMapping("/signup")
-  @ApiOperation(value = "${UserController.signup}")
+  @ApiOperation(value = "${MemberController.signup}")
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 403, message = "Access denied"), //
@@ -46,7 +46,7 @@ public class MemberAPIController {
 
   @DeleteMapping(value = "/{username}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
-  @ApiOperation(value = "${UserController.delete}", authorizations = { @Authorization(value="apiKey") })
+  @ApiOperation(value = "${MemberController.delete}", authorizations = { @Authorization(value="apiKey") })
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 403, message = "Access denied"), //
@@ -59,7 +59,7 @@ public class MemberAPIController {
 
   @GetMapping(value = "/{username}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
-  @ApiOperation(value = "${UserController.search}", response = UserResponseDTO.class, authorizations = { @Authorization(value="apiKey") })
+  @ApiOperation(value = "${MemberController.search}", response = UserResponseDTO.class, authorizations = { @Authorization(value="apiKey") })
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 403, message = "Access denied"), //
@@ -71,7 +71,7 @@ public class MemberAPIController {
 
   @GetMapping(value = "/me")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
-  @ApiOperation(value = "${UserController.me}", response = UserResponseDTO.class, authorizations = { @Authorization(value="apiKey") })
+  @ApiOperation(value = "${MemberController.me}", response = UserResponseDTO.class, authorizations = { @Authorization(value="apiKey") })
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 403, message = "Access denied"), //
