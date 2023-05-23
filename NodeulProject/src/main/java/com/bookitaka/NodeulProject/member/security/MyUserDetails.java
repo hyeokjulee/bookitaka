@@ -19,7 +19,7 @@ public class MyUserDetails implements UserDetailsService {
     final Member member = memberRepository.findByMemberEmail(memberEmail);
 
     if (member == null) {
-      throw new UsernameNotFoundException("User '" + memberEmail + "' not found");
+      throw new UsernameNotFoundException("Member '" + memberEmail + "' not found");
     }
 
     return org.springframework.security.core.userdetails.User//

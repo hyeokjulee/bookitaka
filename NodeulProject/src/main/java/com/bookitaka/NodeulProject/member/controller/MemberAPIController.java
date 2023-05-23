@@ -2,13 +2,18 @@ package com.bookitaka.NodeulProject.member.controller;
 
 import com.bookitaka.NodeulProject.member.dto.UserDataDTO;
 import com.bookitaka.NodeulProject.member.dto.UserResponseDTO;
+import com.bookitaka.NodeulProject.member.exception.CustomException;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.service.MemberService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +32,7 @@ public class MemberAPIController {
   @ApiOperation(value = "${MemberController.signin}")
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong"), //
-      @ApiResponse(code = 422, message = "Invalid username/password supplied")})
+      @ApiResponse(code = 422, message = "Invalid email/password supplied")})
   public String login(//
       @ApiParam("MemberEmail") @RequestParam("memberEmail") String memberEmail, //
       @ApiParam("MemberPassword") @RequestParam("memberPassword") String memberPassword) {
@@ -39,12 +44,12 @@ public class MemberAPIController {
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 403, message = "Access denied"), //
-      @ApiResponse(code = 422, message = "Username is already in use")})
-  public String signup(@ApiParam("Signup User") @RequestBody UserDataDTO user) {
+      @ApiResponse(code = 422, message = "MemberEmail is already in use")})
+  public String signup(@ApiParam("Signup Member") @RequestBody UserDataDTO user) {
     return memberService.signup(modelMapper.map(user, Member.class));
   }
 
-  @DeleteMapping(value = "/{username}")
+  @DeleteMapping(value = "/{memberEmail}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @ApiOperation(value = "${MemberController.delete}", authorizations = { @Authorization(value="apiKey") })
   @ApiResponses(value = {//
@@ -52,12 +57,12 @@ public class MemberAPIController {
       @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 404, message = "The user doesn't exist"), //
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-  public String delete(@ApiParam("Username") @PathVariable String username) {
-    memberService.delete(username);
-    return username;
+  public String delete(@ApiParam("MemberEmail") @PathVariable String memberEmail) {
+    memberService.delete(memberEmail);
+    return memberEmail;
   }
 
-  @GetMapping(value = "/{username}")
+  @GetMapping(value = "/{memberEmail}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @ApiOperation(value = "${MemberController.search}", response = UserResponseDTO.class, authorizations = { @Authorization(value="apiKey") })
   @ApiResponses(value = {//
@@ -65,8 +70,8 @@ public class MemberAPIController {
       @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 404, message = "The user doesn't exist"), //
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-  public UserResponseDTO search(@ApiParam("Username") @PathVariable String username) {
-    return modelMapper.map(memberService.search(username), UserResponseDTO.class);
+  public UserResponseDTO search(@ApiParam("MemberEmail") @PathVariable String memberEmail) {
+    return modelMapper.map(memberService.search(memberEmail), UserResponseDTO.class);
   }
 
   @GetMapping(value = "/me")
@@ -78,6 +83,21 @@ public class MemberAPIController {
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
   public UserResponseDTO whoami(HttpServletRequest req) {
     return modelMapper.map(memberService.whoami(req), UserResponseDTO.class);
+  }
+
+  @GetMapping(value = "/token")
+  @ApiOperation(value = "${MemberController.token}")
+  @ApiResponses(value = {//
+          @ApiResponse(code = 400, message = "Something went wrong"), //
+          @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+  public ResponseEntity<String> checkToken(HttpServletRequest req) {
+    if (memberService.checkToken(req)) {
+      String message = "Valid Token.";
+      return new ResponseEntity<>(message, HttpStatus.OK);
+    } else {
+      String message = "Invalid Token.";
+      return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @GetMapping("/refresh")

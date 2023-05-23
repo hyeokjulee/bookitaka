@@ -24,13 +24,21 @@
         <button type="button" id="removeTokenBtn">토큰 제거</button>
         <button type="button" id="testTokenBtn">토큰으로 인가 확인</button>
     </div>
+    <hr>
+    <div id="tokenDiv"></div>
+    <div id="statusDiv"></div>
 </form>
 <script>
+    window.onload = function() {
+        checkToken();
+    }
     // 로그인 버튼 클릭 이벤트 처리
     document.getElementById("loginBtn").addEventListener("click", function() {
+        let memberEmail = document.getElementById("memberEmail").value;
+        let memberPassword = document.getElementById("memberPassword").value;
         let formData = {
-            memberEmail: document.getElementById("memberEmail").value,
-            memberPassword: document.getElementById("memberPassword").value
+            memberEmail: memberEmail,
+            memberPassword: memberPassword
         }
         fetch("/member/signin", {
             method: 'POST',
@@ -39,18 +47,24 @@
             .then((response) => response.text())
             .then((token) => {
                 console.log(token);
-                storeToken(token);
+                try {
+                    JSON.parse(token);
+                } catch (error) {
+                    storeToken(token);
+                    checkToken();
+                }
             });
     });
 
     // 토큰 확인 버튼 클릭 이벤트 처리
     document.getElementById("checkTokenBtn").addEventListener("click", function() {
-        alert("현재 스토리지 토큰 : " + getToken())
+        checkToken();
     });
     // 토큰 제거 버튼 클릭 이벤트 처리
     document.getElementById("removeTokenBtn").addEventListener("click", function() {
         if(confirm("정말로 제거하시겠습니까? (로그아웃)")) {
             removeToken();
+            checkToken();
         }
     });
     // 토큰 확인 페이지로 이동 버튼 클릭 이벤트 처리
@@ -66,7 +80,7 @@
             .then((response) => response.text())
             .then((data) => {
                 console.log(data);
-                var newWindow = window.open('', '_self');
+                let newWindow = window.open('');
                 newWindow.document.open();
                 newWindow.document.write(data);
                 newWindow.document.close();
@@ -86,6 +100,31 @@
     // JWT 토큰을 로컬 스토리지에서 제거하는 함수 예시
     function removeToken() {
         localStorage.removeItem('jwtToken');
+    }
+
+    // 토큰을 보유했는지 여부 확인
+    function checkToken() {
+        document.getElementById("tokenDiv").innerHTML = getToken();
+        if (getToken() == null) {
+            document.getElementById("statusDiv").innerHTML = '상태 : 로그아웃'
+        } else {
+            fetch("/member/token", {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ` + getToken()
+                }
+            })
+                .then((response) => response.text())
+                .then((data) => {
+                    data = data.trim();
+                    console.log(data);
+                    if (data === 'Valid Token.') {
+                        document.getElementById("statusDiv").innerHTML = '상태 : 로그인'
+                    } else {
+                        document.getElementById("statusDiv").innerHTML = '상태 : 로그아웃 (만료됨)'
+                    }
+                });
+        }
     }
 </script>
 </body>

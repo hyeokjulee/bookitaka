@@ -8,7 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +30,7 @@ public class MemberService {
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(memberEmail, memberPassword));
       return jwtTokenProvider.createToken(memberEmail, memberRepository.findByMemberEmail(memberEmail).getMemberRole());
     } catch (AuthenticationException e) {
-      throw new CustomException("Invalid username/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
+      throw new CustomException("Invalid email/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
     }
   }
 
@@ -38,7 +40,7 @@ public class MemberService {
       memberRepository.save(member);
       return jwtTokenProvider.createToken(member.getMemberEmail(), member.getMemberRole());
     } else {
-      throw new CustomException("Username is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
+      throw new CustomException("Member email is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
     }
   }
 
@@ -49,7 +51,7 @@ public class MemberService {
   public Member search(String memberEmail) {
     Member member = memberRepository.findByMemberEmail(memberEmail);
     if (member == null) {
-      throw new CustomException("The user doesn't exist", HttpStatus.NOT_FOUND);
+      throw new CustomException("The member doesn't exist", HttpStatus.NOT_FOUND);
     }
     return member;
   }
@@ -58,8 +60,20 @@ public class MemberService {
     return memberRepository.findByMemberEmail(jwtTokenProvider.getMemberEmail(jwtTokenProvider.resolveToken(req)));
   }
 
-  public String refresh(String username) {
-    return jwtTokenProvider.createToken(username, memberRepository.findByMemberEmail(username).getMemberRole());
+  public Boolean checkToken(HttpServletRequest req) {
+    String token = jwtTokenProvider.resolveToken(req);
+    try {
+      if (token != null && jwtTokenProvider.validateToken(token)) {
+        return true;
+      }
+    } catch (CustomException ex) {
+      return false;
+    }
+    return false;
+  }
+
+  public String refresh(String memberEmail) {
+    return jwtTokenProvider.createToken(memberEmail, memberRepository.findByMemberEmail(memberEmail).getMemberRole());
   }
 
 }
