@@ -1,7 +1,9 @@
 package com.bookitaka.NodeulProject.faq;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,21 +12,21 @@ import javax.persistence.Id;
 import java.util.Date;
 
 @Entity
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@DynamicInsert
 public class Faq {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    private int faqNo;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long faqNo;
 
     private String faqQuestion;
-
     private String faqAnswer;
-
-    private String faq_category;
-
+    private String faqCategory;
     private int faqBest;
 
+    private Date faqRegdate;
     private Date faqModdate;
 
 }
