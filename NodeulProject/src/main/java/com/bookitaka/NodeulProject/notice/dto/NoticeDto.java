@@ -22,6 +22,7 @@ public class NoticeDto {
                 .noticeNo(noticeNo)
                 .noticeTitle(noticeTitle)
                 .noticeContent(noticeContent)
+                .noticeHit(0)
                 .build();
         return notice;
     }

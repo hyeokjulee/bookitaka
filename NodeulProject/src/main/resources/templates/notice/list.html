@@ -27,6 +27,7 @@
             <th class="one wide">번호</th>
             <th class="ten wide">글제목</th>
             <th class="three wide">작성일</th>
+            <th class="four wide">조회수</th>
         </tr>
         </thead>
 
@@ -43,6 +44,9 @@
             </td>
             <td>
                 <span th:text="${#temporals.format(notice.noticeRegdate, 'yyyy-MM-dd HH:mm')}"></span>
+            </td>
+            <td>
+                <span th:text="${notice.noticeHit}"></span>
             </td>
         </tr>
         </tbody>

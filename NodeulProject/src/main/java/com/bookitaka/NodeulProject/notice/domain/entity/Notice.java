@@ -13,15 +13,17 @@ public class Notice extends TimeEntity{
     private Integer noticeNo;
     private String noticeTitle;
     private String noticeContent;
+    private Integer noticeHit;
 
 
 
 
     @Builder
-    public Notice(Integer noticeNo, String noticeTitle, String noticeContent) {
+    public Notice(Integer noticeNo, String noticeTitle, String noticeContent, Integer noticeHit) {
         this.noticeNo = noticeNo;
         this.noticeTitle = noticeTitle;
         this.noticeContent = noticeContent;
+        this.noticeHit = noticeHit;
 
     }
 }

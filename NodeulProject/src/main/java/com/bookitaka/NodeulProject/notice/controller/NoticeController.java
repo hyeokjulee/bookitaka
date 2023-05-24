@@ -1,9 +1,14 @@
 package com.bookitaka.NodeulProject.notice.controller;
 
+import com.bookitaka.NodeulProject.notice.domain.entity.Notice;
 import com.bookitaka.NodeulProject.notice.dto.NoticeDto;
 import com.bookitaka.NodeulProject.notice.service.NoticeService;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +22,8 @@ public class NoticeController {
     private NoticeService noticeService;
 
     @GetMapping("/")
-    public String list(Model model){
-        List<NoticeDto> noticeList = noticeService.getNoticelist();
+    public String list(Model model) {
+        List<NoticeDto> noticeList = noticeService.getNoticeList();
 
         model.addAttribute("noticeList", noticeList);
         return "notice/list.html";
@@ -64,11 +69,12 @@ public class NoticeController {
     }
 
     @GetMapping("/notice/search")
-    public String search(@RequestParam(value="keyword")String keyword,Model model){
+    public String search(@RequestParam(value="keyword")String keyword, Model model){
         List<NoticeDto> noticeDtoList = noticeService.searchPost(keyword);
 
         model.addAttribute("noticeList",noticeDtoList);
 
         return "notice/list.html";
     }
+
 }
