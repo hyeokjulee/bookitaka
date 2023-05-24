@@ -18,7 +18,7 @@
         <h2>상품 등록 폼</h2>
     </div>
 
-    <form action="item.html" th:action th:object="${sheetRegDto}" method="post">
+    <form action="/sheet/add" th:action="@{/sheet/add}" th:object="${sheetRegDto}" method="post" enctype="multipart/form-data">
         <div>
             <label for="sheetBooktitle">책 제목</label>
             <input type="text" id="sheetBooktitle" th:field="*{sheetBooktitle}" class="form-control" placeholder="책 제목을 입력하세요">
@@ -43,12 +43,17 @@
             <input type="number" id="sheetPrice" th:field="*{sheetPrice}" class="form-control" placeholder="가격을 입력하세요">
         </div>
         <div>
-            <label for="sheetBookimgename">이미지 이름</label>
-            <input type="text" id="sheetBookimgename" th:field="*{sheetBookimgename}" class="form-control" placeholder="이미지 이름을 입력하세요">
+            <label for="sheetBookImg">표지 이미지</label>
+            <input type="file" id="sheetBookImg" name="sheetBookImg" class="form-control" accept=".jpg, .jpeg, .png, .gif" placeholder="이미지 파일을 업로드해주세요">
         </div>
         <div>
+            <label for="sheetFile">독후활동지 파일</label>
+            <input type="file" id="sheetFile" name="sheetFile" class="form-control" accept="application/pdf" placeholder="pdf파일을 업로드해주세요">
+        </div>
+
+        <div>
             <label for="sheetContent">설명</label>
-            <input type="text" id="sheetContent" th:field="*{sheetContent}" class="form-control" placeholder="설명을 입력하세요">
+            <textarea type="text" id="sheetContent" th:field="*{sheetContent}" class="form-control" placeholder="설명을 입력하세요"></textarea>
         </div>
 
         <hr class="my-4">
@@ -66,7 +71,7 @@
         <div>
             <div>장르</div>
             <div th:each="gn : ${genre}" class="form-check form-check-inline">
-                <input type="radio" th:field="*{sheetGenreName}" th:value="${gn.sheetGenreNo}" class="form-check-input">
+                <input type="radio" th:field="*{sheetGenreName}" th:value="${gn.sheetGenreName}" class="form-check-input">
                 <label th:for="${#ids.prev('sheetGenreName')}" th:text="${gn.getSheetGenreName()}" class="form-check-label">
                     장르
                 </label>
@@ -80,7 +85,7 @@
         <div>
             <div>연령대</div>
             <div th:each="ag : ${ageGroup}" class="form-check form-check-inline">
-                <input type="radio" th:field="*{sheetAgegroupName}" th:value="${ag.sheetAgegroupNo}" class="form-check-input">
+                <input type="radio" th:field="*{sheetAgegroupName}" th:value="${ag.sheetAgegroupName}" class="form-check-input">
                 <label th:for="${#ids.prev('sheetAgegroupName')}" th:text="${ag.sheetAgegroupName}" class="form-check-label">
                     연령대
                 </label>

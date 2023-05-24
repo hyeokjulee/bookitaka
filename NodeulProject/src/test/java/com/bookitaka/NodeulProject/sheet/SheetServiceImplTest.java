@@ -10,6 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+import java.util.List;
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,13 +40,41 @@ class SheetServiceImplTest {
             sheetDto.setSheetPrice(1234);
             sheetDto.setSheetBookimgname("serviceimgname");
             sheetDto.setSheetFilename("testFileName");
-            sheetDto.setSheetAgegroupName("유아용");
-            sheetDto.setSheetGenreName("현대문학");
+            sheetDto.setSheetAgegroupName(AgeGroupNames.초등저학년);
+            sheetDto.setSheetGenreName(GenreNames.한국고전);
             sheetDto.setSheetContent("testContent");
 
-            beforeSheet = sheetService.registerSheet(sheetDto);
+            beforeSheet = sheetService.registerSheet(sheetDto, new UploadFile("", ""), new UploadFile("", ""));
             log.info("before sheet={}", beforeSheet);
         }
+    }
+
+    @Test
+    void getByAgeGroupTest() {
+        SheetCri cri = new SheetCri(1,5, SearchTypes.PUBLISHER, "service");
+
+        List<Sheet> sheetList = sheetService.getAllSheetByAgeGroup(AgeGroupNames.초등저학년, cri);
+
+        for (Sheet sheet : sheetList) {
+            log.info("sheet = {}", sheet);
+        }
+
+        assertThat(sheetList.size()).isEqualTo(3);
+
+    }
+
+    @Test
+    void getByGenreTest() {
+        SheetCri cri = new SheetCri(1,5, SearchTypes.PUBLISHER, "service");
+
+        List<Sheet> sheetList = sheetService.getAllSheetByGenre(GenreNames.한국고전, cri);
+
+        for (Sheet sheet : sheetList) {
+            log.info("sheet = {}", sheet);
+        }
+
+        assertThat(sheetList.size()).isEqualTo(3);
+
     }
 
     @Test
@@ -56,15 +87,13 @@ class SheetServiceImplTest {
         sheetDto.setSheetBookpublisher("servicePub");
         sheetDto.setSheetBookisbn("serviceisbn");
         sheetDto.setSheetPrice(1234);
-        sheetDto.setSheetBookimgname("serviceimgname");
-        sheetDto.setSheetFilename("testFileName");
         sheetDto.setSheetAgegroupName("유아용");
         sheetDto.setSheetGenreName("현대문학");
         sheetDto.setSheetContent("testContent");
 
         //when
         log.info("sheetDto = {}", sheetDto);
-        Sheet sheet = sheetService.registerSheet(sheetDto);
+        Sheet sheet = sheetService.registerSheet(sheetDto, new UploadFile("", ""), new UploadFile("", ""));
         log.info("sheet = {}", sheet);
 
         Sheet foundSheet = sheetService.getSheet(sheet.getSheetNo());
