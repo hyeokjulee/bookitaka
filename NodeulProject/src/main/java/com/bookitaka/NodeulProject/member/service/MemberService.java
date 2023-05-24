@@ -1,5 +1,6 @@
 package com.bookitaka.NodeulProject.member.service;
 
+import com.bookitaka.NodeulProject.member.dto.UserResponseDTO;
 import com.bookitaka.NodeulProject.member.exception.CustomException;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.repository.MemberRepository;
@@ -74,6 +75,10 @@ public class MemberService {
 
   public String refresh(String memberEmail) {
     return jwtTokenProvider.createToken(memberEmail, memberRepository.findByMemberEmail(memberEmail).getMemberRole());
+  }
+
+  public boolean modifyMember(String memberEmail, UserResponseDTO userResponseDTO) {
+    return memberRepository.updateMember(memberEmail, userResponseDTO);
   }
 
 }

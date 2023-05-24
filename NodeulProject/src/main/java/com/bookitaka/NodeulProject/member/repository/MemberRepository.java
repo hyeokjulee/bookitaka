@@ -1,5 +1,6 @@
 package com.bookitaka.NodeulProject.member.repository;
 
+import com.bookitaka.NodeulProject.member.dto.UserResponseDTO;
 import com.bookitaka.NodeulProject.member.model.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -13,5 +14,7 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 
   @Transactional
   void deleteByMemberEmail(String memberEmail);
+
+  boolean updateMember(String memberEmail, UserResponseDTO userResponseDTO);
 
 }
