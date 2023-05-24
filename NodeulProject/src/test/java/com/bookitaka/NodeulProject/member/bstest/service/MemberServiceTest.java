@@ -6,14 +6,22 @@ import com.bookitaka.NodeulProject.member.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletResponse;
 
 import static org.junit.Assert.assertEquals;
 
 @SpringBootTest
 @Transactional
+@AutoConfigureMockMvc
 @Slf4j
 public class MemberServiceTest {
 
@@ -22,6 +30,9 @@ public class MemberServiceTest {
 
     @Autowired
     MemberRepository memberRepository;
+
+    @Autowired
+    private MockMvc mockMvc;
 
 
 
@@ -40,7 +51,6 @@ public class MemberServiceTest {
 
         //when
         String signupToken = memberService.signup(member);
-        log.info("signupToken: {}", signupToken);
         //then
 //        assertEquals(member, memberRepository.findOne(savedId));
 
@@ -48,10 +58,12 @@ public class MemberServiceTest {
         //given
         String memberEmail = "asd@asd.com";
         String memberPassword = "0000";
-
+        // Perform HTTP request
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/member/signin")
+                .accept(MediaType.APPLICATION_JSON));
+        HttpServletResponse response = resultActions.andReturn().getResponse();
         //when
-        String signinToken = memberService.signin(memberEmail, memberPassword);
-        log.info("signinToken: {}", signinToken);
+        memberService.signin(memberEmail, memberPassword, response);
         //then
 //        assertEquals(member, memberRepository.findOne(savedId));
 

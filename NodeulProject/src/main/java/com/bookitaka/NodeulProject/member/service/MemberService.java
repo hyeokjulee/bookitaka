@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 @Slf4j
@@ -31,13 +32,32 @@ public class MemberService {
   private final JwtTokenProvider jwtTokenProvider;
   private final AuthenticationManager authenticationManager;
 
-  public String signin(String memberEmail, String memberPassword) {
+  public void signin(String memberEmail, String memberPassword, HttpServletResponse response) {
     try {
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(memberEmail, memberPassword));
-      return jwtTokenProvider.createToken(memberEmail, memberRepository.findByMemberEmail(memberEmail).getMemberRole());
+      String token = jwtTokenProvider.createToken(memberEmail, memberRepository.findByMemberEmail(memberEmail).getMemberRole());
+
+      // 쿠키 생성
+      Cookie cookie = new Cookie("access_token", token);
+      cookie.setHttpOnly(true); // HTTP-only 속성 설정
+      cookie.setPath("/"); // 쿠키의 유효 경로 설정 (루트 경로로 설정하면 모든 요청에서 사용 가능)
+
+      // 응답에 쿠키 추가
+      response.addCookie(cookie);
     } catch (AuthenticationException e) {
       throw new CustomException("Invalid email/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
     }
+  }
+
+  public void signout(HttpServletResponse response) {
+    // 쿠키 제거를 위한 설정
+    Cookie cookie = new Cookie("access_token", "");
+    cookie.setHttpOnly(true); // HTTP-only 속성 설정
+    cookie.setMaxAge(0);
+    cookie.setPath("/"); // 쿠키의 유효 경로 설정 (루트 경로로 설정하면 모든 요청에서 사용 가능)
+
+    // 응답에 쿠키 추가
+    response.addCookie(cookie);
   }
 
   public String signup(Member member) {
@@ -78,7 +98,7 @@ public class MemberService {
 //    return false;
 //  }
 
-  public Boolean checkToken(String token) {
+  public Boolean isTokenValid(String token) {
     try {
       if (token != null && jwtTokenProvider.validateToken(token)) {
         return true;
@@ -105,7 +125,6 @@ public class MemberService {
       Date expDate = jwtTokenProvider.getExpirationDate(token);
       Date now = new Date();
       log.info("isTokenExpired - expDate : {}", expDate);
-      log.info("isTokenExpired - before : {}", expDate.before(now));
       return expDate.before(now);
     }
     return true;
