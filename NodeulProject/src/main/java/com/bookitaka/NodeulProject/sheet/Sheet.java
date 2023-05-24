@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import java.util.Date;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@DynamicInsert
 public class Sheet {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,8 +43,6 @@ public class Sheet {
     private int sheetBuycnt;
     private int sheetHit;
 
-    @CreationTimestamp
-    @Column(nullable = false, updatable = false)
     private Date sheetRegdate;
 
     @LastModifiedDate

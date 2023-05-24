@@ -10,6 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -32,12 +35,12 @@ class SheetRepositoryImplTest {
 
         for (int i = 0; i < 3; i++) {
             SheetAgegroup beforeGroup = new SheetAgegroup();
-            beforeGroup.setSheetAgegroupName("testAgegroup " + i);
+            beforeGroup.setSheetAgegroupName("testAgegroup");
             lastAgeGroup = beforeGroup;
             em.persist(beforeGroup);
 
             SheetGenre beforeGenre = new SheetGenre();
-            beforeGenre.setSheetGenreName("testGenre " + i);
+            beforeGenre.setSheetGenreName("testGenre");
             lastGenre = beforeGenre;
             em.persist(beforeGenre);
 
@@ -49,7 +52,7 @@ class SheetRepositoryImplTest {
             sheet.setSheetPrice(1234);
             sheet.setSheetBookimguuid("testimguuid" + i);
             sheet.setSheetBookimgname("testimgname");
-            sheet.setSheetFilename("testFileuuid" + i);
+            sheet.setSheetFileuuid("testFileuuid" + i);
             sheet.setSheetFilename("testFileName");
             sheet.setSheetAgegroup(beforeGroup);
             sheet.setSheetGenre(beforeGenre);
@@ -96,14 +99,59 @@ class SheetRepositoryImplTest {
         log.info("fined={}", findedSheet);
 
         //then
-        Assertions.assertThat(createdSheet).isEqualTo(findedSheet);
+        assertThat(createdSheet).isEqualTo(findedSheet);
 
 
     }
 
     @Test
     void findSheetByNoTest() {
+        Sheet foundSheet = sheetRepository.findSheetByNo(lastSheet.getSheetNo()).orElse(null);
+        assertThat(foundSheet.getSheetNo()).isEqualTo(lastSheet.getSheetNo());
     }
+
+    @Test
+    void findAllTest() {
+        SheetCri cri = new SheetCri(1, 3, SearchTypes.TITLE, "test");
+
+        List<Sheet> sheetList = sheetRepository.findAllSheet(cri);
+
+        for (Sheet sheet : sheetList) {
+            log.info("sheet = {}", sheet);
+        }
+
+        assertThat(sheetList.size()).isEqualTo(3);
+
+    }
+
+    @Test
+    void findAllByGenreTest() {
+        SheetCri cri = new SheetCri(1,5, SearchTypes.PUBLISHER, "test");
+
+        List<Sheet> sheetList = sheetRepository.findAllSheetByGenre("testGenre", cri);
+
+        for (Sheet sheet : sheetList) {
+            log.info("sheet = {}", sheet);
+        }
+
+        assertThat(sheetList.size()).isEqualTo(3);
+
+    }
+
+    @Test
+    void findAllByAgeGroupTest() {
+        SheetCri cri = new SheetCri(1,5, SearchTypes.AUTHOR, "test");
+
+        List<Sheet> sheetList = sheetRepository.findAllSheetByGenre("testAgegroup", cri);
+
+        for (Sheet sheet : sheetList) {
+            log.info("sheet = {}", sheet);
+        }
+
+        assertThat(sheetList.size()).isEqualTo(3);
+
+    }
+
 
     @Test
     void updateSheetTest() {
@@ -130,7 +178,7 @@ class SheetRepositoryImplTest {
         log.info("fined sheet = {}", fined);
 
         //then
-        Assertions.assertThat(fined.getSheetBooktitle()).isEqualTo("updatedTitle");
+        assertThat(fined.getSheetBooktitle()).isEqualTo("updatedTitle");
 
     }
 
@@ -141,7 +189,7 @@ class SheetRepositoryImplTest {
         sheetRepository.deleteSheet(lastSheet.getSheetNo());
 
         //then
-        Assertions.assertThat(sheetRepository.countSheet()).isEqualTo(2);
+        assertThat(sheetRepository.countSheet()).isEqualTo(2);
 
     }
 }

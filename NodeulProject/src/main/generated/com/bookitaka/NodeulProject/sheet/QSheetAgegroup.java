@@ -19,9 +19,9 @@ public class QSheetAgegroup extends EntityPathBase<SheetAgegroup> {
 
     public static final QSheetAgegroup sheetAgegroup = new QSheetAgegroup("sheetAgegroup");
 
-    public final StringPath SheetAgegroupName = createString("SheetAgegroupName");
+    public final StringPath sheetAgegroupName = createString("sheetAgegroupName");
 
-    public final NumberPath<Integer> SheetAgegroupNo = createNumber("SheetAgegroupNo", Integer.class);
+    public final NumberPath<Long> sheetAgegroupNo = createNumber("sheetAgegroupNo", Long.class);
 
     public QSheetAgegroup(String variable) {
         super(SheetAgegroup.class, forVariable(variable));

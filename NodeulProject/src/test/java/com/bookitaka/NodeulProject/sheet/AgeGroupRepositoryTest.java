@@ -22,13 +22,20 @@ class AgeGroupRepositoryTest {
     void AllAgeGroupTest() {
         int count = 0;
 
-        List<String> ageGroups = ageGroupRepository.findAllSheetAgegroupName();
+        List<SheetAgegroup> ageGroups = ageGroupRepository.findAll();
 
-        for (String ageGroup: ageGroups) {
+        for (SheetAgegroup ageGroup: ageGroups) {
             log.info("AgeGroup = {}", ageGroup);
             count++;
         }
         Assertions.assertThat(count).isGreaterThan(3);
+    }
+
+    @Test
+    void findAgeGroupTest() {
+        SheetAgegroup agegroup = ageGroupRepository.findBySheetAgegroupName("유아용");
+        log.info("ageGroup = {} ", agegroup);
+        Assertions.assertThat(agegroup.getSheetAgegroupNo()).isEqualTo(1);
     }
 
 }

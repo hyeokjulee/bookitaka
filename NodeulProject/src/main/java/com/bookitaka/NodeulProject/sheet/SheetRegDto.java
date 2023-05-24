@@ -25,7 +25,7 @@ public class SheetRegDto {
     @NotNull
     private Integer sheetPrice;
 
-    private String sheetBookimgename;
+    private String sheetBookimgname;
 
     @NotNull
     private String sheetFilename;

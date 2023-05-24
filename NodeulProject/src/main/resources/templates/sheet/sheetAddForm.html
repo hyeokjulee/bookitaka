@@ -62,14 +62,27 @@
 <!--            </div>-->
 <!--        </div>-->
 
-
         <!-- radio button -->
         <div>
             <div>장르</div>
-            <div th:each="type : ${itemTypes}" class="form-check form-check-inline">
-                <input type="radio" th:field="*{itemType}" th:value="${type.name()}" class="form-check-input">
-                <label th:for="${#ids.prev('itemType')}" th:text="${type.description}" class="form-check-label">
-                    BOOK
+            <div th:each="gn : ${genre}" class="form-check form-check-inline">
+                <input type="radio" th:field="*{sheetGenreName}" th:value="${gn.sheetGenreNo}" class="form-check-input">
+                <label th:for="${#ids.prev('sheetGenreName')}" th:text="${gn.getSheetGenreName()}" class="form-check-label">
+                    장르
+                </label>
+            </div>
+        </div>
+
+
+        <hr class="my-4">
+
+        <!-- radio button -->
+        <div>
+            <div>연령대</div>
+            <div th:each="ag : ${ageGroup}" class="form-check form-check-inline">
+                <input type="radio" th:field="*{sheetAgegroupName}" th:value="${ag.sheetAgegroupNo}" class="form-check-input">
+                <label th:for="${#ids.prev('sheetAgegroupName')}" th:text="${ag.sheetAgegroupName}" class="form-check-label">
+                    연령대
                 </label>
             </div>
         </div>

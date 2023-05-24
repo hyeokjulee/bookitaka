@@ -19,9 +19,9 @@ public class QSheetGenre extends EntityPathBase<SheetGenre> {
 
     public static final QSheetGenre sheetGenre = new QSheetGenre("sheetGenre");
 
-    public final StringPath SheetGenreName = createString("SheetGenreName");
+    public final StringPath sheetGenreName = createString("sheetGenreName");
 
-    public final NumberPath<Integer> SheetGenreNo = createNumber("SheetGenreNo", Integer.class);
+    public final NumberPath<Long> sheetGenreNo = createNumber("sheetGenreNo", Long.class);
 
     public QSheetGenre(String variable) {
         super(SheetGenre.class, forVariable(variable));

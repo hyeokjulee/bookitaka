@@ -1,7 +1,10 @@
 package com.bookitaka.NodeulProject.sheet;
 
-public interface GenreRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
 
+public interface GenreRepository extends JpaRepository<SheetGenre, Long> {
+
+    SheetGenre findBySheetGenreName(String sheetGenreName);
 
 }
 

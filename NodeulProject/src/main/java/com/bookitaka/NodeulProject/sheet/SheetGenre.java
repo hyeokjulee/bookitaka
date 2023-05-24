@@ -12,15 +12,15 @@ import javax.persistence.Id;
 public class SheetGenre {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int SheetGenreNo;
+    private Long sheetGenreNo;
 
-    private String SheetGenreName;
+    private String sheetGenreName;
 
     public SheetGenre() {
     }
 
     public SheetGenre(String sheetGenreName) {
-        SheetGenreName = sheetGenreName;
+        this.sheetGenreName = sheetGenreName;
     }
 
 }

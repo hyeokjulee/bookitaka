@@ -1,6 +1,5 @@
 package com.bookitaka.NodeulProject.sheet;
 
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -11,6 +10,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Repository
@@ -21,8 +21,6 @@ public class SheetRepositoryImpl implements SheetRepository{
     private final EntityManager em;
     private final JPAQueryFactory qf;
 
-//    JPAQuery query = new JPAQuery(em);
-//
     QSheet qSheet = new QSheet("m");
 
 
@@ -35,32 +33,67 @@ public class SheetRepositoryImpl implements SheetRepository{
     @Override
     public List<Sheet> findAllSheet(SheetCri cri) {
         List<Sheet> sheetList = null;
-        if (cri.getSearchType().equals("제목")) {
-            sheetList = (List<Sheet>) qf.selectFrom(qSheet)
+
+        if (cri.getSearchType().equals(SearchTypes.TITLE)) {
+            return qf.selectFrom(qSheet)
                     .where(qSheet.sheetBooktitle.like("%" + cri.getSearchWord() + "%"))
-                    .offset((cri.getPageNum()-1) * cri.getAmount() + 1).limit(cri.getAmount());
-        } else if (cri.getSearchType().equals("작가")) {
-            sheetList = (List<Sheet>) qf.selectFrom(qSheet)
+                    .offset(cri.getPageNum() - 1).limit(cri.getAmount()).fetch();
+        } else if (cri.getSearchType().equals(SearchTypes.AUTHOR)) {
+            return qf.selectFrom(qSheet)
                     .where(qSheet.sheetBookauthor.like("%" + cri.getSearchWord() + "%"))
-                    .offset((cri.getPageNum()-1) * cri.getAmount() + 1).limit(cri.getAmount());
-        } else if (cri.getSearchType().equals("출판사")) {
-            sheetList = (List<Sheet>) qf.selectFrom(qSheet)
+                    .offset(cri.getPageNum() - 1).limit(cri.getAmount()).fetch();
+        } else if (cri.getSearchType().equals(SearchTypes.PUBLISHER)) {
+            return qf.selectFrom(qSheet)
                     .where(qSheet.sheetBookpublisher.like("%" + cri.getSearchWord() + "%"))
-                    .offset((cri.getPageNum()-1) * cri.getAmount() + 1).limit(cri.getAmount());
+                    .offset(cri.getPageNum()-1).limit(cri.getAmount()).fetch();
         }
-        return sheetList;
+        return null;
     }
 
     @Override
-    public List<Sheet> findAllSheetByGenre(String genre) {
-        List<Sheet> sheetList = (List<Sheet>) qf.selectFrom(qSheet);
+    public List<Sheet> findAllSheetByGenre(String genre, SheetCri cri) {
+
+        if (cri.getSearchType().equals(SearchTypes.TITLE)) {
+            return qf.selectFrom(qSheet)
+                    .where(qSheet.sheetGenre.sheetGenreName.eq(genre))
+                    .where(qSheet.sheetBooktitle.like("%" + cri.getSearchWord() + "%"))
+                    .offset(cri.getPageNum() - 1).limit(cri.getAmount()).fetch();
+        } else if (cri.getSearchType().equals(SearchTypes.AUTHOR)) {
+            return qf.selectFrom(qSheet)
+                    .where(qSheet.sheetGenre.sheetGenreName.eq(genre))
+                    .where(qSheet.sheetBookauthor.like("%" + cri.getSearchWord() + "%"))
+                    .offset(cri.getPageNum() - 1).limit(cri.getAmount()).fetch();
+        } else if (cri.getSearchType().equals(SearchTypes.PUBLISHER)) {
+            return qf.selectFrom(qSheet)
+                    .where(qSheet.sheetGenre.sheetGenreName.eq(genre))
+                    .where(qSheet.sheetBookpublisher.like("%" + cri.getSearchWord() + "%"))
+                    .offset(cri.getPageNum()-1).limit(cri.getAmount()).fetch();
+        }
 
 
         return null;
     }
 
     @Override
-    public List<Sheet> findAllSheetByAgeGroup(String ageGroup) {
+    public List<Sheet> findAllSheetByAgeGroup(String ageGroup, SheetCri cri) {
+
+        if (cri.getSearchType().equals(SearchTypes.TITLE)) {
+            return qf.selectFrom(qSheet)
+                    .where(qSheet.sheetAgegroup.sheetAgegroupName.eq(ageGroup))
+                    .where(qSheet.sheetBooktitle.like("%" + cri.getSearchWord() + "%"))
+                    .offset(cri.getPageNum() - 1).limit(cri.getAmount()).fetch();
+        } else if (cri.getSearchType().equals(SearchTypes.AUTHOR)) {
+            return qf.selectFrom(qSheet)
+                    .where(qSheet.sheetAgegroup.sheetAgegroupName.eq(ageGroup))
+                    .where(qSheet.sheetBookauthor.like("%" + cri.getSearchWord() + "%"))
+                    .offset(cri.getPageNum() - 1).limit(cri.getAmount()).fetch();
+        } else if (cri.getSearchType().equals(SearchTypes.PUBLISHER)) {
+            return qf.selectFrom(qSheet)
+                    .where(qSheet.sheetAgegroup.sheetAgegroupName.eq(ageGroup))
+                    .where(qSheet.sheetBookpublisher.like("%" + cri.getSearchWord() + "%"))
+                    .offset(cri.getPageNum()-1).limit(cri.getAmount()).fetch();
+        }
+
         return null;
     }
 
@@ -102,40 +135,8 @@ public class SheetRepositoryImpl implements SheetRepository{
 
     @Override
     public Long countSheet() {
-        Query query = em.createQuery("SELECT COUNT(*) FROM Sheet");
-        return (Long) query.getSingleResult();
-        //카운트 하는법 고민중...
-    }
-
-    @Override
-    public SheetGenre findSheetGenreByName(String genreName) {
-        QSheetGenre sheetGenre = QSheetGenre.sheetGenre;
-
-        return qf.selectFrom(sheetGenre)
-                .where(sheetGenre.SheetGenreName.eq(genreName))
-                .fetchOne();
-    }
-
-    @Override
-    public SheetAgegroup findSheetAgeGroupByName(String ageGroupName) {
-        QSheetAgegroup sheetAgegroup = QSheetAgegroup.sheetAgegroup;
-
-        return qf.selectFrom(sheetAgegroup)
-                .where(sheetAgegroup.SheetAgegroupName.eq(ageGroupName))
-                .fetchOne();
-    }
-
-    @Override
-    public List<String> findAllAgeGroup() {
-        QSheetAgegroup sheetAgegroup = QSheetAgegroup.sheetAgegroup;
-
-
-        return null;
-    }
-
-    @Override
-    public List<String> findAllGenre() {
-        return null;
+        QSheet sheet = QSheet.sheet;
+        return qf.select(sheet.sheetNo.count()).from(sheet).fetchOne();
     }
 
 

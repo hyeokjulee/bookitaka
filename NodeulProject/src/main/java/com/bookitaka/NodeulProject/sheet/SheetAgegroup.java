@@ -12,14 +12,14 @@ import javax.persistence.Id;
 public class SheetAgegroup {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int SheetAgegroupNo;
+    private Long sheetAgegroupNo;
 
-    private String SheetAgegroupName;
+    private String sheetAgegroupName;
 
     public SheetAgegroup() {
     }
 
     public SheetAgegroup(String sheetAgegroupName) {
-        SheetAgegroupName = sheetAgegroupName;
+        this.sheetAgegroupName = sheetAgegroupName;
     }
 }
