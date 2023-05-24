@@ -16,7 +16,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
 @RestController
@@ -35,8 +37,43 @@ public class MemberAPIController {
       @ApiResponse(code = 422, message = "Invalid email/password supplied")})
   public String login(//
       @ApiParam("MemberEmail") @RequestParam("memberEmail") String memberEmail, //
-      @ApiParam("MemberPassword") @RequestParam("memberPassword") String memberPassword) {
-    return memberService.signin(memberEmail, memberPassword);
+      @ApiParam("MemberPassword") @RequestParam("memberPassword") String memberPassword,
+      HttpServletResponse response) {
+
+    String token = memberService.signin(memberEmail, memberPassword);
+    if (!memberService.checkToken(token)) {
+      return "invalid";
+    }
+
+    // 쿠키 생성
+    Cookie cookie = new Cookie("access_token", token);
+    cookie.setHttpOnly(true); // HTTP-only 속성 설정
+    cookie.setPath("/"); // 쿠키의 유효 경로 설정 (루트 경로로 설정하면 모든 요청에서 사용 가능)
+
+    // 응답에 쿠키 추가
+    response.addCookie(cookie);
+
+    return "ok";
+  }
+
+  @PostMapping("/signout")
+  @ApiOperation(value = "${MemberController.signin}")
+  @ApiResponses(value = {//
+      @ApiResponse(code = 400, message = "Something went wrong"), //
+      @ApiResponse(code = 422, message = "Invalid email/password supplied")})
+  public String logout(
+      HttpServletResponse response) {
+
+    // 쿠키 제거를 위한 설정
+    Cookie cookie = new Cookie("access_token", "");
+    cookie.setHttpOnly(true); // HTTP-only 속성 설정
+    cookie.setMaxAge(0);
+    cookie.setPath("/"); // 쿠키의 유효 경로 설정 (루트 경로로 설정하면 모든 요청에서 사용 가능)
+
+    // 응답에 쿠키 추가
+    response.addCookie(cookie);
+
+    return "ok";
   }
 
   @PostMapping("/signup")
@@ -85,18 +122,33 @@ public class MemberAPIController {
     return modelMapper.map(memberService.whoami(req), UserResponseDTO.class);
   }
 
+//  @GetMapping(value = "/token")
+//  @ApiOperation(value = "${MemberController.token}")
+//  @ApiResponses(value = {//
+//          @ApiResponse(code = 400, message = "Something went wrong"), //
+//          @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+//  public ResponseEntity<String> checkToken(HttpServletRequest req) {
+//    if (memberService.checkToken(req)) {
+//      String message = "Valid Token.";
+//      return new ResponseEntity<>(message, HttpStatus.OK);
+//    } else {
+//      String message = "Invalid Token.";
+//      return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+//    }
+//  }
+
   @GetMapping(value = "/token")
   @ApiOperation(value = "${MemberController.token}")
   @ApiResponses(value = {//
           @ApiResponse(code = 400, message = "Something went wrong"), //
           @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
   public ResponseEntity<String> checkToken(HttpServletRequest req) {
-    if (memberService.checkToken(req)) {
+    if (!memberService.isTokenExpired(req)) {
       String message = "Valid Token.";
       return new ResponseEntity<>(message, HttpStatus.OK);
     } else {
       String message = "Invalid Token.";
-      return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+      return new ResponseEntity<>(message, HttpStatus.OK);
     }
   }
 

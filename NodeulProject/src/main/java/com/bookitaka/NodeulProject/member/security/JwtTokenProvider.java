@@ -58,13 +58,25 @@ public class JwtTokenProvider {
         .compact();
   }
 
+  // 토큰에서 권한 정보 얻기
   public Authentication getAuthentication(String token) {
     UserDetails userDetails = myUserDetails.loadUserByUsername(getMemberEmail(token));
     return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
   }
 
+  // 토큰에서 이메일 얻기
   public String getMemberEmail(String token) {
     return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+  }
+
+  // 토큰에서 만료 시간 얻기
+  public Date getExpirationDate(String token) {
+    Claims claims = Jwts.parser()
+            .setSigningKey(secretKey)
+            .parseClaimsJws(token)
+            .getBody();
+
+    return claims.getExpiration();
   }
 
   public String resolveToken(HttpServletRequest req) {

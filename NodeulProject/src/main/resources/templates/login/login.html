@@ -20,9 +20,9 @@
     </div>
     <hr>
     <div>
-        <button type="button" id="checkTokenBtn">토큰 확인</button>
-        <button type="button" id="removeTokenBtn">토큰 제거</button>
-        <button type="button" id="testTokenBtn">토큰으로 인가 확인</button>
+        <button type="button" id="checkSignBtn">토큰 확인</button>
+        <button type="button" id="removeTokenBtn">토큰 제거 (로그아웃)</button>
+        <button type="button" id="testTokenBtn">토큰 인가 확인 페이지 이동</button>
     </div>
     <hr>
     <div id="tokenDiv"></div>
@@ -30,7 +30,7 @@
 </form>
 <script>
     window.onload = function() {
-        checkToken();
+        checkSign();
     }
     // 로그인 버튼 클릭 이벤트 처리
     document.getElementById("loginBtn").addEventListener("click", function() {
@@ -47,35 +47,46 @@
             .then((response) => response.text())
             .then((token) => {
                 console.log(token);
-                try {
-                    JSON.parse(token);
-                } catch (error) {
-                    storeToken(token);
-                    checkToken();
-                }
+                checkSign();
+                // try {
+                //     JSON.parse(token);
+                // } catch (error) {
+                //     storeToken(token);
+                //     checkSign();
+                // }
             });
     });
 
     // 토큰 확인 버튼 클릭 이벤트 처리
-    document.getElementById("checkTokenBtn").addEventListener("click", function() {
-        checkToken();
+    document.getElementById("checkSignBtn").addEventListener("click", function() {
+        checkSign();
     });
     // 토큰 제거 버튼 클릭 이벤트 처리
     document.getElementById("removeTokenBtn").addEventListener("click", function() {
         if(confirm("정말로 제거하시겠습니까? (로그아웃)")) {
-            removeToken();
-            checkToken();
+            // removeToken();
+            fetch("/member/signout", {
+                method: 'POST',
+                // headers: {
+                //     'Authorization': `Bearer ${jwtToken}`
+                // }
+            })
+                .then((response) => response.text())
+                .then((data) => {
+                    console.log(data);
+                    checkSign()
+                });
         }
     });
     // 토큰 확인 페이지로 이동 버튼 클릭 이벤트 처리
     document.getElementById("testTokenBtn").addEventListener("click", function() {
-        const jwtToken = getToken();
+        // const jwtToken = getToken();
 
         fetch("/members/test", {
             method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${jwtToken}`
-            }
+            // headers: {
+            //     'Authorization': `Bearer ${jwtToken}`
+            // }
         })
             .then((response) => response.text())
             .then((data) => {
@@ -87,44 +98,34 @@
             });
     });
 
-    // JWT 토큰을 저장하는 함수 예시
-    function storeToken(token) {
-        localStorage.setItem('jwtToken', token);
-    }
-
-    // JWT 토큰을 로컬 스토리지에서 가져오는 함수 예시
-    function getToken() {
-        return localStorage.getItem('jwtToken');
-    }
-
-    // JWT 토큰을 로컬 스토리지에서 제거하는 함수 예시
-    function removeToken() {
-        localStorage.removeItem('jwtToken');
-    }
+    // // JWT 토큰을 저장하는 함수 예시
+    // function storeToken(token) {
+    //     localStorage.setItem('jwtToken', token);
+    // }
+    //
+    // // JWT 토큰을 로컬 스토리지에서 가져오는 함수 예시
+    // function getToken() {
+    //     return localStorage.getItem('jwtToken');
+    // }
+    //
+    // // JWT 토큰을 로컬 스토리지에서 제거하는 함수 예시
+    // function removeToken() {
+    //     localStorage.removeItem('jwtToken');
+    // }
 
     // 토큰을 보유했는지 여부 확인
-    function checkToken() {
-        document.getElementById("tokenDiv").innerHTML = getToken();
-        if (getToken() == null) {
-            document.getElementById("statusDiv").innerHTML = '상태 : 로그아웃'
-        } else {
-            fetch("/member/token", {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ` + getToken()
+    function checkSign() {
+        fetch("/member/token")
+            .then((response) => response.text())
+            .then((data) => {
+                data = data.trim();
+                console.log(data);
+                if (data === 'Valid Token.') {
+                    document.getElementById("statusDiv").innerHTML = '상태 : 로그인'
+                } else {
+                    document.getElementById("statusDiv").innerHTML = '상태 : 로그아웃'
                 }
-            })
-                .then((response) => response.text())
-                .then((data) => {
-                    data = data.trim();
-                    console.log(data);
-                    if (data === 'Valid Token.') {
-                        document.getElementById("statusDiv").innerHTML = '상태 : 로그인'
-                    } else {
-                        document.getElementById("statusDiv").innerHTML = '상태 : 로그아웃 (만료됨)'
-                    }
-                });
-        }
+            });
     }
 </script>
 </body>
