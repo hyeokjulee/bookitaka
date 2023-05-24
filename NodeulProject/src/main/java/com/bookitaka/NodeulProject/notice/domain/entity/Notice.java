@@ -1,12 +1,14 @@
 package com.bookitaka.NodeulProject.notice.domain.entity;
 
 import lombok.*;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@DynamicInsert
 public class Notice extends TimeEntity{
 
     @Id @GeneratedValue(strategy= GenerationType.IDENTITY)

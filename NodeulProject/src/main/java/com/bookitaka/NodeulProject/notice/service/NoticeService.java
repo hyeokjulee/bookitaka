@@ -42,6 +42,11 @@ public class NoticeService {
         return  noticeDtoList;
     }
 
+    @Transactional //페이징
+    public Page<Notice> pageList(Pageable pageable) {
+        return noticeRepository.findAll(pageable);
+    }
+
     /*게시글 생성*/
     @Transactional
     public Integer savePost(NoticeDto noticeDto){

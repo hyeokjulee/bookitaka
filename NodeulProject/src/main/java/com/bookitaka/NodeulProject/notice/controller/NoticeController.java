@@ -41,6 +41,7 @@ public class NoticeController {
     @GetMapping("/post/{noticeNo}")
     public String detail(@PathVariable("noticeNo") Integer noticeNo, Model model) {
         NoticeDto noticeDto = noticeService.getPost(noticeNo);
+        noticeService.updateHit(noticeNo);
         model.addAttribute("noticeDto", noticeDto);
         return "notice/detail.html";
     }
@@ -48,7 +49,6 @@ public class NoticeController {
     @GetMapping("/post/edit/{noticeNo}")
     public String edit(@PathVariable("noticeNo") Integer noticeNo, Model model) {
         NoticeDto noticeDto = noticeService.getPost(noticeNo);
-
         model.addAttribute("noticeDto", noticeDto);
 
         return "notice/update.html";
@@ -57,7 +57,6 @@ public class NoticeController {
     @PutMapping("/post/edit/{noticeNo}")
     public String update(NoticeDto noticeDto) {
         noticeService.savePost(noticeDto);
-
         return "redirect:/";
     }
 
