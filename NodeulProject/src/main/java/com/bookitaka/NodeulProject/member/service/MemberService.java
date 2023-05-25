@@ -1,5 +1,6 @@
 package com.bookitaka.NodeulProject.member.service;
 
+import com.bookitaka.NodeulProject.member.dto.MemberUpdateDTO;
 import com.bookitaka.NodeulProject.member.dto.UserResponseDTO;
 import com.bookitaka.NodeulProject.member.exception.CustomException;
 import com.bookitaka.NodeulProject.member.model.Member;
@@ -77,8 +78,17 @@ public class MemberService {
     return jwtTokenProvider.createToken(memberEmail, memberRepository.findByMemberEmail(memberEmail).getMemberRole());
   }
 
-  public boolean modifyMember(String memberEmail, UserResponseDTO userResponseDTO) {
-    return memberRepository.updateMember(memberEmail, userResponseDTO);
+  public boolean modifyMember(Member member, MemberUpdateDTO memberUpdateDTO) {
+    if(member != null) {
+      member.setMemberName(memberUpdateDTO.getMemberName());
+      member.setMemberGender(memberUpdateDTO.getMemberGender());
+      member.setMemberPhone(memberUpdateDTO.getMemberPhone());
+      member.setMemberBirthday(memberUpdateDTO.getMemberBirthday());
+      memberRepository.save(member);
+      return true;
+    } else {
+      return false;
+    }
   }
 
 }

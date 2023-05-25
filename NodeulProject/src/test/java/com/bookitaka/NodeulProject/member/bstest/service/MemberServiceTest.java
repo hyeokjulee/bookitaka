@@ -1,5 +1,6 @@
 package com.bookitaka.NodeulProject.member.bstest.service;
 
+import com.bookitaka.NodeulProject.member.dto.UserResponseDTO;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.repository.MemberRepository;
 import com.bookitaka.NodeulProject.member.service.MemberService;
@@ -9,6 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
@@ -22,6 +28,7 @@ public class MemberServiceTest {
 
     @Autowired
     MemberRepository memberRepository;
+    UserResponseDTO userResponseDTO;
 
 
 
@@ -65,12 +72,13 @@ public class MemberServiceTest {
         /* 회원가입 */
         //given
         Member member = new Member();
-        member.setMemberEmail("qwer@qwer.com");
+        member.setMemberEmail("qwe@qwe.com");
         member.setMemberPassword("0000");
         member.setMemberName("John");
         member.setMemberPhone("0101");
         member.setMemberGender("Male");
         member.setMemberRole("MEMBER_ROLE");
+        member.setMemberBirthday(new Date());
 
         //when
         String signupToken = memberService.signup(member);
@@ -95,5 +103,26 @@ public class MemberServiceTest {
 //        //then
 //
 //    }
+    @Test
+    @Rollback(false)
+    public void 수정() throws Exception {
+        Date date = new Date();
+        String dateString = "2012-01-01";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            date = dateFormat.parse(dateString);
+            System.out.println(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        UserResponseDTO asd = new UserResponseDTO();
+        asd.setMemberName("modName");
+        asd.setMemberPhone("123123123");
+        asd.setMemberGender("female");
+        asd.setMemberRole("admin");
+        asd.setMemberBirthday(date);
+        memberService.modifyMember("qwe@qwe.com", asd);
+
+    }
 
 }

@@ -15,6 +15,4 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
   @Transactional
   void deleteByMemberEmail(String memberEmail);
 
-  boolean updateMember(String memberEmail, UserResponseDTO userResponseDTO);
-
 }
