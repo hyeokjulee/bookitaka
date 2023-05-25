@@ -1,10 +1,7 @@
 package com.bookitaka.NodeulProject.member.security;
 
 import com.bookitaka.NodeulProject.member.exception.CustomException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
@@ -58,6 +56,23 @@ public class JwtTokenProvider {
         .compact();
   }
 
+  public String createRefreshToken(String memberEmail, String memberRole) {
+
+    Claims claims = Jwts.claims().setSubject(memberEmail);
+//    claims.put("auth", appUserRoles.stream().map(s -> new SimpleGrantedAuthority(s.getAuthority())).filter(Objects::nonNull).collect(Collectors.toList()));
+    claims.put("auth", memberRole);
+
+    Date now = new Date();
+    Date validity = new Date(now.getTime() + 1209600000); // 14일
+
+    return Jwts.builder()//
+            .setClaims(claims)//
+            .setIssuedAt(now)//
+            .setExpiration(validity)//
+            .signWith(SignatureAlgorithm.HS256, secretKey)//
+            .compact();
+  }
+
   // 토큰에서 권한 정보 얻기
   public Authentication getAuthentication(String token) {
     UserDetails userDetails = myUserDetails.loadUserByUsername(getMemberEmail(token));
@@ -79,10 +94,14 @@ public class JwtTokenProvider {
     return claims.getExpiration();
   }
 
-  public String resolveToken(HttpServletRequest req) {
-    String bearerToken = req.getHeader("Authorization");
-    if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-      return bearerToken.substring(7);
+  public String resolveToken(HttpServletRequest httpServletRequest, String tokenCookieName) {
+    Cookie[] cookies = httpServletRequest.getCookies();
+    if (cookies != null) {
+      for (Cookie cookie : cookies) {
+        if (cookie.getName().equals(tokenCookieName)) {
+          return cookie.getValue();
+        }
+      }
     }
     return null;
   }
@@ -91,9 +110,10 @@ public class JwtTokenProvider {
     try {
       Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
       return true;
+    } catch (ExpiredJwtException e) {
+      throw new CustomException("Expired JWT token", HttpStatus.INTERNAL_SERVER_ERROR);
     } catch (JwtException | IllegalArgumentException e) {
-      throw new CustomException("Expired or invalid JWT token", HttpStatus.INTERNAL_SERVER_ERROR);
+      throw new CustomException("Invalid JWT token", HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
-
 }

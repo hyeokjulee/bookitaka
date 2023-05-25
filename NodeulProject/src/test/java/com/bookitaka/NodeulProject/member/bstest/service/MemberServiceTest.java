@@ -50,7 +50,7 @@ public class MemberServiceTest {
         member.setMemberRole("asd");
 
         //when
-        String signupToken = memberService.signup(member);
+        memberService.signup(member);
         //then
 //        assertEquals(member, memberRepository.findOne(savedId));
 
@@ -85,8 +85,7 @@ public class MemberServiceTest {
         member.setMemberRole("MEMBER_ROLE");
 
         //when
-        String signupToken = memberService.signup(member);
-        log.info("signupToken: {}", signupToken);
+        memberService.signup(member);
         //then
 //        assertEquals(member, memberRepository.findOne(savedId));
     }

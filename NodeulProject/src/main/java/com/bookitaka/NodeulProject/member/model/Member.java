@@ -31,4 +31,6 @@ public class Member {
     private Date memberBirthday;
 
     private String memberRole;
+
+    private String memberRtoken;
 }

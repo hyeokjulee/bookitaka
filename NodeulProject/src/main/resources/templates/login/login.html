@@ -66,7 +66,7 @@
         if(confirm("정말로 제거하시겠습니까? (로그아웃)")) {
             // removeToken();
             fetch("/member/signout", {
-                method: 'POST',
+                method: 'GET',
                 // headers: {
                 //     'Authorization': `Bearer ${jwtToken}`
                 // }
@@ -113,14 +113,14 @@
     //     localStorage.removeItem('jwtToken');
     // }
 
-    // 토큰을 보유했는지 여부 확인
+    // 토큰이 유효한지 여부 확인
     function checkSign() {
         fetch("/member/token")
             .then((response) => response.text())
             .then((data) => {
                 data = data.trim();
                 console.log(data);
-                if (data === 'Valid Token.') {
+                if (data === 'Valid Token') {
                     document.getElementById("statusDiv").innerHTML = '상태 : 로그인'
                 } else {
                     document.getElementById("statusDiv").innerHTML = '상태 : 로그아웃'
