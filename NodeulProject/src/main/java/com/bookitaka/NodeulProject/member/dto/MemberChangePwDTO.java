@@ -9,5 +9,9 @@ import java.util.Date;
 public class MemberChangePwDTO {
 
   @ApiModelProperty(position = 0)
-  private String memberPassword;
+  private String oldPw;
+  @ApiModelProperty(position = 1)
+  private String newPw;
+  @ApiModelProperty(position = 2)
+  private String newPwChk;
 }
