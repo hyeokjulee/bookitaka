@@ -139,5 +139,10 @@ public class SheetRepositoryImpl implements SheetRepository{
         return qf.select(sheet.sheetNo.count()).from(sheet).fetchOne();
     }
 
+    @Override
+    public String findFileNameByUuid(String uuid) {
+        return qf.selectFrom(qSheet).where(qSheet.sheetFileuuid.eq(uuid)).fetchOne().getSheetFilename();
+    }
+
 
 }

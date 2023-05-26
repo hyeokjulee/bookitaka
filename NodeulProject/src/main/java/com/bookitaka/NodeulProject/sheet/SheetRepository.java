@@ -23,4 +23,6 @@ public interface SheetRepository {
 
     public Long countSheet();
 
+    public String findFileNameByUuid(String uuid);
+
 }

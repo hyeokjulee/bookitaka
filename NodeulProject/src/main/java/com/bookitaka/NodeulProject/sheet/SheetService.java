@@ -21,6 +21,8 @@ public interface SheetService {
 
     public Long getSheetCnt();
 
+    public List<Sheet> getAllSheets(SheetCri cri);
+
     public List<Sheet> getAllSheetByGenre(String genreName, SheetCri cri);
 
     public List<Sheet> getAllSheetByAgeGroup(String ageGroupName, SheetCri cri);
@@ -33,5 +35,6 @@ public interface SheetService {
 
     public List<SheetAgegroup> getAllSheetAgeGroup();
 
+    public String getFileNameByUuid(String uuid);
 
 }

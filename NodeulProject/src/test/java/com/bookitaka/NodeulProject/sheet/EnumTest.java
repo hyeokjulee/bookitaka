@@ -17,5 +17,9 @@ public class EnumTest {
 
     }
 
+    @Test
+    void giveMeRoot() {
+        log.info("realPath = {}", System.getProperty("user.dir"));
+    }
 
 }

@@ -87,6 +87,11 @@ public class SheetServiceImpl implements SheetService{
     }
 
     @Override
+    public List<Sheet> getAllSheets(SheetCri cri) {
+        return sheetRepository.findAllSheet(cri);
+    }
+
+    @Override
     public List<Sheet> getAllSheetByGenre(String genreName, SheetCri cri) {
         return sheetRepository.findAllSheetByGenre(genreName, cri);
     }
@@ -114,5 +119,10 @@ public class SheetServiceImpl implements SheetService{
     @Override
     public List<SheetAgegroup> getAllSheetAgeGroup() {
         return ageGroupRepository.findAll();
+    }
+
+    @Override
+    public String getFileNameByUuid(String uuid) {
+        return sheetRepository.findFileNameByUuid(uuid);
     }
 }
