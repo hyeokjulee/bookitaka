@@ -28,8 +28,11 @@ public class JwtTokenProvider {
   @Value("${security.jwt.token.secret-key:secret-key}")
   private String secretKey;
 
-  @Value("${security.jwt.token.expire-length:3600000}")
-  private long validityInMilliseconds = 3600000; // 1h
+  @Value("${security.jwt.token.access.expire-length:3600000}")
+  private long access_validityInMilliseconds = 3600000; // 1h
+
+  @Value("${security.jwt.token.refresh.expire-length:1209600000}")
+  private long refresh_validityInMilliseconds = 1209600000; // 14d
 
   @Autowired
   private MyUserDetails myUserDetails;
@@ -46,7 +49,7 @@ public class JwtTokenProvider {
     claims.put("auth", memberRole);
 
     Date now = new Date();
-    Date validity = new Date(now.getTime() + validityInMilliseconds);
+    Date validity = new Date(now.getTime() + access_validityInMilliseconds);
 
     return Jwts.builder()//
         .setClaims(claims)//
@@ -63,7 +66,7 @@ public class JwtTokenProvider {
     claims.put("auth", memberRole);
 
     Date now = new Date();
-    Date validity = new Date(now.getTime() + 1209600000); // 14일
+    Date validity = new Date(now.getTime() + refresh_validityInMilliseconds); // 14일
 
     return Jwts.builder()//
             .setClaims(claims)//
@@ -94,8 +97,8 @@ public class JwtTokenProvider {
     return claims.getExpiration();
   }
 
-  public String resolveToken(HttpServletRequest httpServletRequest, String tokenCookieName) {
-    Cookie[] cookies = httpServletRequest.getCookies();
+  public String resolveToken(HttpServletRequest request, String tokenCookieName) {
+    Cookie[] cookies = request.getCookies();
     if (cookies != null) {
       for (Cookie cookie : cookies) {
         if (cookie.getName().equals(tokenCookieName)) {

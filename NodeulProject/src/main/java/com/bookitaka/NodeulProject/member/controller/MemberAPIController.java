@@ -4,6 +4,7 @@ import com.bookitaka.NodeulProject.member.dto.UserDataDTO;
 import com.bookitaka.NodeulProject.member.dto.UserResponseDTO;
 import com.bookitaka.NodeulProject.member.exception.CustomException;
 import com.bookitaka.NodeulProject.member.model.Member;
+import com.bookitaka.NodeulProject.member.security.Token;
 import com.bookitaka.NodeulProject.member.service.MemberService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -40,7 +42,7 @@ public class MemberAPIController {
       @ApiParam("MemberEmail") @RequestParam("memberEmail") String memberEmail, //
       @ApiParam("MemberPassword") @RequestParam("memberPassword") String memberPassword,
       HttpServletResponse response) {
-    log.info("================================signin");
+    log.info("================================Member : signin");
     memberService.signin(memberEmail, memberPassword, response);
     return "sign-in ok";
   }
@@ -50,11 +52,11 @@ public class MemberAPIController {
   @ApiOperation(value = "${MemberController.signout}")
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong")})
-  public String logout(
-      HttpServletResponse response) {
-    log.info("================================signout");
+  public void logout(
+      HttpServletResponse response) throws IOException {
+    log.info("================================Member : signout");
     memberService.signout(response);
-    return "sign-out ok";
+    response.sendRedirect("/members/login");
   }
 
   // 회원가입
@@ -65,7 +67,7 @@ public class MemberAPIController {
       @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 422, message = "Member Email is already in use")})
   public String signup(@ApiParam("Signup Member") @RequestBody UserDataDTO user) {
-    log.info("================================signup");
+    log.info("================================Member : signup");
     memberService.signup(modelMapper.map(user, Member.class));
     return "Sign-up ok";
   }
@@ -80,6 +82,7 @@ public class MemberAPIController {
       @ApiResponse(code = 404, message = "The user doesn't exist"), //
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
   public String delete(@ApiParam("MemberEmail") @PathVariable String memberEmail) {
+    log.info("================================Member : delete");
     memberService.delete(memberEmail);
     return memberEmail;
   }
@@ -94,6 +97,7 @@ public class MemberAPIController {
       @ApiResponse(code = 404, message = "The user doesn't exist"), //
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
   public UserResponseDTO search(@ApiParam("MemberEmail") @PathVariable String memberEmail) {
+    log.info("================================Member : search");
     return modelMapper.map(memberService.search(memberEmail), UserResponseDTO.class);
   }
 
@@ -105,8 +109,9 @@ public class MemberAPIController {
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-  public UserResponseDTO whoami(HttpServletRequest req) {
-    return modelMapper.map(memberService.whoami(req), UserResponseDTO.class);
+  public UserResponseDTO whoami(HttpServletRequest request) {
+    log.info("================================Member : whoami");
+    return modelMapper.map(memberService.whoami(request, Token.ACCESS_TOKEN), UserResponseDTO.class);
   }
 
   // 토큰 만료 여부 확인
@@ -115,8 +120,9 @@ public class MemberAPIController {
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-  public String checkToken(HttpServletRequest httpServletRequest) {
-    if (memberService.isValidToken(httpServletRequest)) {
+  public String checkToken(HttpServletRequest request) {
+    log.info("================================Member : checkToken");
+    if (memberService.isValidToken(request)) {
       return "Valid Token";
     } else {
       return "Invalid Token";
@@ -126,9 +132,11 @@ public class MemberAPIController {
   // 토큰 재발급 (회원)
   @GetMapping("/refresh")
 //  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
-  public String refresh(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
-    memberService.refresh(httpServletRequest, httpServletResponse);
-    return "refresh ok";
+  public void refresh(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    log.info("================================Member : refresh");
+    Member member = memberService.whoami(request, Token.REFRESH_TOKEN);
+    memberService.refresh(request, response, member);
+    response.sendRedirect((String) request.getAttribute("uri"));
   }
 
 }

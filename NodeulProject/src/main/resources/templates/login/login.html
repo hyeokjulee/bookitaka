@@ -48,12 +48,6 @@
             .then((token) => {
                 console.log(token);
                 checkSign();
-                // try {
-                //     JSON.parse(token);
-                // } catch (error) {
-                //     storeToken(token);
-                //     checkSign();
-                // }
             });
     });
 
@@ -64,54 +58,13 @@
     // 토큰 제거 버튼 클릭 이벤트 처리
     document.getElementById("removeTokenBtn").addEventListener("click", function() {
         if(confirm("정말로 제거하시겠습니까? (로그아웃)")) {
-            // removeToken();
-            fetch("/member/signout", {
-                method: 'GET',
-                // headers: {
-                //     'Authorization': `Bearer ${jwtToken}`
-                // }
-            })
-                .then((response) => response.text())
-                .then((data) => {
-                    console.log(data);
-                    checkSign()
-                });
+            window.location.href = "/member/signout";
         }
     });
     // 토큰 확인 페이지로 이동 버튼 클릭 이벤트 처리
     document.getElementById("testTokenBtn").addEventListener("click", function() {
-        // const jwtToken = getToken();
-
-        fetch("/members/test", {
-            method: 'GET',
-            // headers: {
-            //     'Authorization': `Bearer ${jwtToken}`
-            // }
-        })
-            .then((response) => response.text())
-            .then((data) => {
-                console.log(data);
-                let newWindow = window.open('');
-                newWindow.document.open();
-                newWindow.document.write(data);
-                newWindow.document.close();
-            });
+        window.location.href = "/members/test";
     });
-
-    // // JWT 토큰을 저장하는 함수 예시
-    // function storeToken(token) {
-    //     localStorage.setItem('jwtToken', token);
-    // }
-    //
-    // // JWT 토큰을 로컬 스토리지에서 가져오는 함수 예시
-    // function getToken() {
-    //     return localStorage.getItem('jwtToken');
-    // }
-    //
-    // // JWT 토큰을 로컬 스토리지에서 제거하는 함수 예시
-    // function removeToken() {
-    //     localStorage.removeItem('jwtToken');
-    // }
 
     // 토큰이 유효한지 여부 확인
     function checkSign() {
