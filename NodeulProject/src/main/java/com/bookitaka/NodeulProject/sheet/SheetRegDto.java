@@ -3,6 +3,7 @@ package com.bookitaka.NodeulProject.sheet;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -12,17 +13,18 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class SheetRegDto {
 
-    @NotBlank
+    @NotBlank(message = "책 제목을 입력해주세요")
     private String sheetBooktitle;
 
-    @NotBlank
+    @NotBlank(message = "작가를 입력해주세요")
     private String sheetBookauthor;
 
-    @NotBlank
+    @NotBlank(message = "출판사를 입력해주세요")
     private String sheetBookpublisher;
     private String sheetBookisbn;
 
-    @NotNull
+    @NotNull(message = "가격을 설정해주세요")
+    @Range(min = 100, max = 100000, message = "가격이 100이하이거나 100000이상입니다. 확인해주세요.")
     private Integer sheetPrice;
 
 //    private String sheetBookimgname;
@@ -30,7 +32,7 @@ public class SheetRegDto {
 //    @NotNull
 //    private String sheetFilename;
 
-    @NotNull
+    @NotNull(message = "장르를 설정해주세요.")
     private String sheetGenreName;
 
     private String sheetAgegroupName;

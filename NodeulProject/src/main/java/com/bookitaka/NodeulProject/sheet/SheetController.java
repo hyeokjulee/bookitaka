@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriUtils;
@@ -45,9 +47,29 @@ public class SheetController {
     }
 
     @PostMapping("/add")
-    public String sheetAdd(@ModelAttribute SheetRegDto sheetRegDto,
+    public String sheetAdd(@Validated @ModelAttribute SheetRegDto sheetRegDto,
+                           BindingResult bindingResult,
                            @RequestParam("sheetBookImg") MultipartFile sheetBookImg,
-                           @RequestParam("sheetFile") MultipartFile sheetFile) throws IOException {
+                           @RequestParam("sheetFile") MultipartFile sheetFile,
+                           Model model) throws IOException {
+
+
+        if (sheetFile == null || sheetFile.isEmpty()) {
+            bindingResult.reject("noSheetFile", "파일을 업로드해주세요.");
+        }
+
+//        if (!sheetRegDto.getSheetGenreName().equals("독서토론논제은행") && sheetBookImg == null) {
+//            bindingResult.reject("noAgeGroup", "연령대를 선택해주세요.");
+//        }
+
+
+        if (bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
+
+            model.addAttribute("ageGroup", sheetService.getAllSheetAgeGroup());
+            model.addAttribute("genre", sheetService.getAllSheetGenre());
+            return "/sheet/sheetAddForm";
+        }
 
         UploadFile uploadBookImg = null;
         UploadFile uploadSheetFile = null;

@@ -28,14 +28,14 @@
           <div class="form-row">
             <div class="col">
               <select class="form-control" name="searchType">
-                <option value="제목">제목</option>
-                <option value="작가">작가</option>
-                <option value="출판사">출판사</option>
+                <option value="제목" th:selected="${cri.searchType == '제목'}">제목</option>
+                <option value="작가" th:selected="${cri.searchType == '작가'}">작가</option>
+                <option value="출판사" th:selected="${cri.searchType == '출판사'}">출판사</option>
               </select>
             </div>
             <div class="col">
               <div class="input-group">
-                <input type="text" class="form-control" name="searchWord" placeholder="검색어를 입력하세요">
+                <input th:value="${cri.searchWord}" type="text" class="form-control" name="searchWord" placeholder="검색어를 입력하세요">
                 <div class="input-group-append">
                   <button class="btn btn-primary" type="submit">검색</button>
                 </div>

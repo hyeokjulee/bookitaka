@@ -8,6 +8,9 @@
         .container {
             max-width: 560px;
         }
+        .errorMsg {
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -21,16 +24,19 @@
     <form action="/sheet/add" th:action="@{/sheet/add}" th:object="${sheetRegDto}" method="post" enctype="multipart/form-data">
         <div>
             <label for="sheetBooktitle">책 제목</label>
+            <span class="errorMsg" th:errors="*{sheetBooktitle}">책 제목 오류</span>
             <input type="text" id="sheetBooktitle" th:field="*{sheetBooktitle}" class="form-control" placeholder="책 제목을 입력하세요">
         </div>
 
         <div>
             <label for="sheetBookauthor">작가</label>
+            <span class="errorMsg" th:errors="*{sheetBookauthor}">작가 오류</span>
             <input type="text" id="sheetBookauthor" th:field="*{sheetBookauthor}" class="form-control" placeholder="작가를 입력하세요">
         </div>
 
         <div>
             <label for="sheetPublisher">출판사</label>
+            <span class="errorMsg" th:errors="*{sheetBookpublisher}">출판사 오류</span>
             <input type="text" id="sheetPublisher" th:field="*{sheetBookpublisher}" class="form-control" placeholder="출판사를 입력하세요">
         </div>
         <div>
@@ -40,6 +46,7 @@
 
         <div>
             <label for="sheetPrice">가격</label>
+            <span class="errorMsg" th:errors="*{sheetPrice}">가격 오류</span>
             <input type="number" id="sheetPrice" th:field="*{sheetPrice}" class="form-control" placeholder="가격을 입력하세요">
         </div>
         <div>
@@ -48,6 +55,8 @@
         </div>
         <div>
             <label for="sheetFile">독후활동지 파일</label>
+            <div th:if="${#fields.hasGlobalErrors()}">
+                <span th:class="errorMsg" class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</span> </div>
             <input type="file" id="sheetFile" name="sheetFile" class="form-control" accept="application/pdf" placeholder="pdf파일을 업로드해주세요">
         </div>
 
@@ -70,6 +79,7 @@
         <!-- radio button -->
         <div>
             <div>장르</div>
+            <span class="errorMsg" th:errors="*{sheetGenreName}">장르 오류</span>
             <div th:each="gn : ${genre}" class="form-check form-check-inline">
                 <input type="radio" th:field="*{sheetGenreName}" th:value="${gn.sheetGenreName}" class="form-check-input">
                 <label th:for="${#ids.prev('sheetGenreName')}" th:text="${gn.getSheetGenreName()}" class="form-check-label">
