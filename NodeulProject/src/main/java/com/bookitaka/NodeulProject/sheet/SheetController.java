@@ -73,7 +73,8 @@ public class SheetController {
 
         SheetCri cri = new SheetCri(page, amount, searchType, searchWord);
 
-        model.addAttribute("sheet", sheetService.getAllSheets(cri));
+        model.addAttribute("sheetList", sheetService.getAllSheets(cri));
+
         return "sheet/sheetList";
     }
 
@@ -82,8 +83,6 @@ public class SheetController {
     public String sheetDetail(@PathVariable int sheetNo, Model model) {
         Sheet sheet = sheetService.getSheet(sheetNo);
         model.addAttribute("sheet", sheet);
-        model.addAttribute("bookImgSrc", bookImgDir + sheet.getSheetBookimguuid() + sheet.getSheetBookimgname());
-        model.addAttribute("sheetFileSrc", sheetFileDir + sheet.getSheetFileuuid() + sheet.getSheetFilename());
         return "sheet/sheetDetail";
     }
 
@@ -111,6 +110,7 @@ public class SheetController {
     @GetMapping("/{sheetNo}/mod")
     public String modBookImgForm(@PathVariable int sheetNo, Model model) {
         //만든사람 or 관리자인지 인증 필요
+        //아니면 자세히보기 등 다른페이지로 리다이렉트
         Sheet sheet = sheetService.getSheet(sheetNo);
         model.addAttribute("sheet", sheet);
         model.addAttribute("bookImgSrc", bookImgDir + sheet.getSheetBookimguuid() + sheet.getSheetBookimgname());

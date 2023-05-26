@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -108,7 +109,24 @@ public class SheetServiceImpl implements SheetService{
 
     @Override
     public boolean removeSheet(int sheetNo) {
-        return sheetRepository.deleteSheet(sheetNo);
+        Sheet sheet = sheetRepository.findSheetByNo(sheetNo).orElse(null);
+        boolean result1 = removeStoredFile(bookImgDir + sheet.getSheetBookimguuid() + sheet.getSheetBookimgname());
+        boolean result2 = removeStoredFile(sheetFileDir + sheet.getSheetFileuuid() + sheet.getSheetFilename());
+
+        if (result1 && result2) {
+            return sheetRepository.deleteSheet(sheetNo);
+        }
+        return false;
+
+    }
+
+    private boolean removeStoredFile(String filePath) {
+        File file = new File(filePath);
+        if (file.exists()) {
+            file.delete();
+            return true;
+        }
+        return false;
     }
 
     @Override

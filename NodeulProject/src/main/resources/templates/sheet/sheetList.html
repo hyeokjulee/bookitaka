@@ -35,11 +35,13 @@
       </tr>
       </thead>
       <tbody>
-      <tr th:each="item : ${items}">
-        <td><a th:href="@{|/sheet/${item.id}|}" th:text="${item.itemName}">상품명</a></td>
-        <td th:text="${item.price}">10000</td>
-        <td th:text="${item.quantity}">10</td>
-      </tr>
+      <tr th:each="sheet : ${sheetList}"><a th:href="@{|/sheet/${sheet.sheetNo}|}" >
+        <td><img th:src="|/sheet/bookImg/*{sheet.sheetBookimguuid}*{sheet.sheetBookimgname}|" width="150" height="150"></td>
+        <td th:text="${sheet.sheetBooktitle}">북타이틀</td>
+        <td th:text="${sheet.sheetBookauthor}">작가이름</td>
+        <td th:text="${sheet.sheetBookpublisher}">출판사이름</td>
+        <td th:text="${sheet.sheetPrice}">10000</td>
+      </a></tr>
       </tbody>
     </table>
   </div>
