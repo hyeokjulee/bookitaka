@@ -90,24 +90,35 @@ public class SheetServiceImpl implements SheetService{
     }
 
     @Override
-    public Long getSheetCnt(String searchType, String searchWord) {
-        return sheetRepository.countSheet(searchType, searchWord);
+    public Long getSheetCnt(String genre, String ageGroup, String searchType, String searchWord) {
+        log.info("service cnt genre = {}", genre);
+        log.info("service cnt ageGroup = {}", ageGroup);
+
+        if (!genre.equals("")) {
+            return sheetRepository.countSheetByGenre(genre, searchType, searchWord);
+        } else if (!ageGroup.equals("")) {
+            return sheetRepository.countSheetByAgeGroup(ageGroup, searchType, searchWord);
+        } else {
+            return sheetRepository.countSheet(searchType, searchWord);
+        }
+
     }
 
     @Override
-    public List<Sheet> getAllSheets(SheetCri cri) {
-        return sheetRepository.findAllSheet(cri);
+    public List<Sheet> getAllSheets(String genre, String ageGroup, SheetCri cri) {
+        log.info("service sheet genre = {}", genre);
+        log.info("service sheet ageGroup = {}", ageGroup);
+
+        if (!genre.equals("")) {
+            return sheetRepository.findAllSheetByGenre(genre, cri);
+        } else if (!ageGroup.equals("")) {
+            return sheetRepository.findAllSheetByAgeGroup(ageGroup, cri);
+        } else {
+            return sheetRepository.findAllSheet(cri);
+        }
+
     }
 
-    @Override
-    public List<Sheet> getAllSheetByGenre(String genreName, SheetCri cri) {
-        return sheetRepository.findAllSheetByGenre(genreName, cri);
-    }
-
-    @Override
-    public List<Sheet> getAllSheetByAgeGroup(String ageGroupName, SheetCri cri) {
-        return sheetRepository.findAllSheetByAgeGroup(ageGroupName, cri);
-    }
 
     @Override
     public boolean modifySheet(int sheetNo, SheetUpdateDto sheetUpdateDto) {

@@ -25,10 +25,10 @@ public class SheetRegDto {
     @NotNull
     private Integer sheetPrice;
 
-    private String sheetBookimgname;
+//    private String sheetBookimgname;
 
-    @NotNull
-    private String sheetFilename;
+//    @NotNull
+//    private String sheetFilename;
 
     @NotNull
     private String sheetGenreName;

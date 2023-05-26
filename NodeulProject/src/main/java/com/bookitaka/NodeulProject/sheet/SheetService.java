@@ -19,13 +19,10 @@ public interface SheetService {
 
     public Sheet getSheet(int sheetNo);
 
-    public Long getSheetCnt(String searchType, String searchWord);
+    public Long getSheetCnt(String genre, String ageGroup, String searchType, String searchWord);
 
-    public List<Sheet> getAllSheets(SheetCri cri);
 
-    public List<Sheet> getAllSheetByGenre(String genreName, SheetCri cri);
-
-    public List<Sheet> getAllSheetByAgeGroup(String ageGroupName, SheetCri cri);
+    public List<Sheet> getAllSheets(String genre, String ageGroup, SheetCri cri);
 
     public boolean modifySheet(int sheetNo, SheetUpdateDto sheetUpdateDto);
 

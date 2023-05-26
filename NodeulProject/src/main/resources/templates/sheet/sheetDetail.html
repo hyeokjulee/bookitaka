@@ -78,10 +78,15 @@
                 <button id="removeBtn" th:onclick="'deleteCheck(\'' + ${sheet.sheetNo} + '\')'"  class="w-100 btn btn-danger" type="submit">상품 삭제</button>
             </div>
             <div class="col">
-                <button class="w-100 btn btn-secondary"
-                        onclick="location.href='items.html'"
-                        th:onclick="|location.href='@{/sheet/list}'|"
-                        type="button">목록으로</button>
+                <form th:action="@{/sheet/list}">
+                <button class="w-100 btn btn-secondary" type="submit">목록으로</button>
+                <input type="hidden" name="genre" th:value="${genre}">
+                <input type="hidden" name="ageGroup" th:value="${ageGroup}">
+                <input type="hidden" name="pageNum" th:value="${cri.pageNum}">
+                <input type="hidden" name="amount" th:value="${cri.amount}">
+                <input type="hidden" name="searchType" th:value="${cri.searchType}">
+                <input type="hidden" name="searchWord" th:value="${cri.searchWord}">
+                </form>
             </div>
         </div>
 

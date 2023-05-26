@@ -98,27 +98,45 @@ public class SheetController {
 //    }
 
     @GetMapping("/list")
-    public String sheetList(@RequestParam(name = "pageNum", defaultValue = "1") int page,
+    public String sheetList(@RequestParam(name = "genre", defaultValue = "") String genre,
+                            @RequestParam(name = "ageGroup", defaultValue = "") String ageGroup,
+                            @RequestParam(name = "pageNum", defaultValue = "1") int page,
                             @RequestParam(name = "amount", defaultValue = "10") int amount,
                             @RequestParam(name = "searchType", defaultValue = SearchTypes.TITLE) String searchType,
                             @RequestParam(name = "searchWord", defaultValue = "") String searchWord,
                             Model model) {
 
         SheetCri cri = new SheetCri(page, amount, searchType, searchWord);
-        int totalNum = Math.toIntExact(sheetService.getSheetCnt(searchType, searchWord));
+        int totalNum = Math.toIntExact(sheetService.getSheetCnt(genre, ageGroup, searchType, searchWord));
 
-        model.addAttribute("sheetList", sheetService.getAllSheets(cri));
+        log.info("controller genre = {}", genre);
+        log.info("controller ageGroup = {}", ageGroup);
+        model.addAttribute("sheetList", sheetService.getAllSheets(genre, ageGroup, cri));
         model.addAttribute("pageInfo", new SheetPageInfo(cri, totalNum));
         model.addAttribute("cri", cri);
+        model.addAttribute("genre", genre);
+        model.addAttribute("ageGroup", ageGroup);
 
         return "sheet/sheetList";
     }
 
-
     @GetMapping("/{sheetNo}")
-    public String sheetDetail(@PathVariable int sheetNo, Model model) {
+    public String sheetDetail(@PathVariable int sheetNo,
+                              @RequestParam(name = "genre", defaultValue = "") String genre,
+                              @RequestParam(name = "ageGroup", defaultValue = "") String ageGroup,
+                              @RequestParam(name = "pageNum", defaultValue = "1") int page,
+                              @RequestParam(name = "amount", defaultValue = "10") int amount,
+                              @RequestParam(name = "searchType", defaultValue = SearchTypes.TITLE) String searchType,
+                              @RequestParam(name = "searchWord", defaultValue = "") String searchWord,
+                              Model model) {
         Sheet sheet = sheetService.getSheet(sheetNo);
+        SheetCri cri = new SheetCri(page, amount, searchType, searchWord);
+
         model.addAttribute("sheet", sheet);
+        model.addAttribute("cri", cri);
+        model.addAttribute("genre", genre);
+        model.addAttribute("ageGroup", ageGroup);
+
         return "sheet/sheetDetail";
     }
 
