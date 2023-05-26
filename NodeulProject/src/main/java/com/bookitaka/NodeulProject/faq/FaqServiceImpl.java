@@ -26,45 +26,61 @@ public class FaqServiceImpl implements FaqService{
     private String isbn_api_key;
 
 
-    private final FaqRepository repository;
+    private final FaqRepository faqRepository;
 
     @Override
     public void registerFaq(Faq faq) {
-        repository.save(faq);
+        faqRepository.save(faq);
     }
 
     @Override
     public List<Faq> getAllFaq() {
-        return repository.findAll();
+        return faqRepository.findAll();
     }
 
     @Override
-    public Optional<Faq> getOneFaq(Faq faq) {
-        return repository.findById(faq.getFaqNo());
+    public Optional<Faq> getOneFaq(Long faqNo) {
+        return faqRepository.findById(faqNo);
     }
 
     @Override
     @Modifying(clearAutomatically = true)
     public void modifyFaq(Long faqNo, Faq newFaq) {
-        Faq faqFound = repository.findById(faqNo).get();
+        Faq faqFound = faqRepository.findById(faqNo).get();
         System.out.println("modifyFaq - 번호" + faqFound.getFaqNo() + "질문" + faqFound.getFaqQuestion());
         faqFound.setFaqQuestion(newFaq.getFaqQuestion());
         faqFound.setFaqAnswer(newFaq.getFaqAnswer());
         faqFound.setFaqCategory(newFaq.getFaqCategory());
         faqFound.setFaqBest(newFaq.getFaqBest());
-        repository.save(faqFound);
+        faqRepository.save(faqFound);
         System.out.println("modifyFaq - 번호" + faqFound.getFaqNo() + "질문" + faqFound.getFaqQuestion());
     }
 
     @Override
     public void removeFaq(Faq faq) {
-        repository.delete(faq);
+        faqRepository.delete(faq);
     }
 
     @Override
     public long countFaq() {
-        return repository.count();
+        return faqRepository.count();
     }
+
+    @Override
+    public List<String> getAllFaqCategory() {
+        return FaqCategory.faqAllCategory;
+    }
+
+    @Override
+    public List<Faq> getAllFaqByFaqCategory(String faqCategory) {
+        return faqRepository.findAllByFaqCategory(faqCategory);
+    }
+
+    @Override
+    public List<Faq> getAllFaqByFaqBest() {
+        return faqRepository.findAllByFaqBest(1);
+    }
+
 
     // tag값의 정보를 가져오는 메소드
     private static String getTagValue(String tag, Element eElement) {

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+FAQ 등록 폼 / faqAddForm.html
+
+<form action="/faq/add" method="post">
+    <br> 질문 <textarea name="faqQuestion"></textarea>
+    <br> 답변 <textarea name="faqAnswer"></textarea>
+    <br> 카테고리
+    <select name="faqCategory">
+        <option th:each="category : ${faqAllCategory}" th:value="${category}" th:text="${category}"></option>
+    </select>
+
+    <br> most/best 여부
+    <input type="checkbox" name="faqBest" value="1">
+
+    <hr>
+    <button type="submit">FAQ 등록</button>
+</form>
+
+</body>
+</html>
