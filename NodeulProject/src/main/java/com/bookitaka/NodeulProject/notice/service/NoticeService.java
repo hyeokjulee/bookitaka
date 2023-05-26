@@ -4,9 +4,7 @@ import com.bookitaka.NodeulProject.notice.domain.entity.Notice;
 import com.bookitaka.NodeulProject.notice.dto.NoticeDto;
 import com.bookitaka.NodeulProject.notice.repository.NoticeRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -25,7 +23,7 @@ public class NoticeService {
     @Transactional
     //게시글 리스트 처리
     public List<NoticeDto> getNoticeList(){
-        List<Notice> noticeEntities = noticeRepository.findAll();
+        List<Notice> noticeEntities = noticeRepository.findAll(Sort.by(Sort.Direction.DESC, "noticeNo"));
         List<NoticeDto> noticeDtoList = new ArrayList<>();
 
         for (Notice notice : noticeEntities){
@@ -76,7 +74,7 @@ public class NoticeService {
 
     @Transactional
     public List<NoticeDto> searchPost(String keyword) {
-        List<Notice> noticeEntities = noticeRepository.findByNoticeTitleContaining(keyword);
+        List<Notice> noticeEntities = noticeRepository.findByNoticeTitleContaining(keyword,Sort.by(Sort.Direction.DESC, "noticeNo"));
         List<NoticeDto> noticeDtoList = new ArrayList<>();
 
         if (noticeEntities.isEmpty()) return noticeDtoList;
@@ -98,6 +96,7 @@ public class NoticeService {
                 .noticeNo(notice.getNoticeNo())
                 .noticeTitle(notice.getNoticeTitle())
                 .noticeContent(notice.getNoticeContent())
+                .noticeHit(notice.getNoticeHit())
                 .noticeRegdate(notice.getNoticeRegdate())
                 .build();
 

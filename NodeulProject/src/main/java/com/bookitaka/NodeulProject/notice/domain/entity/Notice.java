@@ -8,7 +8,6 @@ import javax.persistence.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-@DynamicInsert
 public class Notice extends TimeEntity{
 
     @Id @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -16,8 +15,6 @@ public class Notice extends TimeEntity{
     private String noticeTitle;
     private String noticeContent;
     private Integer noticeHit;
-
-
 
 
     @Builder

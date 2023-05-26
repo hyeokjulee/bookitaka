@@ -5,9 +5,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@ToString
+@Data
 @NoArgsConstructor
 public class NoticeDto {
     private Integer noticeNo;
@@ -28,7 +26,7 @@ public class NoticeDto {
     }
 
     @Builder
-    public NoticeDto(Integer noticeNo, String noticeTitle, String noticeContent, Integer noticeHit,LocalDateTime noticeRegdate, LocalDateTime noticeModdate) {
+    public NoticeDto(Integer noticeNo, String noticeTitle, String noticeContent, Integer noticeHit, LocalDateTime noticeRegdate, LocalDateTime noticeModdate) {
         this.noticeNo = noticeNo;
         this.noticeTitle = noticeTitle;
         this.noticeContent = noticeContent;
