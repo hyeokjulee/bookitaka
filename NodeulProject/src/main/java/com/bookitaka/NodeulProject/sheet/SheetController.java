@@ -17,6 +17,10 @@ import org.springframework.web.util.UriUtils;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/sheet")
@@ -59,21 +63,53 @@ public class SheetController {
         // SheetRegDto를 사용한 비즈니스 로직 처리
         Sheet sheet = sheetService.registerSheet(sheetRegDto, uploadBookImg, uploadSheetFile);
 
-//        return "sheet/success";
-
         return "redirect:/sheet/" + sheet.getSheetNo();
     }
 
+    //테스트용 데이터 30개 넣기
+//    @PostMapping("/add")
+//    public String sheetAdd(@ModelAttribute SheetRegDto sheetRegDto,
+//                           @RequestParam("sheetBookImg") MultipartFile sheetBookImg,
+//                           @RequestParam("sheetFile") MultipartFile sheetFile) throws IOException {
+//
+//        for (int i = 0; i < 30; i++) {
+//
+//        UploadFile uploadBookImg = null;
+//        UploadFile uploadSheetFile = null;
+//
+//            // 파일 업로드 처리 로직
+//        if (!sheetBookImg.isEmpty()) {
+//            // 업로드된 파일 저장
+//            uploadBookImg = sheetService.storeBookImg(sheetBookImg);
+//        }
+//        if (!sheetFile.isEmpty()) {
+//            uploadSheetFile = sheetService.storeSheetFile(sheetFile);
+//        }
+//
+//        // SheetRegDto를 사용한 비즈니스 로직 처리
+//        sheetRegDto.setSheetBooktitle(sheetRegDto.getSheetBooktitle().substring(0, sheetRegDto.getSheetBooktitle().length() - 1) + i);
+//        sheetRegDto.setSheetBookauthor(sheetRegDto.getSheetBookauthor().substring(0, sheetRegDto.getSheetBookauthor().length() - 1) + i);
+//        sheetRegDto.setSheetBookpublisher(sheetRegDto.getSheetBookpublisher().substring(0, sheetRegDto.getSheetBookpublisher().length() - 1) + i);
+//
+//        sheetService.registerSheet(sheetRegDto, uploadBookImg, uploadSheetFile);
+//        }
+//
+//        return "redirect:/sheet/list";
+//    }
+
     @GetMapping("/list")
-    public String sheetList(@RequestParam(name = "page", defaultValue = "1") int page,
+    public String sheetList(@RequestParam(name = "pageNum", defaultValue = "1") int page,
                             @RequestParam(name = "amount", defaultValue = "10") int amount,
                             @RequestParam(name = "searchType", defaultValue = SearchTypes.TITLE) String searchType,
-                            @RequestParam(name = "search", required = false) String searchWord,
+                            @RequestParam(name = "searchWord", defaultValue = "") String searchWord,
                             Model model) {
 
         SheetCri cri = new SheetCri(page, amount, searchType, searchWord);
+        int totalNum = Math.toIntExact(sheetService.getSheetCnt(searchType, searchWord));
 
         model.addAttribute("sheetList", sheetService.getAllSheets(cri));
+        model.addAttribute("pageInfo", new SheetPageInfo(cri, totalNum));
+        model.addAttribute("cri", cri);
 
         return "sheet/sheetList";
     }

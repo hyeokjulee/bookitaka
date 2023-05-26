@@ -8,6 +8,10 @@
   .container {
     max-width: 560px;
   }
+  .page-disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
 </style>
 </head>
 <body>
@@ -15,13 +19,29 @@
 <div class="container" style="max-width: 600px">
   <div class="py-5 text-center">
     <h2>상품 목록</h2> </div>
-  <div class="row">
-    <div class="col">
-      <button class="btn btn-primary float-end"
-              onclick="location.href='addForm.html'"
-              th:onclick="|location.href='@{/basic/items/add}'|" type="button">상품 등록</button>
+    <div class="row justify-content-center mt-4">
+      <div class="col-md-6">
+        <form th:action="@{/sheet/list}" method="get">
+          <div class="form-row">
+            <div class="col">
+              <select class="form-control" name="searchType">
+                <option value="제목">제목</option>
+                <option value="작가">작가</option>
+                <option value="출판사">출판사</option>
+              </select>
+            </div>
+            <div class="col">
+              <div class="input-group">
+                <input type="text" class="form-control" name="searchWord" placeholder="검색어를 입력하세요">
+                <div class="input-group-append">
+                  <button class="btn btn-primary" type="submit">검색</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
   <hr class="my-4">
   <div>
     <table class="table">
@@ -35,16 +55,33 @@
       </tr>
       </thead>
       <tbody>
-      <tr th:each="sheet : ${sheetList}"><a th:href="@{|/sheet/${sheet.sheetNo}|}" >
+      <tr th:each="sheet : ${sheetList}">
         <td><img th:src="|/sheet/bookImg/*{sheet.sheetBookimguuid}*{sheet.sheetBookimgname}|" width="150" height="150"></td>
-        <td th:text="${sheet.sheetBooktitle}">북타이틀</td>
+        <td><a th:text="${sheet.sheetBooktitle}" th:href="@{|/sheet/${sheet.sheetNo}|}">북타이틀</a></td>
         <td th:text="${sheet.sheetBookauthor}">작가이름</td>
         <td th:text="${sheet.sheetBookpublisher}">출판사이름</td>
         <td th:text="${sheet.sheetPrice}">10000</td>
-      </a></tr>
+      </tr>
       </tbody>
     </table>
   </div>
+
+  <div class="pagination">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" th:if="${pageInfo.hasPreviousPage}">
+        <a class="page-link" th:href="@{/sheet/list(pageNum=${pageInfo.pageNum - 1}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}">&laquo;</a>
+      </li>
+      <li class="page-item" th:each="pageNum : ${pageInfo.getPageList()}" th:class="${pageNum} == ${pageInfo.pageNum} ? 'page-disabled active' : ''">
+        <a class="page-link" th:href="@{/sheet/list(pageNum=${pageNum}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}" th:text="${pageNum}"></a>
+      </li>
+      <li class="page-item" th:if="${pageInfo.hasNextPage}">
+        <a class="page-link" th:href="@{/sheet/list(pageNum=${pageInfo.pageNum + 1}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}">&raquo;</a>
+      </li>
+    </ul>
+  </div>
+
+
+
 </div> <!-- /container -->
 
 

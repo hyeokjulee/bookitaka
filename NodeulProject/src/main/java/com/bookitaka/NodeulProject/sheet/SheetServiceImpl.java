@@ -8,8 +8,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -57,9 +59,12 @@ public class SheetServiceImpl implements SheetService{
         String bookImgName = sheetBookImg.getOriginalFilename();
 
         String uuid = UUID.randomUUID().toString();
-        String BookImgFullPath = bookImgDir + uuid + bookImgName;
-        log.info("bookImg 저장 fullPath={}", BookImgFullPath);
-        sheetBookImg.transferTo(new File(BookImgFullPath));
+        String bookImgFullPath = bookImgDir + uuid + bookImgName;
+        log.info("bookImg 저장 fullPath={}", bookImgFullPath);
+        sheetBookImg.transferTo(new File(bookImgFullPath));
+
+        //테스트 데이터 넣기용
+//        Files.copy(sheetBookImg.getInputStream(), Paths.get(bookImgFullPath), StandardCopyOption.REPLACE_EXISTING);
 
         return new UploadFile(uuid, bookImgName);
     }
@@ -73,6 +78,8 @@ public class SheetServiceImpl implements SheetService{
         String sheetFileFullPath = sheetFileDir + uuid + sheetFileName;
         log.info("sheetFile 저장 fullPath = {}", sheetFileFullPath);
         sheetFile.transferTo(new File(sheetFileFullPath));
+        //테스트 데이터 넣기용
+//        Files.copy(sheetFile.getInputStream(), Paths.get(sheetFileFullPath), StandardCopyOption.REPLACE_EXISTING);
 
         return new UploadFile(uuid, sheetFileName);
     }
@@ -83,8 +90,8 @@ public class SheetServiceImpl implements SheetService{
     }
 
     @Override
-    public Long getSheetCnt() {
-        return sheetRepository.countSheet();
+    public Long getSheetCnt(String searchType, String searchWord) {
+        return sheetRepository.countSheet(searchType, searchWord);
     }
 
     @Override

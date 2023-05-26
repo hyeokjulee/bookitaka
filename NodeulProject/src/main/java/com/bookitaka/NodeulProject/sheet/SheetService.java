@@ -19,7 +19,7 @@ public interface SheetService {
 
     public Sheet getSheet(int sheetNo);
 
-    public Long getSheetCnt();
+    public Long getSheetCnt(String searchType, String searchWord);
 
     public List<Sheet> getAllSheets(SheetCri cri);
 

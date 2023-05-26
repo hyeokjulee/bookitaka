@@ -21,7 +21,7 @@ public interface SheetRepository {
 
     public boolean deleteSheet(int sheetNo);
 
-    public Long countSheet();
+    public Long countSheet(String searchType, String searchWord);
 
     public String findFileNameByUuid(String uuid);
 
