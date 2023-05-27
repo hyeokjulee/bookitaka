@@ -1,5 +1,7 @@
 package com.bookitaka.NodeulProject.member.bstest.service;
 
+import com.bookitaka.NodeulProject.member.dto.MemberChangePwDTO;
+import com.bookitaka.NodeulProject.member.dto.MemberUpdateDTO;
 import com.bookitaka.NodeulProject.member.dto.UserResponseDTO;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.repository.MemberRepository;
@@ -15,6 +17,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -71,14 +74,18 @@ public class MemberServiceTest {
     public void 회원가입() throws Exception{
         /* 회원가입 */
         //given
+        Date date = new Date();
+        String dateString = "20120101";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        date = dateFormat.parse(dateString);
         Member member = new Member();
-        member.setMemberEmail("qwe@qwe.com");
+        member.setMemberEmail("zz@test.com");
         member.setMemberPassword("0000");
         member.setMemberName("John");
         member.setMemberPhone("0101");
         member.setMemberGender("Male");
         member.setMemberRole("MEMBER_ROLE");
-        member.setMemberBirthday(new Date());
+        member.setMemberBirthday(date);
 
         //when
         String signupToken = memberService.signup(member);
@@ -107,21 +114,50 @@ public class MemberServiceTest {
     @Rollback(false)
     public void 수정() throws Exception {
         Date date = new Date();
-        String dateString = "2012-01-01";
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String dateString = "20120101";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
         try {
             date = dateFormat.parse(dateString);
             System.out.println(date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        UserResponseDTO asd = new UserResponseDTO();
+        MemberUpdateDTO asd = new MemberUpdateDTO();
+        Member byMemberEmail = memberRepository.findByMemberEmail("qwe@qwe.com");
         asd.setMemberName("modName");
         asd.setMemberPhone("123123123");
         asd.setMemberGender("female");
-        asd.setMemberRole("admin");
         asd.setMemberBirthday(date);
-        memberService.modifyMember("qwe@qwe.com", asd);
+        memberService.modifyMember(byMemberEmail, asd);
+
+    }
+
+    @Test
+    public void 비번변경() throws Exception {
+        MemberChangePwDTO asd = new MemberChangePwDTO();
+        asd.setNewPw("qweqwe");
+        asd.setOldPw("0000");
+        asd.setNewPwChk("qweqwe");
+        Member byMemberEmail = memberRepository.findByMemberEmail("asd@asd.com");
+
+        memberService.modifyPassword(byMemberEmail, asd);
+    }
+
+    @Test
+    public void 회원목록() {
+        List<Member> allMembers = memberService.getAllMembers();
+        log.info("allMembers : {} ",allMembers);
+    }
+    @Test
+    public void 이메일찾기() {
+        String memberName = "John";
+        String dateString = "2012010";
+        List<String> members = memberService.getMemberEmail(memberName, dateString);
+        log.info("members : {}", members);
+
+    }
+    @Test
+    public void 비번찾기() {
 
     }
 

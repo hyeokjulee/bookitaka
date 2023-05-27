@@ -111,5 +111,6 @@ public class MemberAPIController {
       return "redirect:/main";
     }
 
+    return null;
   }
 }

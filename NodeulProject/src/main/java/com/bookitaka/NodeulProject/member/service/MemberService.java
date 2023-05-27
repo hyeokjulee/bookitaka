@@ -8,6 +8,7 @@ import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.repository.MemberRepository;
 import com.bookitaka.NodeulProject.member.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,9 +23,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -84,7 +87,7 @@ public class MemberService {
     }
 
     public boolean modifyMember(Member member, MemberUpdateDTO memberUpdateDTO) {
-        if (!memberRepository.existsByMemberEmail(member.getMemberEmail())) {
+        if (memberRepository.existsByMemberEmail(member.getMemberEmail())) {
             member.setMemberName(memberUpdateDTO.getMemberName());
             member.setMemberGender(memberUpdateDTO.getMemberGender());
             member.setMemberPhone(memberUpdateDTO.getMemberPhone());
@@ -101,8 +104,8 @@ public class MemberService {
         String newPw = memberChangePwDTO.getNewPw();
         String newPwChk = memberChangePwDTO.getNewPwChk();
 
-        if (!memberRepository.existsByMemberEmail(member.getMemberEmail())) {
-            if (member.getMemberPassword().equals(oldPw)) {
+        if (memberRepository.existsByMemberEmail(member.getMemberEmail())) {
+            if (passwordEncoder.matches(oldPw, member.getMemberPassword())) {
                 if (newPw.equals(newPwChk)) {
                     member.setMemberPassword(passwordEncoder.encode(newPw));
                     memberRepository.save(member);
@@ -118,7 +121,7 @@ public class MemberService {
         }
     }
 
-    public List<String> getAllMemberEmail(String memberName, String memberBirthday) {
+    public List<String> getMemberEmail(String memberName, String memberBirthday) {
         List<Member> findMember = memberRepository.findByMemberName(memberName);
         List<String> mList = new ArrayList<String>();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
@@ -128,17 +131,27 @@ public class MemberService {
                     mList.add(member.getMemberEmail());
                 }
             }
+            if (mList.isEmpty()) {
+                throw new CustomException("wrong birthday", HttpStatus.NOT_FOUND);
+            }
             return mList;
         } else {
-            throw new CustomException("The member doesn't exist", HttpStatus.NOT_FOUND);
+            throw new CustomException("wrong memberName", HttpStatus.NOT_FOUND);
         }
     }
 
-    public void getPwByEMail(String memberEmail, String memberName) {
+    public void getPwByEmail(String memberEmail, String memberName) {
         if (memberRepository.existsByMemberEmail(memberEmail)) {
             Member findMember = memberRepository.findByMemberEmail(memberEmail);
             if (findMember.getMemberName().equals(memberName)) {
-                // 메일전송
+                String newPw = generateRandomPassword();
+                /*
+                *
+                *
+                *                   메일전송
+                *
+                *
+                * */
             }
         } else {
             throw new CustomException("The member doesn't exist", HttpStatus.NOT_FOUND);
@@ -148,6 +161,23 @@ public class MemberService {
     public List<Member> getAllMembers() {
         List<Member> members = memberRepository.findAll();
         return members;
+    }
+
+    private String generateRandomPassword() {
+        // 임의의 비밀번호 생성 로직을 구현한다.
+        // 예를 들어, 랜덤한 문자열을 생성하거나 암호화 알고리즘을 활용할 수 있다.
+        // 이 예시에서는 간단하게 8자리의 랜덤한 숫자와 문자 조합으로 비밀번호를 생성하는 방식을 사용한다.
+        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder password = new StringBuilder();
+        Random random = new Random();
+        int passwordLength = 8;
+
+        for (int i = 0; i < passwordLength; i++) {
+            int index = random.nextInt(characters.length());
+            password.append(characters.charAt(index));
+        }
+
+        return password.toString();
     }
 
 }
