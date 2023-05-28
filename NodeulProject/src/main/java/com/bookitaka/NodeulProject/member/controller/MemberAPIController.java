@@ -1,5 +1,6 @@
 package com.bookitaka.NodeulProject.member.controller;
 
+import com.bookitaka.NodeulProject.member.dto.MemberChangePwDTO;
 import com.bookitaka.NodeulProject.member.dto.MemberUpdateDTO;
 import com.bookitaka.NodeulProject.member.dto.UserDataDTO;
 import com.bookitaka.NodeulProject.member.dto.UserResponseDTO;
@@ -15,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -104,13 +106,35 @@ public class MemberAPIController {
     return memberService.refresh(req.getRemoteUser());
   }
 
-  @PutMapping("/edit")
+  @PutMapping("/edit/{memberEmail}")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
-  public String edit(Member member, MemberUpdateDTO memberUpdateDTO) {
+  public ResponseEntity<String> edit(@PathVariable Member member, @RequestBody MemberUpdateDTO memberUpdateDTO) {
+    Member member = memberService.whoami();
     if(memberService.modifyMember(member,memberUpdateDTO)){
-      return "redirect:/main";
-    }
+      return ResponseEntity.ok("회원 정보 수정 성공");
+    } else {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 정보 수정 실패");
 
-    return null;
+    }
+  }
+
+  @PutMapping("/changePw")
+  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
+  public ResponseEntity<String> modifyPw(@RequestBody MemberChangePwDTO memberChangePwDTO) {
+    Member member = memberService.whoami();
+    if(memberService.modifyPassword(member,memberChangePwDTO)){
+      return ResponseEntity.ok("비밀번호 수정 성공");
+    } else {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비밀번호 수정 실패");
+
+    }
+  }
+@PostMapping("/findId")
+  public ResponseEntity<List<String>> findMemberEmail(
+          @RequestParam("memberName") String memberName,
+          @RequestParam("memberBirthday") String memberBirthday
+  ) {
+    List<String> memberEmails = memberService.getMemberEmail(memberName, memberBirthday);
+    return ResponseEntity.ok(memberEmails);
   }
 }

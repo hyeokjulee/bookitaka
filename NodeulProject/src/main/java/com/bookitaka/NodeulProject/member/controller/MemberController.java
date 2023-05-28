@@ -37,9 +37,9 @@ public class MemberController {
     @GetMapping("/list")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String list() { return "login/list"; }
-    @GetMapping("/findId")
+    @GetMapping("/findEmail")
     @PreAuthorize("hasRole('ROLE_MEMBER')")
-    public String findId() { return "login/findId"; }
+    public String findId() { return "login/findEmail"; }
     @GetMapping("/findPw")
     @PreAuthorize("hasRole('ROLE_MEMBER')")
     public String findPw() { return "login/findPw"; }
