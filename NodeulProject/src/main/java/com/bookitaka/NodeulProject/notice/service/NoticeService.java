@@ -47,12 +47,12 @@ public class NoticeService {
 
     /*게시글 생성*/
     @Transactional
-    public Integer savePost(NoticeDto noticeDto){
+    public Integer registerNotice(NoticeDto noticeDto){
         return noticeRepository.save(noticeDto.toEntity()).getNoticeNo();
     }
 
     @Transactional
-    public NoticeDto getPost(Integer noticeNo) {
+    public NoticeDto getNotice(Integer noticeNo) {
         Optional<Notice> noticeEntityWrapper = noticeRepository.findById(noticeNo);
         Notice notice = noticeEntityWrapper.get();
 
@@ -68,12 +68,12 @@ public class NoticeService {
     }
 
     @Transactional
-    public void deletePost(Integer noticeNo) {
+    public void removeNotice(Integer noticeNo) {
         noticeRepository.deleteById(noticeNo);
     }
 
     @Transactional
-    public List<NoticeDto> searchPost(String keyword) {
+    public List<NoticeDto> searchNotice(String keyword) {
         List<Notice> noticeEntities = noticeRepository.findByNoticeTitleContaining(keyword,Sort.by(Sort.Direction.DESC, "noticeNo"));
         List<NoticeDto> noticeDtoList = new ArrayList<>();
 
