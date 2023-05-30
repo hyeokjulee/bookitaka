@@ -21,7 +21,16 @@ FAQ 등록 폼 / faqAddForm.html
 
     <hr>
     <button type="submit">FAQ 등록</button>
+    <button class="cancelBtn" type="button">취소</button>
 </form>
 
+
+<script>
+    $('.cancelBtn').on('click', function() {
+        window.history.back();
+    });
+
+
+</script>
 </body>
 </html>

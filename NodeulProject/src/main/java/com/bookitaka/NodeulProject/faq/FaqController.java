@@ -2,6 +2,7 @@ package com.bookitaka.NodeulProject.faq;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +43,7 @@ public class FaqController {
 
     // FAQ 등록 폼
     @GetMapping("/add")
-    public String addForm(Model model, FaqCategory faqCategory) {
+    public String addForm(Model model) {
         model.addAttribute("faqAllCategory", service.getAllFaqCategory());
         return "/faq/faqAddForm";
     }
@@ -65,9 +66,23 @@ public class FaqController {
         return "redirect:/faq";
     }
 
+    // FAQ 수정 폼
+    @GetMapping("/edit/{faqNo}")
+    public String editForm(Model model, @PathVariable Long faqNo) {
+        model.addAttribute("faqAllCategory", service.getAllFaqCategory());
+        Faq editFaq = service.getOneFaq(faqNo).get();
+        model.addAttribute("editFaq", editFaq);
+        return "/faq/faqEditForm";
+    }
 
-
-
+    // FAQ 수정 처리
+    @PostMapping("/edit")
+    public String editProc(Model model, @ModelAttribute Faq faq, HttpServletResponse response) {
+        log.info("Controller editProc : faq = " + faq);
+        service.modifyFaq(faq.getFaqNo(), faq);
+        model.addAttribute("statusCode", response.getStatus());
+        return "redirect:/faq";
+    }
 
 
 }

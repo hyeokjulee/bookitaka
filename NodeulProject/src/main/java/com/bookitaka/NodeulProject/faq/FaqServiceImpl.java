@@ -47,13 +47,11 @@ public class FaqServiceImpl implements FaqService{
     @Modifying(clearAutomatically = true)
     public void modifyFaq(Long faqNo, Faq newFaq) {
         Faq faqFound = faqRepository.findById(faqNo).get();
-        System.out.println("modifyFaq - 번호" + faqFound.getFaqNo() + "질문" + faqFound.getFaqQuestion());
         faqFound.setFaqQuestion(newFaq.getFaqQuestion());
         faqFound.setFaqAnswer(newFaq.getFaqAnswer());
         faqFound.setFaqCategory(newFaq.getFaqCategory());
         faqFound.setFaqBest(newFaq.getFaqBest());
         faqRepository.save(faqFound);
-        System.out.println("modifyFaq - 번호" + faqFound.getFaqNo() + "질문" + faqFound.getFaqQuestion());
     }
 
     @Override
