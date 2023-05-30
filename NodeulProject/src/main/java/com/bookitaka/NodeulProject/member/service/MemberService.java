@@ -145,6 +145,7 @@ public class MemberService {
             Member findMember = memberRepository.findByMemberEmail(memberEmail);
             if (findMember.getMemberName().equals(memberName)) {
                 String newPw = generateRandomPassword();
+
                 /*
                 *
                 *
@@ -152,6 +153,11 @@ public class MemberService {
                 *
                 *
                 * */
+
+                // 임시 비밀번호로 비밀번호 변경
+                findMember.setMemberPassword(passwordEncoder.encode(newPw));
+                memberRepository.save(findMember);
+
             }
         } else {
             throw new CustomException("The member doesn't exist", HttpStatus.NOT_FOUND);

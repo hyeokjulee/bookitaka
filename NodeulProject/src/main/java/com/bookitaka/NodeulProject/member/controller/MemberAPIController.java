@@ -13,6 +13,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -106,9 +108,9 @@ public class MemberAPIController {
     return memberService.refresh(req.getRemoteUser());
   }
 
-  @PutMapping("/edit/{memberEmail}")
+  @PutMapping("/edit")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
-  public ResponseEntity<String> edit(@PathVariable Member member, @RequestBody MemberUpdateDTO memberUpdateDTO) {
+  public ResponseEntity<String> edit(@Validated @RequestBody MemberUpdateDTO memberUpdateDTO, BindingResult result) {
     Member member = memberService.whoami();
     if(memberService.modifyMember(member,memberUpdateDTO)){
       return ResponseEntity.ok("회원 정보 수정 성공");
@@ -120,7 +122,7 @@ public class MemberAPIController {
 
   @PutMapping("/changePw")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
-  public ResponseEntity<String> modifyPw(@RequestBody MemberChangePwDTO memberChangePwDTO) {
+  public ResponseEntity<String> modifyPw(@Validated @RequestBody MemberChangePwDTO memberChangePwDTO, BindingResult result) {
     Member member = memberService.whoami();
     if(memberService.modifyPassword(member,memberChangePwDTO)){
       return ResponseEntity.ok("비밀번호 수정 성공");
@@ -131,10 +133,23 @@ public class MemberAPIController {
   }
 @PostMapping("/findId")
   public ResponseEntity<List<String>> findMemberEmail(
+          @Validated
           @RequestParam("memberName") String memberName,
-          @RequestParam("memberBirthday") String memberBirthday
+          @RequestParam("memberBirthday") String memberBirthday,
+          BindingResult result
   ) {
     List<String> memberEmails = memberService.getMemberEmail(memberName, memberBirthday);
     return ResponseEntity.ok(memberEmails);
+  }
+
+@PostMapping("/findPw")
+  public ResponseEntity<String> findMemberPw(
+          @Validated
+          @RequestParam("memberEmail") String memberEmail,
+          @RequestParam("memberName") String memberName,
+          BindingResult result
+  ) {
+    memberService.getPwByEmail(memberEmail, memberName);
+    return ResponseEntity.ok("임시 비밀번호로 변경완료");
   }
 }

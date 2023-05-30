@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.sun.tools.attach.VirtualMachine.list;
 
 @Slf4j
@@ -36,7 +38,11 @@ public class MemberController {
     }
     @GetMapping("/list")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String list() { return "login/list"; }
+    public String list(Model model) {
+        List<Member> members = memberService.getAllMembers();
+        model.addAttribute("members", members);
+        return "login/list";
+    }
     @GetMapping("/findEmail")
     @PreAuthorize("hasRole('ROLE_MEMBER')")
     public String findId() { return "login/findEmail"; }
