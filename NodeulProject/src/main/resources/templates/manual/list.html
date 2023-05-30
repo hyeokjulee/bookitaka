@@ -11,7 +11,7 @@
 <div th:insert="common/header.html" id="header"></div>
 
 <div id="wrap">
-    <a th:href="@{/manual/write}">글쓰기</a>
+    <a th:href="@{/manual/post}">글쓰기</a>
 
     <form action="/notice/search" method="GET">
         <div class="search">
@@ -31,15 +31,14 @@
 
         <tbody>
         <!-- CONTENTS !-->
-        <tr th:each="manual : ${Manuallist}">
+        <tr th:each="manual : ${manualList}">
             <td>
                 <span th:text="${manual.manualNo}"></span>
             </td>
             <td>
-                <span >
-                    <a th:text="${manual.manualTitle}" th:href="@{/manual/detail(manualNo=${manual.manualNo})}"></a>
-                </span>
-
+                <a th:href="@{'/manual/post/' + ${manual.manualNo}}">
+                    <span th:text="${manual.manualTitle}"></span>
+                </a>
             </td>
         </tr>
         </tbody>

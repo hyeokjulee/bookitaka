@@ -11,7 +11,7 @@
 <div th:insert="common/header.html" id="header"></div>
 
 <div id="wrap">
-    <a th:href="@{/post}">글쓰기</a>
+    <a th:href="@{/notice/post}">글쓰기</a>
 
     <form action="/notice/search" method="GET">
         <div class="search">
@@ -38,7 +38,7 @@
                 <span th:text="${notice.noticeNo}"></span>
             </td>
             <td>
-                <a th:href="@{'/post/' + ${notice.noticeNo}}">
+                <a th:href="@{'/notice/post/' + ${notice.noticeNo}}">
                     <span th:text="${notice.noticeTitle}"></span>
                 </a>
             </td>

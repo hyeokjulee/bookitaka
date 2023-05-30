@@ -18,7 +18,8 @@ public class Manual {
     private String manualContent;
 
     @Builder
-    public Manual(String manualTitle, String manualContent) {
+    public Manual(Integer manualNo,String manualTitle, String manualContent) {
+        this.manualNo = manualNo;
         this.manualTitle = manualTitle;
         this.manualContent = manualContent;
     }

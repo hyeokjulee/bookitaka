@@ -6,19 +6,21 @@ import com.bookitaka.NodeulProject.notice.service.NoticeService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @Controller
 @AllArgsConstructor
+@RequestMapping("/notice")
 public class NoticeController {
     private NoticeService noticeService;
 
-    @GetMapping("/")
+    @GetMapping("/list")
     public String list(Model model) {
         List<NoticeDto> noticeList = noticeService.getNoticeList();
-
         model.addAttribute("noticeList", noticeList);
         return "notice/list.html";
     }
@@ -27,9 +29,9 @@ public class NoticeController {
     public String write(){ return "notice/write.html"; }
 
     @PostMapping("/post")
-    public String write(NoticeDto noticeDto){
+    public String write(@Validated NoticeDto noticeDto, BindingResult bindingResult){
         noticeService.savePost(noticeDto);
-        return "redirect:/";
+        return "redirect:/notice/list";
     }
 
     @GetMapping("/post/{noticeNo}")
@@ -51,14 +53,14 @@ public class NoticeController {
     @PutMapping("/post/edit/{noticeNo}")
     public String update(NoticeDto noticeDto) {
         noticeService.savePost(noticeDto);
-        return "redirect:/";
+        return "redirect:/notice/list";
     }
 
     @DeleteMapping("/post/{noticeNo}")
     public String delete(@PathVariable("noticeNo") Integer noticeNo) {
         noticeService.deletePost(noticeNo);
 
-        return "redirect:/";
+        return "redirect:/notice/list";
     }
 
     @GetMapping("/notice/search")
