@@ -22,7 +22,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/member")
+@RequestMapping("/members")
 @Api(tags = "member")
 @RequiredArgsConstructor
 public class MemberAPIController {
@@ -131,7 +131,8 @@ public class MemberAPIController {
 
     }
   }
-@PostMapping("/findId")
+@PostMapping("/findEmail")
+@PreAuthorize("hasRole('ROLE_MEMBER')")
   public ResponseEntity<List<String>> findMemberEmail(
           @Validated
           @RequestParam("memberName") String memberName,
@@ -143,6 +144,7 @@ public class MemberAPIController {
   }
 
 @PostMapping("/findPw")
+@PreAuthorize("hasRole('ROLE_MEMBER')")
   public ResponseEntity<String> findMemberPw(
           @Validated
           @RequestParam("memberEmail") String memberEmail,

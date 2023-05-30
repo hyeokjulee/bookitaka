@@ -1,10 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Edit</title>
 </head>
 <body>
-edit
+<h1>Edit</h1>
+<form th:method="put" th:action="@{'members/edit'}" th:object="${memberUpdateDTO}">
+    <div>
+        <label>Email:</label>
+        <input type="text" name="memberName" />
+    </div>
+    <div>
+        <label>Password:</label>
+        <input type="password" name="memberPhone"/>
+    </div>
+    <div>
+        <label>Gender:</label>
+        <input type="text" name="memberGender"/>
+    </div>
+    <div>
+        <label>Birthday:</label>
+        <input type="text" name="memberBirthday"/>
+    </div>
+    <div>
+        <input type="submit" value="edit"/>
+    </div>
+</form>
 </body>
 </html>

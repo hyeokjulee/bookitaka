@@ -1,10 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>비밀번호 수정</title>
 </head>
 <body>
-changePw
+<h1>비밀번호 수정</h1>
+<form th:action="@{/changePw}" method="post" th:object="${memberChangePwDTO}">
+    <div>
+        <label>현재 비밀번호:</label>
+        <input type="password" th:field="*{oldPw}" required/>
+    </div>
+    <div>
+        <label>새로운 비밀번호:</label>
+        <input type="password" th:field="*{newPw}" required/>
+    </div>
+    <div>
+        <label>비밀번호 확인:</label>
+        <input type="password" th:field="*{newPwChk}" required/>
+    </div>
+    <div>
+        <input type="submit" value="비밀번호 수정"/>
+    </div>
+</form>
 </body>
 </html>

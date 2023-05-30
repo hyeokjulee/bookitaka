@@ -23,7 +23,7 @@ public class MemberController {
     private MemberService memberService;
     @GetMapping("/login")
     public String login() {
-        return "login/login";
+        return "login/login1";
     }
 
     @GetMapping("/test")
@@ -36,6 +36,8 @@ public class MemberController {
     public String edit() {
         return "login/edit";
     }
+
+
     @GetMapping("/list")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String list(Model model) {

@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>이메일 찾기 결과</title>
 </head>
 <body>
-findId
+<h1>이메일 찾기 결과</h1>
+<ul>
+    <li th:each="email : ${memberEmails}" th:text="${email}"></li>
+</ul>
 </body>
 </html>
