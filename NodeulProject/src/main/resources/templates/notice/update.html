@@ -6,10 +6,9 @@
 </head>
 <body>
 <form th:action="@{'/notice/post/edit/' + ${noticeDto.noticeNo}}" method="post">
-    <input type="hidden" name="_method" value="put"/>
     <input type="hidden" name="noticeNo" th:value="${noticeDto.noticeNo}"/>
 
-    제목 : <input type="text" name="noticeTitle" th:value="${noticeDto.noticeTitle}"> <br>
+    제목: <input type="text" name="noticeTitle" th:value="${noticeDto.noticeTitle}"><br>
     <textarea name="noticeContent" th:text="${noticeDto.noticeContent}"></textarea><br>
 
     <input type="submit" value="수정">
