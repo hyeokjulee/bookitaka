@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>회원 가입</title>
+</head>
+<body>
+<h1>회원 가입</h1>
+<form action="/member/signup" method="post">
+    <div>
+        <label>이메일:</label>
+        <input type="email" name="memberEmail"/>
+    </div>
+    <div>
+        <label>비밀번호:</label>
+        <input type="password" name="memberPassword"/>
+    </div>
+    <div>
+        <label>이름:</label>
+        <input type="text" name="memberName"/>
+    </div>
+    <div>
+        <label>전화번호:</label>
+        <input type="text" name="memberPhone"/>
+    </div>
+    <div>
+        <label>성별:</label>
+        <input type="text" name="memberGender"/>
+    </div>
+    <div>
+        <label>생년월일:</label>
+        <input type="text" name="memberBirthday"/>
+    </div>
+    <div>
+        <Button type="submit" id="joinBtn">회원 가입</Button>
+    </div>
+</form>
+</body>
+</html>

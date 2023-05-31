@@ -45,6 +45,19 @@ dependencies {
 
 	//validation 추가
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	// modelmapper
+	implementation 'org.modelmapper:modelmapper:3.1.1'
+	// swagger2
+	implementation 'io.springfox:springfox-swagger2:2.9.2'
+	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+	// jjwt
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+	// validation 전체 적용
+	implementation 'commons-beanutils:commons-beanutils:1.9.4'
+
 }
 
 tasks.named('test') {

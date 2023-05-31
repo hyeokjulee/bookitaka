@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit</title>
+</head>
+<body>
+<h1>Edit</h1>
+<form method="post" action="/member/edit">
+    <input type="hidden" name="_method" value="PUT" />
+    <div>
+        <label>Name:</label>
+        <input type="text" name="memberName" id="memberName"/>
+    </div>
+    <div>
+        <label>Phone:</label>
+        <input type="text" name="memberPhone" id="memberPhone"/>
+    </div>
+    <div>
+        <label>Gender:</label>
+        <input type="text" name="memberGender" id="memberGender"/>
+    </div>
+    <!--    <div>-->
+    <!--        <label>Birthday:</label>-->
+    <!--        <input type="text" name="memberBirthday"/>-->
+    <!--    </div>-->
+    <div>
+        <button type="button" id="editBtn">edit</button>
+    </div>
+</form>
+<script>
+    document.getElementById("editBtn").addEventListener("click", function() {
+        let memberName = document.getElementById("memberName").value;
+        let memberPhone = document.getElementById("memberPhone").value;
+        let memberGender = document.getElementById("memberGender").value;
+        let formData = {
+            memberName: memberName,
+            memberPhone: memberPhone,
+            memberGender: memberGender
+        }
+        fetch("/member/edit", {
+            method: 'PUT',
+            body: new URLSearchParams(formData)
+        })
+            .then((response) => response.text())
+            .then((data) => {
+                console.log(data);
+            });
+    });
+</script>
+</body>
+</html>

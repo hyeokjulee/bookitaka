@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>findPw</title>
+</head>
+<body>
+<h1>findPw</h1>
+<form th:action="@{members/findPw}" method="post">
+    <div>
+        <label>이메일:</label>
+        <input type="email" name="memberEmail" required/>
+    </div>
+    <div>
+        <label>이름:</label>
+        <input type="text" name="memberName" required/>
+    </div>
+    <div>
+        <input type="submit" value="비밀번호 변경"/>
+    </div>
+</form>
+</body>
+</html>
