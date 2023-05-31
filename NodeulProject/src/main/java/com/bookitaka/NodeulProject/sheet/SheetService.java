@@ -28,6 +28,8 @@ public interface SheetService {
 
     public boolean removeSheet(int sheetNo);
 
+    public boolean removeStoredFile(String filePath);
+
     public List<SheetGenre> getAllSheetGenre();
 
     public List<SheetAgegroup> getAllSheetAgeGroup();

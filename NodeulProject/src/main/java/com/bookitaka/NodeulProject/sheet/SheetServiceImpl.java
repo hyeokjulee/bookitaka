@@ -138,7 +138,8 @@ public class SheetServiceImpl implements SheetService{
 
     }
 
-    private boolean removeStoredFile(String filePath) {
+    @Override
+    public boolean removeStoredFile(String filePath) {
         File file = new File(filePath);
         if (file.exists()) {
             file.delete();

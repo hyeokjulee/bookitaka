@@ -183,17 +183,85 @@ public class SheetController {
                 .body(resource);
     }
 
-    @GetMapping("/{sheetNo}/mod")
-    public String modBookImgForm(@PathVariable int sheetNo, Model model) {
-        //만든사람 or 관리자인지 인증 필요
-        //아니면 자세히보기 등 다른페이지로 리다이렉트
-        Sheet sheet = sheetService.getSheet(sheetNo);
-        model.addAttribute("sheet", sheet);
-        model.addAttribute("bookImgSrc", bookImgDir + sheet.getSheetBookimguuid() + sheet.getSheetBookimgname());
-        model.addAttribute("sheetFileSrc", sheetFileDir + sheet.getSheetFileuuid() + sheet.getSheetFilename());
-        return "sheet/sheetDetail";
+//    @GetMapping("/{sheetNo}/mod")
+//    public String modBookImgForm(@PathVariable int sheetNo, Model model) {
+//        //만든사람 or 관리자인지 인증 필요
+//        //아니면 자세히보기 등 다른페이지로 리다이렉트
+//        Sheet sheet = sheetService.getSheet(sheetNo);
+//        model.addAttribute("sheet", sheet);
+//        model.addAttribute("bookImgSrc", bookImgDir + sheet.getSheetBookimguuid() + sheet.getSheetBookimgname());
+//        model.addAttribute("sheetFileSrc", sheetFileDir + sheet.getSheetFileuuid() + sheet.getSheetFilename());
+//        return "sheet/sheetDetail";
+//
+//    }
 
+    @GetMapping("/{sheetNo}/mod")
+    public String sheetModForm(@PathVariable int sheetNo, Model model) {
+
+
+        Sheet sheet = sheetService.getSheet(sheetNo);
+
+        SheetUpdateDto updateDto = new SheetUpdateDto();
+        updateDto.setSheetBooktitle(sheet.getSheetBooktitle());
+        updateDto.setSheetBookauthor(sheet.getSheetBookauthor());
+        updateDto.setSheetBookpublisher(sheet.getSheetBookpublisher());
+        updateDto.setSheetBookisbn(sheet.getSheetBookisbn());
+        updateDto.setSheetPrice(sheet.getSheetPrice());
+        updateDto.setSheetBookimguuid(sheet.getSheetBookimguuid());
+        updateDto.setSheetBookimgname(sheet.getSheetBookimgname());
+        updateDto.setSheetFileuuid(sheet.getSheetFileuuid());
+        updateDto.setSheetFilename(sheet.getSheetFilename());
+        updateDto.setSheetGenreName(sheet.getSheetGenre().getSheetGenreName());
+        updateDto.setSheetAgegroupName(sheet.getSheetAgegroup().getSheetAgegroupName());
+        updateDto.setSheetContent(sheet.getSheetContent());
+
+        model.addAttribute("sheetUpdataDto", updateDto);
+        model.addAttribute("ageGroup", sheetService.getAllSheetAgeGroup());
+        model.addAttribute("genre", sheetService.getAllSheetGenre());
+
+        return "sheet/sheetModForm";
     }
+
+    @PostMapping("/{sheetNo}/mod")
+    public String sheetMod(@PathVariable int sheetNo,
+                           @Validated @ModelAttribute("sheetUpdateDto") SheetUpdateDto sheetUpdateDto,
+                           BindingResult bindingResult,
+                           @RequestParam("sheetBookImg") MultipartFile sheetBookImg,
+                           @RequestParam("sheetFile") MultipartFile sheetFile,
+                           Model model) throws IOException {
+
+
+        if (bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
+
+            model.addAttribute("ageGroup", sheetService.getAllSheetAgeGroup());
+            model.addAttribute("genre", sheetService.getAllSheetGenre());
+            return "sheet/sheetModForm";
+        }
+
+        UploadFile uploadBookImg = null;
+        UploadFile uploadSheetFile = null;
+
+        // 파일 업로드 처리 로직
+        if (!sheetBookImg.isEmpty()) {
+            // 업로드된 파일 삭제 후 저장
+            sheetService.removeStoredFile(bookImgDir + sheetUpdateDto.getSheetBookimguuid() + sheetUpdateDto.getSheetBookimgname());
+            uploadBookImg = sheetService.storeBookImg(sheetBookImg);
+            sheetUpdateDto.setSheetBookimguuid(uploadBookImg.uuid);
+        }
+        if (!sheetFile.isEmpty()) {
+            sheetService.removeStoredFile(sheetFileDir + sheetUpdateDto.getSheetFileuuid() + sheetUpdateDto.getSheetFilename());
+            uploadSheetFile = sheetService.storeSheetFile(sheetFile);
+            sheetUpdateDto.setSheetFileuuid(uploadSheetFile.uuid);
+        }
+        // SheetRegDto를 사용한 비즈니스 로직 처리
+
+        sheetService.modifySheet(sheetNo, sheetUpdateDto);
+
+        return "redirect:/sheet/" + sheetNo;
+    }
+
+
 
     @DeleteMapping("/{sheetNo}")
     public ResponseEntity<String> deleteSheet(@PathVariable int sheetNo){
