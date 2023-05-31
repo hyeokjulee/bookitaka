@@ -3,6 +3,7 @@ package com.bookitaka.NodeulProject.faq;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,7 @@ public class FaqController {
     }
 
     // FAQ 등록 폼
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/add")
     public String addForm(Model model) {
         model.addAttribute("faqAllCategory", service.getAllFaqCategory());

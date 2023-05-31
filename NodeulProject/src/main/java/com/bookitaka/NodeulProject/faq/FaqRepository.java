@@ -10,5 +10,7 @@ public interface FaqRepository extends JpaRepository<Faq, Long> {
     List<Faq> findAllByFaqCategory(String faqCategory);
     List<Faq> findAllByFaqBest(int faqBest);
 
+    List<Faq> findByFaqQuestionAndFaqAnswerContaining();
+
 
 }
