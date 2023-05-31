@@ -1,5 +1,7 @@
 package com.bookitaka.NodeulProject.cart;
 
+import com.bookitaka.NodeulProject.member.model.Member;
+import com.bookitaka.NodeulProject.sheet.Sheet;
 import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -15,11 +17,13 @@ public class Cart {
     @Column(name = "cart_no")
     private int cartNo;
 
-    @Column(name = "member_email")
-    private String memberEmail;
+    @ManyToOne
+    @JoinColumn(name = "member_email")
+    private Member member;
 
-    @Column(name = "sheet_no")
-    private int sheetNo;
+    @ManyToOne
+    @JoinColumn(name = "sheet_no")
+    private Sheet sheet;
 
     @Column(name = "cart_regdate", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime cartRegdate;
