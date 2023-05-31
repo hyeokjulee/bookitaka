@@ -34,6 +34,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     http.authorizeRequests()//
         .antMatchers("/member/signin").permitAll()//
         .antMatchers("/member/signup").permitAll()//
+        .antMatchers("/members/signup").permitAll()//
         .antMatchers("/member/signout").permitAll()// 로그아웃 (토큰 제거)
         .antMatchers("/member/token").permitAll()// 로그인 (토큰 유효성 확인)
         .antMatchers("/members/login").permitAll()//
