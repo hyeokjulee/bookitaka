@@ -34,9 +34,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     http.authorizeRequests()//
         .antMatchers("/member/signin").permitAll()//
         .antMatchers("/member/signup").permitAll()//
-        .antMatchers("/member/signout").permitAll()
-        .antMatchers("/member/token").permitAll()
-        .antMatchers("/members/login").permitAll()
+        .antMatchers("/member/signout").permitAll()// 로그아웃 (토큰 제거)
+        .antMatchers("/member/token").permitAll()// 로그인 (토큰 유효성 확인)
+        .antMatchers("/members/login").permitAll()//
+        .antMatchers("/error/**").permitAll()//
 //        .antMatchers("/h2-console/**/**").permitAll()
         // Disallow everything else..
         .anyRequest().authenticated();
@@ -52,7 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   }
 
   @Override
-  public void configure(WebSecurity web) throws Exception {
+  public void configure(WebSecurity web) {
     // Allow swagger to be accessed without authentication
     web.ignoring().antMatchers("/v2/api-docs")//
         .antMatchers("/swagger-resources/**")//

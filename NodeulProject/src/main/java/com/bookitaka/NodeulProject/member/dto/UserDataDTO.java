@@ -15,6 +15,8 @@ public class UserDataDTO {
   private String memberEmail;
   @ApiModelProperty(position = 1)
   private String memberPassword;
+  @ApiModelProperty(position = 1)
+  private String memberPasswordCheck;
   @ApiModelProperty(position = 2)
   private String memberName;
   @ApiModelProperty(position = 3)
@@ -25,5 +27,4 @@ public class UserDataDTO {
   private Date memberBirthday;
   @ApiModelProperty(position = 6)
   private String memberRole;
-
 }

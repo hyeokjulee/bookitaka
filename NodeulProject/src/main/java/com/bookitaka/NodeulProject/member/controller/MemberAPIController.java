@@ -2,7 +2,6 @@ package com.bookitaka.NodeulProject.member.controller;
 
 import com.bookitaka.NodeulProject.member.dto.UserDataDTO;
 import com.bookitaka.NodeulProject.member.dto.UserResponseDTO;
-import com.bookitaka.NodeulProject.member.exception.CustomException;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.security.Token;
 import com.bookitaka.NodeulProject.member.service.MemberService;
@@ -10,17 +9,14 @@ import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -43,19 +39,25 @@ public class MemberAPIController {
       @ApiParam("MemberPassword") @RequestParam("memberPassword") String memberPassword,
       HttpServletResponse response) {
     log.info("================================Member : signin");
-    memberService.signin(memberEmail, memberPassword, response);
-    return "sign-in ok";
+    Map<String, String> tokens = memberService.signin(memberEmail, memberPassword);
+    setCookie(response, tokens.get(Token.ACCESS_TOKEN), Token.ACCESS_TOKEN, false);
+    setCookie(response, tokens.get(Token.REFRESH_TOKEN), Token.REFRESH_TOKEN, false);
+    return "Sign-in ok";
   }
 
   // 로그아웃
   @GetMapping("/signout")
   @ApiOperation(value = "${MemberController.signout}")
   @ApiResponses(value = {//
+      @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 400, message = "Something went wrong")})
   public void logout(
+      HttpServletRequest request,
       HttpServletResponse response) throws IOException {
     log.info("================================Member : signout");
-    memberService.signout(response);
+    memberService.signout(request.getRemoteUser());
+    setCookie(response, null, Token.ACCESS_TOKEN,true);
+    setCookie(response, null, Token.REFRESH_TOKEN,true);
     response.sendRedirect("/members/login");
   }
 
@@ -66,7 +68,7 @@ public class MemberAPIController {
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 422, message = "Member Email is already in use")})
-  public String signup(@ApiParam("Signup Member") @RequestBody UserDataDTO user) {
+  public String signup(@ApiParam("Signup Member") @ModelAttribute UserDataDTO user) {
     log.info("================================Member : signup");
     memberService.signup(modelMapper.map(user, Member.class));
     return "Sign-up ok";
@@ -111,7 +113,7 @@ public class MemberAPIController {
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
   public UserResponseDTO whoami(HttpServletRequest request) {
     log.info("================================Member : whoami");
-    return modelMapper.map(memberService.whoami(request, Token.ACCESS_TOKEN), UserResponseDTO.class);
+    return modelMapper.map(memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN), UserResponseDTO.class);
   }
 
   // 토큰 만료 여부 확인
@@ -122,7 +124,7 @@ public class MemberAPIController {
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
   public String checkToken(HttpServletRequest request) {
     log.info("================================Member : checkToken");
-    if (memberService.isValidToken(request)) {
+    if (memberService.isValidToken(request.getCookies())) {
       return "Valid Token";
     } else {
       return "Invalid Token";
@@ -134,9 +136,25 @@ public class MemberAPIController {
 //  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
   public void refresh(HttpServletRequest request, HttpServletResponse response) throws IOException {
     log.info("================================Member : refresh");
-    Member member = memberService.whoami(request, Token.REFRESH_TOKEN);
-    memberService.refresh(request, response, member);
-    response.sendRedirect((String) request.getAttribute("uri"));
+    Member member = memberService.whoami(request.getCookies(), Token.REFRESH_TOKEN);
+    String token = memberService.refresh(request.getCookies(), member);
+    if (token != null) {
+      setCookie(response, token, Token.ACCESS_TOKEN, false);
+      response.sendRedirect((String) request.getAttribute("uri"));
+    }
+  }
+
+  private void setCookie(HttpServletResponse response, String token, String tokenCookieName, boolean isSignout) {
+    // 쿠키 생성 (혹은 제거를 위한 설정)
+    Cookie cookie = new Cookie(tokenCookieName, token);
+    cookie.setHttpOnly(true); // HTTP-only 속성 설정
+    if (isSignout) {
+      cookie.setMaxAge(0);
+    }
+    cookie.setPath("/"); // 쿠키의 유효 경로 설정 (루트 경로로 설정하면 모든 요청에서 사용 가능)
+
+    // 응답에 쿠키 추가
+    response.addCookie(cookie);
   }
 
 }

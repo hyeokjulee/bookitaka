@@ -1,5 +1,6 @@
 package com.bookitaka.NodeulProject.member.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandlerController {
 
@@ -30,11 +32,13 @@ public class GlobalExceptionHandlerController {
 
   @ExceptionHandler(CustomException.class)
   public void handleCustomException(HttpServletResponse res, CustomException ex) throws IOException {
+    log.info("Custom Exception Handler");
     res.sendError(ex.getHttpStatus().value(), ex.getMessage());
   }
 
   @ExceptionHandler(AccessDeniedException.class)
   public void handleAccessDeniedException(HttpServletResponse res) throws IOException {
+    log.info("Access Denied Exception Handler");
     res.sendError(HttpStatus.FORBIDDEN.value(), "Access denied");
   }
 
