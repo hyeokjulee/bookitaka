@@ -8,15 +8,15 @@
 <form th:action="@{/changePw}" method="post" th:object="${memberChangePwDTO}">
     <div>
         <label>현재 비밀번호:</label>
-        <input type="password" th:field="*{oldPw}" required/>
+        <input type="password" th:name="oldPw" required/>
     </div>
     <div>
         <label>새로운 비밀번호:</label>
-        <input type="password" th:field="*{newPw}" required/>
+        <input type="password" th:name="newPw" required/>
     </div>
     <div>
         <label>비밀번호 확인:</label>
-        <input type="password" th:field="*{newPwChk}" required/>
+        <input type="password" th:name="newPwChk" required/>
     </div>
     <div>
         <input type="submit" value="비밀번호 수정"/>

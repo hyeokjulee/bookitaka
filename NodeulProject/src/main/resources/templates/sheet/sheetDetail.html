@@ -1,0 +1,281 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+<style>
+    .container {
+        max-width: 560px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="py-5 text-center">
+        <h2>상품 상세보기 </h2>
+    </div>
+
+    <div>
+            <label for="sheetBooktitle">책 제목</label>
+            <input type="text" id="sheetBooktitle" th:field="*{sheet.sheetBooktitle}" class="form-control" readonly>
+        </div>
+
+        <div>
+            <label for="sheetBookauthor">작가</label>
+            <input type="text" id="sheetBookauthor" th:field="*{sheet.sheetBookauthor}" class="form-control" readonly>
+        </div>
+
+        <div>
+            <label for="sheetPublisher">출판사</label>
+            <input type="text" id="sheetPublisher" th:field="*{sheet.sheetBookpublisher}" class="form-control"readonly>
+        </div>
+        <div>
+            <label for="sheetBookisbn">ISBN</label>
+            <input type="text" id="sheetBookisbn" th:field="*{sheet.sheetBookisbn}" class="form-control" readonly>
+        </div>
+
+        <div>
+            <label for="sheetPrice">가격</label>
+            <input type="number" id="sheetPrice" th:field="*{sheet.sheetPrice}" class="form-control"readonly>
+        </div>
+        <div>
+            <label for="sheetBookImg">표지 이미지</label>
+            <img id="sheetBookImg" th:src="|/sheet/bookImg/*{sheet.sheetBookimguuid}*{sheet.sheetBookimgname}|" width="300" height="300">
+        </div>
+        <div>
+            <label for="sheetFile">독후활동지 파일</label>
+            <a id="sheetFile" class="btn btn-primary" th:href="|/sheet/sheetFile/*{sheet.sheetFileuuid}|">다운로드</a>
+        </div>
+
+<!--    <iframe id="pdf-iframe" src="" width="100%" height="800px"></iframe>-->
+    <div id="pdf-preview-container">
+        <div id="pdf-preview" style="width: 100%; height: 800px; overflow-x: scroll;">
+            <div id="pdf-page-1" class="pdf-page"></div>
+            <div id="pdf-page-2" class="pdf-page"></div>
+            <div id="pdf-page-3" class="pdf-page"></div>
+        </div>
+        <div id="pdf-nav">
+            <button id="prev-page">Previous</button>
+            <button id="next-page">Next</button>
+            <button id="close-btn">X</button>
+        </div>
+    </div>
+
+
+
+
+    <div>
+            <label for="sheetContent">설명</label>
+            <textarea type="text" id="sheetContent" th:field="*{sheet.sheetContent}" class="form-control" readonly></textarea>
+        </div>
+
+        <hr class="my-4">
+
+        <div>
+            <label for="sheetGenreName">장르</label>
+            <input type="text" id="sheetGenreName" th:field="*{sheet.sheetGenre.sheetGenreName}" class="form-control" readonly>
+        </div>
+
+
+        <div>
+            <label for="sheetAgeGroupName">연령대</label>
+            <input type="text" id="sheetAgeGroupName" th:field="*{sheet.sheetAgegroup.sheetAgegroupName}" class="form-control" readonly>
+        </div>
+
+        <div>
+            <label for="sheetRegdate">등록일자</label>
+            <input type="text" id="sheetRegdate" th:field="*{sheet.sheetRegdate}" class="form-control" readonly>
+        </div>
+
+        <div>
+            <label for="sheetModdate">수정일자</label>
+            <input type="text" id="sheetModdate" th:field="*{sheet.sheetModdate}" class="form-control" value="수정하지 않음" readonly>
+        </div>
+
+        <hr class="my-4">
+
+        <div class="row">
+            <div class="col">
+                <a th:href="|/sheet/${sheet.sheetNo}/mod|" class="w-100 btn btn-warning" type="submit">상품 정보 수정</a>
+            </div>
+            <div class="col">
+                <button id="removeBtn" th:onclick="'deleteCheck(\'' + ${sheet.sheetNo} + '\')'"  class="w-100 btn btn-danger" type="submit">상품 삭제</button>
+            </div>
+            <div class="col">
+                <form th:action="@{/sheet/list}">
+                <button class="w-100 btn btn-secondary" type="submit">목록으로</button>
+                <input type="hidden" name="genre" th:value="${genre}">
+                <input type="hidden" name="ageGroup" th:value="${ageGroup}">
+                <input type="hidden" name="pageNum" th:value="${cri.pageNum}">
+                <input type="hidden" name="amount" th:value="${cri.amount}">
+                <input type="hidden" name="searchType" th:value="${cri.searchType}">
+                <input type="hidden" name="searchWord" th:value="${cri.searchWord}">
+                </form>
+            </div>
+        </div>
+
+</div> <!-- /container -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+
+<script src="/pdfjs/build/pdf.js"></script>
+<script>
+    function deleteCheck(sheetNo) {
+        if (confirm("정말로 삭제하시겠습니까?")) {
+         deleteSheet(sheetNo)
+        }
+    }
+
+
+    function deleteSheet(sheetNo) {
+        fetch(`/sheet/${sheetNo}`, {
+            method: 'DELETE'
+        })
+            .then(response => {
+                if (response.ok) {
+                    // 삭제 성공 시 목록 페이지로 리다이렉트
+                    alert("삭제에 성공하였습니다")
+                    window.location.href = '/sheet/list';
+
+                } else {
+                    // 실패 시 에러 처리
+                    alert('삭제 요청이 실패하였습니다.')
+                }
+            })
+            .catch(error => {
+                console.error('삭제 요청 중 에러가 발생하였습니다.', error);
+                alert("삭제 요청 중 에러가 발생하였습니다.")
+            });
+    }
+
+
+    const pdfPath = '/sheet/sheetFile/[[${sheet.sheetFileuuid}]]'; // PDF 파일 경로
+
+
+    // const iframe = document.getElementById('pdf-iframe');
+    //
+    // pdfjsLib.getDocument(pdfPath).promise.then(pdf => {
+    //     pdf.getPage(1).then(page => {
+    //         const viewport = page.getViewport({ scale: 1 });
+    //         const canvas = document.createElement('canvas');
+    //         const context = canvas.getContext('2d');
+    //         canvas.height = viewport.height;
+    //         canvas.width = viewport.width;
+    //
+    //         page.render({
+    //             canvasContext: context,
+    //             viewport
+    //         }).promise.then(() => {
+    //             const dataURL = canvas.toDataURL('image/png');
+    //             iframe.src = dataURL;
+    //         });
+    //     });
+    // });
+
+    const numPreviewPages = 1; // 한 번에 표시할 페이지 수
+    const previewContainer = document.getElementById('pdf-preview');
+    const prevButton = document.getElementById('prev-page');
+    const nextButton = document.getElementById('next-page');
+    const closeButton = document.getElementById('close-btn');
+
+    let currentPage = 1;
+    let pdfDocument;
+
+    function renderPreviewPage(pageNumber) {
+
+        const container = document.createElement('div');
+        container.className = 'pdf-page-container';
+        previewContainer.appendChild(container);
+
+        const canvas = document.createElement('canvas');
+        container.appendChild(canvas);
+        const context = canvas.getContext('2d');
+
+        pdfDocument.getPage(pageNumber).then(page => {
+            const viewport = page.getViewport({ scale: 1 });
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            page.render({
+                canvasContext: context,
+                viewport
+            }).promise.then(() => {
+                // 페이지 렌더링 완료 시
+            });
+        });
+    }
+
+    function removePreviewPages() {
+        while (previewContainer.firstChild) {
+            previewContainer.firstChild.remove();
+        }
+    }
+
+    function navigateToPage(pageNumber) {
+        if (pageNumber < 1 || pageNumber > pdfDocument.numPages) {
+            return;
+        }
+
+        const pageCount = pdfDocument.numPages;
+
+        currentPage = pageNumber;
+
+        removePreviewPages();
+
+        const firstPage = currentPage;
+        const lastPage = Math.min(currentPage + numPreviewPages - 1, pageCount);
+
+        for (let i = firstPage; i <= lastPage; i++) {
+            renderPreviewPage(i);
+        }
+    }
+
+    function prevPage() {
+        const previousPage = currentPage - 1;
+        if (previousPage >= 1) {
+            navigateToPage(previousPage);
+        } else {
+            alert("미리보기 첫 번째 페이지입니다.");
+        }
+    }
+
+    function nextPage() {
+        const nextPage = currentPage + 1;
+        if (nextPage <= 3) {
+            navigateToPage(nextPage);
+        } else {
+            alert("미리보기 마지막 페이지입니다.");
+        }
+    }
+
+
+    function togglePreview() {
+        if (previewContainer.style.display === 'none') {
+            previewContainer.style.display = 'block';
+            closeButton.innerText = 'X'
+        } else {
+            previewContainer.style.display = 'none';
+            closeButton.innerText = '미리보기'
+        }
+    }
+
+    prevButton.addEventListener('click', prevPage);
+
+    nextButton.addEventListener('click', nextPage);
+
+    closeButton.addEventListener('click', togglePreview)
+
+    pdfjsLib.getDocument(pdfPath).promise.then(pdf => {
+        pdfDocument = pdf;
+        navigateToPage(1); // 첫 페이지를 렌더링하여 시작합니다.
+    });
+
+</script>
+
+
+
+
+</body>
+</html>

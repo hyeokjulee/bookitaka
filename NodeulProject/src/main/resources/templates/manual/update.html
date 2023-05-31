@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action="@{'/manual/post/edit/' + ${manualDto.manualNo}}" method="post">
+    <input type="hidden" name="_method" value="put"/>
+    <input type="hidden" name="manualNo" th:value="${manualDto.manualNo}"/>
+
+    제목 : <input type="text" name="manualTitle" th:value="${manualDto.manualTitle}"> <br>
+    <textarea name="manualContent" th:text="${manualDto.manualContent}"></textarea><br>
+
+    <input type="submit" value="수정">
+</form>
+
+</body>
+</html>

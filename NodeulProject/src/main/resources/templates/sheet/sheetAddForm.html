@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+    <style>
+        .container {
+            max-width: 560px;
+        }
+        .errorMsg {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="py-5 text-center">
+        <h2>상품 등록 폼</h2>
+    </div>
+
+    <form action="/sheet/add" th:action="@{/sheet/add}" th:object="${sheetRegDto}" method="post" enctype="multipart/form-data">
+        <div>
+            <label for="sheetBooktitle">책 제목</label>
+            <span class="errorMsg" th:errors="*{sheetBooktitle}">책 제목 오류</span>
+            <input type="text" id="sheetBooktitle" th:field="*{sheetBooktitle}" class="form-control" placeholder="책 제목을 입력하세요">
+        </div>
+
+        <div>
+            <label for="sheetBookauthor">작가</label>
+            <span class="errorMsg" th:errors="*{sheetBookauthor}">작가 오류</span>
+            <input type="text" id="sheetBookauthor" th:field="*{sheetBookauthor}" class="form-control" placeholder="작가를 입력하세요">
+        </div>
+
+        <div>
+            <label for="sheetPublisher">출판사</label>
+            <span class="errorMsg" th:errors="*{sheetBookpublisher}">출판사 오류</span>
+            <input type="text" id="sheetPublisher" th:field="*{sheetBookpublisher}" class="form-control" placeholder="출판사를 입력하세요">
+        </div>
+        <div>
+            <label for="sheetBookisbn">ISBN</label>
+            <input type="text" id="sheetBookisbn" th:field="*{sheetBookisbn}" class="form-control" placeholder="isbn을 입력하세요">
+        </div>
+
+        <div>
+            <label for="sheetPrice">가격</label>
+            <span class="errorMsg" th:errors="*{sheetPrice}">가격 오류</span>
+            <input type="number" id="sheetPrice" th:field="*{sheetPrice}" class="form-control" placeholder="가격을 입력하세요">
+        </div>
+        <div>
+            <label for="sheetBookImg">표지 이미지</label>
+            <input type="file" id="sheetBookImg" name="sheetBookImg" class="form-control" accept=".jpg, .jpeg, .png, .gif" placeholder="이미지 파일을 업로드해주세요">
+        </div>
+        <div>
+            <label for="sheetFile">독후활동지 파일</label>
+            <div th:if="${#fields.hasGlobalErrors()}">
+                <span th:class="errorMsg" class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</span> </div>
+            <input type="file" id="sheetFile" name="sheetFile" class="form-control" accept="application/pdf" placeholder="pdf파일을 업로드해주세요">
+        </div>
+
+        <div>
+            <label for="sheetContent">설명</label>
+            <textarea type="text" id="sheetContent" th:field="*{sheetContent}" class="form-control" placeholder="설명을 입력하세요"></textarea>
+        </div>
+
+        <hr class="my-4">
+
+<!--        &lt;!&ndash; single checkbox &ndash;&gt;-->
+<!--        <div>판매 여부</div>-->
+<!--        <div>-->
+<!--            <div class="form-check">-->
+<!--                <input type="checkbox" id="open" th:field="*{open}" class="form-check-input">-->
+<!--                <label for="open" class="form-check-label">판매 오픈</label>-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <!-- radio button -->
+        <div>
+            <div>장르</div>
+            <span class="errorMsg" th:errors="*{sheetGenreName}">장르 오류</span>
+            <div th:each="gn : ${genre}" class="form-check form-check-inline">
+                <input type="radio" th:field="*{sheetGenreName}" th:value="${gn.sheetGenreName}" class="form-check-input">
+                <label th:for="${#ids.prev('sheetGenreName')}" th:text="${gn.getSheetGenreName()}" class="form-check-label">
+                    장르
+                </label>
+            </div>
+        </div>
+
+
+        <hr class="my-4">
+
+        <!-- radio button -->
+        <div>
+            <div>연령대</div>
+            <div th:each="ag : ${ageGroup}" class="form-check form-check-inline">
+                <input type="radio" th:field="*{sheetAgegroupName}" th:value="${ag.sheetAgegroupName}" class="form-check-input">
+                <label th:for="${#ids.prev('sheetAgegroupName')}" th:text="${ag.sheetAgegroupName}" class="form-check-label">
+                    연령대
+                </label>
+            </div>
+        </div>
+
+
+        <hr class="my-4">
+
+        <div class="row">
+            <div class="col">
+                <button class="w-100 btn btn-primary btn-lg" type="submit">상품 등록</button>
+            </div>
+            <div class="col">
+                <button class="w-100 btn btn-secondary btn-lg"
+                        onclick="location.href='items.html'"
+                        th:onclick="|location.href='@{/form/items}'|"
+                        type="button">취소</button>
+            </div>
+        </div>
+
+    </form>
+
+</div> <!-- /container -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+</body>
+</html>

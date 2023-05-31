@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -33,4 +34,6 @@ public class Member {
     private Date memberBirthday;
 
     private String memberRole;
+
+    private String memberRtoken;
 }

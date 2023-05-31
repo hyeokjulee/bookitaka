@@ -1,29 +1,28 @@
 package com.bookitaka.NodeulProject.member.controller;
 
-import com.bookitaka.NodeulProject.member.dto.UserResponseDTO;
 import com.bookitaka.NodeulProject.member.model.Member;
-import com.bookitaka.NodeulProject.member.repository.MemberRepository;
 import com.bookitaka.NodeulProject.member.service.MemberService;
-import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-
-import static com.sun.tools.attach.VirtualMachine.list;
 
 @Slf4j
 @Controller
 @RequestMapping("/members")
+@RequiredArgsConstructor
 public class MemberController {
-    private MemberRepository memberRepository;
-    private MemberService memberService;
+    MemberService memberService;
+
     @GetMapping("/login")
     public String login() {
-        return "login/login1";
+        return "login/login";
     }
 
     @GetMapping("/test")
@@ -32,6 +31,7 @@ public class MemberController {
         log.info("=====================test");
         return "login/authPage";
     }
+
     @GetMapping("/edit")
     public String edit() {
         return "login/edit";
@@ -48,14 +48,15 @@ public class MemberController {
     @GetMapping("/findEmail")
     @PreAuthorize("hasRole('ROLE_MEMBER')")
     public String findId() { return "login/findEmail"; }
+
     @GetMapping("/findPw")
     @PreAuthorize("hasRole('ROLE_MEMBER')")
     public String findPw() { return "login/findPw"; }
+
     @GetMapping("/signup")
     public String signup() { return "login/signup"; }
+
     @GetMapping("/changePw")
     @PreAuthorize("hasRole('ROLE_MEMBER')")
     public String changePw() { return "login/changePw"; }
-
-
 }
