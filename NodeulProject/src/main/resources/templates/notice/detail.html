@@ -7,7 +7,7 @@
 <body>
 <h2 th:text="${noticeDto.noticeTitle}"></h2>
 <p th:inline="text">작성일 : [[${#temporals.format(noticeDto.noticeRegdate, 'yyyy-MM-dd HH:mm')}]]</p>
-<p th:inline="text">수정일 : [[${#temporals.format(noticeDto.noticeModdate, 'yyyy-MM-dd HH:mm')}]]</p>
+<p th:text="${noticeDto.noticeModdate}"></p>
 
 <p th:text="${noticeDto.noticeContent}"></p>
 

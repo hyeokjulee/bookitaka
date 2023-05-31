@@ -68,6 +68,13 @@ public class NoticeService {
     }
 
     @Transactional
+    public Notice updateNotice(Integer noticeNo, Notice notice) {
+        Notice noticeData= noticeRepository.findById(noticeNo).orElseThrow(IllegalArgumentException::new);;
+        noticeData.update(notice.getNoticeTitle(),notice.getNoticeContent());
+        return noticeData;
+    }
+
+    @Transactional
     public void removeNotice(Integer noticeNo) {
         noticeRepository.deleteById(noticeNo);
     }

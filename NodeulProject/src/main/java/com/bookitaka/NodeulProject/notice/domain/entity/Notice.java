@@ -23,6 +23,12 @@ public class Notice extends TimeEntity{
         this.noticeTitle = noticeTitle;
         this.noticeContent = noticeContent;
         this.noticeHit = noticeHit;
+    }
+
+    public void update(String noticeTitle, String noticeContent){
+        this.noticeTitle = noticeTitle;
+        this.noticeContent = noticeContent;
 
     }
+
 }

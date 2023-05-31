@@ -1,10 +1,11 @@
 package com.bookitaka.NodeulProject.notice.controller;
 
+import com.bookitaka.NodeulProject.notice.domain.entity.Notice;
 import com.bookitaka.NodeulProject.notice.dto.NoticeDto;
 import com.bookitaka.NodeulProject.notice.service.NoticeService;
 
 import lombok.AllArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
+//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,11 +28,11 @@ public class NoticeController {
     }
 
     @GetMapping("/post")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public String write(){ return "notice/write.html"; }
 
     @PostMapping("/post")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public String write(@Validated NoticeDto noticeDto, BindingResult bindingResult){
         noticeService.registerNotice(noticeDto);
         return "redirect:/notice/list";
@@ -46,23 +47,22 @@ public class NoticeController {
     }
 
     @GetMapping("/post/edit/{noticeNo}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public String edit(@PathVariable("noticeNo") Integer noticeNo, Model model) {
         NoticeDto noticeDto = noticeService.getNotice(noticeNo);
         model.addAttribute("noticeDto", noticeDto);
-
         return "notice/update.html";
     }
 
     @PutMapping("/post/edit/{noticeNo}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String update(NoticeDto noticeDto) {
-        noticeService.registerNotice(noticeDto);
-        return "redirect:/notice/list";
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String updateNotice(@PathVariable("noticeNo") Integer noticeNo, Notice notice ) {
+        noticeService.updateNotice(noticeNo, notice);
+        return "redirect:/notice/list/";
     }
 
     @DeleteMapping("/post/{noticeNo}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public String delete(@PathVariable("noticeNo") Integer noticeNo) {
         noticeService.removeNotice(noticeNo);
 
