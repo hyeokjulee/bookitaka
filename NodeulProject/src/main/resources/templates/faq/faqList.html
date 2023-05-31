@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+FAQ list.html
+
+<hr>
+<a href="/faq">MOST</a>
+<a th:each="eachCategory : ${faqAllCategory}" th:href="@{/faq/{category}(category=${eachCategory})}">
+    <span th:text="${eachCategory}"></span>
+</a>
+
+<hr>
+<a href="/faq/add">등록</a>
+
+    best
+    <table class="tb_col" style="border: black 1px;">
+        <tr>
+            <th>Q</th>
+            <th>A</th>
+            <th>Category</th>
+            <th>best</th>
+            <th>삭제버튼</th>
+            <th>수정버튼</th>
+        </tr>
+        <tr th:if="${faqCategory == null}" th:each="faq : ${faqListByBest}">
+            <td th:text="${faq.faqQuestion}"></td>
+            <td th:text="${faq.faqAnswer}"></td>
+            <td th:text="${faq.faqCategory}"></td>
+            <td th:text="${faq.faqBest}"></td>
+            <td>
+                <form th:action="@{/faq/remove/{faqNo}(faqNo=${faq.faqNo})}" method="post">
+                    <input id="deleteBtn" type="submit" value="삭제" onclick="deleteConfirm()">
+                </form>
+            </td>
+            <td>
+                <a class="editBtn" th:href="@{/faq/edit/{faqNo}(faqNo=${faq.faqNo})}">수정</a>
+            </td>
+        </tr>
+        <tr th:if="${faqCategory != null}" th:each="faq : ${faqListByCategory}">
+            <td th:text="${faq.faqQuestion}"></td>
+            <td th:text="${faq.faqAnswer}"></td>
+            <td th:text="${faq.faqCategory}"></td>
+            <td th:text="${faq.faqBest}"></td>
+            <td>
+                <form th:action="@{/faq/remove/{faqNo}(faqNo=${faq.faqNo})}" method="post">
+                    <input class="deleteBtn" type="submit" value="삭제">
+                </form>
+            </td>
+            <td>
+                <a class="editBtn" th:href="@{/faq/edit/{faqNo}(faqNo=${faq.faqNo})}">수정</a>
+            </td>
+        </tr>
+    </table>
+
+
+
+
+<script th:inline="javascript">
+    function deleteConfirm() {
+        // 삭제 확인 후, 확인 시 삭제처리
+        if (confirm('정말 삭제하시겠습니까?')) {
+            this.closest('form').submit();
+        }
+    }
+
+
+
+</script>
+
+</body>
+</html>
+
