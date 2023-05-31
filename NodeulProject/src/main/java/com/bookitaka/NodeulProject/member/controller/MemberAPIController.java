@@ -1,5 +1,7 @@
 package com.bookitaka.NodeulProject.member.controller;
 
+import com.bookitaka.NodeulProject.member.dto.MemberChangePwDTO;
+import com.bookitaka.NodeulProject.member.dto.MemberUpdateDTO;
 import com.bookitaka.NodeulProject.member.dto.UserDataDTO;
 import com.bookitaka.NodeulProject.member.dto.UserResponseDTO;
 import com.bookitaka.NodeulProject.member.model.Member;
@@ -9,13 +11,18 @@ import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -87,6 +94,58 @@ public class MemberAPIController {
     log.info("================================Member : delete");
     memberService.delete(memberEmail);
     return memberEmail;
+  }
+
+  @PutMapping("/edit")
+  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
+  public ResponseEntity<String> edit(@Validated @ModelAttribute MemberUpdateDTO memberUpdateDTO,
+                                     HttpServletRequest request,
+                                     BindingResult result) {
+    log.info("================================Member : edit");
+    Member member = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
+    if(memberService.modifyMember(member,memberUpdateDTO)){
+      return ResponseEntity.ok("회원 정보 수정 성공");
+    } else {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 정보 수정 실패");
+
+    }
+  }
+
+  @PutMapping("/changePw")
+  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
+  public ResponseEntity<String> modifyPw(@Validated @ModelAttribute MemberChangePwDTO memberChangePwDTO,
+                                         HttpServletRequest request,
+                                         BindingResult result) {
+    Member member = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
+    if(memberService.modifyPassword(member,memberChangePwDTO)) {
+      return ResponseEntity.ok("비밀번호 수정 성공");
+    } else {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비밀번호 수정 실패");
+
+    }
+  }
+  @PostMapping("/findEmail")
+  @PreAuthorize("hasRole('ROLE_MEMBER')")
+  public ResponseEntity<List<String>> findMemberEmail(
+          @Validated
+          @RequestParam("memberName") String memberName,
+          @RequestParam("memberBirthday") String memberBirthday,
+          BindingResult result
+  ) {
+    List<String> memberEmails = memberService.getMemberEmail(memberName, memberBirthday);
+    return ResponseEntity.ok(memberEmails);
+  }
+
+  @PostMapping("/findPw")
+  @PreAuthorize("hasRole('ROLE_MEMBER')")
+  public ResponseEntity<String> findMemberPw(
+          @Validated
+          @RequestParam("memberEmail") String memberEmail,
+          @RequestParam("memberName") String memberName,
+          BindingResult result
+  ) {
+    memberService.getPwByEmail(memberEmail, memberName);
+    return ResponseEntity.ok("임시 비밀번호로 변경완료");
   }
 
   // 회원 상세 보기 (관리자)

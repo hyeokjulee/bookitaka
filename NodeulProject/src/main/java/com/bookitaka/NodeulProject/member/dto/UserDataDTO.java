@@ -23,8 +23,8 @@ public class UserDataDTO {
   private String memberPhone;
   @ApiModelProperty(position = 4)
   private String memberGender;
-  @ApiModelProperty(position = 5)
-  private Date memberBirthday;
+//  @ApiModelProperty(position = 5)
+//  private Date memberBirthday;
   @ApiModelProperty(position = 6)
   private String memberRole;
 }
