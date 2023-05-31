@@ -8,7 +8,7 @@
 .gradle
 .idea
 .DS_Store
-.properties
+
 
 # User-specific stuff
 .idea/**/workspace.xml
@@ -173,3 +173,4 @@ gradle-app.setting
 *.hprof
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,java,gradle
+*.properties
