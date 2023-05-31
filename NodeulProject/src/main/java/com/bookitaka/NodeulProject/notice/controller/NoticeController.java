@@ -69,7 +69,7 @@ public class NoticeController {
         return "redirect:/notice/list";
     }
 
-    @GetMapping("/notice/search")
+    @GetMapping("/search")
     public String search(@RequestParam(value="keyword")String keyword, Model model){
         List<NoticeDto> noticeDtoList = noticeService.searchNotice(keyword);
 
