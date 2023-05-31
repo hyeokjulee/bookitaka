@@ -35,9 +35,9 @@ function deleteCart(sheetNo) {
       url: '/cart/deleteCart',  // 서버의 상품 삭제 API 엔드포인트
       type: 'POST',
       data: { sheetNo: sheetNo },
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
-      },
+//      beforeSend: function(xhr) {
+//        xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
+//      },
       success: function(response) {
         if (response.success) {
           showCarts();  // 목록 갱신
@@ -56,9 +56,9 @@ function emptyCart() {
     $.ajax({
       url: '/cart/emptyCart',  // 서버의 비우기 API 엔드포인트
       type: 'POST',
-      beforeSend: function(xhr) {
-        xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
-      },
+//      beforeSend: function(xhr) {
+//        xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
+//      },
       success: function(response) {
         if (response.success) {
           showCarts();  // 목록 갱신
@@ -86,9 +86,9 @@ function deleteSelectedCart() {
     url: '/cart/deleteSelectedCart',
     data: JSON.stringify(selectedItems),
     contentType: 'application/json',
-    beforeSend: function(xhr) {
-      xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
-    },
+//    beforeSend: function(xhr) {
+//      xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
+//    },
     success: function(response) {
       if (response.success) {
           showCarts();  // 목록 갱신
