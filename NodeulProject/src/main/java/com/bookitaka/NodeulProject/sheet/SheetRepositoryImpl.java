@@ -1,5 +1,6 @@
 package com.bookitaka.NodeulProject.sheet;
 
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,72 +38,90 @@ public class SheetRepositoryImpl implements SheetRepository{
         List<Sheet> sheetList = null;
         log.info("cri = {}", cri);
 
+        JPAQuery<Sheet> query = qf.selectFrom(qSheet);
+
         if (cri.getSearchType().equals(SearchTypes.TITLE)) {
-            return qf.selectFrom(qSheet)
-                    .where(qSheet.sheetBooktitle.like("%" + cri.getSearchWord() + "%"))
-                    .offset((cri.getPageNum() - 1) * cri.getAmount()).limit(cri.getAmount()).orderBy(qSheet.sheetNo.desc()).fetch();
+            query.where(qSheet.sheetBooktitle.like("%" + cri.getSearchWord() + "%"));
         } else if (cri.getSearchType().equals(SearchTypes.AUTHOR)) {
-            return qf.selectFrom(qSheet)
-                    .where(qSheet.sheetBookauthor.like("%" + cri.getSearchWord() + "%"))
-                    .offset((cri.getPageNum() - 1) * cri.getAmount()).limit(cri.getAmount()).orderBy(qSheet.sheetNo.desc()).fetch();
+            query.where(qSheet.sheetBookauthor.like("%" + cri.getSearchWord() + "%"));
         } else if (cri.getSearchType().equals(SearchTypes.PUBLISHER)) {
-            return qf.selectFrom(qSheet)
-                    .where(qSheet.sheetBookpublisher.like("%" + cri.getSearchWord() + "%"))
-                    .offset((cri.getPageNum() - 1) * cri.getAmount()).limit(cri.getAmount()).orderBy(qSheet.sheetNo.desc()).fetch();
+            query.where(qSheet.sheetBookpublisher.like("%" + cri.getSearchWord() + "%"));
         }
-        return null;
+
+        query.offset((cri.getPageNum() - 1) * cri.getAmount()).limit(cri.getAmount());
+
+        if (cri.getSort().equals(SortCries.NEWEST)) {
+            query.orderBy(qSheet.sheetNo.desc());
+        } else if (cri.getSort().equals(SortCries.HIT)) {
+            query.orderBy(qSheet.sheetHit.desc());
+        } else if (cri.getSort().equals(SortCries.BUYCNT)) {
+            query.orderBy(qSheet.sheetHit.desc());
+        }
+
+        return query.fetch();
     }
+
+
 
     @Override
     public List<Sheet> findAllSheetByGenre(String genre, SheetCri cri) {
 
+        JPAQuery<Sheet> query = qf.selectFrom(qSheet).where(qSheet.sheetGenre.sheetGenreName.eq(genre));
+
         if (cri.getSearchType().equals(SearchTypes.TITLE)) {
-            return qf.selectFrom(qSheet)
-                    .where(qSheet.sheetGenre.sheetGenreName.eq(genre))
-                    .where(qSheet.sheetBooktitle.like("%" + cri.getSearchWord() + "%"))
-                    .offset((cri.getPageNum() - 1) * cri.getAmount()).limit(cri.getAmount()).orderBy(qSheet.sheetNo.desc()).fetch();
+            query.where(qSheet.sheetBooktitle.like("%" + cri.getSearchWord() + "%"));
         } else if (cri.getSearchType().equals(SearchTypes.AUTHOR)) {
-            return qf.selectFrom(qSheet)
-                    .where(qSheet.sheetGenre.sheetGenreName.eq(genre))
-                    .where(qSheet.sheetBookauthor.like("%" + cri.getSearchWord() + "%"))
-                    .offset((cri.getPageNum() - 1) * cri.getAmount()).limit(cri.getAmount()).orderBy(qSheet.sheetNo.desc()).fetch();
+            query.where(qSheet.sheetBookauthor.like("%" + cri.getSearchWord() + "%"));
         } else if (cri.getSearchType().equals(SearchTypes.PUBLISHER)) {
-            return qf.selectFrom(qSheet)
-                    .where(qSheet.sheetGenre.sheetGenreName.eq(genre))
-                    .where(qSheet.sheetBookpublisher.like("%" + cri.getSearchWord() + "%"))
-                    .offset((cri.getPageNum() - 1) * cri.getAmount()).limit(cri.getAmount()).orderBy(qSheet.sheetNo.desc()).fetch();
+            query.where(qSheet.sheetBookpublisher.like("%" + cri.getSearchWord() + "%"));
         }
 
+        query.offset((cri.getPageNum() - 1) * cri.getAmount()).limit(cri.getAmount());
 
-        return null;
+        if (cri.getSort().equals(SortCries.NEWEST)) {
+            query.orderBy(qSheet.sheetNo.desc());
+        } else if (cri.getSort().equals(SortCries.HIT)) {
+            query.orderBy(qSheet.sheetHit.desc());
+        } else if (cri.getSort().equals(SortCries.BUYCNT)) {
+            query.orderBy(qSheet.sheetHit.desc());
+        }
+
+        return query.fetch();
+
     }
 
     @Override
     public List<Sheet> findAllSheetByAgeGroup(String ageGroup, SheetCri cri) {
 
+        JPAQuery<Sheet> query = qf.selectFrom(qSheet).where(qSheet.sheetAgegroup.sheetAgegroupName.eq(ageGroup));
+
         if (cri.getSearchType().equals(SearchTypes.TITLE)) {
-            return qf.selectFrom(qSheet)
-                    .where(qSheet.sheetAgegroup.sheetAgegroupName.eq(ageGroup))
-                    .where(qSheet.sheetBooktitle.like("%" + cri.getSearchWord() + "%"))
-                    .offset((cri.getPageNum() - 1) * cri.getAmount()).limit(cri.getAmount()).orderBy(qSheet.sheetNo.desc()).fetch();
+            query.where(qSheet.sheetBooktitle.like("%" + cri.getSearchWord() + "%"));
         } else if (cri.getSearchType().equals(SearchTypes.AUTHOR)) {
-            return qf.selectFrom(qSheet)
-                    .where(qSheet.sheetAgegroup.sheetAgegroupName.eq(ageGroup))
-                    .where(qSheet.sheetBookauthor.like("%" + cri.getSearchWord() + "%"))
-                    .offset((cri.getPageNum() - 1) * cri.getAmount()).limit(cri.getAmount()).orderBy(qSheet.sheetNo.desc()).fetch();
+            query.where(qSheet.sheetBookauthor.like("%" + cri.getSearchWord() + "%"));
         } else if (cri.getSearchType().equals(SearchTypes.PUBLISHER)) {
-            return qf.selectFrom(qSheet)
-                    .where(qSheet.sheetAgegroup.sheetAgegroupName.eq(ageGroup))
-                    .where(qSheet.sheetBookpublisher.like("%" + cri.getSearchWord() + "%"))
-                    .offset((cri.getPageNum() - 1) * cri.getAmount()).limit(cri.getAmount()).orderBy(qSheet.sheetNo.desc()).fetch();
+            query.where(qSheet.sheetBookpublisher.like("%" + cri.getSearchWord() + "%"));
         }
 
-        return null;
+        query.offset((cri.getPageNum() - 1) * cri.getAmount()).limit(cri.getAmount());
+
+        if (cri.getSort().equals(SortCries.NEWEST)) {
+            query.orderBy(qSheet.sheetNo.desc());
+        } else if (cri.getSort().equals(SortCries.HIT)) {
+            query.orderBy(qSheet.sheetHit.desc());
+        } else if (cri.getSort().equals(SortCries.BUYCNT)) {
+            query.orderBy(qSheet.sheetHit.desc());
+        }
+
+        return query.fetch();
     }
 
     @Override
     public Optional<Sheet> findSheetByNo(int sheetNo) {
         Sheet sheet = em.find(Sheet.class, sheetNo);
+
+        //조회수 하나 올리기
+        sheet.setSheetHit(sheet.getSheetHit() + 1);
         return Optional.ofNullable(sheet);
     }
 

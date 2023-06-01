@@ -19,10 +19,7 @@ import org.springframework.web.util.UriUtils;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.UUID;
+
 
 @Controller
 @RequestMapping("/sheet")
@@ -126,9 +123,10 @@ public class SheetController {
                             @RequestParam(name = "amount", defaultValue = "10") int amount,
                             @RequestParam(name = "searchType", defaultValue = SearchTypes.TITLE) String searchType,
                             @RequestParam(name = "searchWord", defaultValue = "") String searchWord,
+                            @RequestParam(name = "sort", defaultValue = SortCries.NEWEST) String sort,
                             Model model) {
 
-        SheetCri cri = new SheetCri(page, amount, searchType, searchWord);
+        SheetCri cri = new SheetCri(page, amount, searchType, searchWord, sort);
         int totalNum = Math.toIntExact(sheetService.getSheetCnt(genre, ageGroup, searchType, searchWord));
 
         log.info("controller genre = {}", genre);
@@ -150,9 +148,10 @@ public class SheetController {
                               @RequestParam(name = "amount", defaultValue = "10") int amount,
                               @RequestParam(name = "searchType", defaultValue = SearchTypes.TITLE) String searchType,
                               @RequestParam(name = "searchWord", defaultValue = "") String searchWord,
+                              @RequestParam(name = "sort", defaultValue = SortCries.NEWEST) String sort,
                               Model model) {
         Sheet sheet = sheetService.getSheet(sheetNo);
-        SheetCri cri = new SheetCri(page, amount, searchType, searchWord);
+        SheetCri cri = new SheetCri(page, amount, searchType, searchWord, sort);
 
         model.addAttribute("sheet", sheet);
         model.addAttribute("cri", cri);
@@ -192,7 +191,6 @@ public class SheetController {
 //        model.addAttribute("bookImgSrc", bookImgDir + sheet.getSheetBookimguuid() + sheet.getSheetBookimgname());
 //        model.addAttribute("sheetFileSrc", sheetFileDir + sheet.getSheetFileuuid() + sheet.getSheetFilename());
 //        return "sheet/sheetDetail";
-//
 //    }
 
     @GetMapping("/{sheetNo}/mod")
