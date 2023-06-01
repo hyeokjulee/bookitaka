@@ -96,7 +96,7 @@ public class MemberAPIController {
     return memberEmail;
   }
 
-  @PutMapping("/edit")
+  @PutMapping("/{memberEmail}")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
   public ResponseEntity<String> edit(@Validated @ModelAttribute MemberUpdateDTO memberUpdateDTO,
                                      HttpServletRequest request,
@@ -201,6 +201,7 @@ public class MemberAPIController {
       setCookie(response, token, Token.ACCESS_TOKEN, false);
       response.sendRedirect((String) request.getAttribute("uri"));
     }
+    response.sendRedirect("/members/login");
   }
 
   private void setCookie(HttpServletResponse response, String token, String tokenCookieName, boolean isSignout) {

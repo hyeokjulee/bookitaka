@@ -1,9 +1,12 @@
 package com.bookitaka.NodeulProject.member.controller;
 
+import com.bookitaka.NodeulProject.member.dto.UserResponseDTO;
 import com.bookitaka.NodeulProject.member.model.Member;
+import com.bookitaka.NodeulProject.member.security.Token;
 import com.bookitaka.NodeulProject.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Slf4j
@@ -18,7 +22,8 @@ import java.util.List;
 @RequestMapping("/members")
 @RequiredArgsConstructor
 public class MemberController {
-    MemberService memberService;
+    private final MemberService memberService;
+    private final ModelMapper modelMapper;
 
     @GetMapping("/login")
     public String login() {
@@ -33,7 +38,7 @@ public class MemberController {
     }
 
     @GetMapping("/edit")
-    public String edit() {
+    public String edit(HttpServletRequest request) {
         return "login/edit";
     }
 

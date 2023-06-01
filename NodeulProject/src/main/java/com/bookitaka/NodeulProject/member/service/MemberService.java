@@ -4,6 +4,7 @@ import com.bookitaka.NodeulProject.member.dto.MemberChangePwDTO;
 import com.bookitaka.NodeulProject.member.dto.MemberUpdateDTO;
 import com.bookitaka.NodeulProject.member.exception.CustomException;
 import com.bookitaka.NodeulProject.member.model.Member;
+import com.bookitaka.NodeulProject.member.model.MemberRoles;
 import com.bookitaka.NodeulProject.member.repository.MemberRepository;
 import com.bookitaka.NodeulProject.member.security.JwtTokenProvider;
 import com.bookitaka.NodeulProject.member.security.Token;
@@ -74,6 +75,7 @@ public class MemberService {
   public void signup(Member member) {
     if (!memberRepository.existsByMemberEmail(member.getMemberEmail())) {
       member.setMemberPassword(passwordEncoder.encode(member.getMemberPassword()));
+      member.setMemberRole(MemberRoles.MEMBER);
       memberRepository.save(member);
     } else {
       throw new CustomException("Member email is already in use", HttpStatus.UNPROCESSABLE_ENTITY);

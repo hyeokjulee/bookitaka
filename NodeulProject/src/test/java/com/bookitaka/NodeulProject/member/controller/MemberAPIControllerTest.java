@@ -6,6 +6,9 @@ import com.bookitaka.NodeulProject.member.repository.MemberRepository;
 import com.bookitaka.NodeulProject.member.security.JwtTokenProvider;
 import com.bookitaka.NodeulProject.member.security.Token;
 import com.bookitaka.NodeulProject.member.service.MemberService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,7 +25,6 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
-import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -170,33 +172,72 @@ class MemberAPIControllerTest {
 
     @Test
     @DisplayName("Member API 컨트롤러 - 내 정보 가져오기")
-    void whoami() {
+    void me() throws Exception {
         //given
         Cookie aTokenCookie = new Cookie(Token.ACCESS_TOKEN, testToken);
         Cookie rTokenCookie = new Cookie(Token.REFRESH_TOKEN, testToken);
         aTokenCookie.setHttpOnly(true);
         rTokenCookie.setHttpOnly(true);
-        MockHttpServletRequestBuilder requestBuilder = get("/member/{memberEmail}", testEmail)
+        MockHttpServletRequestBuilder requestBuilder = get("/member/me")
                 .cookie(aTokenCookie)
                 .cookie(rTokenCookie);
         //when
-
+        ResultActions resultActions = mockMvc.perform(requestBuilder);
         //then
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.000+00:00");
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String birthDay =  simpleDateFormat.format(testMember.getMemberBirthday());
+        String resultJson = "{\"memberEmail\":\"aaa@aaa.com\"," +
+                "\"memberName\":\"tester\"," +
+                "\"memberPhone\":\"010-0101-0101\"," +
+                "\"memberGender\":\"F\"," +
+                "\"memberBirthday\":\"" + birthDay +"\"," +
+                "\"memberRole\":\"ROLE_ADMIN\"}";
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(content().json(resultJson));
     }
 
     @Test
     @DisplayName("Member API 컨트롤러 - 토큰 유효성 확인 (로그인 확인)")
-    void checkToken() {
+    void checkToken() throws Exception {
         //given
+        Cookie aTokenCookie = new Cookie(Token.ACCESS_TOKEN, testToken);
+        Cookie rTokenCookie = new Cookie(Token.REFRESH_TOKEN, testToken);
+        aTokenCookie.setHttpOnly(true);
+        rTokenCookie.setHttpOnly(true);
+        MockHttpServletRequestBuilder requestBuilder = get("/member/token")
+                .cookie(aTokenCookie)
+                .cookie(rTokenCookie);
         //when
+        ResultActions resultActions = mockMvc.perform(requestBuilder);
+        ResultActions resultActionsInvalid = mockMvc.perform(get("/member/token"));
         //then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(content().string("Valid Token"));
+        resultActionsInvalid
+                .andExpect(status().isOk())
+                .andExpect(content().string("Invalid Token"));
     }
 
     @Test
     @DisplayName("Member API 컨트롤러 - 토큰 재발급")
-    void refresh() {
+    void refresh() throws Exception {
         //given
+        Cookie aTokenCookie = new Cookie(Token.ACCESS_TOKEN, testToken);
+        Cookie rTokenCookie = new Cookie(Token.REFRESH_TOKEN, testToken);
+        aTokenCookie.setHttpOnly(true);
+        rTokenCookie.setHttpOnly(true);
+        MockHttpServletRequestBuilder requestBuilder = get("/member/refresh")
+                .cookie(aTokenCookie)
+                .cookie(rTokenCookie);
         //when
+        ResultActions resultActions = mockMvc.perform(requestBuilder);
+        ResultActions resultActionsRedirect = mockMvc.perform(get(Objects.requireNonNull(resultActions.andReturn().getResponse().getRedirectedUrl())));
+        Collection<String> tokens = resultActionsRedirect.andReturn().getResponse().getHeaders("Set-Cookie");
         //then
+        resultActions
+                .andExpect(status().is3xxRedirection());
     }
 }
