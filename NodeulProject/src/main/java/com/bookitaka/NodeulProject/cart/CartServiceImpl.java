@@ -20,32 +20,32 @@ public class CartServiceImpl implements CartService {
     @Override
     public List<Cart> getCartByMemberEmail(String memberEmail) {
         // 회원의 장바구니 전체 조회 로직 구현
-        return cartRepository.findByMember_MemberEmailOrderByCartRegdate(memberEmail);
+        return cartRepository.findByMemberEmailOrderByCartRegdate(memberEmail);
     }
 
     @Override
     public List<Cart> getCartByMemberEmailAndSheetNo(String memberEmail, int sheetNo) {
         // 회원의 장바구니 하나 조회 로직 구현
-        return cartRepository.findByMember_MemberEmailAndSheet_SheetNo(memberEmail, sheetNo);
+        return cartRepository.findByMemberEmailAndSheetNo(memberEmail, sheetNo);
     }
 
     @Override
     public void deleteAllCartsByMemberEmail(String memberEmail) {
         // 장바구니 비우기 로직 구현
-        cartRepository.deleteAll(cartRepository.findByMember_MemberEmailOrderByCartRegdate(memberEmail));
+        cartRepository.deleteAll(cartRepository.findByMemberEmailOrderByCartRegdate(memberEmail));
     }
 
     @Override
     public void deleteCartByMemberEmailAndSheetNo(String memberEmail, int sheetNo) {
         // 장바구니에서 상품 하나 삭제 로직 구현
-        cartRepository.deleteAll(cartRepository.findByMember_MemberEmailAndSheet_SheetNo(memberEmail, sheetNo));
+        cartRepository.deleteAll(cartRepository.findByMemberEmailAndSheetNo(memberEmail, sheetNo));
     }
 
     @Override
     public void deleteCartsByMemberEmailAndSheetNos(String memberEmail, List<Integer> sheetNos) {
         // 장바구니에서 선택한 상품들 삭제 로직 구현
         for (Integer sheetNo:sheetNos) {
-            cartRepository.deleteAll(cartRepository.findByMember_MemberEmailAndSheet_SheetNo(memberEmail, sheetNo));
+            cartRepository.deleteAll(cartRepository.findByMemberEmailAndSheetNo(memberEmail, sheetNo));
         }
     }
 }
