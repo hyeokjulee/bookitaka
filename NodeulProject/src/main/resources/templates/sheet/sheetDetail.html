@@ -93,6 +93,16 @@
         </div>
 
         <div>
+            <label for="sheetBuyCnt">다운로드 수</label>
+            <input type="text" id="sheetBuyCnt" th:field="*{sheet.sheetBuycnt}" class="form-control" readonly>
+        </div>
+
+        <div>
+            <label for="sheetHit">조회 수</label>
+            <input type="text" id="sheetHit" th:field="*{sheet.sheetHit}" class="form-control" readonly>
+        </div>
+
+        <div>
             <label for="sheetRegdate">등록일자</label>
             <input type="text" id="sheetRegdate" th:field="*{sheet.sheetRegdate}" class="form-control" readonly>
         </div>
@@ -113,13 +123,14 @@
             </div>
             <div class="col">
                 <form th:action="@{/sheet/list}">
-                <button class="w-100 btn btn-secondary" type="submit">목록으로</button>
-                <input type="hidden" name="genre" th:value="${genre}">
-                <input type="hidden" name="ageGroup" th:value="${ageGroup}">
-                <input type="hidden" name="pageNum" th:value="${cri.pageNum}">
-                <input type="hidden" name="amount" th:value="${cri.amount}">
-                <input type="hidden" name="searchType" th:value="${cri.searchType}">
-                <input type="hidden" name="searchWord" th:value="${cri.searchWord}">
+                    <button class="w-100 btn btn-secondary" type="submit">목록으로</button>
+                    <input type="hidden" name="genre" th:value="${genre}">
+                    <input type="hidden" name="ageGroup" th:value="${ageGroup}">
+                    <input type="hidden" name="pageNum" th:value="${cri.pageNum}">
+                    <input type="hidden" name="amount" th:value="${cri.amount}">
+                    <input type="hidden" name="searchType" th:value="${cri.searchType}">
+                    <input type="hidden" name="searchWord" th:value="${cri.searchWord}">
+                    <input type="hidden" name="sort" th:value="${cri.sort}">
                 </form>
             </div>
         </div>
