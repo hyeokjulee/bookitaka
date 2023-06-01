@@ -28,5 +28,4 @@ public interface SheetRepository {
     public Long countSheetByAgeGroup(String ageGroup, String searchType, String searchWord);
 
     public String findFileNameByUuid(String uuid);
-
 }

@@ -15,5 +15,6 @@ public class SheetCri {
     private String searchType;
     private String searchWord;
 
+    private String sort;
     
 }
