@@ -123,11 +123,11 @@ public class MemberAPIController {
     }
   }
 
-  @PutMapping("/changePw")
+  @PostMapping("/changePw")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
-  public ResponseEntity<String> modifyPw(@Validated @ModelAttribute MemberChangePwDTO memberChangePwDTO,
-                                         HttpServletRequest request,
-                                         BindingResult result) {
+  public ResponseEntity<String> modifyPw(@ModelAttribute MemberChangePwDTO memberChangePwDTO,
+                                         HttpServletRequest request
+                                         ) {
     Member member = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
     if(memberService.modifyPassword(member,memberChangePwDTO)) {
       return ResponseEntity.ok("비밀번호 수정 성공");
