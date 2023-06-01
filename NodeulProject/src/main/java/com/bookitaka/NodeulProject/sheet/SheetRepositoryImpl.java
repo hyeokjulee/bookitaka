@@ -55,7 +55,7 @@ public class SheetRepositoryImpl implements SheetRepository{
         } else if (cri.getSort().equals(SortCries.HIT)) {
             query.orderBy(qSheet.sheetHit.desc());
         } else if (cri.getSort().equals(SortCries.BUYCNT)) {
-            query.orderBy(qSheet.sheetHit.desc());
+            query.orderBy(qSheet.sheetBuycnt.desc());
         }
 
         return query.fetch();
@@ -83,7 +83,7 @@ public class SheetRepositoryImpl implements SheetRepository{
         } else if (cri.getSort().equals(SortCries.HIT)) {
             query.orderBy(qSheet.sheetHit.desc());
         } else if (cri.getSort().equals(SortCries.BUYCNT)) {
-            query.orderBy(qSheet.sheetHit.desc());
+            query.orderBy(qSheet.sheetBuycnt.desc());
         }
 
         return query.fetch();
@@ -110,7 +110,7 @@ public class SheetRepositoryImpl implements SheetRepository{
         } else if (cri.getSort().equals(SortCries.HIT)) {
             query.orderBy(qSheet.sheetHit.desc());
         } else if (cri.getSort().equals(SortCries.BUYCNT)) {
-            query.orderBy(qSheet.sheetHit.desc());
+            query.orderBy(qSheet.sheetBuycnt.desc());
         }
 
         return query.fetch();
