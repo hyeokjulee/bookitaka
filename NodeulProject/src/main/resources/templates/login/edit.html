@@ -5,41 +5,45 @@
 </head>
 <body>
 <h1>Edit</h1>
-<form method="post" action="/member/edit">
+<form method="post" th:action="@{/member/{memberEmail}(memberEmail=${member.memberEmail})}" th:object="${member}">
     <input type="hidden" name="_method" value="PUT" />
+
     <div>
         <label>Name:</label>
-        <input type="text" name="memberName" id="memberName"/>
+        <input type="text" name="memberName" id="memberName" th:value="${member.memberName}"/>
     </div>
     <div>
         <label>Phone:</label>
-        <input type="text" name="memberPhone" id="memberPhone"/>
+        <input type="text" name="memberPhone" id="memberPhone" th:value="${member.memberPhone}"/>
     </div>
     <div>
         <label>Gender:</label>
-        <input type="text" name="memberGender" id="memberGender"/>
+        <input type="text" name="memberGender" id="memberGender" th:value="${member.memberGender}"/>
     </div>
     <!--    <div>-->
     <!--        <label>Birthday:</label>-->
     <!--        <input type="text" name="memberBirthday"/>-->
     <!--    </div>-->
     <div>
-        <button type="button" id="editBtn">edit</button>
+        <button type="submit" id="editBtn">Edit</button>
     </div>
 </form>
 <script>
-    document.getElementById("editBtn").addEventListener("click", function() {
+    document.getElementById("editBtn").addEventListener("click", function(event) {
+        event.preventDefault(); // 폼의 기본 동작(페이지 새로고침) 방지
+
         let memberName = document.getElementById("memberName").value;
         let memberPhone = document.getElementById("memberPhone").value;
         let memberGender = document.getElementById("memberGender").value;
-        let formData = {
+        let formData = new URLSearchParams({
             memberName: memberName,
             memberPhone: memberPhone,
             memberGender: memberGender
-        }
+        });
+
         fetch("/member/edit", {
-            method: 'PUT',
-            body: new URLSearchParams(formData)
+            method: 'PUT', // 수정된 부분: PUT 대신 POST로 변경
+            body: formData
         })
             .then((response) => response.text())
             .then((data) => {
