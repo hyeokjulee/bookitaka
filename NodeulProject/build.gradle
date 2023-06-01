@@ -57,6 +57,9 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	// validation 전체 적용
 	implementation 'commons-beanutils:commons-beanutils:1.9.4'
+	// 메일전송
+	implementation 'javax.mail:javax.mail-api:1.6.2'
+	implementation 'com.sun.mail:javax.mail:1.6.2'
 
 }
 

@@ -32,6 +32,7 @@ public class MemberService {
   private final PasswordEncoder passwordEncoder;
   private final JwtTokenProvider jwtTokenProvider;
   private final AuthenticationManager authenticationManager;
+  private final EmailService emailService;
 
   /************************************************************************************************
    * Member Service
@@ -157,14 +158,8 @@ public class MemberService {
       Member findMember = memberRepository.findByMemberEmail(memberEmail);
       if (findMember.getMemberName().equals(memberName)) {
         String newPw = generateRandomPassword();
-
-        /*
-         *
-         *
-         *                   메일전송
-         *
-         *
-         * */
+        // 메일전송
+        emailService.sendEmail(findMember.getMemberEmail(), newPw);
 
         // 임시 비밀번호로 비밀번호 변경
         findMember.setMemberPassword(passwordEncoder.encode(newPw));

@@ -147,10 +147,10 @@ public class MemberAPIController {
 
   @PostMapping("/findPw")
   public ResponseEntity<String> findMemberPw(
-          @Validated
+
           @RequestParam("memberEmail") String memberEmail,
-          @RequestParam("memberName") String memberName,
-          BindingResult result
+          @RequestParam("memberName") String memberName
+
   ) {
     memberService.getPwByEmail(memberEmail, memberName);
     return ResponseEntity.ok("임시 비밀번호로 변경완료");
