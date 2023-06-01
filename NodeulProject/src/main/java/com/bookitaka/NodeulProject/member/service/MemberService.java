@@ -133,19 +133,20 @@ public class MemberService {
     }
   }
 
-  public List<String> getMemberEmail(String memberName, String memberBirthday) {
+  public List<String> getMemberEmail(String memberName/*, String memberBirthday*/) {
     List<Member> findMember = memberRepository.findByMemberName(memberName);
     List<String> mList = new ArrayList<String>();
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
     if (findMember != null) {
       for (Member member : findMember) {
-        if (dateFormat.format(member.getMemberBirthday()).equals(memberBirthday)) {
+//        if (dateFormat.format(member.getMemberBirthday()).equals(memberBirthday)) {
           mList.add(member.getMemberEmail());
-        }
+//        }
       }
-      if (mList.isEmpty()) {
-        throw new CustomException("wrong birthday", HttpStatus.NOT_FOUND);
-      }
+//      if (mList.isEmpty()) {
+//        throw new CustomException("wrong birthday", HttpStatus.NOT_FOUND);
+//      }
+
       return mList;
     } else {
       throw new CustomException("wrong memberName", HttpStatus.NOT_FOUND);
@@ -177,8 +178,7 @@ public class MemberService {
   }
 
   public List<Member> getAllMembers() {
-    List<Member> members = memberRepository.findAll();
-    return members;
+    return memberRepository.findAll();
   }
 
   private String generateRandomPassword() {

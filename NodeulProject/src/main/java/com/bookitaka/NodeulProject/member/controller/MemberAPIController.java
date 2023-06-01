@@ -14,9 +14,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -125,19 +127,19 @@ public class MemberAPIController {
     }
   }
   @PostMapping("/findEmail")
-  @PreAuthorize("hasRole('ROLE_MEMBER')")
-  public ResponseEntity<List<String>> findMemberEmail(
-          @Validated
-          @RequestParam("memberName") String memberName,
-          @RequestParam("memberBirthday") String memberBirthday,
-          BindingResult result
-  ) {
-    List<String> memberEmails = memberService.getMemberEmail(memberName, memberBirthday);
-    return ResponseEntity.ok(memberEmails);
+  public String findMemberEmail(@RequestParam("memberName") String memberName,
+//                                @RequestParam("memberBirthday") String memberBirthday,
+                                RedirectAttributes redirectAttributes,
+                                HttpServletResponse response
+  ) throws IOException {
+    List<String> memberEmails = memberService.getMemberEmail(memberName/*, memberBirthday*/);
+    redirectAttributes.addFlashAttribute("findResult", memberEmails);
+    response.sendRedirect("/members/findEmailResult");
+    return "redirect:/members/findEmailResult";
   }
 
+
   @PostMapping("/findPw")
-  @PreAuthorize("hasRole('ROLE_MEMBER')")
   public ResponseEntity<String> findMemberPw(
           @Validated
           @RequestParam("memberEmail") String memberEmail,

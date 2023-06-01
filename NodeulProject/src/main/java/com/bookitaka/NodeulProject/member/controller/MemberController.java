@@ -38,10 +38,12 @@ public class MemberController {
     }
 
     @GetMapping("/edit")
-    public String edit(HttpServletRequest request) {
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
+    public String edit(Model model, HttpServletRequest request) {
+        UserResponseDTO userResponseDTO = modelMapper.map(memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN), UserResponseDTO.class);
+        model.addAttribute("member", userResponseDTO);
         return "login/edit";
     }
-
 
     @GetMapping("/list")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -51,11 +53,17 @@ public class MemberController {
         return "login/list";
     }
     @GetMapping("/findEmail")
-    @PreAuthorize("hasRole('ROLE_MEMBER')")
     public String findId() { return "login/findEmail"; }
 
+    @GetMapping("/findEmailResult")
+    public String findEmailResult(Model model) {
+        List<String> findResult = (List<String>) model.getAttribute("findResult");
+        model.addAttribute("findResult", findResult);
+        return "login/findEmailResult";
+    }
+
+
     @GetMapping("/findPw")
-    @PreAuthorize("hasRole('ROLE_MEMBER')")
     public String findPw() { return "login/findPw"; }
 
     @GetMapping("/signup")

@@ -18,7 +18,7 @@ import java.util.Date;
 @AllArgsConstructor
 @DynamicInsert
 public class Member {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer memberNo;
 
     private String memberEmail;

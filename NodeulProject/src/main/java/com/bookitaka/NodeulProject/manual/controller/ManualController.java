@@ -3,6 +3,7 @@ package com.bookitaka.NodeulProject.manual.controller;
 import com.bookitaka.NodeulProject.manual.dto.ManualDto;
 import com.bookitaka.NodeulProject.manual.service.ManualService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,11 +26,13 @@ public class ManualController {
     }
 
     @GetMapping("/post")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String write(){
         return "manual/write.html";
     }
 
     @PostMapping("/post")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String write(ManualDto manualDto){
         manualService.saveManual(manualDto);
         return "redirect:/manual/list";
@@ -44,6 +47,7 @@ public class ManualController {
     }
 
     @GetMapping("/post/edit/{manualNo}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String edit(@PathVariable("manualNo") Integer manualNo, Model model){
         ManualDto manualDto = manualService.getManual(manualNo);
         model.addAttribute("manualDto",manualDto);
@@ -52,12 +56,14 @@ public class ManualController {
     }
 
     @PutMapping("/post/edit/{manualNo}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String update(ManualDto manualDto){
         manualService.saveManual(manualDto);
         return "redirect:/manual/list";
     }
 
     @DeleteMapping("/post/{manualNo}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String delete(@PathVariable("manualNo") Integer manualNo){
         manualService.deleteManual(manualNo);
 
