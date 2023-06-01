@@ -26,7 +26,6 @@ public class MemberUpdateDTO {
 
   @ApiModelProperty(position = 5)
   @NotBlank(message = "생년월일을 입력해 주세요.")
-  @NotNull(message = "생년월일을 입력해 주세요.")
   @Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "생년월일을 형식에 맞게 입력해 주세요.")
   private String memberBirthday;
 }

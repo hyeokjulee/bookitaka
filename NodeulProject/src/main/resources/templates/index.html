@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+    <h3>페이지 이동</h3>
+    <h5>Member</h5>
+    <div>
+        <button type="button" onclick="location.href='/members/login'">로그인</button>
+        <button type="button" onclick="location.href='/members/signup'">회원가입</button>
+        <button type="button" onclick="location.href='/members/edit'">내 정보 수정</button>
+    </div>
+    <hr>
+    <h3>토큰</h3>
+    <button type="button" id="checkSignBtn">토큰 확인</button>
+    <button type="button" id="removeTokenBtn">토큰 제거 (로그아웃)</button>
+    <button type="button" onclick="location.href='/members/test'">토큰 테스트 페이지 이동</button>
+    <div id="statusDiv"></div>
+    <hr>
+<script>
+    onload = function() {
+        checkSign();
+    }
+
+    // 토큰 확인 버튼 클릭 이벤트 처리
+    document.getElementById("checkSignBtn").addEventListener("click", function() {
+        checkSign();
+    });
+    // 토큰 제거 버튼 클릭 이벤트 처리
+    document.getElementById("removeTokenBtn").addEventListener("click", function() {
+        if(confirm("정말로 제거하시겠습니까? (로그아웃)")) {
+            location.href = "/member/signout";
+        }
+    });
+
+    // 토큰이 유효한지 여부 확인
+    function checkSign() {
+        fetch("/member/token")
+            .then((response) => response.text())
+            .then((data) => {
+                data = data.trim();
+                console.log(data);
+                if (data === 'Valid Token') {
+                    document.getElementById("statusDiv").innerHTML = '상태 : 로그인'
+                } else {
+                    document.getElementById("statusDiv").innerHTML = '상태 : 로그아웃'
+                }
+            });
+    }
+</script>
+</body>
+</html>

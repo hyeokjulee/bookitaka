@@ -11,24 +11,25 @@
     <div>
         <label>Name:</label>
         <input type="text" name="memberName" id="memberName" th:value="${member.memberName}"/>
-        <div id="memberNameError"></div>
+        <div class="errorDiv" error="memberName" style="color: red"></div>
     </div>
     <div>
         <label>Phone:</label>
         <input type="text" name="memberPhone" id="memberPhone" th:value="${member.memberPhone}"/>
-        <div id="memberPhoneError"></div>
+        <div class="errorDiv" error="memberPhone" style="color: red"></div>
     </div>
     <div>
         <label>Gender:</label>
         <input type="text" name="memberGender" id="memberGender" th:value="${member.memberGender}"/>
-        <div id="memberGenderError"></div>
+        <div class="errorDiv" error="memberGender" style="color: red"></div>
     </div>
     <div>
         <label>Birthday:</label>
         <input type="date" name="memberBirthday" id="memberBirthday" th:value="${#dates.format(member.memberBirthday, 'yyyy-MM-dd')}"/>
+        <div class="errorDiv" error="memberName" style="color: red"></div>
     </div>
     <div>
-        <button type="submit" id="editBtn">Edit</button>
+        <button type="submit" error="memberBirthday" id="editBtn">Edit</button>
     </div>
 </form>
 <script th:inline="javascript">
@@ -55,13 +56,17 @@
                 // 성공적인 응답 처리
             } else if (response.status === 400) {
                 response.json().then(data => {
+                    // 에러 메시지 초기화
+                    for (let errorDiv of document.querySelectorAll(".errorDiv")){
+                        errorDiv.innerText = "";
+                    }
                     // 응답 데이터를 파싱하여 에러 메시지 표시
                     for (const error of data) {
                         const inputField = document.querySelector(`[name="${error.field}"]`);
                         const errorMessage = error.defaultMessage;
 
                         // 해당 입력 필드 아래에 에러 메시지 표시
-                        const errorElement = inputField.nextElementSibling;
+                        const errorElement = document.querySelector(`[error="${error.field}"]`);
                         errorElement.innerText = errorMessage;
                         // inputField.parentNode.appendChild(errorElement);
                     }

@@ -26,20 +26,26 @@ public class MemberController {
     private final ModelMapper modelMapper;
 
     @GetMapping("/login")
-    public String login() {
-        return "login/login";
+    public String login(HttpServletRequest request) {
+        log.info("=====================MemberController - login");
+        if (!memberService.isValidToken(request.getCookies())) {
+            return "login/login";
+        } else {
+            return "/index";
+        }
     }
 
     @GetMapping("/test")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
     public String test() {
-        log.info("=====================test");
+        log.info("=====================MemberController - test");
         return "login/authPage";
     }
 
     @GetMapping("/edit")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
     public String edit(Model model, HttpServletRequest request) {
+        log.info("=====================MemberController - edit");
         UserResponseDTO userResponseDTO = modelMapper.map(memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN), UserResponseDTO.class);
         model.addAttribute("member", userResponseDTO);
         return "login/edit";

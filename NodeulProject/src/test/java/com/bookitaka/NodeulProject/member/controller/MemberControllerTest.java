@@ -68,24 +68,16 @@ class MemberControllerTest {
     @Test
     void login() throws Exception {
         // 테스트하고자 하는 URL 및 파라미터 설정
-//        String url = "/members/edit";
-//        String param1 = "value1";
-//        String param2 = "value2";
-//
-//        // MockMvc를 사용하여 GET 요청 보내고 응답 결과를 검증
-//        ResultActions result = mockMvc.perform(get(url)
-//                .param("param1", param1)
-//                .param("param2", param2));
-//
-//        // 응답 상태 코드 검증
-//        result.andExpect(status().isOk());
-//
-//        // 응답 뷰 및 뷰 이름 검증
-//        result.andExpect(view().name("your-view-name"));
-//
-//        // 뷰에서 전달하는 모델 속성 검증
-//        result.andExpect(model().attributeExists("yourModelAttribute"));
-//        result.andExpect(model().attribute("yourModelAttribute", "expectedValue"));
+        String url = "/members/login";
+
+        // MockMvc를 사용하여 GET 요청 보내고 응답 결과를 검증
+        ResultActions result = mockMvc.perform(get(url));
+
+        // 응답 상태 코드 검증
+        result.andExpect(status().isOk());
+
+        // 응답 뷰 및 뷰 이름 검증
+        result.andExpect(view().name("login/login"));
     }
 
     @Test

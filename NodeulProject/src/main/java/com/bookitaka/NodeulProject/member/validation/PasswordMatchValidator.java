@@ -1,32 +1,38 @@
 package com.bookitaka.NodeulProject.member.validation;
 
-import com.bookitaka.NodeulProject.member.dto.UserDataDTO;
-import org.apache.commons.beanutils.PropertyUtils;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class PasswordMatchValidator implements ConstraintValidator<PasswordMatch, Object> {
+
     private String passwordFieldName;
-    private String pwChkField;
+    private String passwordCheckFieldName;
 
     @Override
     public void initialize(PasswordMatch constraintAnnotation) {
-        passwordFieldName = constraintAnnotation.passwordField();
-        pwChkField = constraintAnnotation.passwordConfirmField();
+        passwordFieldName = constraintAnnotation.password();
+        passwordCheckFieldName = constraintAnnotation.passwordCheck();
     }
 
-
     @Override
-    public boolean isValid(Object value, ConstraintValidatorContext context) {
+    public boolean isValid(Object object, ConstraintValidatorContext context) {
         try {
-            String password = (String) PropertyUtils.getProperty(value, passwordFieldName);
-            String pwChk = (String) PropertyUtils.getProperty(value, pwChkField);
+            String password = getValue(object, passwordFieldName);
+            String passwordCheck = getValue(object, passwordCheckFieldName);
 
-            return password != null && password.equals(pwChk);
-        } catch (Exception e) {
-            // 필드 값을 가져올 수 없는 경우 기본적으로 유효하다고 판단
-            return true;
+            return password != null && password.equals(passwordCheck);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            // Handle exceptions if necessary
+            return false;
         }
+    }
+
+    private String getValue(Object object, String fieldName)
+            throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        String methodName = "get" + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
+        Method method = object.getClass().getMethod(methodName);
+        return (String) method.invoke(object);
     }
 }

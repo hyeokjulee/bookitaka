@@ -1,30 +1,43 @@
 package com.bookitaka.NodeulProject.member.dto;
 
+import com.bookitaka.NodeulProject.member.validation.PasswordMatch;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-import java.util.List;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 @Data
 @NoArgsConstructor
+@PasswordMatch(password = "memberPassword", passwordCheck = "memberPasswordCheck")
 public class UserDataDTO {
-
-  @ApiModelProperty(position = 0)
+  @NotBlank(message = "이메일을 입력해 주세요.")
+  @Pattern(regexp = "^(?:[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})?$", message = "이메일 형식이 맞는지 확인해 주세요.")
+  @ApiModelProperty(position = 1)
   private String memberEmail;
-  @ApiModelProperty(position = 1)
-  private String memberPassword;
-  @ApiModelProperty(position = 1)
-  private String memberPasswordCheck;
+
+  @NotBlank(message = "비밀번호를 입력해 주세요.")
   @ApiModelProperty(position = 2)
-  private String memberName;
+  private String memberPassword;
+
+  @NotBlank(message = "비밀번호(확인)를 입력해 주세요.")
   @ApiModelProperty(position = 3)
-  private String memberPhone;
+  private String memberPasswordCheck;
+
+  @NotBlank(message = "이름을 입력해 주세요.")
   @ApiModelProperty(position = 4)
-  private String memberGender;
-//  @ApiModelProperty(position = 5)
-//  private Date memberBirthday;
+  private String memberName;
+
+  @NotBlank(message = "핸드폰 번호를 입력해 주세요.")
+  @ApiModelProperty(position = 5)
+  private String memberPhone;
+
+  @NotBlank(message = "성별을 입력해 주세요.")
   @ApiModelProperty(position = 6)
-  private String memberRole;
+  private String memberGender;
+
+  @NotBlank(message = "생일을 입력해 주세요.")
+  @ApiModelProperty(position = 7)
+  private String memberBirthday;
 }

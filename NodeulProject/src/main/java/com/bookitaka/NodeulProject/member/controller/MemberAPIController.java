@@ -11,24 +11,18 @@ import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -82,7 +76,7 @@ public class MemberAPIController {
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 422, message = "Member Email is already in use")})
-  public String signup(@ApiParam("Signup Member") @ModelAttribute UserDataDTO user) {
+  public String signup(@ApiParam("Signup Member") @Validated @ModelAttribute UserDataDTO user) {
     log.info("================================Member : signup");
     memberService.signup(modelMapper.map(user, Member.class));
     return "Sign-up ok";
@@ -210,7 +204,6 @@ public class MemberAPIController {
       setCookie(response, token, Token.ACCESS_TOKEN, false);
       response.sendRedirect((String) request.getAttribute("uri"));
     }
-    response.sendRedirect("/members/login");
   }
 
   private void setCookie(HttpServletResponse response, String token, String tokenCookieName, boolean isSignout) {
