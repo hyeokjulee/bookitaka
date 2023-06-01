@@ -38,7 +38,7 @@ public class MemberController {
     }
 
     @GetMapping("/edit")
-    @PreAuthorize("hasRole('ROLE_MEMBER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
     public String edit(Model model, HttpServletRequest request) {
         UserResponseDTO userResponseDTO = modelMapper.map(memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN), UserResponseDTO.class);
         model.addAttribute("member", userResponseDTO);

@@ -30,9 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -58,9 +56,9 @@ class MemberAPIControllerTest {
     private String testToken = null;
 
     @BeforeEach
-    void beforeTest() throws ParseException {
+    void beforeTest() {
         testMember = new Member(null, testEmail, passwordEncoder.encode(testPassword), "tester",
-                "010-0101-0101", "F", new Date(), MemberRoles.ADMIN, null);
+                "010-0101-0101", "F", "2222-22-22", MemberRoles.ADMIN, null);
         memberRepository.save(testMember);
         testToken = jwtTokenProvider.createToken(testEmail, MemberRoles.ADMIN);
     }
@@ -156,14 +154,11 @@ class MemberAPIControllerTest {
         //when
         ResultActions resultActions = mockMvc.perform(requestBuilder);
         //then
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.000+00:00");
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String birthDay =  simpleDateFormat.format(testMember.getMemberBirthday());
         String resultJson = "{\"memberEmail\":\"aaa@aaa.com\"," +
                 "\"memberName\":\"tester\"," +
                 "\"memberPhone\":\"010-0101-0101\"," +
                 "\"memberGender\":\"F\"," +
-                "\"memberBirthday\":\"" + birthDay +"\"," +
+                "\"memberBirthday\":\"2222-22-22\"," +
                 "\"memberRole\":\"ROLE_ADMIN\"}";
         resultActions
                 .andExpect(status().isOk())
@@ -184,14 +179,11 @@ class MemberAPIControllerTest {
         //when
         ResultActions resultActions = mockMvc.perform(requestBuilder);
         //then
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.000+00:00");
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String birthDay =  simpleDateFormat.format(testMember.getMemberBirthday());
         String resultJson = "{\"memberEmail\":\"aaa@aaa.com\"," +
                 "\"memberName\":\"tester\"," +
                 "\"memberPhone\":\"010-0101-0101\"," +
                 "\"memberGender\":\"F\"," +
-                "\"memberBirthday\":\"" + birthDay +"\"," +
+                "\"memberBirthday\":\"2222-22-22\"," +
                 "\"memberRole\":\"ROLE_ADMIN\"}";
         resultActions
                 .andExpect(status().isOk())
@@ -239,5 +231,42 @@ class MemberAPIControllerTest {
         //then
         resultActions
                 .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    @DisplayName("Member API 컨트롤러 - 회원 수정")
+    void edit() throws Exception {
+        //given
+        Cookie aTokenCookie = new Cookie(Token.ACCESS_TOKEN, testToken);
+        Cookie rTokenCookie = new Cookie(Token.REFRESH_TOKEN, testToken);
+        aTokenCookie.setHttpOnly(true);
+        rTokenCookie.setHttpOnly(true);
+        MockHttpServletRequestBuilder requestBuilder1 = put("/member/{memberEmail}", testEmail)
+                .cookie(aTokenCookie)
+                .cookie(rTokenCookie)
+                .contentType("application/x-www-form-urlencoded")
+                .param("memberName", "aaa")
+                .param("memberPhone", "01001010101")
+                .param("memberGender", "222")
+                .param("memberBirthday", "2011-01-02");
+        MockHttpServletRequestBuilder requestBuilder2 = put("/member/{memberEmail}", testEmail)
+                .cookie(aTokenCookie)
+                .cookie(rTokenCookie)
+                .contentType("application/x-www-form-urlencoded")
+                .param("memberName", " ")
+                .param("memberPhone", "111")
+                .param("memberGender", "222");
+        MockHttpServletRequestBuilder requestBuilder3 = put("/member/{memberEmail}", testEmail)
+                .cookie(aTokenCookie)
+                .cookie(rTokenCookie);
+        //when
+        ResultActions resultActions1 = mockMvc.perform(requestBuilder1);
+        ResultActions resultActions2 = mockMvc.perform(requestBuilder2);
+        ResultActions resultActions3 = mockMvc.perform(requestBuilder3);
+        //then
+        resultActions1
+                .andExpect(status().isOk());
+        resultActions2
+                .andExpect(status().isBadRequest());
     }
 }

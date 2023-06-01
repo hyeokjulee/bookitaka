@@ -31,7 +31,7 @@ public class Member {
 
     private String memberGender;
 
-    private Date memberBirthday;
+    private String memberBirthday;
 
     private String memberRole;
 

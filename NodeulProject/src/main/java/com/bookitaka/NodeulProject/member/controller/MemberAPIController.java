@@ -11,19 +11,24 @@ import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -100,16 +105,18 @@ public class MemberAPIController {
 
   @PutMapping("/{memberEmail}")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
-  public ResponseEntity<String> edit(@Validated @ModelAttribute MemberUpdateDTO memberUpdateDTO,
-                                     HttpServletRequest request,
-                                     BindingResult result) {
+  public ResponseEntity<?> edit(@Validated @ModelAttribute MemberUpdateDTO memberUpdateDTO,
+                                     @PathVariable String memberEmail,
+                                     HttpServletRequest request) {
     log.info("================================Member : edit");
-    Member member = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
-    if(memberService.modifyMember(member,memberUpdateDTO)){
-      return ResponseEntity.ok("회원 정보 수정 성공");
+    Member member = memberService.search(memberEmail);
+    modelMapper.map(memberUpdateDTO, member);
+    if(memberService.modifyMember(member)) {
+      // 수정 성공시
+      return ResponseEntity.ok().build();
     } else {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 정보 수정 실패");
-
+      // 수정 실패 시
+      return ResponseEntity.internalServerError().build();
     }
   }
 
