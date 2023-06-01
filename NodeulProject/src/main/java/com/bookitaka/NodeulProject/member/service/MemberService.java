@@ -146,7 +146,6 @@ public class MemberService {
 //      if (mList.isEmpty()) {
 //        throw new CustomException("wrong birthday", HttpStatus.NOT_FOUND);
 //      }
-
       return mList;
     } else {
       throw new CustomException("wrong memberName", HttpStatus.NOT_FOUND);

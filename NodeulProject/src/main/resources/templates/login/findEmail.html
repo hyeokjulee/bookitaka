@@ -2,21 +2,79 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>이메일 찾기</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:inline="javascript">
+        // jQuery를 사용하여 폼을 제출하는 함수
+        $(document).ready(function() {
+            $('#findBtn').click(function(e) {
+                e.preventDefault(); // 기본 동작(폼 제출) 막기
+
+                // 사용자가 입력한 memberName 값 가져오기
+                var memberName = $('#memberName').val();
+
+                // REST 컨트롤러에 POST 요청 보내기
+                $.ajax({
+                    type: "POST",
+                    url: "/member/findEmail",
+                    data: {
+                        memberName: memberName
+                    },
+                    success: function(response) {
+                        var members = response;
+                        var membersDiv = $("#members");
+
+                        // members를 표시하는 로직
+                        membersDiv.empty(); // 기존 내용 제거
+
+                        for (var i = 0; i < members.length; i++) {
+                            var member = members[i];
+                            var maskedMember = maskEmail(member)
+                            membersDiv.append("<p>" + maskedMember + "</p>");
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
+        });
+
+        // 이메일 주소를 마스킹하는 함수
+        function maskEmail(email) {
+            // 이메일 문자열을 @ 기준으로 분리
+            const [username, domain] = email.split("@");
+            // username의 길이가 5 이상인 경우 첫 번째, 두 번째, 마지막 글자를 제외한 나머지를 *로 대체
+            const maskedUsername =
+                username.length >= 5
+                    ? username.charAt(0) +
+                    username.charAt(1) +
+                    "*".repeat(username.length - 3) +
+                    username.charAt(username.length - 1)
+                    : username.charAt(0) + "*".repeat(username.length - 1);
+
+            // 마스킹된 username과 domain을 합쳐서 반환
+            return maskedUsername + "@" + domain;
+        }
+
+
+    </script>
 </head>
 <body>
 <h1>이메일 찾기</h1>
-<form action="/member/findEmail" method="post">
+<form>
     <div>
         <label>name:</label>
-        <input type="text" name="memberName" id="memberName" />
+        <input type="text" name="memberName" id="memberName"/>
     </div>
-<!--    <div>-->
-<!--        <label>name:</label>-->
-<!--        <input type="text" name="memberPhone" id="memberPhone"/>-->
-<!--    </div>-->
     <div>
         <button type="submit" id="findBtn">find</button>
     </div>
 </form>
+
+<div id="members">
+    <div th:if="${errorMessage}">
+        <p th:text="${errorMessage}"></p>
+    </div>
+</div>
 </body>
 </html>

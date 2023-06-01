@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -23,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -77,8 +79,16 @@ public class MemberAPIController {
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 422, message = "Member Email is already in use")})
-  public String signup(@ApiParam("Signup Member") @ModelAttribute UserDataDTO user) {
+  public String signup(@Validated@ApiParam("Signup Member") @ModelAttribute UserDataDTO user ,BindingResult result) {
     log.info("================================Member : signup");
+    if( result.hasErrors() ) { // 에러가 있는지 검사
+      List<ObjectError> list = result.getAllErrors(); // 에러를 List로 저장
+      for( ObjectError error : list ) {
+        System.out.println(error);
+      }
+      return "/members/signup";
+    }
+
     memberService.signup(modelMapper.map(user, Member.class));
     return "Sign-up ok";
   }
@@ -127,15 +137,11 @@ public class MemberAPIController {
     }
   }
   @PostMapping("/findEmail")
-  public String findMemberEmail(@RequestParam("memberName") String memberName,
-//                                @RequestParam("memberBirthday") String memberBirthday,
-                                RedirectAttributes redirectAttributes,
-                                HttpServletResponse response
-  ) throws IOException {
-    List<String> memberEmails = memberService.getMemberEmail(memberName/*, memberBirthday*/);
-    redirectAttributes.addFlashAttribute("findResult", memberEmails);
-    response.sendRedirect("/members/findEmailResult");
-    return "redirect:/members/findEmailResult";
+  public List<String> findMemberEmail(@RequestParam("memberName") String memberName
+//                                ,@RequestParam("memberBirthday") String memberBirthday
+  ) {
+    List<String> members = memberService.getMemberEmail(memberName/*, memberBirthday*/);
+    return members;
   }
 
 
