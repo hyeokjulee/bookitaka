@@ -8,7 +8,18 @@
 <form>
     <div>
         <label>이메일:</label>
-        <input type="email" name="memberEmail" id="memberEmail"/>
+        <input type="hidden" name="memberEmail" id="memberEmail"/>
+        <input type="text" id="memberEmailF"/> @
+        <input type="text" id="memberEmailR"/>
+        <select id="memberEmailSelect">
+            <option value="" selected>직접 입력</option>
+            <option value="gmail.com">구글 (gmail)</option>
+            <option value="naver.com">네이버</option>
+            <option value="daum.net">다음</option>
+            <option value="kakao.com">카카오</option>
+            <option value="hanmail.net">다음 (한메일)</option>
+            <option value="nate.com">네이트</option>
+        </select>
         <div class="errorDiv" error="memberEmail" style="color: red"></div>
     </div>
     <div>
@@ -29,12 +40,28 @@
     </div>
     <div>
         <label>전화번호:</label>
-        <input type="text" name="memberPhone" id="memberPhone"/>
+        <input type="hidden" name="memberPhone" id="memberPhone"/>
+        <select id="memberPhoneSelect">
+            <option value="010" selected>010</option>
+            <option value="011">011</option>
+            <option value="016">016</option>
+            <option value="02">02</option>
+            <option value="031">031</option>
+            <option value="032">032</option>
+            <option value="">직접 입력</option>
+        </select>
+        <input type="text" id="memberPhoneF" value="010" readonly/>
+        <span> - </span>
+        <input type="text" id="memberPhoneC"/>
+        <span> - </span>
+        <input type="text" id="memberPhoneR"/>
         <div class="errorDiv" error="memberPhone" style="color: red"></div>
     </div>
     <div>
         <label>성별:</label>
-        <input type="text" name="memberGender" id="memberGender"/>
+        선택 안함 <input type="radio" name="memberGender" id="memberGenderN" value="" checked/>
+        남성 <input type="radio" name="memberGender" id="memberGenderM" value="남성"/>
+        여성 <input type="radio" name="memberGender" id="memberGenderF" value="여성"/>
         <div class="errorDiv" error="memberGender" style="color: red"></div>
     </div>
     <div>
@@ -46,6 +73,49 @@
         <Button type="button" id="joinBtn">회원 가입</Button>
     </div>
 </form>
+
+<script th:inline="javascript">
+    // 이메일 선택 이벤트 처리
+    document.getElementById("memberEmailSelect").addEventListener("change", function(event) {
+        selectChangeEvent("memberEmailSelect", "memberEmailR");
+    });
+
+    // 전화번호 앞자리 선택 이벤트 처리
+    document.getElementById("memberPhoneSelect").addEventListener("change", function(event) {
+        selectChangeEvent("memberPhoneSelect", "memberPhoneF");
+    });
+
+    // select 관련 폼 변경 처리
+    function selectChangeEvent(selectName, inputFormId) {
+        let selected = document.getElementById(selectName).value;
+        let memberEmailR = document.getElementById(inputFormId);
+        if (selected === '') {
+            memberEmailR.removeAttribute("readonly");
+            memberEmailR.value = "";
+            memberEmailR.focus();
+        } else {
+            memberEmailR.value = selected;
+            memberEmailR.setAttribute("readonly", "readonly");
+            if (selectName === "memberPhoneSelect") {
+                document.getElementById("memberPhoneC").focus();
+            }
+        }
+    }
+
+    // 전화번호 입력 폼 자동 이동 처리
+    document.getElementById("memberPhoneC").addEventListener("keyup", function(event) {
+        if (document.getElementById("memberPhoneC").value.length > 3) {
+            document.getElementById("memberPhoneR").focus();
+        }
+    });
+    document.getElementById("memberPhoneR").addEventListener("keyup", function(event) {
+        if (document.getElementById("memberPhoneR").value.length > 3) {
+            document.getElementById("memberPhoneR").blur();
+        }
+    });
+</script>
+
+
 <script th:inline="javascript">
     document.getElementById("joinBtn").addEventListener("click", function(event) {
         event.preventDefault(); // 폼의 기본 동작(페이지 새로고침) 방지
