@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
     <style>
         .container {
@@ -10,6 +11,25 @@
         }
         .errorMsg {
             color: red;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
         }
     </style>
 </head>
@@ -23,6 +43,20 @@
 
     <form action="/sheet/add" th:action="@{/sheet/add}" th:object="${sheetRegDto}" method="post" enctype="multipart/form-data">
         <div>
+            <button type="button" onclick="openModal()">검색</button>
+        </div>
+<!--    도서 검색 모달 창  -->
+        <div id="bookSearchModal" class="modal">
+            <div class="modal-content">
+                <h2>도서 검색</h2>
+                제목 <input type="text" id="keyword"><br>
+                작가 <input type="text" id="authorSearch"><br>
+                <button type="button" onclick="search()">검색</button><br><br>
+                <div id="searchResult"></div>
+            </div>
+        </div>
+
+        <div>
             <label for="sheetBooktitle">책 제목</label>
             <span class="errorMsg" th:errors="*{sheetBooktitle}">책 제목 오류</span>
             <input type="text" id="sheetBooktitle" th:field="*{sheetBooktitle}" class="form-control" placeholder="책 제목을 입력하세요">
@@ -35,9 +69,9 @@
         </div>
 
         <div>
-            <label for="sheetPublisher">출판사</label>
+            <label for="sheetBookpublisher">출판사</label>
             <span class="errorMsg" th:errors="*{sheetBookpublisher}">출판사 오류</span>
-            <input type="text" id="sheetPublisher" th:field="*{sheetBookpublisher}" class="form-control" placeholder="출판사를 입력하세요">
+            <input type="text" id="sheetBookpublisher" th:field="*{sheetBookpublisher}" class="form-control" placeholder="출판사를 입력하세요">
         </div>
         <div>
             <label for="sheetBookisbn">ISBN</label>
@@ -120,6 +154,75 @@
     </form>
 
 </div> <!-- /container -->
+
+<script>
+    var modal = document.getElementById("bookSearchModal");
+
+    function openModal() {
+        modal.style.display = "block";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    function search(pageNum) {
+        var keyword = $("#keyword").val();
+        var authorSearch = $("#authorSearch").val();
+        $.ajax({
+            url: "/sheet/booksearch",
+            type: "GET",
+            data: {
+                keyword: keyword,
+                authorSearch: authorSearch,
+                pageNum: pageNum,
+            },
+            success: function(data) {
+                var bookList = data.bookList;
+                var total = data.total;
+                var totalPageNum = data.totalPageNum;
+                var currentPageNum = data.currentPageNum;
+
+                var result = "";
+                result += "<div>"
+                result +=   "<p>검색 결과 : " + total + "개</p>";
+                result += "</div>"
+                for (var i = 0; i < bookList.length; i++) {
+                    result += "<div class='eachBook' onclick='getBookValue(this)'>";
+                    // result += "<img src='" + bookList[i].sheetBookimgname + "'>";
+                    result +=   "<p class='sheetBooktitle'>" + bookList[i].sheetBooktitle + "</p>";
+                    result +=   "<p class='sheetBookauthor'>" + bookList[i].sheetBookauthor + "</p>";
+                    result +=   "<p class='sheetBookpublisher'>" + bookList[i].sheetBookpublisher + "</p>";
+                    result +=   "<p class='sheetBookisbn'>" + bookList[i].sheetBookisbn + "</p>";
+                    result += "</div>"
+                    result += "<hr>"
+                }
+                result += "<div>Page: " + currentPageNum + " / " + totalPageNum;
+                result += "<button type=\"button\" onclick=\"search(3)\">다음페이지</button></div>";
+                $("#searchResult").html(result);
+            }
+        });
+    }
+
+    function getBookValue(element) {
+        var title = $(element).children(".sheetBooktitle").text();
+        var author = $(element).children(".sheetBookauthor").text();
+        var pub = $(element).children(".sheetBookpublisher").text();
+        var isbn = $(element).children(".sheetBookisbn").text();
+        $("#sheetBooktitle").val(title);
+        $("#sheetBookauthor").val(author);
+        $("#sheetBookpublisher").val(pub);
+        $("#sheetBookisbn").val(isbn);
+
+        $("#bookSearchModal").css("display", "none");
+    }
+
+</script>
+
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 </body>
 </html>

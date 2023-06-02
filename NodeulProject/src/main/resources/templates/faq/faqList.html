@@ -8,7 +8,7 @@
 FAQ list.html
 
 <hr>
-<a href="/faq">MOST</a>
+<a href="/faq/best">BEST</a>
 <a th:each="eachCategory : ${faqAllCategory}" th:href="@{/faq/{category}(category=${eachCategory})}">
     <span th:text="${eachCategory}"></span>
 </a>
@@ -16,7 +16,6 @@ FAQ list.html
 <hr>
 <a href="/faq/add">등록</a>
 
-    best
     <table class="tb_col" style="border: black 1px;">
         <tr>
             <th>Q</th>
@@ -26,7 +25,7 @@ FAQ list.html
             <th>삭제버튼</th>
             <th>수정버튼</th>
         </tr>
-        <tr th:if="${faqCategory == null}" th:each="faq : ${faqListByBest}">
+        <tr th:each="faq : ${faqAll.content}">
             <td th:text="${faq.faqQuestion}"></td>
             <td th:text="${faq.faqAnswer}"></td>
             <td th:text="${faq.faqCategory}"></td>
@@ -40,21 +39,15 @@ FAQ list.html
                 <a class="editBtn" th:href="@{/faq/edit/{faqNo}(faqNo=${faq.faqNo})}">수정</a>
             </td>
         </tr>
-        <tr th:if="${faqCategory != null}" th:each="faq : ${faqListByCategory}">
-            <td th:text="${faq.faqQuestion}"></td>
-            <td th:text="${faq.faqAnswer}"></td>
-            <td th:text="${faq.faqCategory}"></td>
-            <td th:text="${faq.faqBest}"></td>
-            <td>
-                <form th:action="@{/faq/remove/{faqNo}(faqNo=${faq.faqNo})}" method="post">
-                    <input class="deleteBtn" type="submit" value="삭제">
-                </form>
-            </td>
-            <td>
-                <a class="editBtn" th:href="@{/faq/edit/{faqNo}(faqNo=${faq.faqNo})}">수정</a>
-            </td>
-        </tr>
     </table>
+
+    <!-- 페이지 이동 버튼-->
+    <div th:each="pageNumber : ${#numbers.sequence(0, faqAll.totalPages - 1)}">
+        <form th:action="@{/faq/{category}(category=${faqCategory})}" method="get">
+            <input type="hidden" name="page" th:value="${pageNumber}" />
+            <button th:text="${pageNumber + 1}"></button>
+        </form>
+    </div>
 
 
 

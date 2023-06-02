@@ -15,14 +15,24 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/sheet")
@@ -88,7 +98,25 @@ public class SheetController {
         return "redirect:/sheet/" + sheet.getSheetNo();
     }
 
-    //테스트용 데이터 30개 넣기
+    //
+    @GetMapping("/booksearch")
+    @ResponseBody
+    public Map<String, Object> bookSearch(@RequestParam("keyword") String keyword,
+                                          @RequestParam("authorSearch") String authorSearch,
+                                          @RequestParam(name = "pageNum", defaultValue = "1") Integer pageNum,
+                                          Model model ) {
+        log.info("SheetController bookSearch 호출");
+        log.info("keyword = {}", keyword);
+        log.info("authorSearch = {}", authorSearch);
+        log.info("pageNum = {}", pageNum);
+
+        String currentPageNum = "";
+        String total = "";
+
+        return sheetService.searchBook(keyword, authorSearch, pageNum);
+    }
+
+        //테스트용 데이터 30개 넣기
 //    @PostMapping("/add")
 //    public String sheetAdd(@ModelAttribute SheetRegDto sheetRegDto,
 //                           @RequestParam("sheetBookImg") MultipartFile sheetBookImg,
@@ -275,4 +303,23 @@ public class SheetController {
         }
 
     }
+
+    @GetMapping("/request")
+    public String requestForm() {
+
+        return "sheet/sheetRequest";
+    }
+
+    @GetMapping("/myrequest")
+    public String listMyRequest() {
+
+        return "sheet/sheetMyRequest";
+    }
+
+    @GetMapping("/requestlist")
+    public String listRequestForAdmin() {
+
+        return "sheet/sheetRequestList";
+    }
+
 }
