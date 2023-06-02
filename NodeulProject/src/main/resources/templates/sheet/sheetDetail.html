@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <style>
     .container {
@@ -50,6 +52,11 @@
             <a id="sheetFile" class="btn btn-primary" th:href="|/sheet/sheetFile/*{sheet.sheetFileuuid}|">다운로드</a>
         </div>
 
+        <!--장바구니에 담기 버튼-->
+        <div>
+            <a th:onclick="'cartAdd(\'' + ${sheet.sheetNo} + '\')'" class="btn btn-secondary">장바구니에 담기</a>
+        </div>
+
 <!--    <iframe id="pdf-iframe" src="" width="100%" height="800px"></iframe>-->
     <div id="pdf-preview-container">
         <div id="pdf-preview" style="width: 100%; height: 800px; overflow-x: scroll;">
@@ -86,6 +93,16 @@
         </div>
 
         <div>
+            <label for="sheetBuyCnt">다운로드 수</label>
+            <input type="text" id="sheetBuyCnt" th:field="*{sheet.sheetBuycnt}" class="form-control" readonly>
+        </div>
+
+        <div>
+            <label for="sheetHit">조회 수</label>
+            <input type="text" id="sheetHit" th:field="*{sheet.sheetHit}" class="form-control" readonly>
+        </div>
+
+        <div>
             <label for="sheetRegdate">등록일자</label>
             <input type="text" id="sheetRegdate" th:field="*{sheet.sheetRegdate}" class="form-control" readonly>
         </div>
@@ -106,13 +123,14 @@
             </div>
             <div class="col">
                 <form th:action="@{/sheet/list}">
-                <button class="w-100 btn btn-secondary" type="submit">목록으로</button>
-                <input type="hidden" name="genre" th:value="${genre}">
-                <input type="hidden" name="ageGroup" th:value="${ageGroup}">
-                <input type="hidden" name="pageNum" th:value="${cri.pageNum}">
-                <input type="hidden" name="amount" th:value="${cri.amount}">
-                <input type="hidden" name="searchType" th:value="${cri.searchType}">
-                <input type="hidden" name="searchWord" th:value="${cri.searchWord}">
+                    <button class="w-100 btn btn-secondary" type="submit">목록으로</button>
+                    <input type="hidden" name="genre" th:value="${genre}">
+                    <input type="hidden" name="ageGroup" th:value="${ageGroup}">
+                    <input type="hidden" name="pageNum" th:value="${cri.pageNum}">
+                    <input type="hidden" name="amount" th:value="${cri.amount}">
+                    <input type="hidden" name="searchType" th:value="${cri.searchType}">
+                    <input type="hidden" name="searchWord" th:value="${cri.searchWord}">
+                    <input type="hidden" name="sort" th:value="${cri.sort}">
                 </form>
             </div>
         </div>
@@ -122,6 +140,29 @@
 
 <script src="/pdfjs/build/pdf.js"></script>
 <script>
+    // 상품 삭제 요청을 보내고 성공 시 장바구니 목록 갱신
+    function cartAdd(sheetNo) {
+        console.log(sheetNo);
+        $.ajax({
+          url: '/cart/cartAdd',  // 서버의 상품 삭제 API 엔드포인트
+          type: 'POST',
+          data: { sheetNo: sheetNo },
+          success: function(response) {
+            if (response.success) {
+              alert("추가에 성공하였습니다")
+            } else {
+              console.error('추가 요청이 실패하였습니다.', error);
+              alert('추가 요청이 실패하였습니다.')
+            }
+          },
+          error: function() {
+            console.error('추가 요청 중 에러가 발생하였습니다.', error);
+            alert("추가 요청 중 에러가 발생하였습니다.")
+          }
+        });
+    }
+
+
     function deleteCheck(sheetNo) {
         if (confirm("정말로 삭제하시겠습니까?")) {
          deleteSheet(sheetNo)

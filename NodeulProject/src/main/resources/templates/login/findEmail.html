@@ -1,12 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>이메일 찾기 결과</title>
+    <title>이메일 찾기</title>
 </head>
 <body>
-<h1>이메일 찾기 결과</h1>
-<ul>
-    <li th:each="email : ${memberEmails}" th:text="${email}"></li>
-</ul>
+<h1>이메일 찾기</h1>
+<form action="/member/findEmail" method="post">
+    <div>
+        <label>name:</label>
+        <input type="text" name="memberName" id="memberName" />
+    </div>
+<!--    <div>-->
+<!--        <label>name:</label>-->
+<!--        <input type="text" name="memberPhone" id="memberPhone"/>-->
+<!--    </div>-->
+    <div>
+        <button type="submit" id="findBtn">find</button>
+    </div>
+</form>
 </body>
 </html>
