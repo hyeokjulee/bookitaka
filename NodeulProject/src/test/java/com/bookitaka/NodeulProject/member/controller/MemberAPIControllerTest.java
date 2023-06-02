@@ -58,7 +58,7 @@ class MemberAPIControllerTest {
     @BeforeEach
     void beforeTest() {
         testMember = new Member(null, testEmail, passwordEncoder.encode(testPassword), "tester",
-                "010-0101-0101", "F", "2222-22-22", MemberRoles.ADMIN, null);
+                "010-0101-0101", "F", "2023-01-01", MemberRoles.ADMIN, null);
         memberRepository.save(testMember);
         testToken = jwtTokenProvider.createToken(testEmail, MemberRoles.ADMIN);
     }
@@ -158,7 +158,7 @@ class MemberAPIControllerTest {
                 "\"memberName\":\"tester\"," +
                 "\"memberPhone\":\"010-0101-0101\"," +
                 "\"memberGender\":\"F\"," +
-                "\"memberBirthday\":\"2222-22-22\"," +
+                "\"memberBirthday\":\"2023-01-01\"," +
                 "\"memberRole\":\"ROLE_ADMIN\"}";
         resultActions
                 .andExpect(status().isOk())
@@ -183,7 +183,7 @@ class MemberAPIControllerTest {
                 "\"memberName\":\"tester\"," +
                 "\"memberPhone\":\"010-0101-0101\"," +
                 "\"memberGender\":\"F\"," +
-                "\"memberBirthday\":\"2222-22-22\"," +
+                "\"memberBirthday\":\"2023-01-01\"," +
                 "\"memberRole\":\"ROLE_ADMIN\"}";
         resultActions
                 .andExpect(status().isOk())
@@ -268,5 +268,34 @@ class MemberAPIControllerTest {
                 .andExpect(status().isOk());
         resultActions2
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("Member API 컨트롤러 - 아이디 찾기")
+    void findEmail() throws Exception {
+        //given
+        MockHttpServletRequestBuilder requestBuilder = post("/member/findEmail")
+                .contentType("application/x-www-form-urlencoded")
+                .param("memberName", "tester")
+                .param("memberBirthday", "2023-01-01");
+        MockHttpServletRequestBuilder requestBuilder2 = post("/member/findEmail")
+                .contentType("application/x-www-form-urlencoded")
+                .param("memberName", "")
+                .param("memberBirthday", "2023-01-01");
+        MockHttpServletRequestBuilder requestBuilder3 = post("/member/findEmail")
+                .contentType("application/x-www-form-urlencoded")
+                .param("memberName", "tester")
+                .param("memberBirthday", "2023-01-02");
+        //when
+        ResultActions resultActions = mockMvc.perform(requestBuilder);
+        ResultActions resultActions2 = mockMvc.perform(requestBuilder2);
+        ResultActions resultActions3 = mockMvc.perform(requestBuilder3);
+        //then
+        resultActions
+                .andExpect(status().isOk());
+        resultActions2
+                .andExpect(status().isBadRequest());
+        resultActions3
+                .andExpect(status().isUnprocessableEntity());
     }
 }

@@ -8,6 +8,7 @@ import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.NotReadablePropertyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -132,16 +134,18 @@ public class MemberAPIController {
         log.info("========================================================= findEmail");
         List<String> members = memberService.getMemberEmail(memberFindEmailDTO);
         log.info("========================================================= members : {}",members);
+        if(bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }
         if (members == null) {
             log.info("membersSize");
-            bindingResult.rejectValue("asd", "일치하는 회원이 없습니다", "일치하는 회원이 없습니다");
+            bindingResult.rejectValue("memberBirthday", "getMemberEmail.notFoundMember", "일치하는 회원이 없습니다");
             log.info("{}",bindingResult.getAllErrors());
 
             return ResponseEntity.unprocessableEntity().body(bindingResult.getAllErrors());
-        } else {
-            log.info("OKOKOKOKOKOK");
-            return ResponseEntity.ok().body(members);
         }
+        log.info("OKOKOKOKOKOK");
+        return ResponseEntity.ok().body(members);
     }
 
 
