@@ -99,12 +99,8 @@ public class MemberService {
     return memberRepository.findByMemberEmail(jwtTokenProvider.getMemberEmail(jwtTokenProvider.resolveToken(cookies, tokenCookieName)));
   }
 
-  public boolean modifyMember(Member member, MemberUpdateDTO memberUpdateDTO) {
+  public boolean modifyMember(Member member) {
     if (memberRepository.existsByMemberEmail(member.getMemberEmail())) {
-      member.setMemberName(memberUpdateDTO.getMemberName());
-      member.setMemberGender(memberUpdateDTO.getMemberGender());
-      member.setMemberPhone(memberUpdateDTO.getMemberPhone());
-      //member.setMemberBirthday(memberUpdateDTO.getMemberBirthday());
       memberRepository.save(member);
       return true;
     } else {

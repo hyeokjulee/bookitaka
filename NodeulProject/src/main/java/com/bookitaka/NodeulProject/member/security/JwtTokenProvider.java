@@ -97,7 +97,10 @@ public class JwtTokenProvider {
 
   // 토큰에서 이메일 얻기
   public String getMemberEmail(String token) {
-    return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().getSubject();
+    if (token != null) {
+      return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().getSubject();
+    }
+    return null;
   }
 
   // 토큰에서 만료 시간 얻기

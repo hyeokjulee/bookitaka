@@ -1,37 +1,105 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>회원 가입</title>
 </head>
 <body>
 <h1>회원 가입</h1>
-<form action="/member/signup" method="post" >
+<form>
     <div>
         <label>이메일:</label>
-        <input type="email" name="memberEmail"/>
+        <input type="email" name="memberEmail" id="memberEmail"/>
+        <div class="errorDiv" error="memberEmail" style="color: red"></div>
     </div>
     <div>
         <label>비밀번호:</label>
-        <input type="password" name="memberPassword"/>
+        <input type="password" name="memberPassword" id="memberPassword"/>
+        <div class="errorDiv" error="memberPassword" style="color: red"></div>
+    </div>
+    <div>
+        <label>비밀번호(확인):</label>
+        <input type="password" name="memberPasswordCheck" id="memberPasswordCheck"/>
+        <div class="errorDiv" error="memberPasswordCheck" style="color: red"></div>
+        <div class="errorDiv" error="PasswordMatch" style="color: red"></div>
     </div>
     <div>
         <label>이름:</label>
-        <input type="text" name="memberName"/>
+        <input type="text" name="memberName" id="memberName"/>
+        <div class="errorDiv" error="memberName" style="color: red"></div>
     </div>
     <div>
         <label>전화번호:</label>
-        <input type="text" name="memberPhone"/>
+        <input type="text" name="memberPhone" id="memberPhone"/>
+        <div class="errorDiv" error="memberPhone" style="color: red"></div>
     </div>
     <div>
         <label>성별:</label>
-        <input type="text" name="memberGender"/>
+        <input type="text" name="memberGender" id="memberGender"/>
+        <div class="errorDiv" error="memberGender" style="color: red"></div>
     </div>
-    <!--    <div>-->
-    <!--        <label>생년월일:</label>-->
-    <!--        <input type="text" name="memberBirthday"/>-->
-    <!--    </div>-->
     <div>
-        <Button type="submit" id="joinBtn">회원 가입</Button>
+        <label>생년월일:</label>
+        <input type="date" name="memberBirthday" id="memberBirthday"/>
+        <div class="errorDiv" error="memberBirthday" style="color: red"></div>
+    </div>
+    <div>
+        <Button type="button" id="joinBtn">회원 가입</Button>
     </div>
 </form>
+<script th:inline="javascript">
+    document.getElementById("joinBtn").addEventListener("click", function(event) {
+        event.preventDefault(); // 폼의 기본 동작(페이지 새로고침) 방지
+
+        let memberEmail = document.getElementById("memberEmail").value;
+        let memberPassword = document.getElementById("memberPassword").value;
+        let memberPasswordCheck = document.getElementById("memberPasswordCheck").value;
+        let memberName = document.getElementById("memberName").value;
+        let memberPhone = document.getElementById("memberPhone").value;
+        let memberGender = document.getElementById("memberGender").value;
+        let memberBirthday = document.getElementById("memberBirthday").value;
+        console.log(memberName, memberPhone, memberGender, memberBirthday)
+        let formData = new URLSearchParams({
+            memberEmail: memberEmail,
+            memberPassword: memberPassword,
+            memberPasswordCheck: memberPasswordCheck,
+            memberName: memberName,
+            memberPhone: memberPhone,
+            memberGender: memberGender,
+            memberBirthday: memberBirthday
+        });
+        fetch("/member/signup", {
+            method: 'POST',
+            body: formData
+        })
+            .then((response) => {
+                if (response.ok) {
+                    // 회원 가입 성공 시
+                    location.href = "/members/login";
+                } else if (response.status === 400) {
+                    response.json().then(data => {
+                        // 에러 메시지 초기화
+                        for (let errorDiv of document.querySelectorAll(".errorDiv")){
+                            errorDiv.innerText = "";
+                        }
+                        // 응답 데이터를 파싱하여 에러 메시지 표시
+                        console.log(data);
+                        for (const error of data) {
+                            let errorElement = null;
+                            if (error.field == null) {
+                                errorElement = document.querySelector(`[error="${error.code}"]`);
+                            } else {
+                                // 해당 입력 필드 아래에 에러 메시지 표시
+                                errorElement = document.querySelector(`[error="${error.field}"]`);
+                            }
+                            errorElement.innerText = error.defaultMessage;
+                            // inputField.parentNode.appendChild(errorElement);
+                        }
+                    });
+                } else {
+                    // 기타 상태 코드에 대한 처리
+                }
+            })
+    });
+</script>
 </body>
 </html>

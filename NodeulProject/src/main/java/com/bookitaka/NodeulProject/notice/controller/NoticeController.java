@@ -5,7 +5,7 @@ import com.bookitaka.NodeulProject.notice.dto.NoticeDto;
 import com.bookitaka.NodeulProject.notice.service.NoticeService;
 
 import lombok.AllArgsConstructor;
-//import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -54,7 +54,7 @@ public class NoticeController {
         return "notice/update.html";
     }
 
-    @PutMapping("/post/edit/{noticeNo}")
+    @PostMapping(value = "/post/edit/{noticeNo}")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public String updateNotice(@PathVariable("noticeNo") Integer noticeNo, Notice notice ) {
         noticeService.updateNotice(noticeNo, notice);
@@ -62,14 +62,14 @@ public class NoticeController {
     }
 
     @DeleteMapping("/post/{noticeNo}")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String delete(@PathVariable("noticeNo") Integer noticeNo) {
         noticeService.removeNotice(noticeNo);
 
         return "redirect:/notice/list";
     }
 
-    @GetMapping("/notice/search")
+    @GetMapping("/search")
     public String search(@RequestParam(value="keyword")String keyword, Model model){
         List<NoticeDto> noticeDtoList = noticeService.searchNotice(keyword);
 

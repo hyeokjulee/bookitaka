@@ -1,19 +1,33 @@
 package com.bookitaka.NodeulProject.member.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
@@ -31,7 +45,7 @@ public class GlobalExceptionHandlerController {
   }
 
   @ExceptionHandler(CustomException.class)
-  public void handleCustomException(HttpServletResponse res, CustomException ex) throws IOException {
+  public void handleCustomEception(HttpServletResponse res, CustomException ex) throws IOException {
     log.info("Custom Exception Handler");
     res.sendError(ex.getHttpStatus().value(), ex.getMessage());
   }
@@ -40,6 +54,24 @@ public class GlobalExceptionHandlerController {
   public void handleAccessDeniedException(HttpServletResponse res) throws IOException {
     log.info("Access Denied Exception Handler");
     res.sendError(HttpStatus.FORBIDDEN.value(), "Access denied");
+  }
+
+  @ExceptionHandler(BindException.class)
+  public ResponseEntity<List<ObjectError>> handleBindException(BindException ex) {
+    // 바인딩 예외 처리 로직을 구현합니다.
+    BindingResult bindingResult = ex.getBindingResult();
+    List<ObjectError> errors = bindingResult.getAllErrors();
+    // 에러 처리 로직을 구현합니다.
+    return ResponseEntity.badRequest().body(errors);
+  }
+
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<List<ObjectError>> handleValidationException(MethodArgumentNotValidException ex) {
+    // 바인딩 예외 처리 로직을 구현합니다.
+    BindingResult bindingResult = ex.getBindingResult();
+    List<ObjectError> errors = bindingResult.getAllErrors();
+    // 에러 처리 로직을 구현합니다.
+    return ResponseEntity.badRequest().body(errors);
   }
 
   @ExceptionHandler(Exception.class)

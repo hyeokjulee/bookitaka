@@ -14,7 +14,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
@@ -79,7 +78,7 @@ public class MemberAPIController {
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 422, message = "Member Email is already in use")})
-  public String signup(@Validated@ApiParam("Signup Member") @ModelAttribute UserDataDTO user ,BindingResult result) {
+  public String signup(@ApiParam("Signup Member") @Validated @ModelAttribute UserDataDTO user) {
     log.info("================================Member : signup");
     if( result.hasErrors() ) { // 에러가 있는지 검사
       List<ObjectError> list = result.getAllErrors(); // 에러를 List로 저장
@@ -110,16 +109,18 @@ public class MemberAPIController {
 
   @PutMapping("/{memberEmail}")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
-  public ResponseEntity<String> edit(@Validated @ModelAttribute MemberUpdateDTO memberUpdateDTO,
-                                     HttpServletRequest request,
-                                     BindingResult result) {
+  public ResponseEntity<?> edit(@Validated @ModelAttribute MemberUpdateDTO memberUpdateDTO,
+                                     @PathVariable String memberEmail,
+                                     HttpServletRequest request) {
     log.info("================================Member : edit");
-    Member member = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
-    if(memberService.modifyMember(member,memberUpdateDTO)){
-      return ResponseEntity.ok("회원 정보 수정 성공");
+    Member member = memberService.search(memberEmail);
+    modelMapper.map(memberUpdateDTO, member);
+    if(memberService.modifyMember(member)) {
+      // 수정 성공시
+      return ResponseEntity.ok().build();
     } else {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("회원 정보 수정 실패");
-
+      // 수정 실패 시
+      return ResponseEntity.internalServerError().build();
     }
   }
 

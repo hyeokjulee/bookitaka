@@ -5,50 +5,76 @@
 </head>
 <body>
 <h1>Edit</h1>
-<form method="post" th:action="@{/member/{memberEmail}(memberEmail=${member.memberEmail})}" th:object="${member}">
+<form th:object="${member}">
     <input type="hidden" name="_method" value="PUT" />
 
     <div>
         <label>Name:</label>
         <input type="text" name="memberName" id="memberName" th:value="${member.memberName}"/>
+        <div class="errorDiv" error="memberName" style="color: red"></div>
     </div>
     <div>
         <label>Phone:</label>
         <input type="text" name="memberPhone" id="memberPhone" th:value="${member.memberPhone}"/>
+        <div class="errorDiv" error="memberPhone" style="color: red"></div>
     </div>
     <div>
         <label>Gender:</label>
         <input type="text" name="memberGender" id="memberGender" th:value="${member.memberGender}"/>
+        <div class="errorDiv" error="memberGender" style="color: red"></div>
     </div>
-    <!--    <div>-->
-    <!--        <label>Birthday:</label>-->
-    <!--        <input type="text" name="memberBirthday"/>-->
-    <!--    </div>-->
     <div>
-        <button type="submit" id="editBtn">Edit</button>
+        <label>Birthday:</label>
+        <input type="date" name="memberBirthday" id="memberBirthday" th:value="${#dates.format(member.memberBirthday, 'yyyy-MM-dd')}"/>
+        <div class="errorDiv" error="memberName" style="color: red"></div>
+    </div>
+    <div>
+        <button type="submit" error="memberBirthday" id="editBtn">Edit</button>
     </div>
 </form>
-<script>
+<script th:inline="javascript">
     document.getElementById("editBtn").addEventListener("click", function(event) {
         event.preventDefault(); // 폼의 기본 동작(페이지 새로고침) 방지
 
         let memberName = document.getElementById("memberName").value;
         let memberPhone = document.getElementById("memberPhone").value;
         let memberGender = document.getElementById("memberGender").value;
+        let memberBirthday = document.getElementById("memberBirthday").value;
+        console.log(memberName, memberPhone, memberGender, memberBirthday)
         let formData = new URLSearchParams({
             memberName: memberName,
             memberPhone: memberPhone,
-            memberGender: memberGender
+            memberGender: memberGender,
+            memberBirthday: memberBirthday
         });
-
-        fetch("/member/edit", {
-            method: 'PUT', // 수정된 부분: PUT 대신 POST로 변경
+        fetch("/member/" + /*[[${member.memberEmail}]]*/ '', {
+            method: 'PUT',
             body: formData
         })
-            .then((response) => response.text())
-            .then((data) => {
-                console.log(data);
-            });
+        .then((response) => {
+            if (response.ok) {
+                // 성공적인 응답 처리
+            } else if (response.status === 400) {
+                response.json().then(data => {
+                    // 에러 메시지 초기화
+                    for (let errorDiv of document.querySelectorAll(".errorDiv")){
+                        errorDiv.innerText = "";
+                    }
+                    // 응답 데이터를 파싱하여 에러 메시지 표시
+                    for (const error of data) {
+                        const inputField = document.querySelector(`[name="${error.field}"]`);
+                        const errorMessage = error.defaultMessage;
+
+                        // 해당 입력 필드 아래에 에러 메시지 표시
+                        const errorElement = document.querySelector(`[error="${error.field}"]`);
+                        errorElement.innerText = errorMessage;
+                        // inputField.parentNode.appendChild(errorElement);
+                    }
+                });
+            } else {
+                // 기타 상태 코드에 대한 처리
+            }
+        })
     });
 </script>
 </body>
