@@ -25,12 +25,10 @@ FAQ 등록 폼 / faqAddForm.html
 </form>
 
 
-<script>
-    $('.cancelBtn').on('click', function() {
+<script th:inline="javascript">
+    document.querySelector('.cancelBtn').addEventListener('click', function() {
         window.history.back();
     });
-
-
 </script>
 </body>
 </html>

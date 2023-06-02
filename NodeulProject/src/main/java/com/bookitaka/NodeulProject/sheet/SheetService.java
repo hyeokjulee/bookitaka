@@ -5,7 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @Service
 public interface SheetService {
@@ -35,5 +35,7 @@ public interface SheetService {
     public List<SheetAgegroup> getAllSheetAgeGroup();
 
     public String getFileNameByUuid(String uuid);
+
+    public Map<String, Object> searchBook(String keyword, String authorSearch, Integer pageNum);
 
 }
