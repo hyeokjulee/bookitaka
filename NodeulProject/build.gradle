@@ -18,6 +18,13 @@ repositories {
 	mavenCentral()
 }
 
+//결제모듈 관련
+allprojects {
+	repositories {
+		maven { url 'https://jitpack.io' }
+	}
+}
+
 dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -57,6 +64,9 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	// validation 전체 적용
 	implementation 'commons-beanutils:commons-beanutils:1.9.4'
+
+	//결제모듈 연동
+	implementation 'com.github.iamport:iamport-rest-client-java:0.2.22'
 
 }
 
