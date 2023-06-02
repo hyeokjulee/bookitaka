@@ -6,16 +6,18 @@ function showCarts() {
       success: function(response) {
         if (response.success) {
           var carts = response.carts;
+          var sheets = response.sheets;
           var tableBody = $('#carts');
           tableBody.empty();
 
           for (var i = 0; i < carts.length; i++) {
             var cart = carts[i];
+            var sheet = sheets[i];
             var row = $('<tr></tr>');
             row.append('<td><input type="checkbox" name="selectedItem" value="' + cart.sheetNo + '"></td>');
-            row.append('<td>' + cart.memberEmail + '</td>');
-            row.append('<td>' + cart.sheetNo + '</td>');
-            row.append('<td>' + cart.cartRegdate + '</td>');
+            row.append('<td><img src="/sheet/bookImg/' + sheet.sheetBookimguuid + sheet.sheetBookimgname + '" width="150" height="150"></td>');
+            row.append('<td>' + sheet.sheetBooktitle + '</td>');
+            row.append('<td>' + sheet.sheetPrice + '</td>');
             row.append('<td><button type="button" class="btn btn-secondary">구매하기</button><button type="button" class="btn btn-secondary btn-delete" data-no="' + cart.sheetNo + '">삭제</button></td>');
             tableBody.append(row);
           }
@@ -35,9 +37,6 @@ function deleteCart(sheetNo) {
       url: '/cart/deleteCart',  // 서버의 상품 삭제 API 엔드포인트
       type: 'POST',
       data: { sheetNo: sheetNo },
-//      beforeSend: function(xhr) {
-//        xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
-//      },
       success: function(response) {
         if (response.success) {
           showCarts();  // 목록 갱신
@@ -56,9 +55,6 @@ function emptyCart() {
     $.ajax({
       url: '/cart/emptyCart',  // 서버의 비우기 API 엔드포인트
       type: 'POST',
-//      beforeSend: function(xhr) {
-//        xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
-//      },
       success: function(response) {
         if (response.success) {
           showCarts();  // 목록 갱신
@@ -86,9 +82,6 @@ function deleteSelectedCart() {
     url: '/cart/deleteSelectedCart',
     data: JSON.stringify(selectedItems),
     contentType: 'application/json',
-//    beforeSend: function(xhr) {
-//      xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
-//    },
     success: function(response) {
       if (response.success) {
           showCarts();  // 목록 갱신

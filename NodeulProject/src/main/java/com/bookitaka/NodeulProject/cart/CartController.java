@@ -1,6 +1,7 @@
 package com.bookitaka.NodeulProject.cart;
 
 import com.bookitaka.NodeulProject.member.service.MemberService;
+import com.bookitaka.NodeulProject.sheet.Sheet;
 import com.bookitaka.NodeulProject.sheet.SheetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +20,6 @@ import java.util.Map;
 public class CartController {
     private final CartService cartService;
     private final SheetService sheetService;
-    private final MemberService memberService;
     private final HttpServletRequest request;
 
     @GetMapping("/cart")
@@ -32,8 +33,13 @@ public class CartController {
         Map<String, Object> response = new HashMap<>();
         String email = request.getRemoteUser();
         List<Cart> carts = cartService.getCartByMemberEmail(email);
+        List<Sheet> sheets = new ArrayList<>();;
+        for (var i = 0; i < carts.size(); i++) {
+            sheets.add(sheetService.getSheet(carts.get(i).getSheetNo()));
+        }
         response.put("success", true);
         response.put("carts", carts);
+        response.put("sheets", sheets);
         return ResponseEntity.ok(response);
     }
 

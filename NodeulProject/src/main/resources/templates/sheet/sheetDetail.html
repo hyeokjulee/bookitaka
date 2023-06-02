@@ -147,9 +147,6 @@
           url: '/cart/cartAdd',  // 서버의 상품 삭제 API 엔드포인트
           type: 'POST',
           data: { sheetNo: sheetNo },
-    //      beforeSend: function(xhr) {
-    //        xhr.setRequestHeader('X-CSRF-TOKEN', $('meta[name="_csrf"]').attr('content'));
-    //      },
           success: function(response) {
             if (response.success) {
               alert("추가에 성공하였습니다")
