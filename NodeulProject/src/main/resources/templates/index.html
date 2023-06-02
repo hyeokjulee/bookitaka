@@ -9,7 +9,7 @@
     <!-- ===============================================-->
     <!--    Document Title-->
     <!-- ===============================================-->
-    <title>little squirrel | Landing, Responsive &amp; Business Templatee</title>
+    <title>북키타카</title>
 
 
     <!-- ===============================================-->
@@ -48,8 +48,6 @@
           <div class="row align-items-center">
             <div class="col-auto ms-md-auto order-md-2 d-none d-sm-block">
               <ul class="list-unstyled list-inline my-2">
-                <li class="list-inline-item"><a class="text-decoration-none" href="#!"><i class="fab fa-facebook-f text-900"></i></a></li>
-                <li class="list-inline-item"><a class="text-decoration-none" href="#!"><i class="fab fa-pinterest text-900"></i></a></li>
                 <li class="list-inline-item"><a class="text-decoration-none" href="#!"><i class="fab fa-twitter text-900"></i></a></li>
                 <li class="list-inline-item"><a class="text-decoration-none" href="#!"><i class="fab fa-instagram text-900"> </i></a></li>
               </ul>
@@ -68,7 +66,7 @@
       <nav class="navbar navbar-expand-lg navbar-light sticky-top py-2 d-block" data-navbar-on-scroll="data-navbar-on-scroll">
         <div class="container">
           <a class="navbar-brand" th:href="@{/index.html}">
-            <img src="assets/img/gallery/logo-n.png" height="75" alt="logo" />
+            <img src="assets/img/gallery/logo-n.png" height="80" alt="logo" />
           </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -76,19 +74,35 @@
           <div class="collapse navbar-collapse border-top border-lg-0 mt-4 mt-lg-0" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto pt-2 pt-lg-0 font-base">
               <li class="nav-item px-2">
-                <a class="nav-link active" aria-current="page" th:href="@{/index}">독후활동지</a>
+                <a class="nav-link active" aria-current="page" th:href="@{/index}">HOME</a>
               </li>
-              <li class="nav-item px-2">
-                <a class="nav-link" aria-current="page" th:href="@{/pricing}">공지사항</a>
+              <li class="nav-item dropdown">
+                <a th:href="@{/sheet/list}" class="nav-link dropdown-toggle" aria-current="page" data-bs-toggle="dropdown">독후활동지</a>
+                <div class="dropdown-menu bg-light m-0">
+                  <a th:href="@{/sheet/list?ageGroup=유아용}" class="dropdown-item">연령별</a>
+                  <a th:href="@{/sheet/list?genre=그림책}" class="dropdown-item">장르별</a>
+                  <a th:href="@{/sheet/list?genre=독서토론논제은행}" class="dropdown-item">독서토론논제은행</a>
+                  <a th:href="@{/sheet/request}" class="dropdown-item">개별출제요청</a>
+                </div>
               </li>
-              <li class="nav-item px-2">
-                <a class="nav-link" aria-current="page" th:href="@{/web-development}">고객지원</a>
+              <li class="nav-item dropdown">
+                <a th:href="@{/user-research}" class="nav-link dropdown-toggle" aria-current="page" data-bs-toggle="dropdown">알림마당</a>
+                <div class="dropdown-menu bg-light m-0">
+                  <a href="#" class="dropdown-item">Feature</a>
+                  <a href="#" class="dropdown-item">Free Quote</a>
+                  <a href="#" class="dropdown-item">Our Team</a>
+                  <a href="#" class="dropdown-item">Testimonial</a>
+                  <a href="#" class="dropdown-item">404 Page</a>
+                </div>
               </li>
-              <li class="nav-item px-2">
-                <a class="nav-link" aria-current="page" th:href="@{/user-research}">User Research</a>
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" th:href="@{/user-research}">고객지원</a>
               </li>
             </ul>
-            <a class="btn btn-primary order-1 order-lg-0" href="#!">Sign Up</a>
+            <a class="btn btn-primary order-1 order-lg-0" href="#!">로그인</a>
+            <!--<a class="btn btn-primary order-1 order-lg-0" href="#!">로그아웃</a>-->
+            <a class="btn btn-primary order-1 order-lg-0" href="#!">회원가입</a>
+            <a href="#!" class="fa-solid fa-cart-shopping"></a>
             <form class="d-flex my-3 d-block d-lg-none">
               <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
               <button class="btn btn-outline-primary" type="submit">Search</button>
@@ -109,10 +123,10 @@
       <section class="pt-6 bg-600" id="home">
         <div class="container">
           <div class="row align-items-center">
-            <div class="col-md-5 col-lg-6 order-0 order-md-1 text-end"><img class="pt-7 pt-md-0 w-100" src="assets/img/gallery/hero-header.png" width="470" alt="hero-header" /></div>
+            <div class="col-md-5 col-lg-6 order-0 order-md-1 text-end"><img class="pt-7 pt-md-0 w-100" src="assets/img/gallery/hero-header1.png" width="470" alt="hero-header" /></div>
             <div class="col-md-7 col-lg-6 text-md-start text-center py-6">
-              <h4 class="fw-bold font-sans-serif">Become Master</h4>
-              <h1 class="fs-6 fs-xl-7 mb-5">Learn New Skills Online Find Best Courses</h1><a class="btn btn-primary me-2" href="#!" role="button">Get A Quote</a><a class="btn btn-outline-secondary" href="#!" role="button">Read more</a>
+              <h4 class="fw-bold font-sans-serif">Think creatively</h4>
+              <h1 class="fw-bold fs-6 fs-xl-5 mb-5">북키타카에는 다양한<br>독후활동지가 있어요!</h1><a class="btn btn-primary me-2" href="#!" role="button">Get A Quote</a><a class="btn btn-outline-secondary" href="#!" role="button">Read more</a>
             </div>
           </div>
         </div>
@@ -127,14 +141,24 @@
           <div class="row">
             <div class="card card-span bg-secondary">
               <div class="card-body">
-                <div class="row flex-center gx-0">
-                  <div class="col-lg-4 col-xl-2 text-center text-xl-start"><img src="assets/img/gallery/funfacts.png" width="170" alt="..." /></div>
+                <!--<div class="row flex-center gx-0">-->
+                  <div class="col-lg-4 col-xl-2 text-center text-xl-start"></div>
                   <div class="col-lg-8 col-xl-4">
-                    <h1 class="text-light fs-lg-4 fs-xl-5">Upcoming Our <span class="text-primary">Basic in Python </span>Course!</h1>
+                    <form class="row g-0 align-items-center">
+                      <div class="col">
+                        <div class="input-group-icon">
+                          <input class="form-control form-little-squirrel-control" type="text" placeholder="검색어를 입력해주세요" />
+                        </div>
+                      </div>
+                      <div class="col-auto">
+                        <button class="btn btn-primary rounded-0" type="submit">검색</button>
+                      </div>
+                    </form>
+                    <!--<h1 class="text-light fs-lg-4 fs-xl-5">Upcoming Our <span class="text-primary">Basic in Python </span>Course!</h1>
                   </div>
                   <div class="col-lg-12 col-xl-6">
                     <h1 class="display-1 text-light text-center text-xl-end">11 : 02 : 45 : 21</h1>
-                  </div>
+                  </div>-->
                 </div>
               </div>
             </div>
@@ -339,47 +363,34 @@
 
         <div class="container">
           <div class="row">
-            <div class="col-12 col-sm-12 col-lg-6 mb-4 order-0 order-sm-0"><a class="text-decoration-none" href="#"><img src="assets/img/gallery/footer-logo.png" height="51" alt="" /></a>
-              <p class="text-light my-4"> <i class="fas fa-map-marker-alt me-3"></i><span class="text-light">1500 Treat Ave, Suite 200  &nbsp;</span><a class="text-light" href="tel:+604-680-9785">+604-680-9785</a><br />San Francisco, CA 94110</p>
-              <p class="text-light"> <i class="fas fa-envelope me-3"> </i><a class="text-light" href="mailto:vctung@outlook.com">vctung@outlook.com </a></p>
-              <p class="text-light"> <i class="fas fa-phone-alt me-3"></i><a class="text-light" href="tel:1-800-800-2299">1-800-800-2299 (Support)</a></p>
-            </div>
+            <div class="col-12 col-sm-12 col-lg-6 mb-4 order-0 order-sm-0"><a class="text-decoration-none" th:href="@{/index}"><img src="assets/img/gallery/logo-n.png" height="80" alt="" /></a>
+              <p class="text-dark my-4"> <i class="fas fa-map-marker-alt me-3"></i><span class="text-dark">문의시  &nbsp;</span><a class="text-dark" href="tel:+604-680-9785">+604-680-9785</a><br /></p>
+              <p class="text-dark"> <i class="fas fa-envelope me-3"> </i><a class="text-dark" href="mailto:vctung@outlook.com">vctung@outlook.com </a></p></div>
             <div class="col-6 col-sm-4 col-lg-2 mb-3 order-2 order-sm-1">
-              <h5 class="lh-lg fw-bold mb-4 text-light font-sans-serif">Community </h5>
+              <h5 class="lh-lg fw-bold mb-4 text-dark font-sans-serif">독후활동지 </h5>
               <ul class="list-unstyled mb-md-4 mb-lg-0">
-                <li class="lh-lg"><a class="text-200" href="#!">Learners</a></li>
-                <li class="lh-lg"><a class="text-200" href="#!">Partners</a></li>
-                <li class="lh-lg"><a class="text-200" href="#!">Developers</a></li>
-                <li class="lh-lg"><a class="text-200" href="#!">Beta Testers</a></li>
-                <li class="lh-lg"><a class="text-200" href="#!">Translators</a></li>
-                <li class="lh-lg"><a class="text-200" href="#!">Blog</a></li>
-                <li class="lh-lg"><a class="text-200" href="#!">Tech Blog</a></li>
-                <li class="lh-lg"><a class="text-200" href="#!">Teaching Center</a></li>
+                <li class="lh-lg"><a class="text-900" href="#!">연령별</a></li>
+                <li class="lh-lg"><a class="text-900" href="#!">장르별</a></li>
+                <li class="lh-lg"><a class="text-900" href="#!">독서토론 논제은행</a></li>
+                <li class="lh-lg"><a class="text-900" href="#!">개별출제요청</a></li>
               </ul>
             </div>
             <div class="col-6 col-sm-4 col-lg-2 mb-3 order-3 order-sm-2">
-              <h5 class="lh-lg fw-bold text-light mb-4 font-sans-serif">Informations</h5>
+              <h5 class="lh-lg fw-bold text-dark mb-4 font-sans-serif">알림마당</h5>
               <ul class="list-unstyled mb-md-4 mb-lg-0">
-                <li class="lh-lg"><a class="text-200" href="#!">About</a></li>
-                <li class="lh-lg"><a class="text-200" href="#!">Pricing</a></li>
-                <li class="lh-lg"><a class="text-200" href="#!">Blog</a></li>
-                <li class="lh-lg"><a class="text-200" href="#!">Careers</a></li>
-                <li class="lh-lg"><a class="text-200" href="#!">Contact</a></li>
+                <li class="lh-lg"><a class="text-900" href="#!">홈페이지소개</a></li>
+                <li class="lh-lg"><a class="text-900" href="#!">이용방법</a></li>
+                <li class="lh-lg"><a class="text-900" href="#!">공지사항</a></li>
               </ul>
             </div>
             <div class="col-6 col-sm-4 col-lg-2 mb-3 order-3 order-sm-2">
-              <h5 class="lh-lg fw-bold text-light mb-4 font-sans-serif"> More</h5>
+              <h5 class="lh-lg fw-bold text-dark mb-4 font-sans-serif"> 마이페이지</h5>
               <ul class="list-unstyled mb-md-4 mb-lg-0">
-                <li class="lh-lg"><a class="text-200" href="#!">Press</a></li>
-                <li class="lh-lg"><a class="text-200" href="#!">Investors</a></li>
-                <li class="lh-lg"><a class="text-200" href="#!">Terms</a></li>
-                <li class="lh-lg"><a class="text-200" href="#!">Privacy</a></li>
-                <li class="lh-lg"><a class="text-200" href="#!">Help</a></li>
-                <li class="lh-lg"><a class="text-200" href="#!">Accessibility</a></li>
-                <li class="lh-lg"><a class="text-200" href="#!">Contact</a></li>
-                <li class="lh-lg"><a class="text-200" href="#!">Articles</a></li>
-                <li class="lh-lg"><a class="text-200" href="#!">Directory</a></li>
-                <li class="lh-lg"><a class="text-200" href="#!">Affiliates</a></li>
+                <li class="lh-lg"><a class="text-900" href="#!">내 정보</a></li>
+                <li class="lh-lg"><a class="text-900" href="#!">독후활동지</a></li>
+                <li class="lh-lg"><a class="text-900" href="#!">내 출제요청</a></li>
+                <li class="lh-lg"><a class="text-900" href="#!">내 쿠폰</a></li>
+                <li class="lh-lg"><a class="text-900" href="#!">내 결제</a></li>
               </ul>
             </div>
           </div>
@@ -395,14 +406,10 @@
         <div class="container bg-primary">
           <div class="row justify-content-md-between justify-content-evenly py-4">
             <div class="col-12 col-sm-8 col-md-6 col-lg-auto text-center text-md-start">
-              <p class="fs--1 my-2 fw-bold">All rights Reserved &copy; Your Company, 2021</p>
+              <p class="fs--1 my-2 fw-bold">All rights Reserved &copy; Bookitaka</p>
             </div>
             <div class="col-12 col-sm-8 col-md-6">
-              <p class="fs--1 my-2 text-center text-md-end"> Made with&nbsp;
-                <svg class="bi bi-suit-heart-fill" xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="#EB6453" viewBox="0 0 16 16">
-                  <path d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z"></path>
-                </svg>&nbsp;by&nbsp;<a class="fw-bold text-900" href="https://themewagon.com/" target="_blank">ThemeWagon </a>
-              </p>
+              <p class="fs--1 my-2 text-center text-md-end"> Made with&nbsp;</p>
             </div>
           </div>
         </div>
@@ -424,6 +431,9 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
     <script src="vendors/fontawesome/all.min.js"></script>
     <script src="assets/js/theme.js"></script>
+
+    <!--아이콘 넣는 cdn ===============================================-->
+    <script src="https://kit.fontawesome.com/95c212c5c0.js" crossorigin="anonymous"></script>
 
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&amp;family=Rubik:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
   </body>

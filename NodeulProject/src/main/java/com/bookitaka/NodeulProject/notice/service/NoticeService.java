@@ -22,8 +22,8 @@ public class NoticeService {
 
     @Transactional
     //게시글 리스트 처리
-    public List<NoticeDto> getNoticeList(){
-        List<Notice> noticeEntities = noticeRepository.findAll(Sort.by(Sort.Direction.DESC, "noticeNo"));
+    /*public List<NoticeDto> getNoticeList(Pageable pageable){
+        Page<Notice> noticeEntities = noticeRepository.findAll(pageable);
         List<NoticeDto> noticeDtoList = new ArrayList<>();
 
         for (Notice notice : noticeEntities){
@@ -38,7 +38,12 @@ public class NoticeService {
             noticeDtoList.add(noticeDto);
         }
         return  noticeDtoList;
+    }*/
+    public Page<NoticeDto> getNoticeList(Pageable pageable) {
+        Page<Notice> noticeEntities = noticeRepository.findAll(pageable);
+        return noticeEntities.map(this::convertEntityToDto);
     }
+
 
     @Transactional //페이징
     public Page<Notice> pageList(Pageable pageable) {
@@ -80,8 +85,8 @@ public class NoticeService {
     }
 
     @Transactional
-    public List<NoticeDto> searchNotice(String keyword) {
-        List<Notice> noticeEntities = noticeRepository.findByNoticeTitleContaining(keyword,Sort.by(Sort.Direction.DESC, "noticeNo"));
+    /*public List<NoticeDto> searchNotice(String keyword, Pageable pageable) {
+        Page<Notice> noticeEntities = noticeRepository.findByNoticeTitleContaining(keyword,pageable);
         List<NoticeDto> noticeDtoList = new ArrayList<>();
 
         if (noticeEntities.isEmpty()) return noticeDtoList;
@@ -91,7 +96,16 @@ public class NoticeService {
         }
 
         return noticeDtoList;
+    }*/
+
+    public Page<NoticeDto> searchNotice(String keyword, Pageable pageable) {
+        Page<Notice> noticeEntities = noticeRepository.findByNoticeTitleContaining(keyword, pageable);
+
+        if (noticeEntities.isEmpty()) return Page.empty(); // 빈 페이지 반환
+
+        return noticeEntities.map(this::convertEntityToDto);
     }
+
 
     @Transactional    //조회수
     public int updateHit(Integer noticeNo) {
