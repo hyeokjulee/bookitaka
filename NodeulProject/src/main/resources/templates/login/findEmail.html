@@ -2,79 +2,119 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>이메일 찾기</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script th:inline="javascript">
-        // jQuery를 사용하여 폼을 제출하는 함수
-        $(document).ready(function() {
-            $('#findBtn').click(function(e) {
-                e.preventDefault(); // 기본 동작(폼 제출) 막기
-
-                // 사용자가 입력한 memberName 값 가져오기
-                var memberName = $('#memberName').val();
-
-                // REST 컨트롤러에 POST 요청 보내기
-                $.ajax({
-                    type: "POST",
-                    url: "/member/findEmail",
-                    data: {
-                        memberName: memberName
-                    },
-                    success: function(response) {
-                        var members = response;
-                        var membersDiv = $("#members");
-
-                        // members를 표시하는 로직
-                        membersDiv.empty(); // 기존 내용 제거
-
-                        for (var i = 0; i < members.length; i++) {
-                            var member = members[i];
-                            var maskedMember = maskEmail(member)
-                            membersDiv.append("<p>" + maskedMember + "</p>");
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(error);
-                    }
-                });
-            });
-        });
-
-        // 이메일 주소를 마스킹하는 함수
-        function maskEmail(email) {
-            // 이메일 문자열을 @ 기준으로 분리
-            const [username, domain] = email.split("@");
-            // username의 길이가 5 이상인 경우 첫 번째, 두 번째, 마지막 글자를 제외한 나머지를 *로 대체
-            const maskedUsername =
-                username.length >= 5
-                    ? username.charAt(0) +
-                    username.charAt(1) +
-                    "*".repeat(username.length - 3) +
-                    username.charAt(username.length - 1)
-                    : username.charAt(0) + "*".repeat(username.length - 1);
-
-            // 마스킹된 username과 domain을 합쳐서 반환
-            return maskedUsername + "@" + domain;
-        }
-
-
-    </script>
 </head>
 <body>
 <h1>이메일 찾기</h1>
 <form>
     <div>
-        <label>name:</label>
+        <label>이름:</label>
         <input type="text" name="memberName" id="memberName"/>
+        <div class="errorDiv" error="memberName" style="color: red"></div>
+    </div>
+    <div>
+        <label>생년월일:</label>
+        <input type="date" name="memberBirthday" id="memberBirthday"/>
+        <div class="errorDiv" error="memberBirthday" style="color: red"></div>
     </div>
     <div>
         <button type="submit" id="findBtn">find</button>
     </div>
 </form>
-
+<div class="errorDiv" error="asd" style="color: red"></div>
 <div id="members">
-    <div th:if="${errorMessage}">
-        <p th:text="${errorMessage}"></p>
-    </div>
 </div>
+<script th:inline="javascript">
+    // jQuery를 사용하여 폼을 제출하는 함수
+    document.getElementById("findBtn").addEventListener("click", function(event) {
+        event.preventDefault(); // 기본 동작(폼 제출) 막기
+        // 사용자가 입력한  값 가져오기
+        let memberName = document.getElementById("memberName").value;
+        let memberBirthday = document.getElementById("memberBirthday").value;
+        let formData = new URLSearchParams({
+            memberName: memberName,
+            memberBirthday: memberBirthday
+        });
+        fetch("/member/findEmail", {
+            method: 'POST',
+            body: formData
+        })
+            .then((response) => {
+                if (response.ok) {
+                    console.log(response.json());
+                } else if (response.status === 400) {
+                    response.json().then(data => {
+                        // 에러 메시지 초기화
+                        for (let errorDiv of document.querySelectorAll(".errorDiv")){
+                            errorDiv.innerText = "";
+                        }
+                        // 응답 데이터를 파싱하여 에러 메시지 표시
+                        console.log(data);
+                        for (const error of data) {
+                            let errorElement = null;
+                            if (error.field == null) {
+                                errorElement = document.querySelector(`[error="${error.code}"]`);
+                            } else {
+                                // 해당 입력 필드 아래에 에러 메시지 표시
+                                errorElement = document.querySelector(`[error="${error.field}"]`);
+                            }
+                            errorElement.innerText = error.defaultMessage;
+                            // inputField.parentNode.appendChild(errorElement);
+                        }
+                    });
+                } else if (response.status === 422) {
+                    response.json().then(data => {
+                        // 에러 메시지 초기화
+                        for (let errorDiv of document.querySelectorAll(".errorDiv")){
+                            errorDiv.innerText = "";
+                        }
+                        // 응답 데이터를 파싱하여 에러 메시지 표시
+                        console.log(data);
+                        for (const error of data) {
+                            let errorElement = null;
+                            if (error.field == null) {
+                                errorElement = document.querySelector(`[error="${error.code}"]`);
+                            } else {
+                                // 해당 입력 필드 아래에 에러 메시지 표시
+                                errorElement = document.querySelector(`[error="${error.field}"]`);
+                            }
+                            errorElement.innerText = error.defaultMessage;
+                            // inputField.parentNode.appendChild(errorElement);
+                        }
+                    });
+                } else {
+                    // 기타 상태 코드에 대한 처리
+                }
+            })
+            // .then((emails) => {
+            //     let membersDiv = document.getElementById("members");
+            //     membersDiv.innerText = "";
+            //         emails.forEach((member) => {
+            //             let maskedMember = maskEmail(member);
+            //             let paragraph = document.createElement("p");
+            //             paragraph.innerText = maskedMember;
+            //             membersDiv.appendChild(paragraph);
+            //         });
+            // })
+        });
+
+    // 이메일 주소를 마스킹하는 함수
+    function maskEmail(email) {
+        // 이메일 문자열을 @ 기준으로 분리
+        const [username, domain] = email.split("@");
+        // username의 길이가 5 이상인 경우 첫 번째, 두 번째, 마지막 글자를 제외한 나머지를 *로 대체
+        const maskedUsername =
+            username.length >= 5
+                ? username.charAt(0) +
+                username.charAt(1) +
+                "*".repeat(username.length - 3) +
+                username.charAt(username.length - 1)
+                : username.charAt(0) + "*".repeat(username.length - 1);
+
+        // 마스킹된 username과 domain을 합쳐서 반환
+        return maskedUsername + "@" + domain;
+    }
+
+
+</script>
 </body>
 </html>

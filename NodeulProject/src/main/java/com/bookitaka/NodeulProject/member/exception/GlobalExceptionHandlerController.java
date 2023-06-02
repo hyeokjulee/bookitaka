@@ -45,7 +45,7 @@ public class GlobalExceptionHandlerController {
   }
 
   @ExceptionHandler(CustomException.class)
-  public void handleCustomEception(HttpServletResponse res, CustomException ex) throws IOException {
+  public void handleCustomException(HttpServletResponse res, CustomException ex) throws IOException {
     log.info("Custom Exception Handler");
     res.sendError(ex.getHttpStatus().value(), ex.getMessage());
   }
