@@ -13,18 +13,6 @@
 
 
     <!-- ===============================================-->
-    <!--    Favicons-->
-    <!-- ===============================================-->
-  <link rel="apple-touch-icon" sizes="180x180" th:href="@{/assets/img/favicons/apple-touch-icon.png}" />
-  <link rel="icon" type="image/png" sizes="32x32" th:href="@{/assets/img/favicons/favicon-32x32.png}" />
-  <link rel="icon" type="image/png" sizes="16x16" th:href="@{/assets/img/favicons/favicon-16x16.png}" />
-  <link rel="shortcut icon" type="image/x-icon" th:href="@{/assets/img/favicons/favicon.ico}" />
-  <link rel="manifest" th:href="@{/assets/img/favicons/manifest.json}" />
-  <meta name="msapplication-TileImage" th:content="@{/assets/img/favicons/mstile-150x150.png}" />
-  <meta name="theme-color" content="#ffffff" />
-
-
-    <!-- ===============================================-->
     <!--    Stylesheets-->
     <!-- ===============================================-->
     <link th:href="@{/assets/css/theme.css}" rel="stylesheet" />
@@ -47,13 +35,12 @@
         <div class="container">
           <div class="row align-items-center">
             <div class="col-auto ms-md-auto order-md-2 d-none d-sm-block">
-              <ul class="list-unstyled list-inline my-2">
-                <li class="list-inline-item"><a class="text-decoration-none" href="#!"><i class="fab fa-twitter text-900"></i></a></li>
-                <li class="list-inline-item"><a class="text-decoration-none" href="#!"><i class="fab fa-instagram text-900"> </i></a></li>
+              <ul class="list-unstyled mb-md-4 mb-lg-0">
+                <li><a class="text-800 my-2 fs--1" th:href="@{/faq/best}">고객지원</a></li>
               </ul>
             </div>
             <div class="col-auto">
-              <p class="my-2 fs--1"><i class="fas fa-envelope me-3"></i>vctung@outlook.com </a></p>
+              <p class="my-2 fs--1">여기에 문구를 넣어주세용 빼도돼용</p>
             </div>
         </div>
         <!-- end of .container-->
@@ -77,7 +64,7 @@
                 <a class="nav-link active" aria-current="page" th:href="@{/index}">HOME</a>
               </li>
               <li class="nav-item dropdown">
-                <a th:href="@{/sheet/list}" class="nav-link dropdown-toggle" aria-current="page" data-bs-toggle="dropdown">독후활동지</a>
+                <a th:href="@{/sheet/list}" class="nav-link" aria-current="page" data-bs-toggle="dropdown" onclick="window.location.href='/sheet/list'">독후활동지</a>
                 <div class="dropdown-menu bg-light m-0">
                   <a th:href="@{/sheet/list?ageGroup=유아용}" class="dropdown-item">연령별</a>
                   <a th:href="@{/sheet/list?genre=그림책}" class="dropdown-item">장르별</a>
@@ -86,40 +73,34 @@
                 </div>
               </li>
               <li class="nav-item dropdown">
-                <a th:href="@{/user-research}" class="nav-link dropdown-toggle" aria-current="page" data-bs-toggle="dropdown">알림마당</a>
+                <a th:href="@{/user-research}" class="nav-link" aria-current="page" data-bs-toggle="dropdown">마이페이지</a>
                 <div class="dropdown-menu bg-light m-0">
-                  <a href="#" class="dropdown-item">Feature</a>
-                  <a href="#" class="dropdown-item">Free Quote</a>
-                  <a href="#" class="dropdown-item">Our Team</a>
-                  <a href="#" class="dropdown-item">Testimonial</a>
-                  <a href="#" class="dropdown-item">404 Page</a>
+                  <a th:href="@{/member/me}" class="dropdown-item">내정보</a>
+                  <a th:href="@{/sheet/mysheet}" class="dropdown-item">독후활동지</a>
+                  <a th:href="@{/sheet/myrequest}" class="dropdown-item">내 출제요청</a>
+                  <a th:href="@{/manual/list}" class="dropdown-item">내 쿠폰</a>
+                  <a th:href="@{/manual/list}" class="dropdown-item">내 결제</a>
                 </div>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" th:href="@{/user-research}">고객지원</a>
+              <li class="nav-item dropdown">
+                <a href="#" class="nav-link" aria-current="page" data-bs-toggle="dropdown">알림마당</a>
+                <div class="dropdown-menu bg-light m-0">
+                  <a th:href="@{user-research}"  class="dropdown-item">게시판페이지만드는중</a>
+                  <a th:href="@{web-development}" class="dropdown-item">독후활동지페이지만드는중</a>
+                  <a th:href="@{/manual/list}" class="dropdown-item">이용방법</a>
+                  <a th:href="@{/notice/list}" class="dropdown-item">공지사항</a>
+                </div>
               </li>
             </ul>
-            <a class="btn btn-primary order-1 order-lg-0" href="#!">로그인</a>
-            <!--<a class="btn btn-primary order-1 order-lg-0" href="#!">로그아웃</a>-->
-            <a class="btn btn-primary order-1 order-lg-0" href="#!">회원가입</a>
-            <a href="#!" class="fa-solid fa-cart-shopping"></a>
-            <form class="d-flex my-3 d-block d-lg-none">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-              <button class="btn btn-outline-primary" type="submit">Search</button>
-            </form>
-            <div class="dropdown d-none d-lg-block">
-              <button class="btn btn-outline-light ms-2" id="dropdownMenuButton1" type="submit" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-search text-800"></i>
-              </button>
-              <ul class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="dropdownMenuButton1" style="top:55px">
-                <form>
-                  <input class="form-control" type="search" placeholder="Search" aria-label="Search" />
-                </form>
-              </ul>
-            </div>
+            <a class="btn btn-primary order-1 order-lg-0" th:href="@{/members/login}">로그인</a>
+            <a class="btn btn-primary order-1 order-lg-0" th:href="@{/member/signout}">로그아웃</a>
+            <a class="btn btn-primary order-1 order-lg-0" th:href="@{/members/signup}">회원가입</a>
+            <a th:href="@{/cart/cart}" class="fa-solid fa-cart-shopping fa-2x"></a><!--장바구니-->
           </div>
         </div>
       </nav>
+      <!---------------nav end-------------------->
+
       <section class="pt-6 bg-600" id="home">
         <div class="container">
           <div class="row align-items-center">
@@ -369,28 +350,28 @@
             <div class="col-6 col-sm-4 col-lg-2 mb-3 order-2 order-sm-1">
               <h5 class="lh-lg fw-bold mb-4 text-dark font-sans-serif">독후활동지 </h5>
               <ul class="list-unstyled mb-md-4 mb-lg-0">
-                <li class="lh-lg"><a class="text-900" href="#!">연령별</a></li>
-                <li class="lh-lg"><a class="text-900" href="#!">장르별</a></li>
-                <li class="lh-lg"><a class="text-900" href="#!">독서토론 논제은행</a></li>
-                <li class="lh-lg"><a class="text-900" href="#!">개별출제요청</a></li>
+                <li class="lh-lg"><a class="text-900" th:href="@{/sheet/list?ageGroup=유아용}">연령별</a></li>
+                <li class="lh-lg"><a class="text-900" th:href="@{/sheet/list?genre=그림책}">장르별</a></li>
+                <li class="lh-lg"><a class="text-900" th:href="@{/sheet/list?genre=독서토론논제은행}">독서토론 논제은행</a></li>
+                <li class="lh-lg"><a class="text-900" th:href="@{/sheet/request}">개별출제요청</a></li>
               </ul>
             </div>
             <div class="col-6 col-sm-4 col-lg-2 mb-3 order-3 order-sm-2">
               <h5 class="lh-lg fw-bold text-dark mb-4 font-sans-serif">알림마당</h5>
               <ul class="list-unstyled mb-md-4 mb-lg-0">
-                <li class="lh-lg"><a class="text-900" href="#!">홈페이지소개</a></li>
-                <li class="lh-lg"><a class="text-900" href="#!">이용방법</a></li>
-                <li class="lh-lg"><a class="text-900" href="#!">공지사항</a></li>
+                <li class="lh-lg"><a class="text-900" th:href="@{/index}">홈페이지소개</a></li>
+                <li class="lh-lg"><a class="text-900" th:href="@{/manual/list}">이용방법</a></li>
+                <li class="lh-lg"><a class="text-900" th:href="@{/notice/list}">공지사항</a></li>
               </ul>
             </div>
             <div class="col-6 col-sm-4 col-lg-2 mb-3 order-3 order-sm-2">
               <h5 class="lh-lg fw-bold text-dark mb-4 font-sans-serif"> 마이페이지</h5>
               <ul class="list-unstyled mb-md-4 mb-lg-0">
-                <li class="lh-lg"><a class="text-900" href="#!">내 정보</a></li>
-                <li class="lh-lg"><a class="text-900" href="#!">독후활동지</a></li>
-                <li class="lh-lg"><a class="text-900" href="#!">내 출제요청</a></li>
-                <li class="lh-lg"><a class="text-900" href="#!">내 쿠폰</a></li>
-                <li class="lh-lg"><a class="text-900" href="#!">내 결제</a></li>
+                <li class="lh-lg"><a class="text-900" th:href="@{/member/me}">내 정보</a></li>
+                <li class="lh-lg"><a class="text-900" th:href="@{/sheet/mysheet}">내 독후활동지</a></li>
+                <li class="lh-lg"><a class="text-900" th:href="@{/sheet/myrequest}">내 출제요청</a></li>
+                <li class="lh-lg"><a class="text-900" href="#">내 쿠폰</a></li>
+                <li class="lh-lg"><a class="text-900" href="#">내 결제</a></li>
               </ul>
             </div>
           </div>

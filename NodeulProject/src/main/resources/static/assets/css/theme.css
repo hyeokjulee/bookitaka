@@ -62,7 +62,7 @@
   vertical-align: middle;
   margin-left: 8px;
 }
-@media (min-width: 600px) {
+@media (min-width: 500px) {
   .navbar .nav-item .dropdown-menu {
     display: block;
     border: none;
