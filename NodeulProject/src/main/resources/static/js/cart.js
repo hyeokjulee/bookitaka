@@ -14,7 +14,7 @@ function showCarts() {
             var cart = carts[i];
             var sheet = sheets[i];
             var row = $('<tr></tr>');
-            row.append('<td><input type="checkbox" name="selectedItem" value="' + cart.sheetNo + '"></td>');
+            row.append('<td><input type="checkbox" name="selectedItem" value="' + cart.sheetNo + '" data-price="' + sheet.sheetPrice + '"></td>');
             row.append('<td><img src="/sheet/bookImg/' + sheet.sheetBookimguuid + sheet.sheetBookimgname + '" width="150" height="150"></td>');
             row.append('<td>' + sheet.sheetBooktitle + '</td>');
             row.append('<td>' + sheet.sheetPrice + '</td>');
@@ -127,7 +127,32 @@ $(document).on('change', '[name="selectedItem"]', function() {
     var totalSheets = $('[name="selectedItem"]').length;
     var checkedSheets = $('[name="selectedItem"]:checked').length;
     var isAllChecked = totalSheets === checkedSheets;
+    var prices = $('[name="selectedItem"]:checked').map(function() {
+      return parseInt($(this).data('price'));
+    }).get();
+    var sum = 0;
+    prices.forEach(function(price) {
+      sum += price;
+    });
 
     $('#selectAll').prop('checked', isAllChecked);
     $('#totalcnt').text("총 " + checkedSheets + "건");
+    $('#totalprice').text("합계 : " + sum + "원");
+});
+
+// 구매하기 버튼 클릭 시 결제하기 페이지로 이동 처리
+$(document).on('click', '.btn-paying', function() {
+  // 선택된 체크박스들을 수집합니다.
+  var selectedItems = [];
+  $('input[name="selectedItem"]:checked').each(function() {
+    selectedItems.push($(this).val());
+  });
+
+  // 리스트를 문자열로 변환
+  var encodedList = JSON.stringify(selectedItems);
+
+  // 쿠키에 리스트 값 설정
+  document.cookie = "list=" + encodedList + "; path=/payproc/paying";
+
+  window.location.href = "/payproc/paying";
 });
