@@ -4,6 +4,7 @@ import com.bookitaka.NodeulProject.member.dto.MemberChangePwDTO;
 import com.bookitaka.NodeulProject.member.dto.MemberUpdateDTO;
 import com.bookitaka.NodeulProject.member.dto.UserDataDTO;
 import com.bookitaka.NodeulProject.member.dto.UserResponseDTO;
+import com.bookitaka.NodeulProject.member.exception.CustomException;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.security.Token;
 import com.bookitaka.NodeulProject.member.service.MemberService;
@@ -74,12 +75,27 @@ public class MemberAPIController {
   @ApiOperation(value = "${MemberController.signup}")
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong"), //
-      @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 422, message = "Member Email is already in use")})
   public String signup(@ApiParam("Signup Member") @Validated @ModelAttribute UserDataDTO user) {
     log.info("================================Member : signup");
     memberService.signup(modelMapper.map(user, Member.class));
     return "Sign-up ok";
+  }
+
+  // 이미 존재하는 아이디 확인 (회원가입 시)
+  @PostMapping("/checkid/{memberEmail}")
+  @ApiOperation(value = "${MemberController.signup}")
+  @ApiResponses(value = {//
+          @ApiResponse(code = 400, message = "Something went wrong"), //
+          @ApiResponse(code = 422, message = "Member Email is already in use")})
+  public ResponseEntity<String> signupCheckDuplicateId(@ApiParam("memberEmail") @PathVariable String memberEmail) {
+    log.info("================================Member : signupCheckDuplicateId");
+    try {
+      memberService.search(memberEmail);
+    } catch (CustomException e) {
+      return ResponseEntity.ok().body("Email-available ok");
+    }
+    return ResponseEntity.unprocessableEntity().body("Member Email is already in use");
   }
 
   // 회원 삭제 (관리자)

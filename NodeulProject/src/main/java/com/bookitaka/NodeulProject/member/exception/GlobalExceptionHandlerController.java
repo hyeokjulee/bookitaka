@@ -45,19 +45,20 @@ public class GlobalExceptionHandlerController {
   }
 
   @ExceptionHandler(CustomException.class)
-  public void handleCustomEception(HttpServletResponse res, CustomException ex) throws IOException {
-    log.info("Custom Exception Handler");
+  public void handleCustomException(HttpServletResponse res, CustomException ex) throws IOException {
+    log.info("================handleCustomException - CustomException");
     res.sendError(ex.getHttpStatus().value(), ex.getMessage());
   }
 
   @ExceptionHandler(AccessDeniedException.class)
   public void handleAccessDeniedException(HttpServletResponse res) throws IOException {
-    log.info("Access Denied Exception Handler");
+    log.info("================handleAccessDeniedException - AccessDeniedException");
     res.sendError(HttpStatus.FORBIDDEN.value(), "Access denied");
   }
 
   @ExceptionHandler(BindException.class)
   public ResponseEntity<List<ObjectError>> handleBindException(BindException ex) {
+    log.info("================handleBindException - BindException");
     // 바인딩 예외 처리 로직을 구현합니다.
     BindingResult bindingResult = ex.getBindingResult();
     List<ObjectError> errors = bindingResult.getAllErrors();
@@ -67,6 +68,7 @@ public class GlobalExceptionHandlerController {
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<List<ObjectError>> handleValidationException(MethodArgumentNotValidException ex) {
+    log.info("================handleValidationException - MethodArgumentNotValidException");
     // 바인딩 예외 처리 로직을 구현합니다.
     BindingResult bindingResult = ex.getBindingResult();
     List<ObjectError> errors = bindingResult.getAllErrors();
@@ -76,6 +78,7 @@ public class GlobalExceptionHandlerController {
 
   @ExceptionHandler(Exception.class)
   public void handleException(HttpServletResponse res) throws IOException {
+    log.info("================handleException - Exception");
     res.sendError(HttpStatus.BAD_REQUEST.value(), "Something went wrong");
   }
 
