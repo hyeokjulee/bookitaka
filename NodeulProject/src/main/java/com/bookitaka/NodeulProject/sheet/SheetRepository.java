@@ -17,6 +17,8 @@ public interface SheetRepository {
 
     public Optional<Sheet> findSheetByNo(int sheetNo);
 
+    public boolean plusOneSheetHit(int sheetNo);
+
     public boolean updateSheet(int sheetNo ,SheetUpdateDto sheetUpdateDto);
 
     public boolean deleteSheet(int sheetNo);
