@@ -5232,6 +5232,18 @@ fieldset:disabled .btn {
   color: #FFFEFE;
 }
 
+.sidebar-link {
+  text-decoration: none; /* 밑줄 제거 */
+  font-weight: normal; /* 텍스트 기본 두껍기 */
+  color: inherit; /* 부모 요소의 색상 상속 */
+}
+
+.sidebar-link:hover {
+  font-weight: bold; /* 텍스트 두꺼워지게 */
+  cursor: pointer; /* 커서 변경 */
+}
+
+
 .card {
   position: relative;
   display: -webkit-box;

@@ -1,70 +1,91 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE HTML>
+<html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-
-    <link rel="stylesheet" th:href="@{/css/notice.css}">
 </head>
 <body>
-<!-- header 추가 -->
-<div th:insert="common/header.html" id="header"></div>
 
-<div id="wrap">
-    <a th:href="@{/notice/post}">글쓰기</a>
+<menuTitle>알림마당</menuTitle>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?ageGroup=유아용}" style="all: unset;">연령별</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?genre=그림책}" style="all: unset;">장르별</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?genre=독서토론논제은행}" style="all: unset;">논제은행</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/request}" style="all: unset;">개별출제요청</a></sidebar>
 
-    <form action="/notice/search" method="GET">
-        <div class="search">
-            <input name="keyword" type="text" placeholder="검색어를 입력해주세요">
+<mainSection>
+    <div id="wrap">
+        <div class="row g-0 align-items-center">
+            <div class="col-auto">
+                <h1 class="fs-5 fs-xl-5 mb-5">공지사항</h1>
+            </div>
+            <div class="col-auto ms-auto align-self-end">
+                <form class="form-inline" action="/notice/search" method="GET">
+                    <div class="input-group">
+                        <input class="form-control" name="keyword" type="text" placeholder="검색어를 입력해주세요" />
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">검색</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
 
-        <button>검색하기</button>
-    </form>
+        <hr class="my-4">
+        <div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>글제목</th>
+                    <th>작성일</th>
+                    <th>조회수</th>
+                </tr>
+                </thead>
+                <tbody>
 
-    <table>
-        <thead>
-        <tr>
-            <th class="one wide">번호</th>
-            <th class="ten wide">글제목</th>
-            <th class="three wide">작성일</th>
-            <th class="four wide">조회수</th>
-        </tr>
-        </thead>
+                <!-- CONTENTS !-->
+                <tr th:each="notice : ${noticeList}">
+                    <td>
+                        <span th:text="${notice.noticeNo}"></span>
+                    </td>
+                    <td>
+                        <a th:href="@{'/notice/post/' + ${notice.noticeNo}}">
+                            <span th:text="${notice.noticeTitle}"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <span th:text="${#temporals.format(notice.noticeRegdate, 'yyyy-MM-dd HH:mm')}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${notice.noticeHit}"></span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
 
-        <tbody>
-        <!-- CONTENTS !-->
-        <tr th:each="notice : ${noticeList}">
-            <td>
-                <span th:text="${notice.noticeNo}"></span>
-            </td>
-            <td>
-                <a th:href="@{'/notice/post/' + ${notice.noticeNo}}">
-                    <span th:text="${notice.noticeTitle}"></span>
-                </a>
-            </td>
-            <td>
-                <span th:text="${#temporals.format(notice.noticeRegdate, 'yyyy-MM-dd HH:mm')}"></span>
-            </td>
-            <td>
-                <span th:text="${notice.noticeHit}"></span>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-
-    <div>
-        <!-- 페이지 이동 버튼 -->
-        <div th:each="pageNumber : ${#numbers.sequence(0, noticeList.totalPages - 1)}">
-            <form th:action="@{/notice/search}" method="get"> <!-- /notice/list에서 /notice/search로 수정 -->
-                <input type="hidden" name="keyword" th:value="${keyword}" /> <!-- 검색어 전달 -->
-                <input type="hidden" name="page" th:value="${pageNumber}" />
-                <button th:text="${pageNumber + 1}"></button>
-            </form>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                        <a class="page-link">Previous</a>
+                    </li>
+                    <th:block th:each="pageNumber : ${#numbers.sequence(0, noticeList.totalPages - 1)}">
+                        <li class="page-item">
+                            <form th:action="@{/notice/search}" method="get">
+                                <input type="hidden" name="keyword" th:value="${keyword}" />
+                                <input type="hidden" name="page" th:value="${pageNumber}" />
+                                <button class="page-link" th:text="${pageNumber + 1}"></button>
+                            </form>
+                        </li>
+                    </th:block>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+            <div class="d-flex justify-content-end">
+                <a class="btn btn-primary" th:href="@{/notice/post}">글쓰기</a>
+            </div>
         </div>
-    </div>
-</div>
 
-<!-- footer 추가 -->
-<div th:insert="common/footer.html" id="footer"></div>
+
+</mainSection>
 </body>
 </html>

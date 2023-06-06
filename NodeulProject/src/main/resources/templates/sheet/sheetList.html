@@ -14,9 +14,10 @@
 <body>
 
 <menuTitle>독후활동지</menuTitle>
-<sidebar class="list-group-item">장르별</sidebar>
-<sidebar class="list-group-item">연령별</sidebar>
-<sidebar class="list-group-item">논제은행</sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?ageGroup=유아용}" style="all: unset;">연령별</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?genre=그림책}" style="all: unset;">장르별</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?genre=독서토론논제은행}" style="all: unset;">논제은행</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/request}" style="all: unset;">개별출제요청</a></sidebar>
 
 
 <mainSection>

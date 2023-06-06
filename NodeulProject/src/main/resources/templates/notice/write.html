@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-<form action="/notice/post" method="post">
-    제목 : <input type="text" name="noticeTitle"> <br>
-    <textarea name="noticeContent"></textarea><br>
+<form action="/notice/post" method="post" th:object="${noticeDto}">
+    제목: <input type="text" name="noticeTitle" th:field="*{noticeTitle}"> <br>
+    <span th:errors="*{noticeTitle}"></span><br>
+
+    내용: <textarea name="noticeContent" th:field="*{noticeContent}"></textarea><br>
+    <span th:errors="*{noticeContent}"></span><br>
 
     <input type="submit" value="등록">
 </form>

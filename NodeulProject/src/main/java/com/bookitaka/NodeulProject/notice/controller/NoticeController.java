@@ -37,11 +37,17 @@ public class NoticeController {
 
     @GetMapping("/post")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String write(){ return "notice/write.html"; }
+    public String write(Model model){
+        model.addAttribute("noticeDto", new NoticeDto()); // noticeDto 객체를 요청 속성에 추가
+        return "notice/write.html"; }
 
     @PostMapping("/post")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String write(@Validated NoticeDto noticeDto, BindingResult bindingResult){
+    public String write(@Validated @ModelAttribute NoticeDto noticeDto, BindingResult bindingResult, Model model){
+        if (bindingResult.hasErrors()) {
+
+            return "notice/write.html"; // 유효성 검사에 실패한 경우에 대한 에러 페이지를 반환하거나 다른 처리를 수행할 수 있습니다.
+        }
         noticeService.registerNotice(noticeDto);
         return "redirect:/notice/list";
     }
