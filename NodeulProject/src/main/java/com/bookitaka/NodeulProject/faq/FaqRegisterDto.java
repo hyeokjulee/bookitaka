@@ -5,22 +5,23 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class FaqRegisterDto {
 
-    @NotBlank
+    @NotBlank(message = "질문은 필수입니다.")
     private String faqQuestion;
 
-    @NotBlank
+    @NotBlank(message = "답변은 필수입니다.")
     private String faqAnswer;
 
-    @NotBlank
+    @NotNull
     private String faqCategory;
 
-    @NotBlank
+    @NotNull
     private int faqBest;
 
 }

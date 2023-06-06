@@ -4,6 +4,8 @@ import com.bookitaka.NodeulProject.sheet.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,11 +29,36 @@ import java.util.*;
 @Slf4j
 public class RequestServiceImpl implements RequestService {
 
-
+    private final RequestRepository requestRepository;
 
     @Value("${isbn-api-key}")
     private String isbn_api_key;
 
+
+    @Override
+    public void registerRequest(Request request) {
+        requestRepository.save(request);
+    }
+
+    @Override
+    public Optional<Request> getOneRequest(Long RequestNo) {
+        return Optional.empty();
+    }
+
+    @Override
+    public void modifyRequest(Request requestModified) {
+
+    }
+
+    @Override
+    public void removeRequest(Request request) {
+
+    }
+
+    @Override
+    public Page<Request> getAllRequestByRequestIsdone(int requestIsdone, Pageable pageable) {
+        return requestRepository.findAllByRequestIsdoneOrderByRequestRegdateDesc(requestIsdone, pageable);
+    }
 
     @Override
     public Map<String, Object> searchBook(String keyword, String authorSearch, Integer pageNum) {
