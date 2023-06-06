@@ -8,6 +8,7 @@
 FAQ list.html
 
 <hr>
+<a href="/faq/all">전체</a>
 <a href="/faq/best">BEST</a>
 <a th:each="eachCategory : ${faqAllCategory}" th:href="@{/faq/{category}(category=${eachCategory})}">
     <span th:text="${eachCategory}"></span>
@@ -15,6 +16,9 @@ FAQ list.html
 
 <hr>
 <a href="/faq/add">등록</a>
+
+<input type="text">
+<button type="button">검색</button>
 
     <table class="tb_col" style="border: black 1px;">
         <tr>

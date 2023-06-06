@@ -1,5 +1,6 @@
 package com.bookitaka.NodeulProject.sheet;
 
+import com.bookitaka.NodeulProject.request.RequestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,6 +42,7 @@ import java.util.Map;
 public class SheetController {
 
     private final SheetService sheetService;
+//    private final RequestService requestService;
 
     @Value("${file.bookImg.dir}")
     private String bookImgDir;
@@ -99,22 +101,21 @@ public class SheetController {
     }
 
     //
-    @GetMapping("/booksearch")
-    @ResponseBody
-    public Map<String, Object> bookSearch(@RequestParam("keyword") String keyword,
-                                          @RequestParam("authorSearch") String authorSearch,
-                                          @RequestParam(name = "pageNum", defaultValue = "1") Integer pageNum,
-                                          Model model ) {
-        log.info("SheetController bookSearch 호출");
-        log.info("keyword = {}", keyword);
-        log.info("authorSearch = {}", authorSearch);
-        log.info("pageNum = {}", pageNum);
-
-        String currentPageNum = "";
-        String total = "";
-
-        return sheetService.searchBook(keyword, authorSearch, pageNum);
-    }
+//    @GetMapping("/booksearch")
+//    @ResponseBody
+//    public Map<String, Object> bookSearch(@RequestParam("keyword") String keyword,
+//                                          @RequestParam("authorSearch") String authorSearch,
+//                                          @RequestParam(name = "pageNum", defaultValue = "1") Integer pageNum,
+//                                          Model model ) {
+////        log.info("keyword = {}", keyword);
+////        log.info("authorSearch = {}", authorSearch);
+//        log.info("pageNum = {}", pageNum);
+//
+//        String currentPageNum = "";
+//        String total = "";
+//
+//        return requestService.searchBook(keyword, authorSearch, pageNum);
+//    }
 
         //테스트용 데이터 30개 넣기
 //    @PostMapping("/add")
@@ -304,22 +305,27 @@ public class SheetController {
 
     }
 
-    @GetMapping("/request")
-    public String requestForm() {
-
-        return "sheet/sheetRequest";
-    }
-
-    @GetMapping("/myrequest")
-    public String listMyRequest() {
-
-        return "sheet/sheetMyRequest";
-    }
-
-    @GetMapping("/requestlist")
-    public String listRequestForAdmin() {
-
-        return "sheet/sheetRequestList";
-    }
+//    @GetMapping("/request")
+//    public String requestForm() {
+//
+//        return "sheet/sheetRequest";
+//    }
+//    @PostMapping("/request")
+//    public String requestProc() {
+//
+//        return "sheet/sheetRequest";
+//    }
+//
+//    @GetMapping("/myrequest")
+//    public String listMyRequest() {
+//
+//        return "sheet/sheetMyRequest";
+//    }
+//
+//    @GetMapping("/requestlist")
+//    public String listRequestForAdmin() {
+//
+//        return "sheet/sheetRequestList";
+//    }
 
 }

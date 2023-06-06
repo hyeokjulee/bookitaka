@@ -61,14 +61,18 @@ public class FaqServiceImpl implements FaqService{
 
     @Override
     public Page<Faq> getAllFaqByFaqCategory(String faqCategory, Pageable pageable) {
-        return faqRepository.findAllByFaqCategoryOrderByFaqRegdateDesc(faqCategory, pageable);
+        if(faqCategory.equals("best")) {
+            return faqRepository.findAllByFaqBestOrderByFaqRegdateDesc(1, pageable);
+        } else {
+            return faqRepository.findAllByFaqCategoryOrderByFaqRegdateDesc(faqCategory, pageable);
+        }
     }
 
     @Override
-    public Page<Faq> getAllFaqByFaqBest(Pageable pageable) {
-        return faqRepository.findAllByFaqBestOrderByFaqRegdateDesc(1, pageable);
+    public Page<Faq> getAllFaqContaningKeyword(String keyword, Pageable pageable) {
+        return faqRepository.findAllByFaqQuestionContaining(keyword, pageable);
+//        return null;
     }
-
 
 
 }

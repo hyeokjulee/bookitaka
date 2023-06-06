@@ -32,17 +32,19 @@ public class FaqController {
 
     // FAQ 카테고리 별 목록
     @GetMapping("/{faqCategory}")
-    public String list(@PathVariable String faqCategory, Model model, @RequestParam(name = "page", defaultValue = "0") int page) {
+    public String list(@PathVariable String faqCategory,
+                       Model model,
+                       @RequestParam(name = "page", defaultValue = "0") int page,
+                       @RequestParam(name = "keyword", defaultValue = "") String keyword) {
         model.addAttribute("faqCategory", faqCategory);
         model.addAttribute("faqAllCategory", service.getAllFaqCategory());
 
         Pageable pageable = PageRequest.of(page, size);
-        if (faqCategory.equals("best")) {
-            model.addAttribute("faqAll", service.getAllFaqByFaqBest(pageable));
-        } else {
+        if(keyword.isBlank()) {
             model.addAttribute("faqAll", service.getAllFaqByFaqCategory(faqCategory, pageable));
+        } else {
+            model.addAttribute("faqAll", service.getAllFaqContaningKeyword(keyword, pageable));
         }
-//        model.addAttribute("faqList", service.getAllFaq());
         return "/faq/faqList";
     }
 

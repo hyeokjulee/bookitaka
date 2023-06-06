@@ -1,4 +1,4 @@
-package com.bookitaka.NodeulProject.sheet;
+package com.bookitaka.NodeulProject.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,5 +15,5 @@ public class BookDto {
     private String sheetBookisbn;
 
 //    private String sheetBookimguuid;
-//    private String sheetBookimgname;
+    private String sheetBookimgname;
 }
