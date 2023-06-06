@@ -2,8 +2,8 @@ package com.bookitaka.NodeulProject.member.controller;
 
 import com.bookitaka.NodeulProject.member.dto.MemberChangePwDTO;
 import com.bookitaka.NodeulProject.member.dto.MemberUpdateDTO;
-import com.bookitaka.NodeulProject.member.dto.UserDataDTO;
-import com.bookitaka.NodeulProject.member.dto.UserResponseDTO;
+import com.bookitaka.NodeulProject.member.dto.MemberDataDTO;
+import com.bookitaka.NodeulProject.member.dto.MemberResponseDTO;
 import com.bookitaka.NodeulProject.member.exception.CustomException;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.security.Token;
@@ -76,7 +76,7 @@ public class MemberAPIController {
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 422, message = "Member Email is already in use")})
-  public String signup(@ApiParam("Signup Member") @Validated @ModelAttribute UserDataDTO user) {
+  public String signup(@ApiParam("Signup Member") @Validated @ModelAttribute MemberDataDTO user) {
     log.info("================================Member : signup");
     memberService.signup(modelMapper.map(user, Member.class));
     return "Sign-up ok";
@@ -115,13 +115,22 @@ public class MemberAPIController {
 
   @PutMapping("/{memberEmail}")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
+  @ApiResponses(value = {//
+      @ApiResponse(code = 400, message = "Something went wrong"), //
+      @ApiResponse(code = 403, message = "Access denied"), //
+      @ApiResponse(code = 404, message = "The user doesn't exist"), //
+      @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
   public ResponseEntity<?> edit(@Validated @ModelAttribute MemberUpdateDTO memberUpdateDTO,
                                      @PathVariable String memberEmail,
                                      HttpServletRequest request) {
     log.info("================================Member : edit");
-    Member member = memberService.search(memberEmail);
-    modelMapper.map(memberUpdateDTO, member);
-    if(memberService.modifyMember(member)) {
+    Member memberPath = memberService.search(memberEmail);
+    Member memberToken = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
+    if (!memberPath.getMemberEmail().equals(memberToken.getMemberEmail())) {
+      return ResponseEntity.badRequest().body("permission mismatch");
+    }
+    modelMapper.map(memberUpdateDTO, memberPath);
+    if(memberService.modifyMember(memberPath)) {
       // 수정 성공시
       return ResponseEntity.ok().build();
     } else {
@@ -170,28 +179,28 @@ public class MemberAPIController {
   // 회원 상세 보기 (관리자)
   @GetMapping(value = "/{memberEmail}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
-  @ApiOperation(value = "${MemberController.search}", response = UserResponseDTO.class, authorizations = { @Authorization(value="apiKey") })
+  @ApiOperation(value = "${MemberController.search}", response = MemberResponseDTO.class, authorizations = { @Authorization(value="apiKey") })
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 404, message = "The user doesn't exist"), //
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-  public UserResponseDTO search(@ApiParam("MemberEmail") @PathVariable String memberEmail) {
+  public MemberResponseDTO search(@ApiParam("MemberEmail") @PathVariable String memberEmail) {
     log.info("================================Member : search");
-    return modelMapper.map(memberService.search(memberEmail), UserResponseDTO.class);
+    return modelMapper.map(memberService.search(memberEmail), MemberResponseDTO.class);
   }
 
   // 내 정보 보기 (회원)
   @GetMapping(value = "/me")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
-  @ApiOperation(value = "${MemberController.me}", response = UserResponseDTO.class, authorizations = { @Authorization(value="apiKey") })
+  @ApiOperation(value = "${MemberController.me}", response = MemberResponseDTO.class, authorizations = { @Authorization(value="apiKey") })
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-  public UserResponseDTO whoami(HttpServletRequest request) {
+  public MemberResponseDTO whoami(HttpServletRequest request) {
     log.info("================================Member : whoami");
-    return modelMapper.map(memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN), UserResponseDTO.class);
+    return modelMapper.map(memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN), MemberResponseDTO.class);
   }
 
   // 토큰 만료 여부 확인

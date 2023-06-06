@@ -7,10 +7,9 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.util.Date;
-import java.util.List;
 
 @Data
-public class UserResponseDTO {
+public class MemberResponseDTO {
 
   @ApiModelProperty(position = 0)
   @NotBlank(message = "이메일을 입력해주세요.")
