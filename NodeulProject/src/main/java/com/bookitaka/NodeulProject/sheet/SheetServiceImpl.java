@@ -95,7 +95,12 @@ public class SheetServiceImpl implements SheetService{
 
     @Override
     public Sheet getSheet(int sheetNo) {
-        return sheetRepository.findSheetByNo(sheetNo).orElse(null);
+        Sheet sheet = sheetRepository.findSheetByNo(sheetNo).orElse(null);
+        if (sheet != null) {
+            sheetRepository.plusOneSheetHit(sheetNo);
+            return sheet;
+        }
+        return null;
     }
 
     @Override
@@ -131,6 +136,17 @@ public class SheetServiceImpl implements SheetService{
 
     @Override
     public boolean modifySheet(int sheetNo, SheetUpdateDto sheetUpdateDto) {
+        Sheet sheet = sheetRepository.findSheetByNo(sheetNo).orElse(null);
+        if (sheetUpdateDto.getSheetBookimgname() == null) {
+            sheetUpdateDto.setSheetBookimguuid(sheet.getSheetBookimguuid());
+            sheetUpdateDto.setSheetBookimgname(sheet.getSheetBookimgname());
+        }
+        if (sheetUpdateDto.getSheetFilename() == null) {
+            sheetUpdateDto.setSheetFileuuid(sheet.getSheetFileuuid());
+            sheetUpdateDto.setSheetFilename(sheet.getSheetFilename());
+        }
+        log.info("sheetUpdataDto = {}", sheetUpdateDto);
+
         return sheetRepository.updateSheet(sheetNo, sheetUpdateDto);
     }
 

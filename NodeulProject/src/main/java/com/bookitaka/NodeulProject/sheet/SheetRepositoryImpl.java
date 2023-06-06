@@ -4,6 +4,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -120,9 +121,19 @@ public class SheetRepositoryImpl implements SheetRepository{
     public Optional<Sheet> findSheetByNo(int sheetNo) {
         Sheet sheet = em.find(Sheet.class, sheetNo);
 
-        //조회수 하나 올리기
-        sheet.setSheetHit(sheet.getSheetHit() + 1);
         return Optional.ofNullable(sheet);
+    }
+
+    @Override
+    public boolean plusOneSheetHit(int sheetNo) {
+        Sheet sheet = em.find(Sheet.class, sheetNo);
+
+        //조회수 하나 올리기
+        if (sheet != null) {
+            sheet.setSheetHit(sheet.getSheetHit() + 1);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -130,16 +141,10 @@ public class SheetRepositoryImpl implements SheetRepository{
         Sheet findSheet = em.find(Sheet.class, sheetNo);
 
         if (findSheet !=null) {
-            findSheet.setSheetBooktitle(sheetUpdateDto.getSheetBooktitle());
-            findSheet.setSheetBookauthor(sheetUpdateDto.getSheetBookauthor());
-            findSheet.setSheetBookpublisher(sheetUpdateDto.getSheetBookpublisher());
-            findSheet.setSheetBookisbn(sheetUpdateDto.getSheetBookisbn());
-            findSheet.setSheetPrice(sheetUpdateDto.getSheetPrice());
-            findSheet.setSheetBookimgname(sheetUpdateDto.getSheetBookimgname());
-            findSheet.setSheetFilename(sheetUpdateDto.getSheetFilename());
-            findSheet.setSheetGenre(new SheetGenre(sheetUpdateDto.getSheetGenreName()));
-            findSheet.setSheetAgegroup(new SheetAgegroup(sheetUpdateDto.getSheetAgegroupName()));
-            findSheet.setSheetContent(sheetUpdateDto.getSheetContent());
+            ModelMapper modelMapper = new ModelMapper();
+
+            modelMapper.map(sheetUpdateDto, findSheet);
+            em.merge(findSheet);
             return true;
         }
         return false;

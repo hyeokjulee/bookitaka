@@ -35,7 +35,6 @@ public class SheetUpdateDto {
 
     private String sheetFileuuid;
 
-    @NotNull
     private String sheetFilename;
 
     @NotNull(message = "장르를 설정해주세요.")

@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -253,10 +254,10 @@ public class SheetController {
 
     @PostMapping("/{sheetNo}/mod")
     public String sheetMod(@PathVariable int sheetNo,
-                           @Validated @ModelAttribute("sheetUpdateDto") SheetUpdateDto sheetUpdateDto,
+                           @Validated @ModelAttribute SheetUpdateDto sheetUpdateDto,
                            BindingResult bindingResult,
-                           @RequestParam("sheetBookImg") MultipartFile sheetBookImg,
-                           @RequestParam("sheetFile") MultipartFile sheetFile,
+                           @RequestParam(value = "sheetBookImg", required = false) MultipartFile sheetBookImg,
+                           @RequestParam(value = "sheetFile", required = false) MultipartFile sheetFile,
                            Model model) throws IOException {
 
 
@@ -271,27 +272,32 @@ public class SheetController {
         UploadFile uploadBookImg = null;
         UploadFile uploadSheetFile = null;
 
+        log.info("sheetBookImg = {}", sheetBookImg.isEmpty());
+        log.info("sheetFile= {}", sheetFile.isEmpty());
+
         // 파일 업로드 처리 로직
         if (!sheetBookImg.isEmpty()) {
             // 업로드된 파일 삭제 후 저장
             sheetService.removeStoredFile(bookImgDir + sheetUpdateDto.getSheetBookimguuid() + sheetUpdateDto.getSheetBookimgname());
             uploadBookImg = sheetService.storeBookImg(sheetBookImg);
             sheetUpdateDto.setSheetBookimguuid(uploadBookImg.uuid);
+            sheetUpdateDto.setSheetBookimgname(uploadBookImg.fileName);
         }
         if (!sheetFile.isEmpty()) {
             sheetService.removeStoredFile(sheetFileDir + sheetUpdateDto.getSheetFileuuid() + sheetUpdateDto.getSheetFilename());
             uploadSheetFile = sheetService.storeSheetFile(sheetFile);
             sheetUpdateDto.setSheetFileuuid(uploadSheetFile.uuid);
+            sheetUpdateDto.setSheetFilename(uploadSheetFile.fileName);
         }
         // SheetRegDto를 사용한 비즈니스 로직 처리
+        log.info("sheetUpdateDto = {}", sheetUpdateDto);
 
         sheetService.modifySheet(sheetNo, sheetUpdateDto);
 
         return "redirect:/sheet/" + sheetNo;
     }
 
-
-
+    
     @DeleteMapping("/{sheetNo}")
     public ResponseEntity<String> deleteSheet(@PathVariable int sheetNo){
         boolean result = sheetService.removeSheet(sheetNo);
