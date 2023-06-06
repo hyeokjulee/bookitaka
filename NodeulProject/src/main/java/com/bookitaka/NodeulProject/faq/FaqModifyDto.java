@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -19,10 +20,10 @@ public class FaqModifyDto {
     @NotBlank
     private String faqAnswer;
 
-    @NotBlank
+    @NotNull
     private String faqCategory;
 
-    @NotBlank
+    @NotNull
     private int faqBest;
 
 }

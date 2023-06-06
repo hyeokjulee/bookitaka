@@ -1,16 +1,21 @@
 package com.bookitaka.NodeulProject.request;
 
-import com.bookitaka.NodeulProject.sheet.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public interface RequestService {
+    void registerRequest(Request request);
+    //    List<Faq> getAllFaq();
+    Optional<Request> getOneRequest(Long RequestNo);
+    void modifyRequest(Request requestModified);
+    void removeRequest(Request request);
 
+    Page<Request> getAllRequestByRequestIsdone(int requestIsdone, Pageable pageable);
 
     public Map<String, Object> searchBook(String keyword, String authorSearch, Integer pageNum);
 

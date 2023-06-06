@@ -1,15 +1,22 @@
 package com.bookitaka.NodeulProject.request;
 
+import com.bookitaka.NodeulProject.faq.Faq;
+import com.bookitaka.NodeulProject.faq.FaqRegisterDto;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.security.Token;
 import com.bookitaka.NodeulProject.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 @Controller
@@ -20,6 +27,7 @@ public class RequestController {
 
     private final RequestService requestService;
     private final MemberService memberService;
+    private final ModelMapper modelMapper;
 
 
     @GetMapping("/booksearch")
@@ -47,9 +55,17 @@ public class RequestController {
         return "request/requestForm";
     }
     @PostMapping
-    public String requestProc() {
+    public String requestProc(Model model,
+                              @ModelAttribute RequestDto requestDto,
+                              HttpServletResponse response) {
+        log.info("Request Controller - requestProc 호출");
+        log.info("requestDto = {}", requestDto);
+        Request request = modelMapper.map(requestDto, Request.class);
+        log.info("request = {}", request);
+        requestService.registerRequest(request);
 
-        return "request/requestForm";
+        model.addAttribute("statusCode", response.getStatus());
+        return "request/myRequestList";
     }
 
     @GetMapping("/myrequest")
@@ -59,8 +75,13 @@ public class RequestController {
     }
 
     @GetMapping("/list")
-    public String listRequestForAdmin() {
-
+    public String listRequestForAdmin(@RequestParam(name = "requestIsdone", defaultValue = "0") int requestIsdone,
+                                      @RequestParam(name = "page", defaultValue = "0") int page,
+                                      Model model) {
+        int size = 3;
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Request> requestList = requestService.getAllRequestByRequestIsdone(requestIsdone, pageable);
+        model.addAttribute("requestList", requestList);
         return "request/requestList";
     }
 

@@ -42,24 +42,24 @@
         <h2>활동지 요청 폼 / sheet Request.html</h2>
     </div>
 
-    <form action="/sheet/requset" th:action="@{/sheet/requset}" method="post">
+    <form th:action="@{/sheet/request}" method="post">
 
         <div>
             <label for="requestEmail">이메일</label>
-<!--            <input type="text" th:value="${currentMember.memberEmail}" id="requestEmail" class="form-control" placeholder="이메일을 입력하세요">-->
-            <input type="text" id="requestEmail" class="form-control" placeholder="이메일을 입력하세요">
+            <input type="text" th:value="${currentMember.memberEmail}" id="requestEmail" name="requestEmail" class="form-control" placeholder="이메일을 입력하세요">
+<!--            <input type="text" id="requestEmail" class="form-control" placeholder="이메일을 입력하세요">-->
         </div>
 
         <div>
             <label for="requestName">이름</label>
-<!--            <input type="text" th:value="${currentMember.memberName}" id="requestName" class="form-control" placeholder="이름을 입력하세요">-->
-            <input type="text" id="requestName" class="form-control" placeholder="이름을 입력하세요">
+            <input type="text" th:value="${currentMember.memberName}" id="requestName" name="requestName" class="form-control" placeholder="이름을 입력하세요">
+<!--            <input type="text" id="requestName" class="form-control" placeholder="이름을 입력하세요">-->
         </div>
 
         <div>
             <label for="requestPhone">연락처</label>
-<!--            <input type="text" th:value="${currentMember.memberPhone}" id="requestPhone" class="form-control" placeholder="연락처를 입력하세요">-->
-            <input type="text"  id="requestPhone" class="form-control" placeholder="연락처를 입력하세요">
+            <input type="text" th:value="${currentMember.memberPhone}" id="requestPhone" name="requestPhone" class="form-control" placeholder="연락처를 입력하세요">
+<!--            <input type="text"  id="requestPhone" class="form-control" placeholder="연락처를 입력하세요">-->
         </div>
 
         <div>
@@ -79,28 +79,28 @@
         <div>
             <label for="sheetBooktitle">책 제목</label>
 <!--            <span class="errorMsg" th:errors="*{sheetBooktitle}">책 제목 오류</span>-->
-            <input type="text" id="sheetBooktitle" class="form-control" placeholder="책 제목을 입력하세요" readonly>
+            <input type="text" id="sheetBooktitle" name="requestBooktitle" class="form-control" placeholder="책 제목을 입력하세요" readonly>
         </div>
 
         <div>
             <label for="sheetBookauthor">작가</label>
 <!--            <span class="errorMsg" th:errors="*{sheetBookauthor}">작가 오류</span>-->
-            <input type="text" id="sheetBookauthor" class="form-control" placeholder="작가를 입력하세요" readonly>
+            <input type="text" id="sheetBookauthor" name="requestBookauthor" class="form-control" placeholder="작가를 입력하세요" readonly>
         </div>
 
         <div>
             <label for="sheetBookpublisher">출판사</label>
 <!--            <span class="errorMsg" th:errors="*{sheetBookpublisher}">출판사 오류</span>-->
-            <input type="text" id="sheetBookpublisher" class="form-control" placeholder="출판사를 입력하세요" readonly>
+            <input type="text" id="sheetBookpublisher" name="requestBookpublisher" class="form-control" placeholder="출판사를 입력하세요" readonly>
         </div>
         <div>
             <label for="sheetBookisbn">ISBN</label>
-            <input type="text" id="sheetBookisbn" class="form-control" placeholder="isbn을 입력하세요" readonly>
+            <input type="text" id="sheetBookisbn" name="requestBookisbn" class="form-control" placeholder="isbn을 입력하세요" readonly>
         </div>
 
         <div>
             <label for="sheetContent">요구사항</label>
-            <textarea type="text" id="sheetContent" class="form-control" placeholder="설명을 입력하세요"></textarea>
+            <textarea type="text" id="sheetContent" name="requestContent" class="form-control" placeholder="설명을 입력하세요"></textarea>
         </div>
 
         <div>
@@ -119,9 +119,9 @@
             </div>
             <div class="col">
                 <button class="w-100 btn btn-secondary btn-lg"
-                        onclick="location.href='items.html'"
-                        th:onclick="|location.href='@{/form/items}'|"
+                        onclick="window.history.back()"
                         type="button">취소</button>
+
             </div>
         </div>
 
@@ -156,26 +156,28 @@
             success: function(data) {
                 var bookList = data.bookList;
                 var total = data.total;
-                var totalPageNum = data.totalPageNum;
-                var currentPageNum = data.currentPageNum;
+                var totalPageNum = parseInt(data.totalPageNum);
+                var currentPageNum = parseInt(data.currentPageNum);
 
                 var result = "";
-                result += "<div>"
-                result +=   "<p>검색 결과 : " + total + "개</p>";
-                result += "</div>"
+                result += `<div><p>검색 결과 : ${total}개</p></div>`;
                 for (var i = 0; i < bookList.length; i++) {
-                    result += "<div class='eachBook' onclick='getBookValue(this)'>";
-                    // result += "<img src='" + bookList[i].sheetBookimgname + "'>";
-                    result +=   "<img class='sheetBookimgname' src='"+ bookList[i].sheetBookimgname +"'>";
-                    result +=   "<p class='sheetBooktitle'>" + bookList[i].sheetBooktitle + "</p>";
-                    result +=   "<p class='sheetBookauthor'>" + bookList[i].sheetBookauthor + "</p>";
-                    result +=   "<p class='sheetBookpublisher'>" + bookList[i].sheetBookpublisher + "</p>";
-                    result +=   "<p class='sheetBookisbn'>" + bookList[i].sheetBookisbn + "</p>";
-                    result += "</div>"
-                    result += "<hr>"
+                    result += `<div class='eachBook' onclick='getBookValue(this)'>`;
+                    result += `<img class='sheetBookimgname' src='${bookList[i].sheetBookimgname}'>`;
+                    result += `<p class='sheetBooktitle'>${bookList[i].sheetBooktitle}</p>`;
+                    result += `<p class='sheetBookauthor'>${bookList[i].sheetBookauthor}</p>`;
+                    result += `<p class='sheetBookpublisher'>${bookList[i].sheetBookpublisher}</p>`;
+                    result += `<p class='sheetBookisbn'>${bookList[i].sheetBookisbn}</p>`;
+                    result += `</div><hr>`;
                 }
-                result += "<div>Page: " + currentPageNum + " / " + totalPageNum;
-                result += "<button type=\"button\" onclick=\"search(3)\">다음페이지</button></div>";
+                result += `<div>Page: ${currentPageNum} / ${totalPageNum}`;
+                if (currentPageNum > 1) {
+                    result += `<button type="button" onclick="search(${currentPageNum - 1})">이전페이지</button>`;
+                }
+                if (currentPageNum < totalPageNum) {
+                    result += `<button type="button" onclick="search(${currentPageNum + 1})">다음페이지</button>`;
+                }
+                result += `</div>`;
                 $("#searchResult").html(result);
             }
         });

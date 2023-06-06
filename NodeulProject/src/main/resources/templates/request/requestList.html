@@ -5,7 +5,70 @@
     <title>Title</title>
 </head>
 <body>
-sheet Request List .html
+들어온 요청 목록 / Request List .html
+
+<hr>
+<a href="/sheet/request/list">응답안함</a>
+<a href="/sheet/request/list?requestIsdone=1">응답함</a>
+
+
+<hr>
+<!--<a href="/sheet/request">요청 등록</a>-->
+
+
+<table class="tb_col" style="border: black 1px;">
+    <tr>
+        <th>요청자 이메일</th>
+        <th>요청자 이름</th>
+        <th>요청자 연락처</th>
+        <th>책 제목</th>
+        <th>출판사</th>
+        <th>응답 여부(0이면 응답X)</th>
+        <th>희망일자</th>
+        <th>삭제버튼</th>
+        <th>수정버튼</th>
+    </tr>
+    <tr th:each="req : ${requestList.content}">
+        <td th:text="${req.requestEmail}"></td>
+        <td th:text="${req.requestName}"></td>
+        <td th:text="${req.requestPhone}"></td>
+        <td th:text="${req.requestBooktitle}"></td>
+        <td th:text="${req.requestBookpublisher}"></td>
+        <td th:text="${req.requestIsdone}"></td>
+        <td th:text="${req.requestHopedate}"></td>
+        <td>
+            <form th:action="@{/sheet/request/remove/{requestNo}(requestNo=${req.requestNo})}" method="post">
+                <input id="deleteBtn" type="submit" value="삭제" onclick="deleteConfirm()">
+            </form>
+        </td>
+        <td>
+            <a class="editBtn" th:href="@{/sheet/request/edit/{requestNo}(requestNo=${req.requestNo})}">수정</a>
+        </td>
+    </tr>
+</table>
+
+<!-- 페이지 이동 버튼-->
+<div th:each="pageNumber : ${#numbers.sequence(0, requestList.totalPages - 1)}">
+    <form th:action="@{/sheet/request/list}" method="get">
+        <input type="hidden" name="page" th:value="${pageNumber}" />
+        <button th:text="${pageNumber + 1}"></button>
+    </form>
+</div>
+
+
+
+
+<script th:inline="javascript">
+    function deleteConfirm() {
+        // 삭제 확인 후, 확인 시 삭제처리
+        if (confirm('정말 삭제하시겠습니까?')) {
+            this.closest('form').submit();
+        }
+    }
+
+
+
+</script>
 
 </body>
 </html>

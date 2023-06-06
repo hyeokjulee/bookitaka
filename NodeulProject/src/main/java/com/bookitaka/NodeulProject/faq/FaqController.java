@@ -7,9 +7,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -52,14 +55,23 @@ public class FaqController {
     @GetMapping("/add")
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String addForm(Model model) {
+        model.addAttribute("faqRegisterDto", new FaqRegisterDto());
         model.addAttribute("faqAllCategory", service.getAllFaqCategory());
         return "/faq/faqAddForm";
     }
 
     // FAQ 등록 처리
     @PostMapping("/add")
-    public String addProc(Model model, @ModelAttribute FaqRegisterDto faqRegisterDto, HttpServletResponse response) throws UnsupportedEncodingException {
+    public String addProc(Model model,
+                          @Validated @ModelAttribute FaqRegisterDto faqRegisterDto,
+                          BindingResult bindingResult,
+                          HttpServletResponse response) throws UnsupportedEncodingException {
         log.info("Controller addProc : faqRegisterDto = " + faqRegisterDto);
+
+        if(bindingResult.hasErrors()){
+            model.addAttribute("faqAllCategory", service.getAllFaqCategory());
+            return "/faq/faqAddForm";
+        }
 
         // faqDto -> faq 변환
         Faq faq = modelMapper.map(faqRegisterDto, Faq.class);

@@ -8,16 +8,35 @@
 
 FAQ 등록 폼 / faqAddForm.html
 
-<form action="/faq/add" method="post">
-    <br> 질문 <textarea name="faqQuestion"></textarea>
-    <br> 답변 <textarea name="faqAnswer"></textarea>
-    <br> 카테고리
-    <select name="faqCategory">
-        <option th:each="category : ${faqAllCategory}" th:value="${category}" th:text="${category}"></option>
-    </select>
+<form th:action="@{/faq/add}" th:object="${faqRegisterDto}" method="post">
 
-    <br> most/best 여부
-    <input type="checkbox" name="faqBest" value="1">
+    <div>
+        <label for="faqQuestion">자주묻는 질문</label>
+        <span class="errorMsg" th:errors="*{faqQuestion}">질문 오류</span><br>
+        <textarea name="faqQuestion" id="faqQuestion" th:field="*{faqQuestion}"></textarea>
+    </div>
+
+    <div>
+        <label for="faqQuestion">답변</label>
+        <span class="errorMsg" th:errors="*{faqAnswer}">답변 오류</span><br>
+        <textarea name="faqAnswer" id="faqAnswer" th:field="*{faqAnswer}"></textarea>
+    </div>
+
+<!--    <span class="errorMsg" th:errors="*{faqQuestion}">질문 오류</span>-->
+<!--    <br> 질문 <textarea name="faqQuestion" th:field="*{faqQuestion}"></textarea>-->
+<!--    <span class="errorMsg" th:errors="*{sheetBooktitle}">답변 오류</span>-->
+<!--    <br> 답변 <textarea name="faqAnswer"></textarea>-->
+    <div>
+        카테고리
+        <select name="faqCategory">
+            <option th:each="category : ${faqAllCategory}" th:value="${category}" th:text="${category}"></option>
+        </select>
+    </div>
+
+    <div>
+        <br> most/best 여부
+        <input type="checkbox" name="faqBest" value="1">
+    </div>
 
     <hr>
     <button type="submit">FAQ 등록</button>

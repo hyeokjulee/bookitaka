@@ -182,29 +182,33 @@
             success: function(data) {
                 var bookList = data.bookList;
                 var total = data.total;
-                var totalPageNum = data.totalPageNum;
-                var currentPageNum = data.currentPageNum;
+                var totalPageNum = parseInt(data.totalPageNum);
+                var currentPageNum = parseInt(data.currentPageNum);
 
                 var result = "";
-                result += "<div>"
-                result +=   "<p>검색 결과 : " + total + "개</p>";
-                result += "</div>"
+                result += `<div><p>검색 결과 : ${total}개</p></div>`;
                 for (var i = 0; i < bookList.length; i++) {
-                    result += "<div class='eachBook' onclick='getBookValue(this)'>";
-                    // result += "<img src='" + bookList[i].sheetBookimgname + "'>";
-                    result +=   "<p class='sheetBooktitle'>" + bookList[i].sheetBooktitle + "</p>";
-                    result +=   "<p class='sheetBookauthor'>" + bookList[i].sheetBookauthor + "</p>";
-                    result +=   "<p class='sheetBookpublisher'>" + bookList[i].sheetBookpublisher + "</p>";
-                    result +=   "<p class='sheetBookisbn'>" + bookList[i].sheetBookisbn + "</p>";
-                    result += "</div>"
-                    result += "<hr>"
+                    result += `<div class='eachBook' onclick='getBookValue(this)'>`;
+                    result += `<img class='sheetBookimgname' src='${bookList[i].sheetBookimgname}'>`;
+                    result += `<p class='sheetBooktitle'>${bookList[i].sheetBooktitle}</p>`;
+                    result += `<p class='sheetBookauthor'>${bookList[i].sheetBookauthor}</p>`;
+                    result += `<p class='sheetBookpublisher'>${bookList[i].sheetBookpublisher}</p>`;
+                    result += `<p class='sheetBookisbn'>${bookList[i].sheetBookisbn}</p>`;
+                    result += `</div><hr>`;
                 }
-                result += "<div>Page: " + currentPageNum + " / " + totalPageNum;
-                result += "<button type=\"button\" onclick=\"search(3)\">다음페이지</button></div>";
+                result += `<div>Page: ${currentPageNum} / ${totalPageNum}`;
+                if (currentPageNum > 1) {
+                    result += `<button type="button" onclick="search(${currentPageNum - 1})">이전페이지</button>`;
+                }
+                if (currentPageNum < totalPageNum) {
+                    result += `<button type="button" onclick="search(${currentPageNum + 1})">다음페이지</button>`;
+                }
+                result += `</div>`;
                 $("#searchResult").html(result);
             }
         });
     }
+
 
     function getBookValue(element) {
         var title = $(element).children(".sheetBooktitle").text();
