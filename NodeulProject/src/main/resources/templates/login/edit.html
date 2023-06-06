@@ -14,6 +14,7 @@
         <label>이름:</label>
         <span id="memberNameForm" style="display: none">
             <input type="text" th:field="*{memberName}"/>
+            <div class="errorDiv" error="memberName" style="color: red"></div>
         </span>
         <span id="memberNameText">
             <span th:text="*{memberName}"></span>

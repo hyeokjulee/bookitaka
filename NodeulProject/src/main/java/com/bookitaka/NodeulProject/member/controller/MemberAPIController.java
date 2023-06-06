@@ -176,8 +176,8 @@ public class MemberAPIController {
     if(bindingResult.hasErrors()) {
       return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
     }
-    String result = memberService.getPwByEmail(memberFindPwDTO);
-    if (result.equals("회원X")) {
+    boolean result = memberService.getPwByEmailAndName(memberFindPwDTO.getMemberEmail(), memberFindPwDTO.getMemberName());
+    if (!result) {
       bindingResult.rejectValue("memberName","getMemberPassword.notFoundMember","일치하는 회원이 없습니다");
       log.info("==================================== 회원X");
       return ResponseEntity.unprocessableEntity().body(bindingResult.getAllErrors());
