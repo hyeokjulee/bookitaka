@@ -18,7 +18,7 @@ public interface FaqService {
     List<String> getAllFaqCategory();
 
     Page<Faq> getAllFaqByFaqCategory(String faqCategory, Pageable pageable);
-    Page<Faq> getAllFaqByFaqBest(Pageable pageable);
+    Page<Faq> getAllFaqContaningKeyword(String keyword, Pageable pageable);
 
 
 

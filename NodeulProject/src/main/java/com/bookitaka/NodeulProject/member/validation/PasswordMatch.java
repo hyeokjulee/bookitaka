@@ -9,14 +9,10 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PasswordMatch {
-
     String message() default "비밀번호가 일치하지 않습니다.";
-
     Class<?>[] groups() default {};
-
     Class<? extends Payload>[] payload() default {};
 
-    String passwordField();
-
-    String passwordConfirmField();
+    String password() default "memberPassword";
+    String passwordCheck() default "memberPasswordCheck";
 }

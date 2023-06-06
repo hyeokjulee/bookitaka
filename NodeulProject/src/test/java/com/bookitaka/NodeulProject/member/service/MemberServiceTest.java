@@ -34,7 +34,7 @@ public class MemberServiceTest {
 
     @BeforeEach
     void beforeTest() {
-        Member member = new Member(null, testEmail, testPassword, "tester", "010-0101-0101", "F", new Date(), MemberRoles.ADMIN, null);
+        Member member = new Member(null, testEmail, testPassword, "tester", "010-0101-0101", "F", "2222-22-22", MemberRoles.ADMIN, null);
         memberService.signup(member);
     }
 
@@ -49,7 +49,7 @@ public class MemberServiceTest {
     public void signup() {
         //given
         String email = "test@test.com";
-        Member member = new Member(null, email, "0000", "tester", "010-0101-0101", "F", new Date(), MemberRoles.MEMBER, null);
+        Member member = new Member(null, email, "0000", "tester", "010-0101-0101", "F", "2222-22-22", MemberRoles.MEMBER, null);
         //when
         memberService.signup(member);
         //then

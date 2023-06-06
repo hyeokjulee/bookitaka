@@ -10,15 +10,13 @@ import java.util.List;
 
 public interface FaqRepository extends PagingAndSortingRepository<Faq, Long> {
 
-//    Page<Faq> findAllByFaqCategory(String faqCategory, Pageable pageable);
     Page<Faq> findAllByFaqCategoryOrderByFaqRegdateDesc(String faqCategory, Pageable pageable);
-//    Page<Faq> findAllByFaqBest(int faqBest, Pageable pageable);
     Page<Faq> findAllByFaqBestOrderByFaqRegdateDesc(int faqBest, Pageable pageable);
 
-//    List<Faq> findAllByFaqCategory(String faqCategory);
-//    List<Faq> findAllByFaqBest(int faqBest);
+//    Page<Faq> findAllByFaqAnswerContainsAndFaqQuestionContains(String keyword, Pageable pageable);
+    Page<Faq> findAllByFaqQuestionContaining(String keyword, Pageable pageable);
+//    Page<Faq> findAllByFaqQuestionOrFaqAnswerContaining(String keyword, Pageable pageable);
 
-//    List<Faq> findByFaqQuestionAndFaqAnswerContaining();
 
 
 }

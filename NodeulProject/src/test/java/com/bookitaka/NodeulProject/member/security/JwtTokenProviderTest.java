@@ -34,7 +34,7 @@ class JwtTokenProviderTest {
 
     @BeforeEach
     void beforeTest() {
-        testMember = new Member(null, testEmail, testPassword, "tester", "010-0101-0101", "F", new Date(), MemberRoles.ADMIN, null);
+        testMember = new Member(null, testEmail, testPassword, "tester", "010-0101-0101", "F", "2222-22-22", MemberRoles.ADMIN, null);
         memberRepository.save(testMember);
         testToken = jwtTokenProvider.createToken(testEmail, MemberRoles.ADMIN);
     }

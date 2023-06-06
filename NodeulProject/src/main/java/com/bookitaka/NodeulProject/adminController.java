@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class adminController {
     @GetMapping
     public String mainPage() {
-        return "login/authPage";
+        return "/index";
     }
 }*/
