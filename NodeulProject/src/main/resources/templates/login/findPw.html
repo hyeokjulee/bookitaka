@@ -24,7 +24,7 @@
     </div>
 </form>
 <script th:inline="javascript">
-    document.getElementById("findBtn").addEventListener("click", function(event) {
+    document.getElementById("findBtn").addEventListener("click", function (event) {
         event.preventDefault(); // 폼의 기본 동작(페이지 새로고침) 방지
 
         let memberEmail = document.getElementById("memberEmail").value;
@@ -39,16 +39,19 @@
         })
             .then((response) => {
                 if (response.ok) {
-                    // 회원 가입 성공 시
+
+                    for (let errorDiv of document.querySelectorAll(".errorDiv")){
+                        errorDiv.innerText = "";
+                    }
                     alert("임시 비밀번호가 이메일로 전송되었습니다")
                 } else if (response.status === 400) {
                     response.json().then(data => {
                         // 에러 메시지 초기화
-                        for (let errorDiv of document.querySelectorAll(".errorDiv")){
+                        for (let errorDiv of document.querySelectorAll(".errorDiv")) {
                             errorDiv.innerText = "";
                         }
                         // 응답 데이터를 파싱하여 에러 메시지 표시
-                        console.log(data);
+                        // console.log(data);
                         for (const error of data) {
                             let errorElement = null;
                             if (error.field == null) {
@@ -61,13 +64,31 @@
                             // inputField.parentNode.appendChild(errorElement);
                         }
                     });
-                }   else if (response.status === 404) {
-                    alert("gdgdg")
-                }
-                else {
+                } else if (response.status === 422) {
+                    response.json().then(data => {
+                        // 에러 메시지 초기화
+                        for (let errorDiv of document.querySelectorAll(".errorDiv")) {
+                            errorDiv.innerText = "";
+                        }
+                        // 응답 데이터를 파싱하여 에러 메시지 표시
+                        // console.log(data);
+                        for (const error of data) {
+                            let errorElement = null;
+                            if (error.field == null) {
+                                errorElement = document.querySelector(`[error="${error.code}"]`);
+                            } else {
+                                // 해당 입력 필드 아래에 에러 메시지 표시
+                                errorElement = document.querySelector(`[error="${error.field}"]`);
+                            }
+                            errorElement.innerText = error.defaultMessage;
+                            // inputField.parentNode.appendChild(errorElement);
+                        }
+                    });
+                } else {
                     // 기타 상태 코드에 대한 처리
                 }
             })
     });
+</script>
 </body>
 </html>

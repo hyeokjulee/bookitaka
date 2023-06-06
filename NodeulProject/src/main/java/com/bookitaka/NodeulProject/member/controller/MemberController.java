@@ -61,14 +61,6 @@ public class MemberController {
     @GetMapping("/findEmail")
     public String findId() { return "login/findEmail"; }
 
-    @GetMapping("/findEmailResult")
-    public String findEmailResult(Model model) {
-        List<String> findResult = (List<String>) model.getAttribute("findResult");
-        model.addAttribute("findResult", findResult);
-        return "login/findEmailResult";
-    }
-
-
     @GetMapping("/findPw")
     public String findPw() {
         return "login/findPw";

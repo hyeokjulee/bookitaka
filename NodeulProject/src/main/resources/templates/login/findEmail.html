@@ -40,7 +40,25 @@
         })
             .then((response) => {
                 if (response.ok) {
-                    console.log(response.json());
+                    let result = response.json();
+                    // console.log(result);
+                    for (let errorDiv of document.querySelectorAll(".errorDiv")){
+                        errorDiv.innerText = "";
+                    }
+                    result.then((data) => {
+                        // 배열의 각 요소에 접근하여 처리
+                        data.forEach((email) => {
+                            // console.log(email);
+                            // 여기에 각 이메일 주소에 대한 작업을 수행하면 됩니다.
+                            const membersDiv = document.getElementById('members');
+                            const paragraph = document.createElement('p');
+                            paragraph.textContent = maskEmail(email);
+                            membersDiv.appendChild(paragraph);
+                        });
+                    }).catch((error) => {
+                        // 처리 중에 오류가 발생한 경우
+                        console.error(error);
+                    });
                 } else if (response.status === 400) {
                     response.json().then(data => {
                         // 에러 메시지 초기화
@@ -48,7 +66,7 @@
                             errorDiv.innerText = "";
                         }
                         // 응답 데이터를 파싱하여 에러 메시지 표시
-                        console.log(data);
+                        // console.log(data);
                         for (const error of data) {
                             let errorElement = null;
                             if (error.field == null) {
@@ -68,7 +86,7 @@
                             errorDiv.innerText = "";
                         }
                         // 응답 데이터를 파싱하여 에러 메시지 표시
-                        console.log(data);
+                        // console.log(data);
                         for (const error of data) {
                             let errorElement = null;
                             if (error.field == null) {
@@ -85,16 +103,6 @@
                     // 기타 상태 코드에 대한 처리
                 }
             })
-            // .then((emails) => {
-            //     let membersDiv = document.getElementById("members");
-            //     membersDiv.innerText = "";
-            //         emails.forEach((member) => {
-            //             let maskedMember = maskEmail(member);
-            //             let paragraph = document.createElement("p");
-            //             paragraph.innerText = maskedMember;
-            //             membersDiv.appendChild(paragraph);
-            //         });
-            // })
         });
 
     // 이메일 주소를 마스킹하는 함수

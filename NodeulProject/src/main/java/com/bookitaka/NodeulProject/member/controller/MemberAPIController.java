@@ -1,9 +1,6 @@
 package com.bookitaka.NodeulProject.member.controller;
 
-import com.bookitaka.NodeulProject.member.dto.MemberChangePwDTO;
-import com.bookitaka.NodeulProject.member.dto.MemberUpdateDTO;
-import com.bookitaka.NodeulProject.member.dto.MemberDataDTO;
-import com.bookitaka.NodeulProject.member.dto.MemberResponseDTO;
+import com.bookitaka.NodeulProject.member.dto.*;
 import com.bookitaka.NodeulProject.member.exception.CustomException;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.security.Token;
@@ -152,28 +149,40 @@ public class MemberAPIController {
 
     }
   }
+
   @PostMapping("/findEmail")
-  public String findMemberEmail(@RequestParam("memberName") String memberName,
-//                                @RequestParam("memberBirthday") String memberBirthday,
-                                RedirectAttributes redirectAttributes,
-                                HttpServletResponse response
-  ) throws IOException {
-    List<String> memberEmails = memberService.getMemberEmail(memberName/*, memberBirthday*/);
-    redirectAttributes.addFlashAttribute("findResult", memberEmails);
-    response.sendRedirect("/members/findEmailResult");
-    return "redirect:/members/findEmailResult";
+  public ResponseEntity<?> findMemberEmail(@Validated @ModelAttribute MemberFindEmailDTO memberFindEmailDTO, BindingResult bindingResult) {
+    log.info("========================================================= findEmail");
+    List<String> members = memberService.getMemberEmail(memberFindEmailDTO);
+    log.info("========================================================= members : {}",members);
+    if(bindingResult.hasErrors()) {
+      return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+    }
+    if (members == null) {
+      log.info("membersSize");
+      bindingResult.rejectValue("memberBirthday", "getMemberEmail.notFoundMember", "일치하는 회원이 없습니다");
+      log.info("{}",bindingResult.getAllErrors());
+
+      return ResponseEntity.unprocessableEntity().body(bindingResult.getAllErrors());
+    }
+    log.info("OKOKOKOKOKOK");
+    return ResponseEntity.ok().body(members);
   }
 
 
   @PostMapping("/findPw")
-  public ResponseEntity<String> findMemberPw(
-          @Validated
-          @RequestParam("memberEmail") String memberEmail,
-          @RequestParam("memberName") String memberName,
-          BindingResult result
-  ) {
-    memberService.getPwByEmail(memberEmail, memberName);
-    return ResponseEntity.ok("임시 비밀번호로 변경완료");
+  public ResponseEntity<?> findMemberPw(@Validated @ModelAttribute MemberFindPwDTO memberFindPwDTO, BindingResult bindingResult) {
+    log.info("=================================================== findPw");
+    if(bindingResult.hasErrors()) {
+      return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+    }
+    String result = memberService.getPwByEmail(memberFindPwDTO);
+    if (result.equals("회원X")) {
+      bindingResult.rejectValue("memberName","getMemberPassword.notFoundMember","일치하는 회원이 없습니다");
+      log.info("==================================== 회원X");
+      return ResponseEntity.unprocessableEntity().body(bindingResult.getAllErrors());
+    }
+    return ResponseEntity.ok().build();
   }
 
   // 회원 상세 보기 (관리자)

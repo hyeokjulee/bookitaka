@@ -156,7 +156,8 @@ public class MemberService {
         return mList;
     }
 
-    public void getPwByEmail(MemberFindPwDTO memberFindPwDTO) {
+    public String getPwByEmail(MemberFindPwDTO memberFindPwDTO) {
+        String result;
         String memberEmail = memberFindPwDTO.getMemberEmail();
         String memberName = memberFindPwDTO.getMemberName();
         if (memberRepository.existsByMemberEmail(memberEmail)) {
@@ -170,11 +171,14 @@ public class MemberService {
                 findMember.setMemberPassword(passwordEncoder.encode(newPw));
                 log.info("================================== newPw : {}", newPw);
                 memberRepository.save(findMember);
-
+                result = "완료";
+            } else {
+                result = "회원X";
             }
         } else {
-            throw new CustomException("The member doesn't exist", HttpStatus.NOT_FOUND);
+            result = "회원X";
         }
+        return result;
     }
 
     public List<Member> getAllMembers() {

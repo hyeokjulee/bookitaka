@@ -16,8 +16,13 @@
     <tr th:each="member : ${members}">
         <td th:text="${member.memberName}"></td>
         <td th:text="${member.memberEmail}"></td>
+        <button type="button" id="editBtn">edit</button>
+        <button type="button" id="delBtn">delete</button>
     </tr>
     </tbody>
 </table>
+<script th:inline="">
+    [[]]
+</script>
 </body>
 </html>
