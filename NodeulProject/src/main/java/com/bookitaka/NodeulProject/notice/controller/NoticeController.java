@@ -77,21 +77,14 @@ public class NoticeController {
         return "redirect:/notice/list";
     }
 
-    /*@GetMapping("/search")
-    public String search(@RequestParam(value="keyword")String keyword, Pageable pageable,Model model){
-        List<NoticeDto> noticeDtoList = noticeService.searchNotice(keyword,pageable);
-
-        model.addAttribute("noticeList",noticeDtoList);
-
-        return "notice/list.html";
-    }*/
-
     @GetMapping("/search")
-    public String search(@RequestParam(value="keyword") String keyword, @RequestParam(name="page", defaultValue = "0") int page, Model model) {
+    public String search(@RequestParam(value = "keyword") String keyword, @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         Page<NoticeDto> noticeDtoPage = noticeService.searchNotice(keyword, pageable);
-        model.addAttribute("noticeList", noticeDtoPage.getContent());
+        model.addAttribute("noticeList", noticeDtoPage);
+        model.addAttribute("keyword", keyword); // 검색어 전달
         return "notice/list.html";
     }
+
 
 }

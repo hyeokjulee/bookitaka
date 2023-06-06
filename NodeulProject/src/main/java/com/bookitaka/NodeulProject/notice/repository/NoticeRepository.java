@@ -17,7 +17,6 @@ public interface NoticeRepository extends PagingAndSortingRepository<Notice,Inte
     @Query("update Notice n set n.noticeHit = n.noticeHit + 1 where n.noticeNo = :noticeNo")
     int updateHit(Integer noticeNo);
 
-   // List<Notice> findByNoticeTitleContaining(String keyword, Sort noticeNo);
    Page<Notice> findByNoticeTitleContaining(String keyword, Pageable pageable);
 
 }

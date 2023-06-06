@@ -53,16 +53,14 @@
     </table>
 
     <div>
-        <!-- 페이지 이동 버튼-->
+        <!-- 페이지 이동 버튼 -->
         <div th:each="pageNumber : ${#numbers.sequence(0, noticeList.totalPages - 1)}">
-            <form th:action="@{/notice/list}" method="get">
+            <form th:action="@{/notice/search}" method="get"> <!-- /notice/list에서 /notice/search로 수정 -->
+                <input type="hidden" name="keyword" th:value="${keyword}" /> <!-- 검색어 전달 -->
                 <input type="hidden" name="page" th:value="${pageNumber}" />
                 <button th:text="${pageNumber + 1}"></button>
             </form>
         </div>
-<!--    <span th:each="pageNum : ${pageList}" th:inline="text">
-        <a th:href="@{'/?page=' + ${pageNum}}">[[${pageNum}]]</a>
-    </span>-->
     </div>
 </div>
 

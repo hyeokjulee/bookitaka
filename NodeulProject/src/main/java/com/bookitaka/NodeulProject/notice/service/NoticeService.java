@@ -44,12 +44,6 @@ public class NoticeService {
         return noticeEntities.map(this::convertEntityToDto);
     }
 
-
-    @Transactional //페이징
-    public Page<Notice> pageList(Pageable pageable) {
-        return noticeRepository.findAll(pageable);
-    }
-
     /*게시글 생성*/
     @Transactional
     public Integer registerNotice(NoticeDto noticeDto){
@@ -85,19 +79,6 @@ public class NoticeService {
     }
 
     @Transactional
-    /*public List<NoticeDto> searchNotice(String keyword, Pageable pageable) {
-        Page<Notice> noticeEntities = noticeRepository.findByNoticeTitleContaining(keyword,pageable);
-        List<NoticeDto> noticeDtoList = new ArrayList<>();
-
-        if (noticeEntities.isEmpty()) return noticeDtoList;
-
-        for (Notice notice : noticeEntities) {
-            noticeDtoList.add(this.convertEntityToDto(notice));
-        }
-
-        return noticeDtoList;
-    }*/
-
     public Page<NoticeDto> searchNotice(String keyword, Pageable pageable) {
         Page<Notice> noticeEntities = noticeRepository.findByNoticeTitleContaining(keyword, pageable);
 

@@ -85,8 +85,8 @@
           <li class="nav-item dropdown">
             <a href="#" class="nav-link" aria-current="page" data-bs-toggle="dropdown">알림마당</a>
             <div class="dropdown-menu bg-light m-0">
-              <a th:href="@{user-research}"  class="dropdown-item">게시판페이지만드는중</a>
-              <a th:href="@{web-development}" class="dropdown-item">독후활동지페이지만드는중</a>
+              <a th:href="@{/user-research}"  class="dropdown-item">게시판페이지만드는중</a>
+              <a th:href="@{/web-development}" class="dropdown-item">독후활동지페이지만드는중</a>
               <a th:href="@{/manual/list}" class="dropdown-item">이용방법</a>
               <a th:href="@{/notice/list}" class="dropdown-item">공지사항</a>
             </div>
@@ -104,13 +104,13 @@
 
   <!-- ============================================-->
   <!-- <section> begin ============================-->
-  <section class="pb-11 pt-7 bg-600">
+  <section class="pb-7 pt-6 bg-600">
 
     <div class="container">
       <div class="row">
         <div class="col-12">
           <h6 class="font-sans-serif text-primary fw-bold">북키타카</h6>
-          <h1><div th:replace="${menuTitle}" class="fs-6 fs-xl-6 mb-5">알림마당</div></h1>
+          <h1 class="fs-6 fs-xl-6 mb-5"><div th:replace="${menuTitle}" >알림마당</div></h1>
         </div>
       </div>
     </div>
@@ -121,18 +121,20 @@
   <!-- ============================================-->
 
 
-
+  <br><hr class="my-4">
 
   <!-- ============================================-->
   <!-- <section> begin ============================-->
-  <section style="margin-top:-21.5rem">
+  <section class="py-5">
 
     <div class="container">
       <div class="row">
         <div class="col-md-3">
           <div class="card">
             <ul class="list-group list-group-flush">
-              <li th:block th:replace="${sidebar}" class="list-group-item"><strong>Enrolled </strong>: 1200 students</li>
+              <li class="list-group-item" th:replace="${sidebar}">
+                <strong>Enrolled</strong>
+              </li>
             </ul>
           </div>
         </div>
