@@ -89,6 +89,7 @@ public class MemberService {
 
     public Member search(String memberEmail) {
         Member member = memberRepository.findByMemberEmail(memberEmail);
+        log.info("================================ memberEmail : {}", memberEmail);
         if (member == null) {
             throw new CustomException("The member doesn't exist", HttpStatus.NOT_FOUND);
         }

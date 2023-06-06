@@ -128,35 +128,38 @@
             memberGender: memberGender,
             memberBirthday: memberBirthday
         });
-        fetch("/member/" + /*[[${member.memberEmail}]]*/ '', {
+        fetch("/member/editAdmin/" + /*[[${member.memberEmail}]]*/ '', {
             method: 'PUT',
             body: formData
         })
-        .then((response) => {
-            if (response.ok) {
-                // 성공적인 응답 처리
-                window.location.reload();
-            } else if (response.status === 400) {
-                response.json().then(data => {
-                    // 에러 메시지 초기화
-                    for (let errorDiv of document.querySelectorAll(".errorDiv")){
-                        errorDiv.innerText = "";
-                    }
-                    // 응답 데이터를 파싱하여 에러 메시지 표시
-                    for (const error of data) {
-                        const inputField = document.querySelector(`[name="${error.field}"]`);
-                        const errorMessage = error.defaultMessage;
+            .then((response) => {
+                if (response.ok) {
+                    alert("수정 완료")
+                    // 성공적인 응답 처리
+                    window.location.href="/members/list";
+                } else if (response.status === 400) {
+                    response.json().then(data => {
+                        // 에러 메시지 초기화
+                        for (let errorDiv of document.querySelectorAll(".errorDiv")){
+                            errorDiv.innerText = "";
+                        }
+                        // 응답 데이터를 파싱하여 에러 메시지 표시
+                        for (const error of data) {
+                            const inputField = document.querySelector(`[name="${error.field}"]`);
+                            const errorMessage = error.defaultMessage;
 
-                        // 해당 입력 필드 아래에 에러 메시지 표시
-                        const errorElement = document.querySelector(`[error="${error.field}"]`);
-                        errorElement.innerText = errorMessage;
-                        // inputField.parentNode.appendChild(errorElement);
-                    }
-                });
-            } else {
-                // 기타 상태 코드에 대한 처리
-            }
-        })
+                            // 해당 입력 필드 아래에 에러 메시지 표시
+                            const errorElement = document.querySelector(`[error="${error.field}"]`);
+                            errorElement.innerText = errorMessage;
+                            // inputField.parentNode.appendChild(errorElement);
+                        }
+                    });
+                } else {
+                    // 기타 상태 코드에 대한 처리
+                    alert("수정 실패")
+                    window.location.href="/members/list";
+                }
+            })
     });
 
 

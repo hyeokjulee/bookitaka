@@ -12,10 +12,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -50,12 +53,24 @@ public class MemberController {
         model.addAttribute("member", userResponseDTO);
         return "login/edit";
     }
-
+    @GetMapping("/editAdmin/{memberEmail}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String editAdmin(Model model, @PathVariable String memberEmail) {
+        log.info("=====================MemberController - editAdmin");
+        Member memberByEmail = memberService.search(memberEmail);
+        MemberResponseDTO userResponseDTO = modelMapper.map(memberByEmail, MemberResponseDTO.class);
+        model.addAttribute("member", userResponseDTO);
+        return "login/editAdmin";
+    }
     @GetMapping("/list")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String list(Model model) {
         List<Member> members = memberService.getAllMembers();
-        model.addAttribute("members", members);
+//        model.addAttribute("members", members);
+        List<Member> filteredMembers = members.stream()
+                .filter(member -> member.getMemberRole().equals("ROLE_MEMBER"))
+                .collect(Collectors.toList());
+        model.addAttribute("members", filteredMembers);
         return "login/list";
     }
     @GetMapping("/findEmail")

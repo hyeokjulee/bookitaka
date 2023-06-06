@@ -104,12 +104,13 @@ public class MemberAPIController {
       @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 404, message = "The user doesn't exist"), //
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-  public String delete(@ApiParam("MemberEmail") @PathVariable String memberEmail) {
+  public ResponseEntity<?> delete(@ApiParam("MemberEmail") @PathVariable String memberEmail) {
     log.info("================================Member : delete");
     memberService.delete(memberEmail);
-    return memberEmail;
+    return ResponseEntity.ok().build();
   }
 
+  //회원 정보 수정 (회원)
   @PutMapping("/{memberEmail}")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
   @ApiResponses(value = {//
@@ -127,6 +128,28 @@ public class MemberAPIController {
       return ResponseEntity.badRequest().body("permission mismatch");
     }
     modelMapper.map(memberUpdateDTO, memberPath);
+    if (memberService.modifyMember(memberPath)) {
+      // 수정 성공시
+      return ResponseEntity.ok().build();
+    } else {
+      // 수정 실패 시
+      return ResponseEntity.internalServerError().build();
+    }
+  }
+
+  // 회원 정보 수정 (관리자)
+  @PutMapping("/editAdmin/{memberEmail}")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @ApiResponses(value = {//
+      @ApiResponse(code = 400, message = "Something went wrong"), //
+      @ApiResponse(code = 403, message = "Access denied"), //
+      @ApiResponse(code = 404, message = "The user doesn't exist"), //
+      @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+  public ResponseEntity<?> editAdmin(@Validated @ModelAttribute MemberUpdateDTO memberUpdateDTO,
+                                     @PathVariable("memberEmail") String memberEmail) {
+    log.info("================================ Member : editAdmin");
+    Member memberPath = memberService.search(memberEmail);
+    modelMapper.map(memberUpdateDTO, memberPath);
     if(memberService.modifyMember(memberPath)) {
       // 수정 성공시
       return ResponseEntity.ok().build();
@@ -136,6 +159,7 @@ public class MemberAPIController {
     }
   }
 
+  // 비밀번호 변경
   @PutMapping("/changePw")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
   public ResponseEntity<String> modifyPw(@Validated @ModelAttribute MemberChangePwDTO memberChangePwDTO,
@@ -150,6 +174,7 @@ public class MemberAPIController {
     }
   }
 
+  // 이메일 찾기
   @PostMapping("/findEmail")
   public ResponseEntity<?> findMemberEmail(@Validated @ModelAttribute MemberFindEmailDTO memberFindEmailDTO, BindingResult bindingResult) {
     log.info("========================================================= findEmail");
