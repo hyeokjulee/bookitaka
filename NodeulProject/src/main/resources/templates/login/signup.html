@@ -5,34 +5,215 @@
 </head>
 <body>
 <h1>회원 가입</h1>
-<form action="/member/signup" method="post">
+<form th:object="${member}">
     <div>
         <label>이메일:</label>
-        <input type="email" name="memberEmail"/>
+        <input type="text" id="memberEmailF"/> @
+        <input type="text" id="memberEmailR"/>
+        <select id="memberEmailSelect">
+            <option value="" selected>직접 입력</option>
+            <option value="gmail.com">지메일 (gmail.com)</option>
+            <option value="naver.com">네이버 (naver.com)</option>
+            <option value="daum.net">다음 (daum.net)</option>
+            <option value="kakao.com">카카오 (kakao.com)</option>
+            <option value="hanmail.net">한메일 (hanmail.net)</option>
+            <option value="nate.com">네이트 (nate.com)</option>
+        </select>
+        <div class="errorDiv" error="memberEmail" style="color: red"></div>
+        <div id="dupliDiv" style="color: red"></div>
     </div>
     <div>
         <label>비밀번호:</label>
-        <input type="password" name="memberPassword"/>
+        <input type="password" th:field="*{memberPassword}"/>
+        <div class="errorDiv" error="memberPassword" style="color: red"></div>
+    </div>
+    <div>
+        <label>비밀번호(확인):</label>
+        <input type="password" th:field="*{memberPasswordCheck}"/>
+        <div class="errorDiv" error="memberPasswordCheck" style="color: red"></div>
+        <div class="errorDiv" error="PasswordMatch" style="color: red"></div>
     </div>
     <div>
         <label>이름:</label>
-        <input type="text" name="memberName"/>
+        <input type="text" th:field="*{memberName}"/>
+        <div class="errorDiv" error="memberName" style="color: red"></div>
     </div>
     <div>
         <label>전화번호:</label>
-        <input type="text" name="memberPhone"/>
+        <select id="memberPhoneSelect">
+            <option value="010" selected>010</option>
+            <option value="011">011</option>
+            <option value="016">016</option>
+            <option value="02">02</option>
+            <option value="031">031</option>
+            <option value="032">032</option>
+            <option value="">직접 입력</option>
+        </select>
+        <input type="text" id="memberPhoneF" value="010" readonly/>
+        <span> - </span>
+        <input type="text" id="memberPhoneC"/>
+        <span> - </span>
+        <input type="text" id="memberPhoneR"/>
+        <div class="errorDiv" error="memberPhone" style="color: red"></div>
     </div>
     <div>
         <label>성별:</label>
-        <input type="text" name="memberGender"/>
+        선택 안함 <input type="radio" name="memberGender" id="memberGenderN" value="" checked/>
+        남성 <input type="radio" name="memberGender" id="memberGenderM" value="남성"/>
+        여성 <input type="radio" name="memberGender" id="memberGenderF" value="여성"/>
+        <div class="errorDiv" error="memberGender" style="color: red"></div>
     </div>
-<!--    <div>-->
-<!--        <label>생년월일:</label>-->
-<!--        <input type="text" name="memberBirthday"/>-->
-<!--    </div>-->
     <div>
-        <Button type="submit" id="joinBtn">회원 가입</Button>
+        <label>생년월일:</label>
+        <input type="date" th:field="*{memberBirthday}"/>
+        <div class="errorDiv" error="memberBirthday" style="color: red"></div>
+    </div>
+    <div>
+        <Button type="button" id="joinBtn">회원 가입</Button>
     </div>
 </form>
+
+<script th:inline="javascript">
+    // 이메일 선택 이벤트 처리
+    document.getElementById("memberEmailSelect").addEventListener("change", function(event) {
+        selectChangeEvent("memberEmailSelect", "memberEmailR");
+        checkDuplicateEmailFromServer();
+    });
+
+    // 전화번호 앞자리 선택 이벤트 처리
+    document.getElementById("memberPhoneSelect").addEventListener("change", function(event) {
+        selectChangeEvent("memberPhoneSelect", "memberPhoneF");
+    });
+
+    // select 관련 폼 변경 처리
+    function selectChangeEvent(selectName, inputFormId) {
+        let selected = document.getElementById(selectName).value;
+        let memberEmailR = document.getElementById(inputFormId);
+        if (selected === '') {
+            memberEmailR.readOnly = false;
+            memberEmailR.value = "";
+            memberEmailR.focus();
+        } else {
+            memberEmailR.value = selected;
+            memberEmailR.readOnly = true;
+            if (selectName === "memberPhoneSelect") {
+                document.getElementById("memberPhoneC").focus();
+            }
+        }
+    }
+
+    // 전화번호 입력 폼 자동 이동 처리
+    document.getElementById("memberPhoneC").addEventListener("keyup", function(event) {
+        if (document.getElementById("memberPhoneC").value.length > 3) {
+            document.getElementById("memberPhoneR").focus();
+        }
+    });
+    document.getElementById("memberPhoneR").addEventListener("keyup", function(event) {
+        if (document.getElementById("memberPhoneR").value.length > 3) {
+            document.getElementById("memberPhoneR").blur();
+        }
+    });
+</script>
+
+
+<script th:inline="javascript">
+    // 회원가입 버튼 클릭 이벤트 처리
+    document.getElementById("joinBtn").addEventListener("click", function(event) {
+        let memberEmail = document.getElementById("memberEmailF").value +
+            '@' + document.getElementById("memberEmailR").value;
+        let memberPassword = document.getElementById("memberPassword").value;
+        let memberPasswordCheck = document.getElementById("memberPasswordCheck").value;
+        let memberName = document.getElementById("memberName").value;
+        let memberPhone = document.getElementById("memberPhoneF").value +
+            '-' + document.getElementById("memberPhoneC").value +
+            '-' + document.getElementById("memberPhoneR").value;
+        let memberGender = "";
+        for (const gender of document.querySelectorAll(`[name="memberGender"]`)) {
+            if (gender.checked) {
+                memberGender = gender.value;
+                break
+            }
+        }
+        let memberBirthday = document.getElementById("memberBirthday").value;
+        if (memberEmail === '@') {
+            memberEmail = "";
+        }
+        if (/^\d{2}--$|^\d{3}--$/.test(memberPhone)) {
+            memberPhone = "";
+        }
+
+        let formData = new URLSearchParams({
+            memberEmail: memberEmail,
+            memberPassword: memberPassword,
+            memberPasswordCheck: memberPasswordCheck,
+            memberName: memberName,
+            memberPhone: memberPhone,
+            memberGender: memberGender,
+            memberBirthday: memberBirthday
+        });
+
+        fetch("/member/signup", {
+            method: 'POST',
+            body: formData
+        })
+            .then((response) => {
+                if (response.ok) {
+                    // 회원 가입 성공 시
+                    location.href = "/members/login";
+                } else if (response.status === 400) {
+                    // 예외 발생 시
+                    response.json().then(data => {
+                        // 에러 메시지 초기화
+                        for (let errorDiv of document.querySelectorAll(".errorDiv")){
+                            errorDiv.innerText = "";
+                        }
+                        // 응답 데이터를 파싱하여 에러 메시지 표시
+                        console.log(data);
+                        for (const error of data) {
+                            let errorElement = null;
+                            if (error.field == null) {
+                                errorElement = document.querySelector(`[error="${error.code}"]`);
+                            } else {
+                                // 해당 입력 필드 아래에 에러 메시지 표시
+                                errorElement = document.querySelector(`[error="${error.field}"]`);
+                            }
+                            errorElement.innerText = error.defaultMessage;
+                            // inputField.parentNode.appendChild(errorElement);
+                        }
+                    });
+                } else {
+                    // 기타 상태 코드에 대한 처리
+                }
+            })
+    });
+
+    // 이메일 폼 중복 체크 이벤트 처리
+    document.getElementById("memberEmailF").addEventListener("keyup", function(event) {
+        checkDuplicateEmailFromServer();
+    });
+    document.getElementById("memberEmailR").addEventListener("keyup", function(event) {
+        checkDuplicateEmailFromServer();
+    });
+
+    function checkDuplicateEmailFromServer() {
+        let memberEmail = document.getElementById("memberEmailF").value +
+            '@' + document.getElementById("memberEmailR").value;
+        let dupliDiv = document.getElementById("dupliDiv");
+        fetch("/member/checkid/" + memberEmail, {
+            method: 'POST',
+        })
+            .then((response) => {
+                if (response.ok) {
+                    // 사용 가능한 이메일 일 경우
+                    dupliDiv.innerText = ""
+                } else if (response.status === 422) {
+                    // 이미 사용 중인 이메일 일 경우
+                    dupliDiv.innerText = "이미 사용중인 이메일 입니다."
+                } else {
+                    // 기타 상태 코드에 대한 처리
+                }
+            })
+    }
+</script>
 </body>
 </html>

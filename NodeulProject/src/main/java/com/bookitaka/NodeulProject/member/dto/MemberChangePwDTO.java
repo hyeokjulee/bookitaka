@@ -9,7 +9,6 @@ import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 @Data
-@PasswordMatch(passwordField = "newPw", passwordConfirmField = "newPwChk")
 public class MemberChangePwDTO {
 
   @ApiModelProperty(position = 0)

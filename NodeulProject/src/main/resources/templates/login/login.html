@@ -45,9 +45,11 @@
             body: new URLSearchParams(formData)
         })
             .then((response) => response.text())
-            .then((token) => {
-                console.log(token);
-                checkSign();
+            .then((data) => {
+                console.log(data);
+                if (data === 'Sign-in ok') {
+                    location.href = '/';
+                }
             });
     });
 

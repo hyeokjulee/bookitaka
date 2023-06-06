@@ -6,13 +6,19 @@ import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -32,18 +38,40 @@ public class GlobalExceptionHandlerController {
 
   @ExceptionHandler(CustomException.class)
   public void handleCustomException(HttpServletResponse res, CustomException ex) throws IOException {
-    log.info("Custom Exception Handler");
+    log.info("================handleCustomException - CustomException");
     res.sendError(ex.getHttpStatus().value(), ex.getMessage());
   }
 
   @ExceptionHandler(AccessDeniedException.class)
   public void handleAccessDeniedException(HttpServletResponse res) throws IOException {
-    log.info("Access Denied Exception Handler");
+    log.info("================handleAccessDeniedException - AccessDeniedException");
     res.sendError(HttpStatus.FORBIDDEN.value(), "Access denied");
   }
 
+  @ExceptionHandler(BindException.class)
+  public ResponseEntity<List<ObjectError>> handleBindException(BindException ex) {
+    log.info("================handleBindException - BindException");
+    // 바인딩 예외 처리 로직을 구현합니다.
+    BindingResult bindingResult = ex.getBindingResult();
+    List<ObjectError> errors = bindingResult.getAllErrors();
+    // 에러 처리 로직을 구현합니다.
+    return ResponseEntity.badRequest().body(errors);
+  }
+
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<List<ObjectError>> handleValidationException(MethodArgumentNotValidException ex) {
+    log.info("================handleValidationException - MethodArgumentNotValidException");
+    // 바인딩 예외 처리 로직을 구현합니다.
+    BindingResult bindingResult = ex.getBindingResult();
+    List<ObjectError> errors = bindingResult.getAllErrors();
+    // 에러 처리 로직을 구현합니다.
+    return ResponseEntity.badRequest().body(errors);
+  }
+
   @ExceptionHandler(Exception.class)
-  public void handleException(HttpServletResponse res) throws IOException {
+  public void handleException(HttpServletResponse res, Exception ex) throws IOException {
+    log.info("================handleException - Exception");
+    log.info("================Exception : {}", (Object) ex.getStackTrace());
     res.sendError(HttpStatus.BAD_REQUEST.value(), "Something went wrong");
   }
 

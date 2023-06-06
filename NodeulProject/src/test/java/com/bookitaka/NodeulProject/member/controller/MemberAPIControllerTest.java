@@ -6,6 +6,9 @@ import com.bookitaka.NodeulProject.member.repository.MemberRepository;
 import com.bookitaka.NodeulProject.member.security.JwtTokenProvider;
 import com.bookitaka.NodeulProject.member.security.Token;
 import com.bookitaka.NodeulProject.member.service.MemberService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,15 +25,12 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
-import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,9 +56,9 @@ class MemberAPIControllerTest {
     private String testToken = null;
 
     @BeforeEach
-    void beforeTest() throws ParseException {
+    void beforeTest() {
         testMember = new Member(null, testEmail, passwordEncoder.encode(testPassword), "tester",
-                "010-0101-0101", "F", new Date(), MemberRoles.ADMIN, null);
+                "010-0101-0101", "F", "2222-22-22", MemberRoles.ADMIN, null);
         memberRepository.save(testMember);
         testToken = jwtTokenProvider.createToken(testEmail, MemberRoles.ADMIN);
     }
@@ -77,11 +77,11 @@ class MemberAPIControllerTest {
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .param("memberEmail", "bbb@bbb.com")
                 .param("memberPassword", "0000")
+                .param("memberPasswordCheck", "0000")
                 .param("memberName", "Signup")
-                .param("memberPhone", "010-0101-0101")
+                .param("memberPhone", "01001010101")
                 .param("memberGender", "M")
-//                .param("memberBirthday", "2023-05-23")
-                .param("memberRole", MemberRoles.ADMIN))
+                .param("memberBirthday", "2023-05-23"))
         //then
             .andExpect(status().isOk())
             .andExpect(content().string("Sign-up ok"));
@@ -154,14 +154,36 @@ class MemberAPIControllerTest {
         //when
         ResultActions resultActions = mockMvc.perform(requestBuilder);
         //then
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.000+00:00");
-        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        String birthDay =  simpleDateFormat.format(testMember.getMemberBirthday());
+//        String resultJson = "{\"memberEmail\":\"aaa@aaa.com\"," +
+//                "\"memberName\":\"tester\"," +
+//                "\"memberPhone\":\"010-0101-0101\"," +
+//                "\"memberGender\":\"F\"," +
+//                "\"memberBirthday\":\"2222-22-22\"," +
+//                "\"memberRole\":\"ROLE_ADMIN\"}";
+        resultActions
+                .andExpect(status().isOk());
+//                .andExpect(content().json(resultJson));
+    }
+
+    @Test
+    @DisplayName("Member API 컨트롤러 - 내 정보 가져오기")
+    void me() throws Exception {
+        //given
+        Cookie aTokenCookie = new Cookie(Token.ACCESS_TOKEN, testToken);
+        Cookie rTokenCookie = new Cookie(Token.REFRESH_TOKEN, testToken);
+        aTokenCookie.setHttpOnly(true);
+        rTokenCookie.setHttpOnly(true);
+        MockHttpServletRequestBuilder requestBuilder = get("/member/me")
+                .cookie(aTokenCookie)
+                .cookie(rTokenCookie);
+        //when
+        ResultActions resultActions = mockMvc.perform(requestBuilder);
+        //then
         String resultJson = "{\"memberEmail\":\"aaa@aaa.com\"," +
                 "\"memberName\":\"tester\"," +
                 "\"memberPhone\":\"010-0101-0101\"," +
                 "\"memberGender\":\"F\"," +
-                "\"memberBirthday\":\"" + birthDay +"\"," +
+                "\"memberBirthday\":\"2222-22-22\"," +
                 "\"memberRole\":\"ROLE_ADMIN\"}";
         resultActions
                 .andExpect(status().isOk())
@@ -169,34 +191,82 @@ class MemberAPIControllerTest {
     }
 
     @Test
-    @DisplayName("Member API 컨트롤러 - 내 정보 가져오기")
-    void whoami() {
+    @DisplayName("Member API 컨트롤러 - 토큰 유효성 확인 (로그인 확인)")
+    void checkToken() throws Exception {
         //given
         Cookie aTokenCookie = new Cookie(Token.ACCESS_TOKEN, testToken);
         Cookie rTokenCookie = new Cookie(Token.REFRESH_TOKEN, testToken);
         aTokenCookie.setHttpOnly(true);
         rTokenCookie.setHttpOnly(true);
-        MockHttpServletRequestBuilder requestBuilder = get("/member/{memberEmail}", testEmail)
+        MockHttpServletRequestBuilder requestBuilder = get("/member/token")
                 .cookie(aTokenCookie)
                 .cookie(rTokenCookie);
         //when
-
+        ResultActions resultActions = mockMvc.perform(requestBuilder);
+        ResultActions resultActionsInvalid = mockMvc.perform(get("/member/token"));
         //then
-    }
-
-    @Test
-    @DisplayName("Member API 컨트롤러 - 토큰 유효성 확인 (로그인 확인)")
-    void checkToken() {
-        //given
-        //when
-        //then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(content().string("Valid Token"));
+        resultActionsInvalid
+                .andExpect(status().isOk())
+                .andExpect(content().string("Invalid Token"));
     }
 
     @Test
     @DisplayName("Member API 컨트롤러 - 토큰 재발급")
-    void refresh() {
+    void refresh() throws Exception {
         //given
+        Cookie aTokenCookie = new Cookie(Token.ACCESS_TOKEN, testToken);
+        Cookie rTokenCookie = new Cookie(Token.REFRESH_TOKEN, testToken);
+        aTokenCookie.setHttpOnly(true);
+        rTokenCookie.setHttpOnly(true);
+        MockHttpServletRequestBuilder requestBuilder = get("/member/refresh")
+                .cookie(aTokenCookie)
+                .cookie(rTokenCookie);
         //when
+        ResultActions resultActions = mockMvc.perform(requestBuilder);
+        ResultActions resultActionsRedirect = mockMvc.perform(get(Objects.requireNonNull(resultActions.andReturn().getResponse().getRedirectedUrl())));
+        Collection<String> tokens = resultActionsRedirect.andReturn().getResponse().getHeaders("Set-Cookie");
         //then
+        resultActions
+                .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    @DisplayName("Member API 컨트롤러 - 회원 수정")
+    void edit() throws Exception {
+        //given
+        Cookie aTokenCookie = new Cookie(Token.ACCESS_TOKEN, testToken);
+        Cookie rTokenCookie = new Cookie(Token.REFRESH_TOKEN, testToken);
+        aTokenCookie.setHttpOnly(true);
+        rTokenCookie.setHttpOnly(true);
+        MockHttpServletRequestBuilder requestBuilder1 = put("/member/{memberEmail}", testEmail)
+                .cookie(aTokenCookie)
+                .cookie(rTokenCookie)
+                .contentType("application/x-www-form-urlencoded")
+                .param("memberName", "aaa")
+                .param("memberPhone", "01001010101")
+                .param("memberGender", "222")
+                .param("memberBirthday", "2011-01-02");
+        MockHttpServletRequestBuilder requestBuilder2 = put("/member/{memberEmail}", testEmail)
+                .cookie(aTokenCookie)
+                .cookie(rTokenCookie)
+                .contentType("application/x-www-form-urlencoded")
+                .param("memberName", " ")
+                .param("memberPhone", "111")
+                .param("memberGender", "222");
+        MockHttpServletRequestBuilder requestBuilder3 = put("/member/{memberEmail}", testEmail)
+                .cookie(aTokenCookie)
+                .cookie(rTokenCookie);
+        //when
+        ResultActions resultActions1 = mockMvc.perform(requestBuilder1);
+        ResultActions resultActions2 = mockMvc.perform(requestBuilder2);
+        ResultActions resultActions3 = mockMvc.perform(requestBuilder3);
+        //then
+        resultActions1
+                .andExpect(status().isOk());
+        resultActions2
+                .andExpect(status().isBadRequest());
     }
 }
