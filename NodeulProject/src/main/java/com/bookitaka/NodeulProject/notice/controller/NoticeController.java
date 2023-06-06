@@ -70,7 +70,7 @@ public class NoticeController {
     }
 
     @DeleteMapping("/post/{noticeNo}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public String delete(@PathVariable("noticeNo") Integer noticeNo) {
         noticeService.removeNotice(noticeNo);
 
