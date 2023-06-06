@@ -1,7 +1,6 @@
 package com.bookitaka.NodeulProject.member.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
@@ -11,23 +10,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
@@ -77,8 +69,9 @@ public class GlobalExceptionHandlerController {
   }
 
   @ExceptionHandler(Exception.class)
-  public void handleException(HttpServletResponse res) throws IOException {
+  public void handleException(HttpServletResponse res, Exception ex) throws IOException {
     log.info("================handleException - Exception");
+    log.info("================Exception : {}", (Object) ex.getStackTrace());
     res.sendError(HttpStatus.BAD_REQUEST.value(), "Something went wrong");
   }
 

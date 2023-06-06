@@ -12,7 +12,7 @@ import javax.validation.constraints.Pattern;
 @Data
 @NoArgsConstructor
 @PasswordMatch(password = "memberPassword", passwordCheck = "memberPasswordCheck")
-public class UserDataDTO {
+public class MemberDataDTO {
   @NotBlank(message = "이메일을 입력해 주세요.")
   @Pattern(regexp = "^(?:[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})?$", message = "이메일 형식이 맞는지 확인해 주세요.")
   @ApiModelProperty(position = 1)

@@ -5,37 +5,37 @@
 </head>
 <body>
 <h1>회원 가입</h1>
-<form>
+<form th:object="${member}">
     <div>
         <label>이메일:</label>
         <input type="text" id="memberEmailF"/> @
         <input type="text" id="memberEmailR"/>
         <select id="memberEmailSelect">
             <option value="" selected>직접 입력</option>
-            <option value="gmail.com">구글 (gmail)</option>
-            <option value="naver.com">네이버</option>
-            <option value="daum.net">다음</option>
-            <option value="kakao.com">카카오</option>
-            <option value="hanmail.net">다음 (한메일)</option>
-            <option value="nate.com">네이트</option>
+            <option value="gmail.com">지메일 (gmail.com)</option>
+            <option value="naver.com">네이버 (naver.com)</option>
+            <option value="daum.net">다음 (daum.net)</option>
+            <option value="kakao.com">카카오 (kakao.com)</option>
+            <option value="hanmail.net">한메일 (hanmail.net)</option>
+            <option value="nate.com">네이트 (nate.com)</option>
         </select>
         <div class="errorDiv" error="memberEmail" style="color: red"></div>
         <div id="dupliDiv" style="color: red"></div>
     </div>
     <div>
         <label>비밀번호:</label>
-        <input type="password" name="memberPassword" id="memberPassword"/>
+        <input type="password" th:field="*{memberPassword}"/>
         <div class="errorDiv" error="memberPassword" style="color: red"></div>
     </div>
     <div>
         <label>비밀번호(확인):</label>
-        <input type="password" name="memberPasswordCheck" id="memberPasswordCheck"/>
+        <input type="password" th:field="*{memberPasswordCheck}"/>
         <div class="errorDiv" error="memberPasswordCheck" style="color: red"></div>
         <div class="errorDiv" error="PasswordMatch" style="color: red"></div>
     </div>
     <div>
         <label>이름:</label>
-        <input type="text" name="memberName" id="memberName"/>
+        <input type="text" th:field="*{memberName}"/>
         <div class="errorDiv" error="memberName" style="color: red"></div>
     </div>
     <div>
@@ -65,7 +65,7 @@
     </div>
     <div>
         <label>생년월일:</label>
-        <input type="date" name="memberBirthday" id="memberBirthday"/>
+        <input type="date" th:field="*{memberBirthday}"/>
         <div class="errorDiv" error="memberBirthday" style="color: red"></div>
     </div>
     <div>
@@ -90,12 +90,12 @@
         let selected = document.getElementById(selectName).value;
         let memberEmailR = document.getElementById(inputFormId);
         if (selected === '') {
-            memberEmailR.removeAttribute("readonly");
+            memberEmailR.readOnly = false;
             memberEmailR.value = "";
             memberEmailR.focus();
         } else {
             memberEmailR.value = selected;
-            memberEmailR.setAttribute("readonly", "readonly");
+            memberEmailR.readOnly = true;
             if (selectName === "memberPhoneSelect") {
                 document.getElementById("memberPhoneC").focus();
             }
@@ -129,15 +129,15 @@
             '-' + document.getElementById("memberPhoneR").value;
         let memberGender = "";
         for (const gender of document.querySelectorAll(`[name="memberGender"]`)) {
-            if (gender.hasAttribute("checked")) {
+            if (gender.checked) {
                 memberGender = gender.value;
+                break
             }
         }
         let memberBirthday = document.getElementById("memberBirthday").value;
         if (memberEmail === '@') {
             memberEmail = "";
         }
-        console.log(memberPhone)
         if (/^\d{2}--$|^\d{3}--$/.test(memberPhone)) {
             memberPhone = "";
         }
@@ -203,7 +203,6 @@
             method: 'POST',
         })
             .then((response) => {
-                console.log(response.status)
                 if (response.ok) {
                     // 사용 가능한 이메일 일 경우
                     dupliDiv.innerText = ""
