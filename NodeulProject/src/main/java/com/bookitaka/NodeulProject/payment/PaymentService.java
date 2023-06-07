@@ -8,6 +8,6 @@ public interface PaymentService {
 
     public Page<Payment> getMyAllPayment(String memberEmail, PaymentCri paymentCri);
 
-    public Page<Payment> getAllPayment(PaymentCri paymentCri);
+    public Page<Payment> getAllPaymentForAdmin(PaymentCri paymentCri);
 
 }

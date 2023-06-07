@@ -20,12 +20,12 @@ public class PaymentServiceImpl implements PaymentService{
     @Override
     public Page<Payment> getMyAllPayment(String memberEmail, PaymentCri paymentCri) {
 
-        Pageable pageable = PageRequest.of(paymentCri.getPageNum(), paymentCri.getAmount());
+        Pageable pageable = PageRequest.of(paymentCri.getPageNum()-1, paymentCri.getAmount());
         return paymentRepository.findAllByMember_MemberEmailOrderByPaymentDateDesc(memberEmail, pageable);
     }
 
     @Override
-    public Page<Payment> getAllPayment(PaymentCri paymentCri) {
+    public Page<Payment> getAllPaymentForAdmin(PaymentCri paymentCri) {
 
         Pageable pageable = PageRequest.of(paymentCri.getPageNum(), paymentCri.getAmount());
 

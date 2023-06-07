@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -17,7 +18,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @DynamicInsert
-public class Member {
+public class Member implements Serializable {
     @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer memberNo;
 

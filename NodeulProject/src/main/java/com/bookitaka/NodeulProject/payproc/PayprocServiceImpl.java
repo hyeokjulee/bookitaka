@@ -1,9 +1,6 @@
 package com.bookitaka.NodeulProject.payproc;
 
 import com.bookitaka.NodeulProject.member.model.Member;
-import com.bookitaka.NodeulProject.member.repository.MemberRepository;
-import com.bookitaka.NodeulProject.member.security.Token;
-import com.bookitaka.NodeulProject.member.service.MemberService;
 import com.bookitaka.NodeulProject.payment.Payment;
 import com.bookitaka.NodeulProject.payment.PaymentRepository;
 import com.bookitaka.NodeulProject.sheet.SheetRepository;

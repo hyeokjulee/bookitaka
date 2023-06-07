@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @Entity
@@ -27,6 +28,6 @@ public class Payment {
 
     private Long paymentPrice;
 
-    private Long paymentDate;
+    private Date paymentDate;
 
 }
