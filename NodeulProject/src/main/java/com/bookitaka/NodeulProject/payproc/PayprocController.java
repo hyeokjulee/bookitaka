@@ -1,5 +1,6 @@
 package com.bookitaka.NodeulProject.payproc;
 
+import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.security.Token;
 import com.bookitaka.NodeulProject.member.service.MemberService;
 import com.bookitaka.NodeulProject.sheet.Sheet;
@@ -26,6 +27,7 @@ import java.util.Map;
 public class PayprocController {
     private final MemberService memberService;
     private final SheetService sheetService;
+    private final HttpServletRequest request;
 
     @GetMapping("/paying")
     public String paying(Model model, HttpServletRequest request) {
@@ -43,6 +45,12 @@ public class PayprocController {
         }
         response.put("success", true);
         response.put("sheets", sheets);
+
+        // 내 정보
+        String email = request.getRemoteUser();
+        Member member = memberService.search(email);
+        response.put("member", member);
+
         return ResponseEntity.ok(response);
     }
 }

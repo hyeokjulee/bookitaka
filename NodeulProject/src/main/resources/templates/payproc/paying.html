@@ -55,12 +55,14 @@
                 {
                     pg: "kcp.INIpayTest",
                     pay_method: "card",
-                    merchant_uid: "57008833-33011",
-                    name: "당근 10kg",
-                    amount: 100,
-                    buyer_email: "Iamport@chai.finance",
-                    buyer_name: "포트원 기술지원팀",
-                    buyer_tel: "010-1234-5678",
+                    merchant_uid: "57008833-33015",
+
+                    name: title + "외 " + (cnt - 1) + "건",
+                    amount: sum,
+                    buyer_email: memberInfo[0],
+                    buyer_name: memberInfo[1],
+                    buyer_tel: memberInfo[2],
+
                     buyer_addr: "서울특별시 강남구 삼성동",
                     buyer_postcode: "123-456",
                 },
