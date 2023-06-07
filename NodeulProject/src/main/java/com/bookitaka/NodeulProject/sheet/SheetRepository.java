@@ -19,6 +19,8 @@ public interface SheetRepository {
 
     public boolean plusOneSheetHit(int sheetNo);
 
+    public boolean plusOneSheetBuyCnt(int sheetNo);
+
     public boolean updateSheet(int sheetNo ,SheetUpdateDto sheetUpdateDto);
 
     public boolean deleteSheet(int sheetNo);

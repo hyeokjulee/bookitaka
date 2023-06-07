@@ -152,7 +152,7 @@ $(document).on('click', '.btn-paying', function() {
   var encodedList = JSON.stringify(selectedItems);
 
   // 쿠키에 리스트 값 설정
-  document.cookie = "list=" + encodedList + "; path=/payproc/paying";
+  document.cookie = "list=" + encodeURIComponent(encodedList) + "; path=/";
 
   window.location.href = "/payproc/paying";
 });

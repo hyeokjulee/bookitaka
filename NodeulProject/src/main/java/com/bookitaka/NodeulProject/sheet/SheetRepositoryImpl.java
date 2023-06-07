@@ -137,6 +137,18 @@ public class SheetRepositoryImpl implements SheetRepository{
     }
 
     @Override
+    public boolean plusOneSheetBuyCnt(int sheetNo) {
+        Sheet sheet = em.find(Sheet.class, sheetNo);
+
+        //조회수 하나 올리기
+        if (sheet != null) {
+            sheet.setSheetBuycnt(sheet.getSheetBuycnt() + 1);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public boolean updateSheet(int sheetNo, SheetUpdateDto sheetUpdateDto) {
         Sheet findSheet = em.find(Sheet.class, sheetNo);
 
