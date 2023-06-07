@@ -1,20 +1,40 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE HTML>
+<html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
 </head>
 <body>
-<form th:action="@{'/notice/post/edit/' + ${noticeDto.noticeNo}}" method="post" th:object="${noticeDto}">
-    <input type="hidden" name="noticeNo" th:value="${noticeDto.noticeNo}"/>
 
-    제목: <input type="text" name="noticeTitle" th:value="${noticeDto.noticeTitle}" th:field="*{noticeTitle}">
-    <span th:if="${#fields.hasErrors('noticeTitle')}" th:errors="*{noticeTitle}"></span><br>
+<menuTitle>알림마당</menuTitle>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?ageGroup=유아용}" style="all: unset;">연령별</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?genre=그림책}" style="all: unset;">장르별</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?genre=독서토론논제은행}" style="all: unset;">논제은행</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/request}" style="all: unset;">개별출제요청</a></sidebar>
 
-    내용: <textarea name="noticeContent" th:text="${noticeDto.noticeContent}" th:field="*{noticeContent}"></textarea>
-    <span th:if="${#fields.hasErrors('noticeContent')}" th:errors="*{noticeContent}"></span><br>
+<mainSection>
+    <div id="wrap">
+        <div class="row g-0 align-items-center">
+            <div class="col-auto">
+                <h1 class="fs-5 fs-xl-5 mb-5">공지사항</h1>
+            </div>
+        </div>
+        <form th:action="@{'/notice/post/edit/' + ${noticeDto.noticeNo}}" method="post" th:object="${noticeDto}">
+            <input type="hidden" name="noticeNo" th:value="${noticeDto.noticeNo}"/>
+            <div class="mb-3">
+                <label class="form-label">제목</label>
+                <input type="text" name="noticeTitle" th:value="${noticeDto.noticeTitle}" th:field="*{noticeTitle}" class="form-control" >
+                <span th:if="${#fields.hasErrors('noticeTitle')}" th:errors="*{noticeTitle}"></span><br>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">내용</label>
+                <textarea name="noticeContent" th:text="${noticeDto.noticeContent}" th:field="*{noticeContent}" class="form-control" rows="3"></textarea>
+                <span th:if="${#fields.hasErrors('noticeContent')}" th:errors="*{noticeContent}"></span><br>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary" type="submit">수정</button>
+            </div>
+        </form>
+    </div>
 
-    <input type="submit" value="수정">
-</form>
+</mainSection>
 </body>
 </html>

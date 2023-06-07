@@ -1,33 +1,60 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE HTML>
+<html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
 </head>
 <body>
-<h2 th:text="${noticeDto.noticeTitle}"></h2>
-<p th:inline="text">작성일 : [[${#temporals.format(noticeDto.noticeRegdate, 'yyyy-MM-dd HH:mm')}]]</p>
-<p th:text="${noticeDto.noticeModdate}"></p>
 
-<p th:text="${noticeDto.noticeContent}"></p>
+<menuTitle>알림마당</menuTitle>
+<sidebar class="list-group-item link-custom"><a th:href="@{/sheet/list?ageGroup=유아용}" style="all: unset;">연령별</a></sidebar>
+<sidebar class="list-group-item link-custom"><a th:href="@{/sheet/list?genre=그림책}" style="all: unset;">장르별</a></sidebar>
+<sidebar class="list-group-item link-custom"><a th:href="@{/sheet/list?genre=독서토론논제은행}" style="all: unset;">논제은행</a></sidebar>
+<sidebar class="list-group-item link-custom"><a th:href="@{/sheet/request}" style="all: unset;">개별출제요청</a></sidebar>
 
-<!-- 수정/삭제 -->
-<div>
-    <a th:href="@{'/notice/post/edit/' + ${noticeDto.noticeNo}}">
-        <button>수정</button>
-    </a>
+<mainSection>
+<div id="wrap">
+    <div class="row g-0 align-items-center">
+        <div class="col-auto">
+            <h1 class="fs-5 fs-xl-5 mb-5">공지사항</h1>
+        </div>
+    </div>
 
-    <form id="delete-form" th:action="@{'/notice/post/' + ${noticeDto.noticeNo}}" method="post">
-        <input type="hidden" name="_method" value="delete"/>
-        <button id="delete-btn">삭제</button>
-    </form>
+    <table class="table table-bordered mb-0">
+        <tr>
+            <th class="col-1 text-center table-light ">제목</th>
+            <th class="col-10" style="font-weight: normal;" th:text="${noticeDto.noticeTitle}"></th>
+        </tr>
+    </table>
+    <table class="table table-bordered mt-0">
+        <tr>
+            <th class="col-1 text-center table-light">등록일</th>
+            <th class="col-3" style="font-weight: normal;" th:inline="text">[[${#temporals.format(noticeDto.noticeRegdate, 'yyyy-MM-dd HH:mm')}]]</th>
+            <th class="col-1 text-center table-light">수정일</th>
+            <th class="col-3" style="font-weight: normal;" th:inline="text">[[${#temporals.format(noticeDto.noticeModdate, 'yyyy-MM-dd HH:mm')}]]</th>
+            <th class="col-1 text-center table-light">조회수</th>
+            <th class="col-2"></th>
+        </tr>
+    </table>
+
+<div class="py-3 px-5">
+    <div class="text-lg">
+        <p th:text="${noticeDto.noticeContent}"></p>
+    </div>
 </div>
 
-<script th:inline="javascript">
-    /*<![CDATA[*/
-    var noticeDto = /*[[${noticeDto}]]*/ "";
-    /*]]>*/
-</script>
-<script th:inline="javascript" th:src="@{/js/notice.js}"></script>
+<!-- 수정/삭제 -->
+    <div class="d-flex justify-content-end">
+        <a th:href="@{/notice/list}">
+            <button class="btn btn-primary">목록으로</button>
+        </a>
+            <a th:href="@{'/notice/post/edit/' + ${noticeDto.noticeNo}}">
+                <button class="btn btn-primary">수정</button>
+            </a>
+        <form id="delete-form" th:action="@{'/notice/post/' + ${noticeDto.noticeNo}}" method="post">
+            <input type="hidden" name="_method" value="delete"/>
+            <button class="btn btn-primary" id="delete-btn">삭제</button>
+        </form>
+    </div>
+</div>
+</mainSection>
 </body>
 </html>

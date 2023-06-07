@@ -22,23 +22,6 @@ public class NoticeService {
 
     @Transactional
     //게시글 리스트 처리
-    /*public List<NoticeDto> getNoticeList(Pageable pageable){
-        Page<Notice> noticeEntities = noticeRepository.findAll(pageable);
-        List<NoticeDto> noticeDtoList = new ArrayList<>();
-
-        for (Notice notice : noticeEntities){
-            NoticeDto noticeDto = NoticeDto.builder()
-                    .noticeNo(notice.getNoticeNo())
-                    .noticeTitle(notice.getNoticeTitle())
-                    .noticeContent(notice.getNoticeContent())
-                    .noticeHit(notice.getNoticeHit())
-                    .noticeRegdate(notice.getNoticeRegdate())
-                    .build();
-
-            noticeDtoList.add(noticeDto);
-        }
-        return  noticeDtoList;
-    }*/
     public Page<NoticeDto> getNoticeList(Pageable pageable) {
         Page<Notice> noticeEntities = noticeRepository.findAll(pageable);
         return noticeEntities.map(this::convertEntityToDto);
@@ -61,6 +44,7 @@ public class NoticeService {
                 .noticeHit(notice.getNoticeHit())
                 .noticeContent(notice.getNoticeContent())
                 .noticeRegdate(notice.getNoticeRegdate())
+                .noticeModdate(notice.getNoticeModdate())
                 .build();
 
         return noticeDto;
