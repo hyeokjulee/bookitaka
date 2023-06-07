@@ -5,14 +5,16 @@
     <title>Title</title>
 </head>
 <body>
-<form th:action="@{'/notice/post/edit/' + ${noticeDto.noticeNo}}" method="post">
+<form th:action="@{'/notice/post/edit/' + ${noticeDto.noticeNo}}" method="post" th:object="${noticeDto}">
     <input type="hidden" name="noticeNo" th:value="${noticeDto.noticeNo}"/>
 
-    제목: <input type="text" name="noticeTitle" th:value="${noticeDto.noticeTitle}"><br>
-    <textarea name="noticeContent" th:text="${noticeDto.noticeContent}"></textarea><br>
+    제목: <input type="text" name="noticeTitle" th:value="${noticeDto.noticeTitle}" th:field="*{noticeTitle}">
+    <span th:if="${#fields.hasErrors('noticeTitle')}" th:errors="*{noticeTitle}"></span><br>
+
+    내용: <textarea name="noticeContent" th:text="${noticeDto.noticeContent}" th:field="*{noticeContent}"></textarea>
+    <span th:if="${#fields.hasErrors('noticeContent')}" th:errors="*{noticeContent}"></span><br>
 
     <input type="submit" value="수정">
 </form>
-
 </body>
 </html>

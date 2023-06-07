@@ -61,7 +61,7 @@ public class NoticeController {
     }
 
     @GetMapping("/post/edit/{noticeNo}")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+//@PreAuthorize("hasRole('ROLE_ADMIN')")
     public String edit(@PathVariable("noticeNo") Integer noticeNo, Model model) {
         NoticeDto noticeDto = noticeService.getNotice(noticeNo);
         model.addAttribute("noticeDto", noticeDto);
@@ -69,9 +69,12 @@ public class NoticeController {
     }
 
     @PostMapping(value = "/post/edit/{noticeNo}")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String updateNotice(@PathVariable("noticeNo") Integer noticeNo, Notice notice ) {
-        noticeService.updateNotice(noticeNo, notice);
+//@PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String updateNotice(@PathVariable("noticeNo") Integer noticeNo, @Validated @ModelAttribute("noticeDto") NoticeDto noticeDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "notice/update.html";
+        }
+        noticeService.updateNotice(noticeNo, noticeDto.toEntity());
         return "redirect:/notice/list/";
     }
 
