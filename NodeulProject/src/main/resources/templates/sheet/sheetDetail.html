@@ -148,7 +148,9 @@
           type: 'POST',
           data: { sheetNo: sheetNo },
           success: function(response) {
-            if (response.success) {
+            if (response.fail) {
+              alert("이미 장바구니에 담겨있는 상품입니다.")
+            } else if (response.success) {
               alert("추가에 성공하였습니다")
             } else {
               console.error('추가 요청이 실패하였습니다.', error);
