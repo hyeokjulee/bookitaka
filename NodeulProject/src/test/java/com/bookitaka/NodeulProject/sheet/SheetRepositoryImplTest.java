@@ -112,7 +112,7 @@ class SheetRepositoryImplTest {
 
     @Test
     void findAllTest() {
-        SheetCri cri = new SheetCri(1, 3, SearchTypes.TITLE, "test");
+        SheetCri cri = new SheetCri(1, 3, SearchTypes.TITLE, "test", SortCries.HIT);
 
         List<Sheet> sheetList = sheetRepository.findAllSheet(cri);
 
@@ -126,7 +126,7 @@ class SheetRepositoryImplTest {
 
     @Test
     void findAllByGenreTest() {
-        SheetCri cri = new SheetCri(1,5, SearchTypes.PUBLISHER, "test");
+        SheetCri cri = new SheetCri(1,5, SearchTypes.PUBLISHER, "test", SortCries.HIT);
 
         List<Sheet> sheetList = sheetRepository.findAllSheetByGenre("testGenre", cri);
 
@@ -140,7 +140,7 @@ class SheetRepositoryImplTest {
 
     @Test
     void findAllByAgeGroupTest() {
-        SheetCri cri = new SheetCri(1,5, SearchTypes.AUTHOR, "test");
+        SheetCri cri = new SheetCri(1,5, SearchTypes.AUTHOR, "test", SortCries.HIT);
 
         List<Sheet> sheetList = sheetRepository.findAllSheetByGenre("testAgegroup", cri);
 
@@ -189,7 +189,8 @@ class SheetRepositoryImplTest {
         sheetRepository.deleteSheet(lastSheet.getSheetNo());
 
         //then
-        assertThat(sheetRepository.countSheet()).isEqualTo(2);
+        assertThat(sheetRepository.countSheet(SearchTypes.TITLE, "")).isEqualTo(2);
+
 
     }
 }
