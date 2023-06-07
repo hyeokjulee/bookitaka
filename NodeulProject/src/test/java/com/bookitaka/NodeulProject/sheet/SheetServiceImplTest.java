@@ -38,8 +38,6 @@ class SheetServiceImplTest {
             sheetDto.setSheetBookpublisher("servicePub");
             sheetDto.setSheetBookisbn("serviceisbn");
             sheetDto.setSheetPrice(1234);
-            sheetDto.setSheetBookimgname("serviceimgname");
-            sheetDto.setSheetFilename("testFileName");
             sheetDto.setSheetAgegroupName(AgeGroupNames.초등저학년);
             sheetDto.setSheetGenreName(GenreNames.한국고전);
             sheetDto.setSheetContent("testContent");
@@ -51,9 +49,9 @@ class SheetServiceImplTest {
 
     @Test
     void getByAgeGroupTest() {
-        SheetCri cri = new SheetCri(1,5, SearchTypes.PUBLISHER, "service");
+        SheetCri cri = new SheetCri(1,5, SearchTypes.PUBLISHER, "service", SortCries.NEWEST);
 
-        List<Sheet> sheetList = sheetService.getAllSheetByAgeGroup(AgeGroupNames.초등저학년, cri);
+        List<Sheet> sheetList = sheetService.getAllSheets(GenreNames.한국고전 , AgeGroupNames.초등저학년, cri);
 
         for (Sheet sheet : sheetList) {
             log.info("sheet = {}", sheet);
@@ -65,9 +63,9 @@ class SheetServiceImplTest {
 
     @Test
     void getByGenreTest() {
-        SheetCri cri = new SheetCri(1,5, SearchTypes.PUBLISHER, "service");
+        SheetCri cri = new SheetCri(1,5, SearchTypes.PUBLISHER, "service", SortCries.NEWEST);
 
-        List<Sheet> sheetList = sheetService.getAllSheetByGenre(GenreNames.한국고전, cri);
+        List<Sheet> sheetList = sheetService.getAllSheets(GenreNames.한국고전, AgeGroupNames.초등저학년, cri);
 
         for (Sheet sheet : sheetList) {
             log.info("sheet = {}", sheet);
@@ -140,14 +138,14 @@ class SheetServiceImplTest {
     void removeSheetTest() {
 
         //given
-        Long beforeCnt = sheetService.getSheetCnt();
+        Long beforeCnt = sheetService.getSheetCnt(GenreNames.한국고전, AgeGroupNames.초등저학년, SearchTypes.TITLE, "");
         log.info("before count = {}", beforeCnt);
 
         //when
         sheetService.removeSheet(beforeSheet.getSheetNo());
 
         //then
-        assertThat(beforeCnt - 1).isEqualTo(sheetService.getSheetCnt());
+        assertThat(beforeCnt - 1).isEqualTo(sheetService.getSheetCnt(GenreNames.한국고전, AgeGroupNames.초등저학년, SearchTypes.TITLE, ""));
 
     }
 

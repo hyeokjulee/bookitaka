@@ -34,6 +34,11 @@
         </tfoot>
     </table>
 
+    <form method="post" action="/payproc/paid">
+        <button type="submit">테스트테스트</button>
+    </form>
+
+
     <div class="text-center">
         <button onclick="requestPay()" class="btn btn-secondary">결제하기</button>
     </div>
@@ -42,12 +47,15 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 
     <!-- iamport.payment.js -->
-    <script
-            type="text/javascript"
-            src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"
-    ></script>
+    <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
 
     <script src="/js/paying.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/uuid@8.3.2/dist/umd/uuidv4.min.js"></script>
+
+    <script>
+        const uuid = uuidv4();
+        console.log(uuid);
+    </script>
 
     <script>
         var IMP = window.IMP;
@@ -58,12 +66,14 @@
                 {
                     pg: "kcp.INIpayTest",
                     pay_method: "card",
-                    merchant_uid: "57008833-33011",
-                    name: "당근 10kg",
-                    amount: 100,
-                    buyer_email: "Iamport@chai.finance",
-                    buyer_name: "포트원 기술지원팀",
-                    buyer_tel: "010-1234-5678",
+                    merchant_uid: "57008833-33015",
+
+                    name: title + "외 " + (cnt - 1) + "건",
+                    amount: sum,
+                    buyer_email: memberInfo[0],
+                    buyer_name: memberInfo[1],
+                    buyer_tel: memberInfo[2],
+
                     buyer_addr: "서울특별시 강남구 삼성동",
                     buyer_postcode: "123-456",
                 },
@@ -83,14 +93,14 @@
                             if (rsp.paid_amount === result.response.amount) {
                                 alert("결제가 완료되었습니다.");
                                 console.log("결제 및 검증 완료")
-                                // $.ajax({
-                                //     type:'POST',
-                                //     url:'/lecture/payment',
-                                // }).done(function() {
-                                //     window.location.reload();
-                                // }).fail(function(error){
-                                //     alert(JSON.stringify(error));
-                                // })
+                                $.ajax({
+                                    type:'POST',
+                                    url:'/payproc/paid',
+                                }).done(function() {
+                                    window.location.reload();
+                                }).fail(function(error){
+                                    alert(JSON.stringify(error));
+                                })
                             } else {
                                 alert("결제에 실패했습니다." + "에러코드 : " + rsp.error_code + "에러 메시지 : " + rsp.error_message);
                                 console.log("검증실패")
