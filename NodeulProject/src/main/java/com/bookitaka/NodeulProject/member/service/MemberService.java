@@ -164,7 +164,7 @@ public class MemberService {
                 // 임시 비밀번호로 비밀번호 변경 후 디비에 저장
                 log.info("================================== newPw : {}", newPw);
                 Member member = memberRepository.findByMemberEmail(memberEmail);
-                member.setMemberPassword(passwordEncoder.encode(generateRandomPassword()));
+                member.setMemberPassword(passwordEncoder.encode(newPw));
                 memberRepository.save(member);
                 return true;
             }
