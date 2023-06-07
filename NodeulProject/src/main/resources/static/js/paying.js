@@ -9,13 +9,13 @@ function showSheets(sheets) {
     var row = $('<tr></tr>');
     row.append('<td><img src="/sheet/bookImg/' + sheet.sheetBookimguuid + sheet.sheetBookimgname + '" width="150" height="150"></td>');
     row.append('<td>' + sheet.sheetBooktitle + '</td>');
-    row.append('<td>' + sheet.sheetPrice + '</td>');
+    row.append('<td>' + sheet.sheetPrice.toLocaleString() + '원</td>');
     tableBody.append(row);
     sum += parseInt(sheet.sheetPrice);
   }
 
   $('#totalcnt').text("총 " + sheets.length + "건");
-  $('#totalprice').text("합계 : " + sum + "원");
+  $('#totalprice').text("합계 : " + sum.toLocaleString() + "원");
 }
 
 // 활동지 번호들을 넘겨서 활동지들을 받고 목록을 표시하는 함수
@@ -50,7 +50,7 @@ $(document).ready(function() {
       var name = cookie[0];
       var value = cookie[1];
 
-      if (name.trim() === "list") {
+      if (name.trim() === "carts") {
         decodedList = JSON.parse(decodeURIComponent(value));
         break;
       }

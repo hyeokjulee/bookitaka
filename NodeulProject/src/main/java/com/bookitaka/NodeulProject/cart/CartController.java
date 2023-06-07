@@ -5,6 +5,7 @@ import com.bookitaka.NodeulProject.sheet.Sheet;
 import com.bookitaka.NodeulProject.sheet.SheetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
 @Controller
 @RequestMapping("/cart")
 @RequiredArgsConstructor
@@ -22,12 +24,12 @@ public class CartController {
     private final SheetService sheetService;
     private final HttpServletRequest request;
 
-    @GetMapping("/cart")
+    @GetMapping("/cart") // 목록 페이지
     public String cart() {
         return "cart/cart"; // 뷰 이름을 반환
     }
 
-    @GetMapping("/getCarts")
+    @GetMapping("/getCarts") // 목록 반환
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getCarts() {
         Map<String, Object> response = new HashMap<>();
@@ -43,7 +45,7 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/deleteCart")
+    @PostMapping("/deleteCart") // 하나 삭제
     @ResponseBody
     public ResponseEntity<Map<String, Object>> deleteCart(@RequestParam int sheetNo) {
         Map<String, Object> response = new HashMap<>();
@@ -53,7 +55,7 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/emptyCart")
+    @PostMapping("/emptyCart") // 전체 삭제
     @ResponseBody
     public ResponseEntity<Map<String, Object>> deleteCart() {
         Map<String, Object> response = new HashMap<>();
@@ -63,7 +65,7 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/deleteSelectedCart")
+    @PostMapping("/deleteSelectedCart") // 선택 삭제
     @ResponseBody
     public ResponseEntity<Map<String, Object>> deleteSelectedCart(@RequestBody List<Integer> selectedItems) {
         Map<String, Object> response = new HashMap<>();
@@ -73,16 +75,22 @@ public class CartController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/cartAdd")
+    @PostMapping("/cartAdd") // 추가
     @ResponseBody
     public ResponseEntity<Map<String, Object>> cartAdd(@RequestParam int sheetNo) {
         Map<String, Object> response = new HashMap<>();
         String email = request.getRemoteUser();
-        Cart cart = new Cart();
-        cart.setMemberEmail(email);
-        cart.setSheetNo(sheetNo);
-        cartService.addToCart(cart);
-        response.put("success", true);
+
+        if(cartService.getCartByMemberEmailAndSheetNo(email, sheetNo).isEmpty()) {
+            Cart cart = new Cart();
+            cart.setMemberEmail(email);
+            cart.setSheetNo(sheetNo);
+            cartService.addToCart(cart);
+            response.put("success", true);
+        } else {
+            response.put("fail", true);
+        }
+
         return ResponseEntity.ok(response);
     }
 }
