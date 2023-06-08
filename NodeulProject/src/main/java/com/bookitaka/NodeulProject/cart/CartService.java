@@ -17,4 +17,6 @@ public interface CartService {
     void deleteCartByMemberEmailAndSheetNo(String memberEmail, int sheetNo);
 
     void deleteCartsByMemberEmailAndSheetNos(String memberEmail, List<Integer> sheetNos);
+
+    int getCountByMemberEmail(String memberEmail);
 }

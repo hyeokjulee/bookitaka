@@ -10,4 +10,6 @@ public interface CartRepository extends JpaRepository<Cart, Integer> {
     List<Cart> findByMemberEmailOrderByCartRegdate(String memberEmail);
 
     List<Cart> findByMemberEmailAndSheetNo(String memberEmail, int sheetNo);
+
+    int countByMemberEmail(String memberEmail);
 }

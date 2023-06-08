@@ -48,4 +48,9 @@ public class CartServiceImpl implements CartService {
             cartRepository.deleteAll(cartRepository.findByMemberEmailAndSheetNo(memberEmail, sheetNo));
         }
     }
+
+    @Override
+    public int getCountByMemberEmail(String memberEmail) {
+        return cartRepository.countByMemberEmail(memberEmail);
+    }
 }

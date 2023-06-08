@@ -36,5 +36,4 @@ public class VerifyController {
 
         return iamportClient.paymentByImpUid(imp_uid);
     }
-
 }
