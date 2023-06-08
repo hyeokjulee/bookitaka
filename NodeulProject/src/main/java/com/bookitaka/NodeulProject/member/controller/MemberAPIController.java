@@ -124,7 +124,7 @@ public class MemberAPIController {
                                      @PathVariable String memberEmail,
                                      HttpServletRequest request) {
     log.info("================================Member : edit");
-    String memberAuthEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+    String memberAuthEmail = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN).getMemberEmail();
     log.info("memberEmail : {}", memberEmail);
     log.info("memberAuthEmail : {}", memberAuthEmail);
     if (!memberEmail.equals(memberAuthEmail)) {
