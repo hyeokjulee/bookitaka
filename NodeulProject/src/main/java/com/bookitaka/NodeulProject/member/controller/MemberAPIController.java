@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -110,25 +111,27 @@ public class MemberAPIController {
     return ResponseEntity.ok().build();
   }
 
-  //회원 정보 수정 (회원)
+  // 회원 정보 수정 (회원)
   @PutMapping("/{memberEmail}")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
   @ApiResponses(value = {//
-      @ApiResponse(code = 400, message = "Something went wrong"), //
-      @ApiResponse(code = 403, message = "Access denied"), //
-      @ApiResponse(code = 404, message = "The user doesn't exist"), //
-      @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+          @ApiResponse(code = 400, message = "Something went wrong"), //
+          @ApiResponse(code = 403, message = "Access denied"), //
+          @ApiResponse(code = 404, message = "The user doesn't exist"), //
+          @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
   public ResponseEntity<?> edit(@Validated @ModelAttribute MemberUpdateDTO memberUpdateDTO,
-                                     @PathVariable String memberEmail,
-                                     HttpServletRequest request) {
+                                @PathVariable String memberEmail,
+                                HttpServletRequest request) {
     log.info("================================Member : edit");
-    Member memberPath = memberService.search(memberEmail);
-    Member memberToken = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
-    if (!memberPath.getMemberEmail().equals(memberToken.getMemberEmail())) {
+    String memberAuthEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+    log.info("memberEmail : {}", memberEmail);
+    log.info("memberAuthEmail : {}", memberAuthEmail);
+    if (!memberEmail.equals(memberAuthEmail)) {
       return ResponseEntity.badRequest().body("permission mismatch");
     }
-    modelMapper.map(memberUpdateDTO, memberPath);
-    if (memberService.modifyMember(memberPath)) {
+    Member member = memberService.search(memberEmail);
+    modelMapper.map(memberUpdateDTO, member);
+    if(memberService.modifyMember(member)) {
       // 수정 성공시
       return ResponseEntity.ok().build();
     } else {
@@ -146,11 +149,11 @@ public class MemberAPIController {
       @ApiResponse(code = 404, message = "The user doesn't exist"), //
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
   public ResponseEntity<?> editAdmin(@Validated @ModelAttribute MemberUpdateDTO memberUpdateDTO,
-                                     @PathVariable("memberEmail") String memberEmail) {
+                                     @PathVariable String memberEmail) {
     log.info("================================ Member : editAdmin");
-    Member memberPath = memberService.search(memberEmail);
-    modelMapper.map(memberUpdateDTO, memberPath);
-    if(memberService.modifyMember(memberPath)) {
+    Member member = memberService.search(memberEmail);
+    modelMapper.map(memberUpdateDTO, member);
+    if(memberService.modifyMember(member)) {
       // 수정 성공시
       return ResponseEntity.ok().build();
     } else {
