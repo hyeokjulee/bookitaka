@@ -57,7 +57,7 @@
       <tbody>
       <tr th:each="sheet : ${sheetList}">
         <td><img th:src="|/sheet/bookImg/*{sheet.sheetBookImgFullName}|" width="150" height="150"></td>
-        <td><a th:text="${sheet.sheetBooktitle}" th:href="@{/sheet/${sheet.sheetNo}}">북타이틀</a></td>
+        <td><a th:text="${sheet.sheetBooktitle}" th:href="|/sheet/*{sheet.sheetNo}|">북타이틀</a></td>
         <td th:text="|*{sheet.sheetBookauthor} / *{sheet.sheetBookpublisher}|">작가 / 출판사</td>
         <td th:text="${sheet.mysheetEndDate}"> 다운로드 만료일 </td>
         <td>

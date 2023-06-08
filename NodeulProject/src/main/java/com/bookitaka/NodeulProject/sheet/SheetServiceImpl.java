@@ -3,6 +3,8 @@ package com.bookitaka.NodeulProject.sheet;
 import com.bookitaka.NodeulProject.request.BookDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -37,6 +39,10 @@ public class SheetServiceImpl implements SheetService{
 
     @Value("${file.sheetFile.dir}")
     private String sheetFileDir;
+
+    @Value("${file.preview.dir}")
+    private String previewDir;
+
 
     @Value("${isbn-api-key}")
     private String isbn_api_key;
@@ -85,8 +91,37 @@ public class SheetServiceImpl implements SheetService{
         String sheetFileName = sheetFile.getOriginalFilename();
 
         String uuid = UUID.randomUUID().toString();
+
         String sheetFileFullPath = sheetFileDir + uuid + sheetFileName;
         log.info("sheetFile 저장 fullPath = {}", sheetFileFullPath);
+
+
+        //미리보기 따로 저장을 위한 코드 시작
+        // PDF 파일을 PDDocument로 로드
+        PDDocument document = PDDocument.load(sheetFile.getInputStream());
+
+        // 저장할 페이지 수
+        int numPagesToSave = 3;
+
+        // 앞부분만 따로 저장할 새로운 PDDocument 생성
+        PDDocument newDocument = new PDDocument();
+        for (int i = 0; i < numPagesToSave; i++) {
+            // 원본 문서에서 페이지 가져오기
+            PDPage page = document.getPage(i);
+
+            // 새로운 문서에 페이지 추가
+            newDocument.addPage(page);
+        }
+
+
+        // 새로운 문서 저장
+        newDocument.save(previewDir + uuid + sheetFileName);
+
+        // 문서 닫기
+        newDocument.close();
+        document.close();
+        //미리보기 따로 저장을 위한 코드 끝
+
         sheetFile.transferTo(new File(sheetFileFullPath));
         //테스트 데이터 넣기용
 //        Files.copy(sheetFile.getInputStream(), Paths.get(sheetFileFullPath), StandardCopyOption.REPLACE_EXISTING);

@@ -69,21 +69,11 @@ public class MysheetServiceImpl implements MysheetService{
             sheetForMemberDto.setSheetBookpublisher(sheet.getSheetBookpublisher());
             sheetForMemberDto.setSheetBookImgFullName(sheet.getSheetBookimguuid() + sheet.getSheetBookimgname());
 
-            Date mysheetEnddate = mysheet.getMysheetEnddate();
-            Date currentDate = new Date();
-
-            sheetForMemberDto.setMysheetEndDate(mysheetEnddate);
-            log.info("mysheetEnddate = {}", mysheetEnddate);
-            log.info("currentDate = {}", currentDate);
-
-            //현재시각보다 enddate가 더 이전이라면(기한지남)
-            if (mysheetEnddate.before(currentDate)) {
-                log.info("false!!");
-                sheetForMemberDto.setTimeLimit(false);
-            } else {
-                log.info("true!!");
+            if (checkMySheetIsAvailable(mysheet)) {
                 sheetForMemberDto.setTimeLimit(true);
                 sheetForMemberDto.setSheetFileUuid(sheet.getSheetFileuuid());
+            } else {
+                sheetForMemberDto.setTimeLimit(false);
             }
             sheetForMemberDtoList.add(sheetForMemberDto);
         }
@@ -101,6 +91,27 @@ public class MysheetServiceImpl implements MysheetService{
         Predicate predicate = builder.getValue();
 
         return mysheetRepository.count(predicate);
+    }
+
+    @Override
+    public Mysheet canIDownloadSheet(String fileUuid, Member member) {
+        return mysheetRepository.findFirstBySheet_SheetFileuuidAndMemberOrderByMysheetEnddateDesc(fileUuid, member);
+    }
+
+    @Override
+    public boolean checkMySheetIsAvailable(Mysheet mysheet) {
+
+        Date mysheetEnddate = mysheet.getMysheetEnddate();
+        Date currentDate = new Date();
+
+        //기한 지나면
+        if (mysheetEnddate.before(currentDate)) {
+            //기한 지나면 false
+            return false;
+        } else {
+            //기한 안지나면 true
+            return true;
+        }
     }
 
     @Override

@@ -3,17 +3,20 @@ package com.bookitaka.NodeulProject.sheet;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.security.Token;
 import com.bookitaka.NodeulProject.member.service.MemberService;
+import com.bookitaka.NodeulProject.sheet.mysheet.Mysheet;
 import com.bookitaka.NodeulProject.sheet.mysheet.MysheetCri;
 import com.bookitaka.NodeulProject.sheet.mysheet.MysheetPageInfo;
 import com.bookitaka.NodeulProject.sheet.mysheet.MysheetService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -43,6 +46,9 @@ public class SheetController {
 
     @Value("${file.sheetFile.dir}")
     private String sheetFileDir;
+
+    @Value("${file.preview.dir}")
+    private String previewDir;
 
     @GetMapping("/add")
     public String sheetAddForm(Model model) {
@@ -214,14 +220,53 @@ public class SheetController {
         return new UrlResource("file:" + bookImgDir + imgName);
     }
 
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
     @GetMapping("/sheetFile/{fileUuid}")
-    public ResponseEntity<Resource> downloadSheetFile(@PathVariable String fileUuid)
+    public ResponseEntity<Resource> downloadSheetFile(HttpServletRequest request,
+                                                      @PathVariable String fileUuid)
             throws MalformedURLException {
 
+        //인증 과정
+        //누구인지 찾기
+        Member member = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
+
+        log.info("downloadController Fileuuid = {}", fileUuid);
+
+        //그 사람 mysheet기록, fileUuid같은걸로 찾기
+        Mysheet mysheet = mysheetService.canIDownloadSheet(fileUuid, member);
+        if (mysheet == null) { //null이면 badrequest보내기.
+            String errorMessage = "구입 내역 없음";
+            Resource errorResource = new ByteArrayResource(errorMessage.getBytes());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResource);
+        }
+
+        //아니면 날짜 체크하기
+        if (!mysheetService.checkMySheetIsAvailable(mysheet)) {
+            String errorMessage = "다운로드 기간 만료";
+            Resource errorResource = new ByteArrayResource(errorMessage.getBytes());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResource);
+        }
+
+        //안지났으면 프로세스 진행
         String fileName = sheetService.getFileNameByUuid(fileUuid);
         String fullFileName = fileUuid + fileName;
         UrlResource resource = new UrlResource("file:" + sheetFileDir + fullFileName);
         log.info("uploadFileName={}", fullFileName);
+        String encodedUploadFileName = UriUtils.encode(fileName, StandardCharsets.UTF_8);
+        String contentDisposition = "attachment; filename=\"" + encodedUploadFileName + "\"";
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                .body(resource);
+    }
+
+    @GetMapping("/preview/{fileUuid}")
+    public ResponseEntity<Resource> downloadPreviewFile(@PathVariable String fileUuid)
+            throws MalformedURLException {
+
+        String fileName = sheetService.getFileNameByUuid(fileUuid);
+        String fullFileName = fileUuid + fileName;
+        UrlResource resource = new UrlResource("file:" + previewDir + fullFileName);
+        log.info("previewFileName={}", fullFileName);
         String encodedUploadFileName = UriUtils.encode(fileName, StandardCharsets.UTF_8);
         String contentDisposition = "attachment; filename=\"" + encodedUploadFileName + "\"";
         return ResponseEntity.ok()
