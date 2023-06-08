@@ -114,7 +114,8 @@
                                 // 해당 입력 필드 아래에 에러 메시지 표시
                                 errorElement = document.querySelector(`[error="${error.field}"]`);
                             }
-                            errorElement.innerText = error.defaultMessage;
+                            // errorElement.innerText = error.defaultMessage;
+                            alert(error.defaultMessage);
                             // inputField.parentNode.appendChild(errorElement);
                         }
                     });

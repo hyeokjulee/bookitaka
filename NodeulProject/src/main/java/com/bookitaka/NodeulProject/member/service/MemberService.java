@@ -108,19 +108,24 @@ public class MemberService {
         }
     }
 
-    public boolean modifyPassword(Member member, MemberChangePwDTO memberChangePwDTO) {
+    public int modifyPassword(Member member, MemberChangePwDTO memberChangePwDTO) {
         String oldPw = memberChangePwDTO.getOldMemberPassword();
         String newPw = memberChangePwDTO.getNewMemberPassword();
         String newPwChk = memberChangePwDTO.getNewMemberPasswordCheck();
 
         if (member != null && passwordEncoder.matches(oldPw, member.getMemberPassword())) {
+            if (passwordEncoder.matches(newPw, member.getMemberPassword())) {
+                return 1;
+            }
+            
             if (newPw.equals(newPwChk)) {
                 member.setMemberPassword(passwordEncoder.encode(newPw));
                 memberRepository.save(member);
-                return true;
+                return 0;
             }
+
         }
-        return false;
+        return 2;
     }
 
 

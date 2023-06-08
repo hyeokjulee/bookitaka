@@ -171,14 +171,21 @@ public class MemberAPIController {
                                          HttpServletRequest request,
                                          BindingResult bindingResult) {
     Member member = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
-    boolean result = memberService.modifyPassword(member, memberChangePwDTO);
+    int result = memberService.modifyPassword(member, memberChangePwDTO);
 
     if(bindingResult.hasErrors()) {
       return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
     }
 
-    if (!result) {
+    if (result==2) {
       bindingResult.rejectValue("newMemberPasswordCheck", "changePw.incorrectPw", "기존 비밀번호를 확인해주세요");
+      log.info("===================== changePw bindingResult : {}",bindingResult.getAllErrors());
+
+      return ResponseEntity.unprocessableEntity().body(bindingResult.getAllErrors());
+    }
+
+    if (result==1) {
+      bindingResult.rejectValue("newMemberPasswordCheck", "changePw.samePw", "기존 비밀번호와 같은 비밀번호는 사용할 수 없습니다");
       log.info("===================== changePw bindingResult : {}",bindingResult.getAllErrors());
 
       return ResponseEntity.unprocessableEntity().body(bindingResult.getAllErrors());
