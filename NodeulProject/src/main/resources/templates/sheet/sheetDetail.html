@@ -140,11 +140,9 @@
 
 <script src="/pdfjs/build/pdf.js"></script>
 <script>
-    // 상품 삭제 요청을 보내고 성공 시 장바구니 목록 갱신
     function cartAdd(sheetNo) {
-        console.log(sheetNo);
         $.ajax({
-          url: '/cart/cartAdd',  // 서버의 상품 삭제 API 엔드포인트
+          url: '/cart/cartAdd',
           type: 'POST',
           data: { sheetNo: sheetNo },
           success: function(response) {
@@ -314,11 +312,6 @@
         pdfDocument = pdf;
         navigateToPage(1); // 첫 페이지를 렌더링하여 시작합니다.
     });
-
 </script>
-
-
-
-
 </body>
 </html>

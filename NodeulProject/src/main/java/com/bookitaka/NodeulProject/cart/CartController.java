@@ -93,4 +93,15 @@ public class CartController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/getCount") // 개수 반환
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getCount() {
+        Map<String, Object> response = new HashMap<>();
+        String email = request.getRemoteUser();
+        int count = cartService.getCountByMemberEmail(email);
+        response.put("success", true);
+        response.put("count", count);
+        return ResponseEntity.ok(response);
+    }
 }
