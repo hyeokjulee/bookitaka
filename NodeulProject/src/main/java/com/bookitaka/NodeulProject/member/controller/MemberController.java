@@ -5,6 +5,7 @@ import com.bookitaka.NodeulProject.member.dto.MemberResponseDTO;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.security.Token;
 import com.bookitaka.NodeulProject.member.service.MemberService;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -14,7 +15,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -92,4 +92,25 @@ public class MemberController {
     public String changePw() {
         return "login/changePw";
     }
+
+    // 회원 상세 보기 (관리자)
+    @GetMapping(value = "/{memberEmail}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String detailAdmin(@PathVariable String memberEmail, Model model) {
+        log.info("================================Members : detailAdmin");
+        model.addAttribute("member", memberService.search(memberEmail));
+        model.addAttribute("role", "admin");
+        return "login/detail";
+    }
+
+    // 내 정보 보기 (회원)
+    @GetMapping(value = "/me")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
+    public String detail(HttpServletRequest request, Model model) {
+        log.info("================================Members : detail");
+        model.addAttribute("member",memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN));
+        model.addAttribute("role", "member");
+        return "login/detail";
+    }
+
 }
