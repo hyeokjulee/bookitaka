@@ -14,10 +14,10 @@ public class FaqModifyDto {
 
     private Long faqNo;
 
-    @NotBlank
+    @NotBlank(message = "질문은 필수입니다.")
     private String faqQuestion;
 
-    @NotBlank
+    @NotBlank(message = "답변은 필수입니다.")
     private String faqAnswer;
 
     @NotNull

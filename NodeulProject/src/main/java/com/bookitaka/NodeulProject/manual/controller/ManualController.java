@@ -2,10 +2,13 @@ package com.bookitaka.NodeulProject.manual.controller;
 
 import com.bookitaka.NodeulProject.manual.dto.ManualDto;
 import com.bookitaka.NodeulProject.manual.service.ManualService;
+import com.bookitaka.NodeulProject.notice.dto.NoticeDto;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,15 +29,22 @@ public class ManualController {
     }
 
     @GetMapping("/post")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String write(){
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String write(Model model){
+        model.addAttribute("manualDto", new ManualDto());
         return "manual/write.html";
     }
 
     @PostMapping("/post")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String write(ManualDto manualDto){
-        manualService.saveManual(manualDto);
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String write(@Validated @ModelAttribute ManualDto manualDto, BindingResult bindingResult, Model model){
+
+        if (bindingResult.hasErrors()) {
+
+            return "manual/write.html"; // 유효성 검사에 실패한 경우에 대한 에러 페이지를 반환하거나 다른 처리를 수행할 수 있습니다.
+        }
+
+        manualService.registerManual(manualDto);
         return "redirect:/manual/list";
     }
 
@@ -47,7 +57,7 @@ public class ManualController {
     }
 
     @GetMapping("/post/edit/{manualNo}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public String edit(@PathVariable("manualNo") Integer manualNo, Model model){
         ManualDto manualDto = manualService.getManual(manualNo);
         model.addAttribute("manualDto",manualDto);
@@ -55,15 +65,18 @@ public class ManualController {
         return "manual/update.html";
     }
 
-    @PutMapping("/post/edit/{manualNo}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String update(ManualDto manualDto){
-        manualService.saveManual(manualDto);
+    @PostMapping("/post/edit/{manualNo}")
+//@PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String updateManual(@Validated @ModelAttribute("manualDto") ManualDto manualDto,BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "manual/update.html";
+        }
+        manualService.registerManual(manualDto);
         return "redirect:/manual/list";
     }
 
     @DeleteMapping("/post/{manualNo}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public String delete(@PathVariable("manualNo") Integer manualNo){
         manualService.deleteManual(manualNo);
 

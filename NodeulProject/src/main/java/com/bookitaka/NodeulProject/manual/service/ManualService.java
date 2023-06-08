@@ -37,7 +37,7 @@ public class ManualService {
     }
 
     @Transactional
-    public Integer saveManual(ManualDto manualDto){
+    public Integer registerManual(ManualDto manualDto){
         return manualRepository.save(manualDto.toEntity()).getManualNo();
 
     }

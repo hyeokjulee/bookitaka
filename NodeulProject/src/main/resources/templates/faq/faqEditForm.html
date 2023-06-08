@@ -1,39 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
 <body>
 
-FAQ 수정 폼 / faqEditForm.html
+<menuTitle>알림마당</menuTitle>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?ageGroup=유아용}" style="all: unset;">연령별</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?genre=그림책}" style="all: unset;">장르별</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?genre=독서토론논제은행}" style="all: unset;">논제은행</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/request}" style="all: unset;">개별출제요청</a></sidebar>
 
-<form action="/faq/edit" method="post">
-    <input type="hidden" name="faqNo" th:value="${editFaq.faqNo}">
-    <br> 질문 <textarea name="faqQuestion" th:text="${editFaq.faqQuestion}"></textarea>
-    <br> 답변 <textarea name="faqAnswer" th:text="${editFaq.faqAnswer}"></textarea>
+<mainSection>
+    <div id="wrap">
+        <div class="row g-0 align-items-center">
+            <div class="col-auto">
+                <h1 class="fs-5 fs-xl-5 mb-5">자주묻는질문 수정</h1>
+            </div>
+        </div>
+        <form th:action="@{/faq/edit}" method="post">
+            <input type="hidden" name="faqNo" th:value="${editFaq.faqNo}">
+            <div class="mb-3">
+                <label class="form-label" name="faqQuestion" th:text="${editFaq.faqQuestion}">자주묻는 질문</label>
+                <textarea name="faqQuestion" th:text="${editFaq.faqQuestion}" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" name="faqAnswer" th:text="${editFaq.faqAnswer}">답변</label>
+                <textarea name="faqAnswer" th:text="${editFaq.faqAnswer}" class="form-control" rows="3"></textarea>
+            </div>
+            <div>
+                카테고리
+                <select name="faqCategory">
+                    <option th:each="category : ${faqAllCategory}" th:value="${category}" th:text="${category}" th:selected="${category == editFaq.faqCategory}"></option>
+                </select>
+            </div>
 
-    <br> 카테고리
-    <select name="faqCategory">
-        <option th:each="category : ${faqAllCategory}" th:value="${category}" th:text="${category}" th:selected="${category == editFaq.faqCategory}"></option>
-    </select>
+            <div>
+                <br> most/best 여부
+                <input type="checkbox" name="faqBest" value="1" th:checked="${editFaq.faqBest == 1}">
+            </div>
+            <hr>
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary" type="submit">FAQ 등록</button>
+                <button class="btn btn-primary cancelBtn" type="button">취소</button>
+            </div>
+        </form>
+    </div>
 
-
-    <br> most/best 여부
-    <input type="checkbox" name="faqBest" value="1" th:checked="${editFaq.faqBest == 1}">
-
-    <hr>
-    <button type="submit">FAQ 수정 저장</button>
-    <button class="cancelBtn" type="button">취소</button>
-</form>
-
-<script th:inline="javascript">
-    document.querySelector('.cancelBtn').addEventListener('click', function() {
-        window.history.back();
-    });
-</script>
-
-
-
+    <script th:inline="javascript">
+        document.querySelector('.cancelBtn').addEventListener('click', function() {
+            window.history.back();
+        });
+    </script>
+    </div>
+</mainSection>
 </body>
 </html>

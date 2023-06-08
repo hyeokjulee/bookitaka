@@ -1,19 +1,40 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE HTML>
+<html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
 </head>
 <body>
-<form th:action="@{'/manual/post/edit/' + ${manualDto.manualNo}}" method="post">
-    <input type="hidden" name="_method" value="put"/>
-    <input type="hidden" name="manualNo" th:value="${manualDto.manualNo}"/>
 
-    제목 : <input type="text" name="manualTitle" th:value="${manualDto.manualTitle}"> <br>
-    <textarea name="manualContent" th:text="${manualDto.manualContent}"></textarea><br>
+<menuTitle>알림마당</menuTitle>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?ageGroup=유아용}" style="all: unset;">연령별</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?genre=그림책}" style="all: unset;">장르별</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?genre=독서토론논제은행}" style="all: unset;">논제은행</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/request}" style="all: unset;">개별출제요청</a></sidebar>
 
-    <input type="submit" value="수정">
-</form>
+<mainSection>
+    <div id="wrap">
+        <div class="row g-0 align-items-center">
+            <div class="col-auto">
+                <h1 class="fs-5 fs-xl-5 mb-5">이용안내</h1>
+            </div>
+        </div>
+        <form th:action="@{/manual/post/edit/${manualDto.manualNo}}" method="post" th:object="${manualDto}">
+            <input type="hidden" name="manualNo" th:value="${manualDto.manualNo}"/>
+            <div class="mb-3">
+                <label class="form-label">제목</label>
+                <input type="text" name="manualTitle" th:value="${manualDto.manualTitle}" th:field="*{manualTitle}" class="form-control" >
+                <span th:if="${#fields.hasErrors('manualTitle')}" th:errors="*{manualTitle}"></span><br>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">내용</label>
+                <textarea name="manualContent" th:text="${manualDto.manualContent}" th:field="*{manualContent}" class="form-control" rows="3"></textarea>
+                <span th:if="${#fields.hasErrors('manualContent')}" th:errors="*{manualContent}"></span><br>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary" type="submit">수정</button>
+            </div>
+        </form>
+    </div>
 
+</mainSection>
 </body>
 </html>

@@ -5,12 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 @NoArgsConstructor
 public class ManualDto {
 
     private Integer manualNo;
+    @NotBlank(message = "제목은 필수입니다.")
     private String manualTitle;
+    @NotBlank(message = "내용은 필수입니다.")
     private String manualContent;
 
 

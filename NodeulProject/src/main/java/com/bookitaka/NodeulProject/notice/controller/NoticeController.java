@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,12 +23,13 @@ import java.util.List;
 @RequestMapping("/notice")
 public class NoticeController {
 
-    private static final int PAGE_SIZE = 3;
+    private static final int PAGE_SIZE = 10;
     private NoticeService noticeService;
 
     @GetMapping("/list")
     public String list(Model model, @RequestParam(name="page", defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        Sort sort = Sort.by("noticeRegdate").descending();
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE,sort);
         Page<NoticeDto> noticeList = noticeService.getNoticeList(pageable);
         model.addAttribute("noticeList", noticeList);
 
@@ -68,7 +70,7 @@ public class NoticeController {
         return "notice/update.html";
     }
 
-    @PostMapping(value = "/post/edit/{noticeNo}")
+    @PostMapping("/post/edit/{noticeNo}")
 //@PreAuthorize("hasRole('ROLE_ADMIN')")
     public String updateNotice(@PathVariable("noticeNo") Integer noticeNo, @Validated @ModelAttribute("noticeDto") NoticeDto noticeDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -88,7 +90,8 @@ public class NoticeController {
 
     @GetMapping("/search")
     public String search(@RequestParam(value = "keyword") String keyword, @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        Pageable pageable = PageRequest.of(page, PAGE_SIZE);
+        Sort sort = Sort.by("noticeRegdate").descending();
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
         Page<NoticeDto> noticeDtoPage = noticeService.searchNotice(keyword, pageable);
         model.addAttribute("noticeList", noticeDtoPage);
         model.addAttribute("keyword", keyword); // 검색어 전달

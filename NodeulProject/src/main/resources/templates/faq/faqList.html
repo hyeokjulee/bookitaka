@@ -1,73 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML>
+<html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
 </head>
 <body>
-FAQ list.html
 
-<hr>
-<a href="/faq/all">전체</a>
-<a href="/faq/best">BEST</a>
-<a th:each="eachCategory : ${faqAllCategory}" th:href="@{/faq/{category}(category=${eachCategory})}">
-    <span th:text="${eachCategory}"></span>
-</a>
+<menuTitle>알림마당</menuTitle>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?ageGroup=유아용}" style="all: unset;">연령별</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?genre=그림책}" style="all: unset;">장르별</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?genre=독서토론논제은행}" style="all: unset;">논제은행</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/request}" style="all: unset;">개별출제요청</a></sidebar>
 
-<hr>
-<a href="/faq/add">등록</a>
-
-<input type="text">
-<button type="button">검색</button>
-
-    <table class="tb_col" style="border: black 1px;">
-        <tr>
-            <th>Q</th>
-            <th>A</th>
-            <th>Category</th>
-            <th>best</th>
-            <th>삭제버튼</th>
-            <th>수정버튼</th>
-        </tr>
-        <tr th:each="faq : ${faqAll.content}">
-            <td th:text="${faq.faqQuestion}"></td>
-            <td th:text="${faq.faqAnswer}"></td>
-            <td th:text="${faq.faqCategory}"></td>
-            <td th:text="${faq.faqBest}"></td>
-            <td>
-                <form th:action="@{/faq/remove/{faqNo}(faqNo=${faq.faqNo})}" method="post">
-                    <input id="deleteBtn" type="submit" value="삭제" onclick="deleteConfirm()">
+<mainSection>
+    <div id="wrap">
+        <div class="row g-0 align-items-center">
+            <div class="col-auto">
+                <h1 class="fs-5 fs-xl-5 mb-5">자주묻는질문</h1>
+            </div>
+            <div class="col-auto ms-auto align-self-end">
+                <form class="form-inline" action="#" method="GET">
+                    <div class="input-group">
+                        <input class="form-control" name="keyword" type="text" placeholder="검색어를 입력해주세요" />
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">검색</button>
+                        </div>
+                    </div>
                 </form>
-            </td>
-            <td>
-                <a class="editBtn" th:href="@{/faq/edit/{faqNo}(faqNo=${faq.faqNo})}">수정</a>
-            </td>
-        </tr>
-    </table>
+            </div>
+        </div>
 
-    <!-- 페이지 이동 버튼-->
-    <div th:each="pageNumber : ${#numbers.sequence(0, faqAll.totalPages - 1)}">
-        <form th:action="@{/faq/{category}(category=${faqCategory})}" method="get">
-            <input type="hidden" name="page" th:value="${pageNumber}" />
-            <button th:text="${pageNumber + 1}"></button>
-        </form>
+        <a href="/faq/all">전체</a>
+        <a href="/faq/best">BEST</a>
+        <a th:each="eachCategory : ${faqAllCategory}" th:href="@{/faq/{category}(category=${eachCategory})}">
+            <span th:text="${eachCategory}"></span>
+        </a>
+
+        <hr class="my-4">
+        <div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>질문</th>
+                    <th>답변</th>
+                    <th>카테고리</th>
+                    <th>베스트</th>
+                    <th>삭제</th>
+                    <th>수정</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="faq : ${faqAll.content}">
+                    <td th:text="${faq.faqQuestion}"></td>
+                    <td th:text="${faq.faqAnswer}"></td>
+                    <td th:text="${faq.faqCategory}"></td>
+                    <td th:text="${faq.faqBest}"></td>
+                    <td>
+                        <form th:action="@{/faq/remove/{faqNo}(faqNo=${faq.faqNo})}" method="post">
+                            <input class="btn btn-primary" id="deleteBtn" type="submit" value="삭제" onclick="deleteConfirm()">
+                        </form>
+                    </td>
+                    <td>
+                        <a class="btn btn-primary" th:href="@{/faq/edit/{faqNo}(faqNo=${faq.faqNo})}">수정</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="d-flex justify-content-end">
+                <a class="btn btn-primary" th:href="@{/faq/add}">등록</a>
+            </div>
+            <!-- 페이지 이동 버튼-->
+            <div th:each="pageNumber : ${#numbers.sequence(0, faqAll.totalPages - 1)}">
+                <form th:action="@{/faq/{category}(category=${faqCategory})}" method="get">
+                    <input type="hidden" name="page" th:value="${pageNumber}" />
+                    <button th:text="${pageNumber + 1}"></button>
+                </form>
+            </div>
+
+            <script th:inline="javascript">
+                function deleteConfirm() {
+                    // 삭제 확인 후, 확인 시 삭제처리
+                    if (confirm('정말 삭제하시겠습니까?')) {
+                        this.closest('form').submit();
+                    }
+                }
+            </script>
+        </div>
     </div>
-
-
-
-
-<script th:inline="javascript">
-    function deleteConfirm() {
-        // 삭제 확인 후, 확인 시 삭제처리
-        if (confirm('정말 삭제하시겠습니까?')) {
-            this.closest('form').submit();
-        }
-    }
-
-
-
-</script>
-
+</mainSection>
 </body>
 </html>
 
