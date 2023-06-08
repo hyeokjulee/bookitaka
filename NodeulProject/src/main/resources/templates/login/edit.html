@@ -110,7 +110,6 @@
         // 선택된 성별 찾아 값 넣기
         for (const gender of document.querySelectorAll(`[name="memberGender"]`)) {
             if (gender.checked) {
-                console.log(gender)
                 memberGender = gender.value;
                 break
             }
@@ -130,12 +129,17 @@
         });
         fetch("/member/" + /*[[${member.memberEmail}]]*/ '', {
             method: 'PUT',
-            body: formData
+            body: formData,
+            credentials: 'include',
+            redirect: "manual"
         })
         .then((response) => {
+            console.log("response.status : " + response.status);
             if (response.ok) {
                 // 성공적인 응답 처리
                 window.location.reload();
+            } else if (response.status === 0) {
+                window.location.href = response.url;
             } else if (response.status === 400) {
                 response.json().then(data => {
                     // 에러 메시지 초기화
@@ -155,6 +159,10 @@
                 });
             } else {
                 // 기타 상태 코드에 대한 처리
+                response.text().then(data => {
+                    console.log(data);
+                    console.log("else");
+                });
             }
         })
     });

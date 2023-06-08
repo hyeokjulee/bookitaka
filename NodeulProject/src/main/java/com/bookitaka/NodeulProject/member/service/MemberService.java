@@ -1,7 +1,6 @@
 package com.bookitaka.NodeulProject.member.service;
 
 import com.bookitaka.NodeulProject.member.dto.MemberFindEmailDTO;
-import com.bookitaka.NodeulProject.member.dto.MemberFindPwDTO;
 import com.bookitaka.NodeulProject.member.dto.MemberChangePwDTO;
 import com.bookitaka.NodeulProject.member.exception.CustomException;
 import com.bookitaka.NodeulProject.member.model.Member;
@@ -31,7 +30,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
-    private final EmailService emailService;
+    private final EmailSender emailService;
 
     /************************************************************************************************
      * Member Service
@@ -157,29 +156,21 @@ public class MemberService {
         return mList;
     }
 
-    public String getPwByEmail(MemberFindPwDTO memberFindPwDTO) {
-        String result;
-        String memberEmail = memberFindPwDTO.getMemberEmail();
-        String memberName = memberFindPwDTO.getMemberName();
-        if (memberRepository.existsByMemberEmail(memberEmail)) {
-            Member findMember = memberRepository.findByMemberEmail(memberEmail);
-            if (findMember.getMemberName().equals(memberName)) {
-                String newPw = generateRandomPassword();
-                // 메일전송
-                emailService.sendEmail(findMember.getMemberEmail(), newPw);
-
-                // 임시 비밀번호로 비밀번호 변경
-                findMember.setMemberPassword(passwordEncoder.encode(newPw));
+    public boolean getPwByEmailAndName(String memberEmail, String memberName) {
+        if (memberRepository.existsByMemberEmailAndMemberName(memberEmail, memberName)) {
+            String newPw = generateRandomPassword();
+            // 메일전송
+            if (emailService.sendEmailWithTemplate(memberEmail, "templates/member/temp-password-email-template.html", "[북키타카] 임시비밀번호 발송", newPw)) {
+                // 메일전송 성공 시
+                // 임시 비밀번호로 비밀번호 변경 후 디비에 저장
                 log.info("================================== newPw : {}", newPw);
-                memberRepository.save(findMember);
-                result = "완료";
-            } else {
-                result = "회원X";
+                Member member = memberRepository.findByMemberEmail(memberEmail);
+                member.setMemberPassword(passwordEncoder.encode(newPw));
+                memberRepository.save(member);
+                return true;
             }
-        } else {
-            result = "회원X";
         }
-        return result;
+        return false;
     }
 
     public List<Member> getAllMembers() {

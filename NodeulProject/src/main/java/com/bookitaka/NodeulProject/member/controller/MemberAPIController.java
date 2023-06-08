@@ -9,6 +9,7 @@ import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,7 +55,7 @@ public class MemberAPIController {
   }
 
   // 로그아웃
-  @GetMapping("/signout")
+  @GetMapping("/signout") @PostMapping("/signout") @PutMapping("/signout") @DeleteMapping("/signout")
   @ApiOperation(value = "${MemberController.signout}")
   @ApiResponses(value = {//
       @ApiResponse(code = 403, message = "Access denied"), //
@@ -204,8 +206,8 @@ public class MemberAPIController {
     if(bindingResult.hasErrors()) {
       return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
     }
-    String result = memberService.getPwByEmail(memberFindPwDTO);
-    if (result.equals("회원X")) {
+    boolean result = memberService.getPwByEmailAndName(memberFindPwDTO.getMemberEmail(), memberFindPwDTO.getMemberName());
+    if (!result) {
       bindingResult.rejectValue("memberName","getMemberPassword.notFoundMember","일치하는 회원이 없습니다");
       log.info("==================================== 회원X");
       return ResponseEntity.unprocessableEntity().body(bindingResult.getAllErrors());
@@ -256,16 +258,16 @@ public class MemberAPIController {
   }
 
   // 토큰 재발급 (회원)
-  @GetMapping("/refresh")
-//  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
-  public void refresh(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  @GetMapping("/refresh/token") @PostMapping("/refresh/token") @PutMapping("/refresh/token") @DeleteMapping("/refresh/token")
+  public ResponseEntity<String> refresh(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     log.info("================================Member : refresh");
     Member member = memberService.whoami(request.getCookies(), Token.REFRESH_TOKEN);
     String token = memberService.refresh(request.getCookies(), member);
     if (token != null) {
       setCookie(response, token, Token.ACCESS_TOKEN, false);
-      response.sendRedirect((String) request.getAttribute("uri"));
+      response.sendRedirect("/");
     }
+    return ResponseEntity.badRequest().build();
   }
 
   private void setCookie(HttpServletResponse response, String token, String tokenCookieName, boolean isSignout) {
@@ -276,8 +278,6 @@ public class MemberAPIController {
       cookie.setMaxAge(0);
     }
     cookie.setPath("/"); // 쿠키의 유효 경로 설정 (루트 경로로 설정하면 모든 요청에서 사용 가능)
-
-    // 응답에 쿠키 추가
     response.addCookie(cookie);
   }
 
