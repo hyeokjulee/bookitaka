@@ -167,16 +167,24 @@ public class MemberAPIController {
   // 비밀번호 변경
   @PutMapping("/changePw")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
-  public ResponseEntity<String> modifyPw(@Validated @ModelAttribute MemberChangePwDTO memberChangePwDTO,
+  public ResponseEntity<?> modifyPw(@Validated @ModelAttribute MemberChangePwDTO memberChangePwDTO,
                                          HttpServletRequest request,
-                                         BindingResult result) {
+                                         BindingResult bindingResult) {
     Member member = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
-    if(memberService.modifyPassword(member,memberChangePwDTO)) {
-      return ResponseEntity.ok("비밀번호 수정 성공");
-    } else {
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("비밀번호 수정 실패");
+    boolean result = memberService.modifyPassword(member, memberChangePwDTO);
 
+    if(bindingResult.hasErrors()) {
+      return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
     }
+
+    if (!result) {
+      bindingResult.rejectValue("newMemberPasswordCheck", "changePw.incorrectPw", "기존 비밀번호를 확인해주세요");
+      log.info("===================== changePw bindingResult : {}",bindingResult.getAllErrors());
+
+      return ResponseEntity.unprocessableEntity().body(bindingResult.getAllErrors());
+    }
+
+    return ResponseEntity.ok().build();
   }
 
   // 이메일 찾기
@@ -199,7 +207,7 @@ public class MemberAPIController {
     return ResponseEntity.ok().body(members);
   }
 
-
+  // 비밀번호 찾기
   @PostMapping("/findPw")
   public ResponseEntity<?> findMemberPw(@Validated @ModelAttribute MemberFindPwDTO memberFindPwDTO, BindingResult bindingResult) {
     log.info("=================================================== findPw");

@@ -113,22 +113,16 @@ public class MemberService {
         String newPw = memberChangePwDTO.getNewMemberPassword();
         String newPwChk = memberChangePwDTO.getNewMemberPasswordCheck();
 
-        if (memberRepository.existsByMemberEmail(member.getMemberEmail())) {
-            if (passwordEncoder.matches(oldPw, member.getMemberPassword())) {
-                if (newPw.equals(newPwChk)) {
-                    member.setMemberPassword(passwordEncoder.encode(newPw));
-                    memberRepository.save(member);
-                    return true;
-                } else {
-                    throw new CustomException("wrong pwChk", HttpStatus.UNPROCESSABLE_ENTITY);
-                }
-            } else {
-                throw new CustomException("wrong password", HttpStatus.UNPROCESSABLE_ENTITY);
+        if (member != null && passwordEncoder.matches(oldPw, member.getMemberPassword())) {
+            if (newPw.equals(newPwChk)) {
+                member.setMemberPassword(passwordEncoder.encode(newPw));
+                memberRepository.save(member);
+                return true;
             }
-        } else {
-            throw new CustomException("wrong member", HttpStatus.NOT_FOUND);
         }
+        return false;
     }
+
 
     public List<String> getMemberEmail(MemberFindEmailDTO memberFindEmailDTO) {
         String memberName = memberFindEmailDTO.getMemberName();
