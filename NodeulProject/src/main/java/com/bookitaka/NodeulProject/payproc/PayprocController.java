@@ -41,21 +41,33 @@ public class PayprocController {
 
     @PostMapping("/paid")
     @ResponseBody
-    public String requestAfterPay(@CookieValue("list") String list) {
-        log.info("carts = {}", list);
-        log.info("parsed carts = {}", parseCookie(list));
+    public String requestAfterPay(@RequestBody PayMakeDto payMakeDto, @CookieValue("carts") String carts) {
+
+        List<Long> sheetNumListInCart = parseCookie(carts);
+
+        log.info("parsed carts = {}", sheetNumListInCart);
+
+        payMakeDto.setSheetNoList(sheetNumListInCart);
+        log.info("payMakeDto", payMakeDto);
+
+
+        payprocService.makePay(payMakeDto, memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN));
+
+
+
+
         return "hihi you successed";
     }
 
-    private List<Integer> parseCookie(String input) {
-        List<Integer> numberList = new ArrayList<>();
+    private List<Long> parseCookie(String input) {
+        List<Long> numberList = new ArrayList<>();
 
         // 대괄호와 쌍따옴표를 제거한 후 숫자 문자열 추출
         String numbersString = input.replace("[", "").replace("]", "").replaceAll("\"", "");
 
         String[] numberStrings = numbersString.split(",");
         for (String numberString : numberStrings) {
-            int number = Integer.parseInt(numberString.trim());
+            Long number = Long.valueOf(numberString.trim());
             numberList.add(number);
         }
 

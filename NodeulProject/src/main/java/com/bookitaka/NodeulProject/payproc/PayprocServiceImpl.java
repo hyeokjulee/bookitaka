@@ -50,7 +50,7 @@ public class PayprocServiceImpl implements PayprocService {
             Mysheet mysheet = new Mysheet();
 
             mysheet.setMember(member);
-            mysheet.setMysheetMeans(payMakeDto.getSheetMeans());
+            mysheet.setMysheetMeans(payMakeDto.getMySheetMeans());
 
             mysheet.setMysheetStartdate(nowDate);
             mysheet.setMysheetEnddate(afterWeekDate);

@@ -29,12 +29,12 @@ public class VerifyController {
     private IamportClient iamportClient;
 
     /** 프론트에서 받은 PG사 결괏값을 통해 아임포트 토큰 발행 **/
-    @PostMapping("/{imp_uid}")
-    public IamportResponse<Payment> paymentByImpUid(@PathVariable("imp_uid") String imp_uid) throws IamportResponseException, IOException {
-        log.info("paymentByImpUid 진입 = {}", imp_uid);
+    @PostMapping("/{impUid}")
+    public IamportResponse<Payment> paymentByImpUid(@PathVariable("impUid") String impUid) throws IamportResponseException, IOException {
+        log.info("paymentByImpUid 진입 = {}", impUid);
         iamportClient = new IamportClient(apiKey, apiSecret);
 
-        return iamportClient.paymentByImpUid(imp_uid);
+        return iamportClient.paymentByImpUid(impUid);
     }
 
 }

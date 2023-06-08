@@ -1,6 +1,11 @@
 package com.bookitaka.NodeulProject.sheet;
 
-import com.bookitaka.NodeulProject.request.RequestService;
+import com.bookitaka.NodeulProject.member.model.Member;
+import com.bookitaka.NodeulProject.member.security.Token;
+import com.bookitaka.NodeulProject.member.service.MemberService;
+import com.bookitaka.NodeulProject.sheet.mysheet.MysheetCri;
+import com.bookitaka.NodeulProject.sheet.mysheet.MysheetPageInfo;
+import com.bookitaka.NodeulProject.sheet.mysheet.MysheetService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,31 +15,17 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/sheet")
@@ -43,6 +34,8 @@ import java.util.Map;
 public class SheetController {
 
     private final SheetService sheetService;
+    private final MysheetService mysheetService;
+    private final MemberService memberService;
 //    private final RequestService requestService;
 
     @Value("${file.bookImg.dir}")
@@ -172,6 +165,27 @@ public class SheetController {
 
         return "sheet/sheetList";
     }
+    @GetMapping("/mysheet")
+    public String mySheetList(HttpServletRequest request,
+                              @RequestParam(name = "pageNum", defaultValue = "1") int page,
+                              @RequestParam(name = "amount", defaultValue = "10") int amount,
+                              @RequestParam(name = "searchType", defaultValue = SearchTypes.TITLE) String searchType,
+                              @RequestParam(name = "searchWord", defaultValue = "") String searchWord,
+                              Model model) {
+
+
+        MysheetCri cri = new MysheetCri(page, amount, searchType, searchWord);
+        Member member = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
+
+        int totalNum = Math.toIntExact(mysheetService.getMySheetCnt(searchType, searchWord, member));
+        model.addAttribute("sheetList", mysheetService.getAllMysheetByMember(cri, member));
+        model.addAttribute("pageInfo", new MysheetPageInfo(cri, totalNum));
+        model.addAttribute("cri", cri);
+
+        return "sheet/mysheet";
+
+    }
+
 
     @GetMapping("/{sheetNo}")
     public String sheetDetail(@PathVariable int sheetNo,

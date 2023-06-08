@@ -38,12 +38,12 @@ class PayprocServiceImplTest {
         payMakeDto.setPaymentPrice(2000L);
 
         List<Long> sheetNoList = new ArrayList<>();
-        sheetNoList.add(197L);
-        sheetNoList.add(198L);
+        sheetNoList.add(229L);
+        sheetNoList.add(230L);
 
         payMakeDto.setSheetNoList(sheetNoList);
 
-        payMakeDto.setSheetMeans("카드");
+        payMakeDto.setMySheetMeans("결제");
 
         payprocService.makePay(payMakeDto, member);
     }

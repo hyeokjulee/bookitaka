@@ -54,7 +54,6 @@
 
     <script>
         const uuid = uuidv4();
-        console.log(uuid);
     </script>
 
     <script>
@@ -66,7 +65,7 @@
                 {
                     pg: "kcp.INIpayTest",
                     pay_method: "card",
-                    merchant_uid: "57008833-33015",
+                    merchant_uid: uuid,
 
                     name: title + "외 " + (cnt - 1) + "건",
                     amount: sum,
@@ -91,20 +90,29 @@
                             console.log(result)
                             // rsp.paid_amount와 result.response.amount(서버 검증) 비교 후 로직 실행
                             if (rsp.paid_amount === result.response.amount) {
-                                alert("결제가 완료되었습니다.");
                                 console.log("결제 및 검증 완료")
                                 $.ajax({
                                     type:'POST',
                                     url:'/payproc/paid',
+                                    paymentUuid: rsp.merchant_uid,
+                                    paymentInfo: rsp.name,
+                                    paymentPrice : rsp.paid_amount,
+                                    payMethod : rsp.pay_method,
+                                    receiptUrl: rsp.receipt_url,
+                                    email : rsp.buyer_email,
+                                    impId : rsp.imp_uid,
+                                    mySheetMeans: "결제"
                                 }).done(function() {
-                                    window.location.reload();
+                                    window.location.href("/payproc/complete");
                                 }).fail(function(error){
-                                    alert(JSON.stringify(error));
+                                    alert("결제 후 구매진행 프로세스에서 오류 발생. 에러 메시지 :" + error);
                                 })
                             } else {
-                                alert("결제에 실패했습니다." + "에러코드 : " + rsp.error_code + "에러 메시지 : " + rsp.error_message);
+                                alert("결제 과정에서 에러 발생." + "에러코드 : " + rsp.error_code + "에러 메시지 : " + rsp.error_message);
                                 console.log("검증실패")
                             }
+                        }).fail(function (error) {
+                            alert("검증실패, 문의해주세요." + "에러 메세지 :" + error);
                         })
                     } else {
                         console.log("결제 시작부터 실패")

@@ -1,13 +1,17 @@
 package com.bookitaka.NodeulProject.sheet.mysheet;
 
+import com.bookitaka.NodeulProject.member.model.Member;
+import com.bookitaka.NodeulProject.sheet.SheetCri;
+import org.springframework.data.domain.Page;
+
 import java.util.List;
 
 public interface MysheetService {
 
-    public List<Mysheet> getAllMysheetByEmail(String memberEmail);
+    public List<SheetForMemberDto> getAllMysheetByMember(MysheetCri mysheetCri, Member member);
 
-    public List<Mysheet> getAllMysheetAvailableByEmail(String memberEmail);
+    public Long getMySheetCnt(String searchType, String searchWord, Member member);
 
-    public List<Mysheet> getAllMysheetForAdmin();
+    public Page<Mysheet> getAllMysheetForAdmin();
 
 }

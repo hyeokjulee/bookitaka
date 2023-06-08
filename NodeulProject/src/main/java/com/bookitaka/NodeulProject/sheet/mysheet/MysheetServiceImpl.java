@@ -1,9 +1,23 @@
 package com.bookitaka.NodeulProject.sheet.mysheet;
 
+import com.bookitaka.NodeulProject.member.model.Member;
+import com.bookitaka.NodeulProject.sheet.SearchTypes;
+import com.bookitaka.NodeulProject.sheet.Sheet;
+import com.bookitaka.NodeulProject.sheet.SheetRepository;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -12,19 +26,85 @@ import java.util.List;
 public class MysheetServiceImpl implements MysheetService{
 
     private final MysheetRepository mysheetRepository;
+    private final SheetRepository sheetRepository;
+
 
     @Override
-    public List<Mysheet> getAllMysheetByEmail(String memberEmail) {
-        return null;
+    public List<SheetForMemberDto> getAllMysheetByMember(MysheetCri mysheetCri, Member member) {
+        //쿼리 DSL로 검색조건에 따른 검색 구현
+        QMysheet QMysheet = com.bookitaka.NodeulProject.sheet.mysheet.QMysheet.mysheet;
+
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(QMysheet.member.eq(member));
+
+        if (mysheetCri.getSearchType().equals(SearchTypes.TITLE)) {
+            builder.and(QMysheet.sheet.sheetBooktitle.contains(mysheetCri.getSearchWord()));
+        } else if (mysheetCri.getSearchType().equals(SearchTypes.AUTHOR)) {
+            builder.and(QMysheet.sheet.sheetBooktitle.contains(mysheetCri.getSearchWord()));
+        } else if (mysheetCri.getSearchType().equals(SearchTypes.PUBLISHER)) {
+            builder.and(QMysheet.sheet.sheetBooktitle.contains(mysheetCri.getSearchWord()));
+        }
+
+
+        Predicate predicate = builder.getValue();
+
+        OrderSpecifier<Date> orderSpecifier = QMysheet.mysheetStartdate.desc();
+
+        //페이징 구현
+        Pageable pageable = PageRequest.of(mysheetCri.getPageNum()-1, mysheetCri.getAmount(), Sort.by(Sort.Direction.DESC, "mysheetStartdate"));
+
+        //모든 mySheet가져옴;
+        List<Mysheet> mysheetList = mysheetRepository.findAll(predicate, pageable).getContent();
+
+        List<SheetForMemberDto> sheetForMemberDtoList = new ArrayList<>();
+
+        //모든 mysheet에 해당하는 sheet가져와서 dtoList에 넣기
+        for (Mysheet mysheet: mysheetList) {
+            SheetForMemberDto sheetForMemberDto = new SheetForMemberDto();
+            Sheet sheet = mysheet.getSheet();
+
+            sheetForMemberDto.setSheetNo(sheet.getSheetNo());
+            sheetForMemberDto.setSheetBooktitle(sheet.getSheetBooktitle());
+            sheetForMemberDto.setSheetBookauthor(sheet.getSheetBookauthor());
+            sheetForMemberDto.setSheetBookpublisher(sheet.getSheetBookpublisher());
+            sheetForMemberDto.setSheetBookImgFullName(sheet.getSheetBookimguuid() + sheet.getSheetBookimgname());
+
+            Date mysheetEnddate = mysheet.getMysheetEnddate();
+            Date currentDate = new Date();
+
+            sheetForMemberDto.setMysheetEndDate(mysheetEnddate);
+            log.info("mysheetEnddate = {}", mysheetEnddate);
+            log.info("currentDate = {}", currentDate);
+
+            //현재시각보다 enddate가 더 이전이라면(기한지남)
+            if (mysheetEnddate.before(currentDate)) {
+                log.info("false!!");
+                sheetForMemberDto.setTimeLimit(false);
+            } else {
+                log.info("true!!");
+                sheetForMemberDto.setTimeLimit(true);
+                sheetForMemberDto.setSheetFileUuid(sheet.getSheetFileuuid());
+            }
+            sheetForMemberDtoList.add(sheetForMemberDto);
+        }
+
+        return sheetForMemberDtoList;
     }
 
     @Override
-    public List<Mysheet> getAllMysheetAvailableByEmail(String memberEmail) {
-        return null;
+    public Long getMySheetCnt(String searchType, String searchWord, Member member) {
+        QMysheet QMysheet = com.bookitaka.NodeulProject.sheet.mysheet.QMysheet.mysheet;
+
+        BooleanBuilder builder = new BooleanBuilder();
+        builder.and(QMysheet.member.eq(member));
+
+        Predicate predicate = builder.getValue();
+
+        return mysheetRepository.count(predicate);
     }
 
     @Override
-    public List<Mysheet> getAllMysheetForAdmin() {
+    public Page<Mysheet> getAllMysheetForAdmin() {
         return null;
     }
 }
