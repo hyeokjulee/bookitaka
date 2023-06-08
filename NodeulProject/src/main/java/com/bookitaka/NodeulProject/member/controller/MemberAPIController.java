@@ -12,7 +12,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -53,7 +52,7 @@ public class MemberAPIController {
   }
 
   // 로그아웃
-  @GetMapping("/signout") @PostMapping("/signout") @PutMapping("/signout") @DeleteMapping("/signout")
+  @GetMapping("/signout")
   @ApiOperation(value = "${MemberController.signout}")
   @ApiResponses(value = {//
       @ApiResponse(code = 403, message = "Access denied"), //
@@ -233,7 +232,7 @@ public class MemberAPIController {
   }
 
   // 토큰 재발급 (회원)
-  @GetMapping("/refresh/token") @PostMapping("/refresh/token") @PutMapping("/refresh/token") @DeleteMapping("/refresh/token")
+  @GetMapping("/refresh/token")
   public ResponseEntity<String> refresh(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     log.info("================================Member : refresh");
     Member member = memberService.whoami(request.getCookies(), Token.REFRESH_TOKEN);

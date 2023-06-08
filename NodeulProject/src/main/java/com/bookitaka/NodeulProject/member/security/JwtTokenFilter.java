@@ -25,12 +25,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
     log.info("doFilterInternal - getRequestURI : {}", request.getRequestURI());
-    // 쿠키에서 Access Token 을 가져옴
+    // 쿠키에서 Token 을 가져옴
     String aToken = jwtTokenProvider.resolveToken(request.getCookies(), Token.ACCESS_TOKEN);
-    log.info("doFilterInternal - aToken : {}", aToken);
-    // 쿠키에서 Refresh Token 을 가져옴
     String rToken = jwtTokenProvider.resolveToken(request.getCookies(), Token.REFRESH_TOKEN);
-    log.info("doFilterInternal - rToken : {}", rToken);
+    String signoutUri = "/member/signout";
+    String refreshUri = "/member/refresh/token";
 
     // 둘 다 있는 경우
     if (aToken != null && rToken != null) {
@@ -50,15 +49,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         // a토큰이 만료되었고 r토큰은 유효한 경우
         if (ex.getMessage().equals("Expired JWT token") && validRToken) {
           // 토큰 재발급
-          if (!request.getRequestURI().equals("/member/refresh/token")) {
-            response.sendRedirect("/member/refresh/token");
+          if (!request.getRequestURI().equals(refreshUri)) {
+            response.sendRedirect(refreshUri);
             return;
           }
         // a토큰이 유효하지 않고 r토큰은 유효한 경우 || 둘 다 유효하지 않은 경우
         } else {
           // 로그아웃
-          if (!request.getRequestURI().equals("/member/signout")) {
-            response.sendRedirect("/member/signout");
+          if (!request.getRequestURI().equals(signoutUri)) {
+            response.sendRedirect(signoutUri);
             return;
           }
         }
@@ -72,16 +71,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     // a토큰이 없고 r토큰은 있는 경우 || r토큰이 없고 a토큰은 있는 경우
     } else {
       // 로그아웃
-      if (!request.getRequestURI().equals("/member/signout")) {
-        response.sendRedirect("/member/signout");
+      if (!request.getRequestURI().equals(signoutUri)) {
+        response.sendRedirect(signoutUri);
         return;
       }
     }
     filterChain.doFilter(request, response);
   }
-
-
-
 
 
   public boolean validationRefreshToken(String rToken) {
