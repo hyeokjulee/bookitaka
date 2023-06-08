@@ -1,4 +1,4 @@
-function showCount() {
+function showCartCount() {
     $.ajax({
       url: '/cart/getCount',  // 서버의 장바구니 상품 목록 개수 조회 API 엔드포인트
       type: 'GET',
@@ -18,5 +18,5 @@ function showCount() {
 
 // 페이지 로드 시 장바구니 목록 개수 표시
 $(document).ready(function() {
-    showCount();
+    showCartCount();
 });
