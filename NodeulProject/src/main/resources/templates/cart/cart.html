@@ -1,55 +1,64 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE HTML>
+<html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Cart</title>
-
-  <!-- CSS only -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-
-  <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
-  <h1>Cart</h1>
 
-  <table class="table" id="cartTable">
-    <thead>
-      <tr>
-        <th scope="col" colspan="2"><label><input type="checkbox" id="selectAll">전체 선택</label></th>
-        <th scope="col">자료명</th>
-        <th scope="col">금액</th>
-        <th scope="col">선택</th>
-      </tr>
-    </thead>
+<menuTitle>장바구니</menuTitle>
+<sidebar class="list-group-item"><a th:href="@{/sheet/list?ageGroup=유아용}">연령별</a></sidebar>
+<sidebar class="list-group-item"><a th:href="@{/sheet/list?genre=그림책}">장르별</a></sidebar>
+<sidebar class="list-group-item"><a th:href="@{/sheet/list?genre=독서토론논제은행}">논제은행</a></sidebar>
+<sidebar class="list-group-item"><a th:href="@{/sheet/request}">개별출제요청</a></sidebar>
 
-    <tbody class="table-group-divider" id="carts">
-    <!-- 장바구니 상품 목록이 동적으로 추가될 영역 -->
-    </tbody>
+<mainSection>
+  <div id="wrap">
+    <div class="row g-0 align-items-center">
+      <div class="col-auto">
+        <h1 class="fs-5 fs-xl-5 mb-5">장바구니</h1>
+      </div>
+    </div>
 
-    <tfoot>
-      <tr>
-        <th id="totalcnt">총 0건</th>
-        <th></th>
-        <th></th>
-        <th id="totalprice">합계 : 0원</th>
-        <th></th>
-      </tr>
-      <tr>
-        <th><button type="button" class="btn btn-secondary btn-deleteselected">선택삭제</button></th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th><button type="button" class="btn btn-secondary btn-empty">장바구니 비우기</button></th>
-      </tr>
-    </tfoot>
-  </table>
-  <div class="text-center">
-    <button type="button" class="btn btn-secondary btn-paying">구매하기</button>
+    <hr class="my-4">
+    <div>
+      <table class="table" id="cartTable">
+        <thead>
+        <tr>
+          <th scope="col" colspan="2"><label><input type="checkbox" id="selectAll">전체 선택</label></th>
+          <th>자료명</th>
+          <th>금액</th>
+          <th>선택</th>
+        </tr>
+        </thead>
+        <tbody class="table-group-divider" id="carts">
+        <!-- 장바구니 상품 목록이 동적으로 추가될 영역 -->
+        </tbody>
+        <!-- CONTENTS !-->
+
+
+        <tfoot>
+        <tr>
+          <th id="totalcnt">총 0건</th>
+          <th></th>
+          <th></th>
+          <th id="totalprice">합계 : 0원</th>
+          <th></th>
+        </tr>
+        <tr>
+          <th class="text-start">
+            <button type="button" class="btn btn-primary btn-deleteselected">선택삭제</button>
+          </th>
+          <th class="text-start">
+            <button type="button" class="btn btn-primary btn-empty">장바구니 비우기</button>
+          </th>
+        </tr>
+        </tfoot>
+      </table>
+      <div class="text-end">
+        <button type="button" class="btn btn-primary btn-paying">구매하기</button>
+      </div>
+    </div>
   </div>
-
-  <!-- JavaScript Bundle with Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-
   <script src="/js/cart.js"></script>
+</mainSection>
 </body>
 </html>

@@ -18,7 +18,7 @@ function showCarts() {
             row.append('<td><img src="/sheet/bookImg/' + sheet.sheetBookimguuid + sheet.sheetBookimgname + '" width="150" height="150"></td>');
             row.append('<td>' + sheet.sheetBooktitle + '</td>');
             row.append('<td>' + sheet.sheetPrice.toLocaleString() + '원</td>');
-            row.append('<td><button type="button" class="btn btn-secondary btn-payingOne" value="' + cart.sheetNo + '">구매</button><button type="button" class="btn btn-secondary btn-delete" data-no="' + cart.sheetNo + '">삭제</button></td>');
+            row.append('<td><button type="button" class="btn btn-primary btn-payingOne" value="' + cart.sheetNo + '">구매</button> <button type="button" class="btn btn-primary btn-delete" data-no="' + cart.sheetNo + '">삭제</button></td>');
             tableBody.append(row);
           }
         } else {
