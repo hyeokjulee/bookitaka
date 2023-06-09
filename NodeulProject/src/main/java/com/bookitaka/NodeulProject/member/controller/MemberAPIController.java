@@ -9,7 +9,6 @@ import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -56,7 +55,8 @@ public class MemberAPIController {
   @ApiOperation(value = "${MemberController.signout}")
   @ApiResponses(value = {//
       @ApiResponse(code = 403, message = "Access denied"), //
-      @ApiResponse(code = 400, message = "Something went wrong")})
+      @ApiResponse(code = 400, message = "Something went wrong"),
+      @ApiResponse(code = 302, message = "redirect to login page")})
   public void logout(
       HttpServletRequest request,
       HttpServletResponse response) throws IOException {
@@ -107,6 +107,25 @@ public class MemberAPIController {
   public ResponseEntity<?> delete(@ApiParam("MemberEmail") @PathVariable String memberEmail) {
     log.info("================================Member : delete");
     memberService.delete(memberEmail);
+    return ResponseEntity.ok().build();
+  }
+
+  // 회원 탈퇴 (회원)
+  @DeleteMapping(value = "/{memberEmail}")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @ApiOperation(value = "${MemberController.delete}", authorizations = { @Authorization(value="apiKey") })
+  @ApiResponses(value = {//
+      @ApiResponse(code = 400, message = "Something went wrong"), //
+      @ApiResponse(code = 403, message = "Access denied"), //
+      @ApiResponse(code = 404, message = "The user doesn't exist"), //
+      @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+  public ResponseEntity<?> withdrawal(@ApiParam("MemberEmail") @PathVariable String memberEmail, HttpServletRequest request) {
+    log.info("================================Member : withdrawal");
+    if (memberEmail.equals(memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN).getMemberEmail())) {
+      memberService.delete(memberEmail);
+    } else {
+      return ResponseEntity.badRequest().build();
+    }
     return ResponseEntity.ok().build();
   }
 
