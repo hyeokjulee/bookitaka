@@ -86,12 +86,35 @@ public class PayprocController {
     }
 
 
-    @PostMapping("/verifyAfter")
-    public ResponseEntity<String> verifyAfter(@RequestBody VeriAfterDto veriAfterDto) {
+    @PostMapping("/paid")
+    @ResponseBody
+    public ResponseEntity<String> verifyAndRequestAfterPay(@RequestBody PayMakeDto payMakeDto, @CookieValue("carts") String carts) {
+
+        VeriAfterDto veriAfterDto = new VeriAfterDto(payMakeDto.getImpId(), Math.toIntExact(payMakeDto.getPaymentPrice()));
+
+        log.info("verifyAfterDto = {}", veriAfterDto);
+        if (!verifyAfter(veriAfterDto)) {
+            // 예외 발생 시
+            return ResponseEntity.badRequest().body("사후 검증 오류");
+        }
+
+        List<Long> sheetNumListInCart = parseCookie(carts);
+
+        log.info("parsed carts = {}", sheetNumListInCart);
+
+        payMakeDto.setSheetNoList(sheetNumListInCart);
+        log.info("payMakeDto", payMakeDto);
+
+        payprocService.makePay(payMakeDto, memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN));
+
+        return ResponseEntity.ok().body("결제 완료");
+    }
+
+
+    public boolean verifyAfter(VeriAfterDto veriAfterDto) {
         try {
             // req의 body에서 imp_uid, merchant_uid 추출
-            String imp_uid = veriAfterDto.getImp_uid();
-            String merchant_uid = veriAfterDto.getMerchant_uid();
+            String imp_uid = veriAfterDto.getImpUid();
 
             // 액세스 토큰(access token) 발급 받기
             String accessToken = getAccessToken();
@@ -111,16 +134,53 @@ public class PayprocController {
 
 
             if (veriAfterDto.getAmount() == price) {
-
-                return ResponseEntity.ok().body("결제 완료");
+                return true;
             }
             else {
-                return ResponseEntity.badRequest().body("결제 정보 불일치");
+                return false;
             }
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            log.error("사후검증 중 문제발생", e);
+            return false;
         }
     }
+
+
+//    @PostMapping("/verifyAfter")
+//    public ResponseEntity<String> verifyAfter(@RequestBody VeriAfterDto veriAfterDto) {
+//        try {
+//            // req의 body에서 imp_uid, merchant_uid 추출
+//            String imp_uid = veriAfterDto.getImp_uid();
+//            String merchant_uid = veriAfterDto.getMerchant_uid();
+//
+//            // 액세스 토큰(access token) 발급 받기
+//            String accessToken = getAccessToken();
+//
+//            log.info("verifyAfter dto = {}", veriAfterDto);
+//            // imp_uid로 포트원 서버에서 결제 정보 조회
+//            String paymentData = getPaymentData(imp_uid, accessToken);
+//
+//            // ObjectMapper 인스턴스 생성
+//            ObjectMapper objectMapper = new ObjectMapper();
+//
+//            // JSON 문자열 파싱
+//            JsonNode jsonNode = objectMapper.readTree(paymentData);
+//
+//            // "amount" 필드 값 price로 가져오기
+//            int price = jsonNode.get("response").get("amount").asInt();
+//
+//
+//            if (veriAfterDto.getAmount() == price) {
+//
+//                return ResponseEntity.ok().body("결제 완료");
+//            }
+//            else {
+//                return ResponseEntity.badRequest().body("결제 정보 불일치");
+//            }
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+//    }
 
     private String getAccessToken() throws JsonProcessingException {
         String url = "https://api.iamport.kr/users/getToken";
@@ -171,25 +231,7 @@ public class PayprocController {
 
 
 
-    @PostMapping("/paid")
-    @ResponseBody
-    public String requestAfterPay(@RequestBody PayMakeDto payMakeDto, @CookieValue("carts") String carts) {
 
-        List<Long> sheetNumListInCart = parseCookie(carts);
-
-        log.info("parsed carts = {}", sheetNumListInCart);
-
-        payMakeDto.setSheetNoList(sheetNumListInCart);
-        log.info("payMakeDto", payMakeDto);
-
-
-        payprocService.makePay(payMakeDto, memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN));
-
-
-
-
-        return "hihi you successed";
-    }
 
     private List<Long> parseCookie(String input) {
         List<Long> numberList = new ArrayList<>();
@@ -208,7 +250,7 @@ public class PayprocController {
 
     @GetMapping("/complete")
     public String payCompletePage() {
-        return "payComplete";
+        return "/payproc/payComplete";
     }
 
 

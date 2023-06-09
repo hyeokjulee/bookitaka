@@ -67,6 +67,7 @@ public class MysheetServiceImpl implements MysheetService{
             sheetForMemberDto.setSheetBooktitle(sheet.getSheetBooktitle());
             sheetForMemberDto.setSheetBookauthor(sheet.getSheetBookauthor());
             sheetForMemberDto.setSheetBookpublisher(sheet.getSheetBookpublisher());
+            sheetForMemberDto.setMysheetEndDate(mysheet.getMysheetEnddate());
             sheetForMemberDto.setSheetBookImgFullName(sheet.getSheetBookimguuid() + sheet.getSheetBookimgname());
 
             if (checkMySheetIsAvailable(mysheet)) {
