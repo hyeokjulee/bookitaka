@@ -14,8 +14,14 @@ public class PayMakeDto {
 
     private Long paymentPrice;
 
+    private String receiptUrl;
+
+    private String payMethod;
+
     private List<Long> sheetNoList;
 
-    private String sheetMeans;
+    private String impId;
+
+    private String mySheetMeans;
 
 }
