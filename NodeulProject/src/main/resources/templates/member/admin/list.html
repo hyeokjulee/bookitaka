@@ -48,7 +48,7 @@
                 event.preventDefault(); // 폼의 기본 동작(페이지 새로고침) 방지
 
                 var email = this.parentNode.previousElementSibling.textContent; // 해당 행의 이메일 값을 가져옴
-                var url = "/member/" + email; // 이메일을 주소에 추가
+                var url = "/member/admin/" + email; // 이메일을 주소에 추가
 
                 fetch(url, {
                     method: 'DELETE'

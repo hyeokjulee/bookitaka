@@ -32,7 +32,7 @@ public class MemberController {
     public String login(HttpServletRequest request) {
         log.info("=====================MemberController - login");
         if (memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN) == null) {
-            return "login/login";
+            return "member/login/login";
         } else {
             return "index";
         }
@@ -43,7 +43,7 @@ public class MemberController {
         log.info("=====================MemberController - signup");
         model.addAttribute("member", new MemberDataDTO());
         if (memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN) == null) {
-            return "login/signup";
+            return "member/login/signup";
         } else {
             return "index";
         }
@@ -53,7 +53,7 @@ public class MemberController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
     public String test() {
         log.info("=====================MemberController - test");
-        return "login/authPage";
+        return "member/authPage";
     }
 
     @GetMapping("/edit")
@@ -62,7 +62,7 @@ public class MemberController {
         log.info("=====================MemberController - edit");
         MemberResponseDTO userResponseDTO = modelMapper.map(memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN), MemberResponseDTO.class);
         model.addAttribute("member", userResponseDTO);
-        return "login/edit";
+        return "member/edit";
     }
     @GetMapping("/editAdmin/{memberEmail}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -71,7 +71,7 @@ public class MemberController {
         Member memberByEmail = memberService.search(memberEmail);
         MemberResponseDTO userResponseDTO = modelMapper.map(memberByEmail, MemberResponseDTO.class);
         model.addAttribute("member", userResponseDTO);
-        return "login/editAdmin";
+        return "member/admin/editAdmin";
     }
     @GetMapping("/list")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -82,13 +82,13 @@ public class MemberController {
                 .filter(member -> member.getMemberRole().equals("ROLE_MEMBER"))
                 .collect(Collectors.toList());
         model.addAttribute("members", filteredMembers);
-        return "login/list";
+        return "member/admin/list";
     }
 
     @GetMapping("/findEmail")
     public String findId(HttpServletRequest request) {
         if (memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN) == null) {
-            return "login/findEmail";
+            return "member/login/findEmail";
         } else {
             return "index";
         }
@@ -97,7 +97,7 @@ public class MemberController {
     @GetMapping("/findPw")
     public String findPw(HttpServletRequest request) {
         if (memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN) == null) {
-            return "login/findPw";
+            return "member/login/findPw";
         } else {
             return "index";
         }
@@ -106,7 +106,7 @@ public class MemberController {
     @GetMapping("/changePw")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
     public String changePw() {
-        return "login/changePw";
+        return "member/changePw";
     }
 
     // 회원 상세 보기 (관리자)
@@ -116,7 +116,7 @@ public class MemberController {
         log.info("================================Members : detailAdmin");
         model.addAttribute("member", memberService.search(memberEmail));
         model.addAttribute("role", "admin");
-        return "login/detail";
+        return "member/detail";
     }
 
     // 내 정보 보기 (회원)
@@ -126,7 +126,7 @@ public class MemberController {
         log.info("================================Members : detail");
         model.addAttribute("member",memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN));
         model.addAttribute("role", "member");
-        return "login/detail";
+        return "member/detail";
     }
 
 }

@@ -128,7 +128,7 @@
             memberGender: memberGender,
             memberBirthday: memberBirthday
         });
-        fetch("/member/editAdmin/" + /*[[${member.memberEmail}]]*/ '', {
+        fetch("/member/admin/" + /*[[${member.memberEmail}]]*/ '', {
             method: 'PUT',
             body: formData
         })

@@ -221,7 +221,7 @@ class MemberAPIControllerTest {
         Cookie rTokenCookie = new Cookie(Token.REFRESH_TOKEN, testToken);
         aTokenCookie.setHttpOnly(true);
         rTokenCookie.setHttpOnly(true);
-        MockHttpServletRequestBuilder requestBuilder = get("/member/refresh/token")
+        MockHttpServletRequestBuilder requestBuilder = get("/member/refresh")
                 .cookie(aTokenCookie)
                 .cookie(rTokenCookie);
         //when

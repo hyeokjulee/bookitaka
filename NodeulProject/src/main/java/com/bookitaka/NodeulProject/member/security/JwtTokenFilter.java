@@ -30,7 +30,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     String aToken = jwtTokenProvider.resolveToken(request.getCookies(), Token.ACCESS_TOKEN);
     String rToken = jwtTokenProvider.resolveToken(request.getCookies(), Token.REFRESH_TOKEN);
     String signoutUri = "/member/signout";
-    String refreshUri = "/member/refresh/token";
+    String refreshUri = "/member/refresh";
 
     // 둘 다 있는 경우
     if (aToken != null && rToken != null) {

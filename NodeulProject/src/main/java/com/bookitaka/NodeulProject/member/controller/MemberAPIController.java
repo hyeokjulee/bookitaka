@@ -81,7 +81,7 @@ public class MemberAPIController {
 
   // 이미 존재하는 아이디 확인 (회원가입 시)
   @PostMapping("/checkid/{memberEmail}")
-  @ApiOperation(value = "${MemberController.signup}")
+  @ApiOperation(value = "${MemberController.signupCheckDuplicateId}")
   @ApiResponses(value = {//
           @ApiResponse(code = 400, message = "Something went wrong"), //
           @ApiResponse(code = 422, message = "Member Email is already in use")})
@@ -96,14 +96,13 @@ public class MemberAPIController {
   }
 
   // 회원 삭제 (관리자)
-  @DeleteMapping(value = "/{memberEmail}")
+  @DeleteMapping(value = "/admin/{memberEmail}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @ApiOperation(value = "${MemberController.delete}", authorizations = { @Authorization(value="apiKey") })
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 403, message = "Access denied"), //
-      @ApiResponse(code = 404, message = "The user doesn't exist"), //
-      @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+      @ApiResponse(code = 404, message = "The user doesn't exist")})
   public ResponseEntity<?> delete(@ApiParam("MemberEmail") @PathVariable String memberEmail) {
     log.info("================================Member : delete");
     memberService.delete(memberEmail);
@@ -113,12 +112,11 @@ public class MemberAPIController {
   // 회원 탈퇴 (회원)
   @DeleteMapping(value = "/{memberEmail}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
-  @ApiOperation(value = "${MemberController.delete}", authorizations = { @Authorization(value="apiKey") })
+  @ApiOperation(value = "${MemberController.withdrawal}", authorizations = { @Authorization(value="apiKey") })
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 403, message = "Access denied"), //
-      @ApiResponse(code = 404, message = "The user doesn't exist"), //
-      @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+      @ApiResponse(code = 404, message = "The user doesn't exist")})
   public ResponseEntity<?> withdrawal(@ApiParam("MemberEmail") @PathVariable String memberEmail, HttpServletRequest request) {
     log.info("================================Member : withdrawal");
     if (memberEmail.equals(memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN).getMemberEmail())) {
@@ -133,10 +131,10 @@ public class MemberAPIController {
   @PutMapping("/{memberEmail}")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
   @ApiResponses(value = {//
-          @ApiResponse(code = 400, message = "Something went wrong"), //
+          @ApiResponse(code = 400, message = "Something went wrong or permission mismatch"), //
           @ApiResponse(code = 403, message = "Access denied"), //
-          @ApiResponse(code = 404, message = "The user doesn't exist"), //
-          @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+          @ApiResponse(code = 404, message = "The user doesn't exist"),
+          @ApiResponse(code = 500, message = "Member edit failed")})
   public ResponseEntity<?> edit(@Validated @ModelAttribute MemberUpdateDTO memberUpdateDTO,
                                 @PathVariable String memberEmail,
                                 HttpServletRequest request) {
@@ -159,13 +157,13 @@ public class MemberAPIController {
   }
 
   // 회원 정보 수정 (관리자)
-  @PutMapping("/editAdmin/{memberEmail}")
+  @PutMapping("/admin/{memberEmail}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 404, message = "The user doesn't exist"), //
-      @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+      @ApiResponse(code = 500, message = "Member edit failed")})
   public ResponseEntity<?> editAdmin(@Validated @ModelAttribute MemberUpdateDTO memberUpdateDTO,
                                      @PathVariable String memberEmail) {
     log.info("================================ Member : editAdmin");
@@ -186,6 +184,7 @@ public class MemberAPIController {
   public ResponseEntity<?> modifyPw(@Validated @ModelAttribute MemberChangePwDTO memberChangePwDTO,
                                          HttpServletRequest request,
                                          BindingResult bindingResult) {
+    log.info("================================ Member : modifyPw");
     Member member = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
     int result = memberService.modifyPassword(member, memberChangePwDTO);
 
@@ -213,65 +212,59 @@ public class MemberAPIController {
   // 이메일 찾기
   @PostMapping("/findEmail")
   public ResponseEntity<?> findMemberEmail(@Validated @ModelAttribute MemberFindEmailDTO memberFindEmailDTO, BindingResult bindingResult) {
-    log.info("========================================================= findEmail");
+    log.info("================================ Member : findMemberEmail");
     List<String> members = memberService.getMemberEmail(memberFindEmailDTO);
-    log.info("========================================================= members : {}",members);
     if(bindingResult.hasErrors()) {
       return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
     }
     if (members == null) {
-      log.info("membersSize");
       bindingResult.rejectValue("memberBirthday", "getMemberEmail.notFoundMember", "일치하는 회원이 없습니다");
       log.info("{}",bindingResult.getAllErrors());
 
       return ResponseEntity.unprocessableEntity().body(bindingResult.getAllErrors());
     }
-    log.info("OKOKOKOKOKOK");
     return ResponseEntity.ok().body(members);
   }
 
   // 비밀번호 찾기
   @PostMapping("/findPw")
   public ResponseEntity<?> findMemberPw(@Validated @ModelAttribute MemberFindPwDTO memberFindPwDTO, BindingResult bindingResult) {
-    log.info("=================================================== findPw");
+    log.info("================================ Member : findMemberPw");
     if(bindingResult.hasErrors()) {
       return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
     }
     boolean result = memberService.getPwByEmailAndName(memberFindPwDTO.getMemberEmail(), memberFindPwDTO.getMemberName());
     if (!result) {
       bindingResult.rejectValue("memberName","getMemberPassword.notFoundMember","일치하는 회원이 없습니다");
-      log.info("==================================== 회원X");
       return ResponseEntity.unprocessableEntity().body(bindingResult.getAllErrors());
     }
     return ResponseEntity.ok().build();
   }
 
-//  // 회원 상세 보기 (관리자)
-//  @GetMapping(value = "/{memberEmail}")
-//  @PreAuthorize("hasRole('ROLE_ADMIN')")
-//  @ApiOperation(value = "${MemberController.search}", response = MemberResponseDTO.class, authorizations = { @Authorization(value="apiKey") })
-//  @ApiResponses(value = {//
-//      @ApiResponse(code = 400, message = "Something went wrong"), //
-//      @ApiResponse(code = 403, message = "Access denied"), //
-//      @ApiResponse(code = 404, message = "The user doesn't exist"), //
-//      @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-//  public MemberResponseDTO search(@ApiParam("MemberEmail") @PathVariable String memberEmail) {
-//    log.info("================================Member : search");
-//    return modelMapper.map(memberService.search(memberEmail), MemberResponseDTO.class);
-//  }
-//
-//  // 내 정보 보기 (회원)
-//  @GetMapping(value = "/me")
-//  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
-//  @ApiOperation(value = "${MemberController.me}", response = MemberResponseDTO.class, authorizations = { @Authorization(value="apiKey") })
-//  @ApiResponses(value = {//
-//      @ApiResponse(code = 400, message = "Something went wrong"), //
-//      @ApiResponse(code = 403, message = "Access denied"), //
-//      @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-//  public MemberResponseDTO whoami(HttpServletRequest request) {
-//    log.info("================================Member : whoami");
-//    return modelMapper.map(memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN), MemberResponseDTO.class);
-//  }
+  // 회원 상세 보기 (관리자)
+  @GetMapping(value = "/{memberEmail}")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @ApiOperation(value = "${MemberController.search}", response = MemberResponseDTO.class, authorizations = { @Authorization(value="apiKey") })
+  @ApiResponses(value = {//
+      @ApiResponse(code = 400, message = "Something went wrong"), //
+      @ApiResponse(code = 403, message = "Access denied"), //
+      @ApiResponse(code = 404, message = "The user doesn't exist")})
+  public MemberResponseDTO search(@ApiParam("MemberEmail") @PathVariable String memberEmail) {
+    log.info("================================Member : search");
+    return modelMapper.map(memberService.search(memberEmail), MemberResponseDTO.class);
+  }
+
+  // 내 정보 보기 (회원)
+  @GetMapping(value = "/me")
+  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
+  @ApiOperation(value = "${MemberController.me}", response = MemberResponseDTO.class, authorizations = { @Authorization(value="apiKey") })
+  @ApiResponses(value = {//
+      @ApiResponse(code = 400, message = "Something went wrong"), //
+      @ApiResponse(code = 403, message = "Access denied")})
+  public MemberResponseDTO whoami(HttpServletRequest request) {
+    log.info("================================Member : whoami");
+    return modelMapper.map(memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN), MemberResponseDTO.class);
+  }
 
   // 토큰 만료 여부 확인
   @GetMapping(value = "/token")
@@ -289,7 +282,7 @@ public class MemberAPIController {
   }
 
   // 토큰 재발급 (회원)
-  @GetMapping("/refresh/token")
+  @GetMapping("/refresh")
   public ResponseEntity<String> refresh(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     log.info("================================Member : refresh");
     Member member = memberService.whoami(request.getCookies(), Token.REFRESH_TOKEN);
