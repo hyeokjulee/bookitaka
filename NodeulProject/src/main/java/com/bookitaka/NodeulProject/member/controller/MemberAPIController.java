@@ -254,5 +254,4 @@ public class MemberAPIController {
     cookie.setPath("/"); // 쿠키의 유효 경로 설정 (루트 경로로 설정하면 모든 요청에서 사용 가능)
     response.addCookie(cookie);
   }
-
 }
