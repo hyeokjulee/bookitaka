@@ -1,205 +1,153 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+<html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<style>
-    .container {
-        max-width: 560px;
-    }
-    .errorMsg {
-        color: red;
-    }
-
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0,0,0,0.4);
-    }
-    .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%;
-    }
-</style>
-</head>
-<body>
 
 
-<div class="container">
+<menuTitle>알림마당</menuTitle>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?ageGroup=유아용}" style="all: unset;">연령별</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?genre=그림책}" style="all: unset;">장르별</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?genre=독서토론논제은행}" style="all: unset;">논제은행</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/request}" style="all: unset;">개별출제요청</a></sidebar>
 
-    <div class="py-5 text-center">
-        <h2>활동지 요청 폼 / sheet Request.html</h2>
+<mainSection>
+    <div id="wrap">
+        <div class="row g-0 align-items-center">
+            <div class="col-auto">
+                <h1 class="fs-5 fs-xl-5 mb-5">개별출제요청</h1>
+            </div>
+        </div>
+        <form th:action="@{/sheet/request}" method="post">
+            <div class="mb-4">
+                <label class="form-label">이메일</label>
+                <input type="text" th:value="${currentMember.memberEmail}" id="requestEmail" name="requestEmail" class="form-control" placeholder="이메일을 입력하세요" >
+            </div>
+            <div class="mb-4">
+                <label class="form-label">이름</label>
+                <input type="text" th:value="${currentMember.memberName}" id="requestName" name="requestName" class="form-control" placeholder="이름을 입력하세요">
+            </div>
+            <div class="mb-4">
+                <label class="form-label">연락처</label>
+                <input type="text" th:value="${currentMember.memberPhone}" id="requestPhone" name="requestPhone" class="form-control" placeholder="연락처를 입력하세요">
+            </div>
+            <hr class="my-4">
+            <div class="mb-4">
+                <label class="form-label">도서 검색하기</label>
+                <button type="button" class="btn btn-primary" onclick="openModal()">도서검색</button>
+            </div>
+            <hr class="my-4">
+
+            <!--    도서 검색 모달 창  -->
+            <div id="bookSearchModal" class="modal">
+                <div class="modal-content">
+                    <h2>도서 검색</h2>
+                    제목 <input type="text" id="keyword" class="form-control"><br>
+                    작가 <input type="text" id="authorSearch" class="form-control"><br>
+                    <button type="button" class="btn btn-primary" onclick="search()">검색</button><br><br>
+                    <div id="searchResult"></div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">책 제목</label>
+                <input type="text" id="sheetBooktitle" name="requestBooktitle" class="form-control" placeholder="책 제목을 입력하세요" readonly>
+            </div>
+            <div class="mb-4">
+                <label class="form-label">작가</label>
+                <input type="text" id="sheetBookauthor" name="requestBookauthor" class="form-control" placeholder="작가를 입력하세요" readonly>
+            </div>
+            <div class="mb-4">
+                <label class="form-label">출판사</label>
+                <input type="text" id="sheetBookpublisher" name="requestBookpublisher" class="form-control" placeholder="출판사를 입력하세요" readonly>
+            </div>
+            <div class="mb-4">
+                <label class="form-label">ISBN</label>
+                <input type="text" id="sheetBookisbn" name="requestBookisbn" class="form-control" placeholder="isbn을 입력하세요" readonly>
+            </div>
+            <hr class="my-4">
+            <div class="mb-4">
+                <label class="form-label">요구사항</label>
+                <textarea type="text" id="sheetContent" name="requestContent" class="form-control" rows="3" placeholder="설명을 입력하세요"></textarea>
+            </div>
+            <div class="mb-4">
+                <label class="form-label">희망일</label>
+                <input type="date" id="requestHopedate" name="requestHopedate" class="form-control" placeholder="희망하는 날짜를 입력하세요">
+            </div>
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary" type="submit">요청하기</button>
+                <button class="btn btn-primary" type="button" onclick="window.history.back()">취소</button>
+            </div>
+        </form>
     </div>
 
-    <form th:action="@{/sheet/request}" method="post">
+    <script>
+        var modal = document.getElementById("bookSearchModal");
 
-        <div>
-            <label for="requestEmail">이메일</label>
-            <input type="text" th:value="${currentMember.memberEmail}" id="requestEmail" name="requestEmail" class="form-control" placeholder="이메일을 입력하세요">
-<!--            <input type="text" id="requestEmail" class="form-control" placeholder="이메일을 입력하세요">-->
-        </div>
-
-        <div>
-            <label for="requestName">이름</label>
-            <input type="text" th:value="${currentMember.memberName}" id="requestName" name="requestName" class="form-control" placeholder="이름을 입력하세요">
-<!--            <input type="text" id="requestName" class="form-control" placeholder="이름을 입력하세요">-->
-        </div>
-
-        <div>
-            <label for="requestPhone">연락처</label>
-            <input type="text" th:value="${currentMember.memberPhone}" id="requestPhone" name="requestPhone" class="form-control" placeholder="연락처를 입력하세요">
-<!--            <input type="text"  id="requestPhone" class="form-control" placeholder="연락처를 입력하세요">-->
-        </div>
-
-        <div>
-            <button type="button" onclick="openModal()">도서 검색</button>
-        </div>
-        <!--    도서 검색 모달 창  -->
-        <div id="bookSearchModal" class="modal">
-            <div class="modal-content">
-                <h2>도서 검색</h2>
-                제목 <input type="text" id="keyword"><br>
-                작가 <input type="text" id="authorSearch"><br>
-                <button type="button" onclick="search()">검색</button><br><br>
-                <div id="searchResult"></div>
-            </div>
-        </div>
-
-        <div>
-            <label for="sheetBooktitle">책 제목</label>
-<!--            <span class="errorMsg" th:errors="*{sheetBooktitle}">책 제목 오류</span>-->
-            <input type="text" id="sheetBooktitle" name="requestBooktitle" class="form-control" placeholder="책 제목을 입력하세요" readonly>
-        </div>
-
-        <div>
-            <label for="sheetBookauthor">작가</label>
-<!--            <span class="errorMsg" th:errors="*{sheetBookauthor}">작가 오류</span>-->
-            <input type="text" id="sheetBookauthor" name="requestBookauthor" class="form-control" placeholder="작가를 입력하세요" readonly>
-        </div>
-
-        <div>
-            <label for="sheetBookpublisher">출판사</label>
-<!--            <span class="errorMsg" th:errors="*{sheetBookpublisher}">출판사 오류</span>-->
-            <input type="text" id="sheetBookpublisher" name="requestBookpublisher" class="form-control" placeholder="출판사를 입력하세요" readonly>
-        </div>
-        <div>
-            <label for="sheetBookisbn">ISBN</label>
-            <input type="text" id="sheetBookisbn" name="requestBookisbn" class="form-control" placeholder="isbn을 입력하세요" readonly>
-        </div>
-
-        <div>
-            <label for="sheetContent">요구사항</label>
-            <textarea type="text" id="sheetContent" name="requestContent" class="form-control" placeholder="설명을 입력하세요"></textarea>
-        </div>
-
-        <div>
-            <label for="requestHopedate">희망일</label>
-            <input type="date" id="requestHopedate" name="requestHopedate" class="form-control" placeholder="희망하는 날짜를 입력하세요">
-        </div>
-
-        <hr class="my-4">
-
-
-        <hr class="my-4">
-
-        <div class="row">
-            <div class="col">
-                <button class="w-100 btn btn-primary btn-lg" type="submit">요청하기</button>
-            </div>
-            <div class="col">
-                <button class="w-100 btn btn-secondary btn-lg"
-                        onclick="window.history.back()"
-                        type="button">취소</button>
-
-            </div>
-        </div>
-
-    </form>
-
-</div> <!-- /container -->
-
-<script>
-    var modal = document.getElementById("bookSearchModal");
-
-    function openModal() {
-        modal.style.display = "block";
-    }
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
+        function openModal() {
+            modal.style.display = "block";
         }
-    }
 
-    function search(pageNum) {
-        var keyword = $("#keyword").val();
-        var authorSearch = $("#authorSearch").val();
-        $.ajax({
-            url: "/sheet/request/booksearch",
-            type: "GET",
-            data: {
-                keyword: keyword,
-                authorSearch: authorSearch,
-                pageNum: pageNum,
-            },
-            success: function(data) {
-                var bookList = data.bookList;
-                var total = data.total;
-                var totalPageNum = parseInt(data.totalPageNum);
-                var currentPageNum = parseInt(data.currentPageNum);
-
-                var result = "";
-                result += `<div><p>검색 결과 : ${total}개</p></div>`;
-                for (var i = 0; i < bookList.length; i++) {
-                    result += `<div class='eachBook' onclick='getBookValue(this)'>`;
-                    result += `<img class='sheetBookimgname' src='${bookList[i].sheetBookimgname}'>`;
-                    result += `<p class='sheetBooktitle'>${bookList[i].sheetBooktitle}</p>`;
-                    result += `<p class='sheetBookauthor'>${bookList[i].sheetBookauthor}</p>`;
-                    result += `<p class='sheetBookpublisher'>${bookList[i].sheetBookpublisher}</p>`;
-                    result += `<p class='sheetBookisbn'>${bookList[i].sheetBookisbn}</p>`;
-                    result += `</div><hr>`;
-                }
-                result += `<div>Page: ${currentPageNum} / ${totalPageNum}`;
-                if (currentPageNum > 1) {
-                    result += `<button type="button" onclick="search(${currentPageNum - 1})">이전페이지</button>`;
-                }
-                if (currentPageNum < totalPageNum) {
-                    result += `<button type="button" onclick="search(${currentPageNum + 1})">다음페이지</button>`;
-                }
-                result += `</div>`;
-                $("#searchResult").html(result);
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
             }
-        });
-    }
+        }
 
-    function getBookValue(element) {
-        var title = $(element).children(".sheetBooktitle").text();
-        var author = $(element).children(".sheetBookauthor").text();
-        var pub = $(element).children(".sheetBookpublisher").text();
-        var isbn = $(element).children(".sheetBookisbn").text();
-        $("#sheetBooktitle").val(title);
-        $("#sheetBookauthor").val(author);
-        $("#sheetBookpublisher").val(pub);
-        $("#sheetBookisbn").val(isbn);
+        function search(pageNum) {
+            var keyword = $("#keyword").val();
+            var authorSearch = $("#authorSearch").val();
+            $.ajax({
+                url: "/sheet/request/booksearch",
+                type: "GET",
+                data: {
+                    keyword: keyword,
+                    authorSearch: authorSearch,
+                    pageNum: pageNum,
+                },
+                success: function(data) {
+                    var bookList = data.bookList;
+                    var total = data.total;
+                    var totalPageNum = parseInt(data.totalPageNum);
+                    var currentPageNum = parseInt(data.currentPageNum);
 
-        $("#bookSearchModal").css("display", "none");
-    }
+                    var result = "";
+                    result += `<div><p>검색 결과 : ${total}개</p></div>`;
+                    for (var i = 0; i < bookList.length; i++) {
+                        result += `<div class='eachBook' onclick='getBookValue(this)'>`;
+                        result += `<img class='sheetBookimgname' src='${bookList[i].sheetBookimgname}'>`;
+                        result += `<p class='sheetBooktitle'>${bookList[i].sheetBooktitle}</p>`;
+                        result += `<p class='sheetBookauthor'>${bookList[i].sheetBookauthor}</p>`;
+                        result += `<p class='sheetBookpublisher'>${bookList[i].sheetBookpublisher}</p>`;
+                        result += `<p class='sheetBookisbn'>${bookList[i].sheetBookisbn}</p>`;
+                        result += `</div><hr>`;
+                    }
+                    result += `<div>Page: ${currentPageNum} / ${totalPageNum}`;
+                    if (currentPageNum > 1) {
+                        result += `<button type="button" onclick="search(${currentPageNum - 1})">이전페이지</button>`;
+                    }
+                    if (currentPageNum < totalPageNum) {
+                        result += `<button type="button" onclick="search(${currentPageNum + 1})">다음페이지</button>`;
+                    }
+                    result += `</div>`;
+                    $("#searchResult").html(result);
+                }
+            });
+        }
 
-</script>
+        function getBookValue(element) {
+            var title = $(element).children(".sheetBooktitle").text();
+            var author = $(element).children(".sheetBookauthor").text();
+            var pub = $(element).children(".sheetBookpublisher").text();
+            var isbn = $(element).children(".sheetBookisbn").text();
+            $("#sheetBooktitle").val(title);
+            $("#sheetBookauthor").val(author);
+            $("#sheetBookpublisher").val(pub);
+            $("#sheetBookisbn").val(isbn);
 
+            $("#bookSearchModal").css("display", "none");
+        }
 
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    </script>
+</mainSection>
 </body>
 </html>
