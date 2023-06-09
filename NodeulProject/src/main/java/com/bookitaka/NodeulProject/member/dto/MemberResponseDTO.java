@@ -28,6 +28,4 @@ public class MemberResponseDTO {
   @NotBlank(message = "생년월일을 입력해주세요.")
   @Pattern(regexp = "^\\d{8}$", message = "생년월일은 8자리 숫자로 입력해주세요 (예: 19910101)")
   private Date memberBirthday;
-  @ApiModelProperty(position = 5)
-  private String memberRole;
 }

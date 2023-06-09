@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
@@ -37,9 +39,10 @@ public class GlobalExceptionHandlerController {
   }
 
   @ExceptionHandler(CustomException.class)
-  public void handleCustomException(HttpServletResponse res, CustomException ex) throws IOException {
+  public void handleCustomException(HttpServletRequest request, HttpServletResponse response, CustomException ex) throws IOException, ServletException {
     log.info("================handleCustomException - CustomException");
-    res.sendError(ex.getHttpStatus().value(), ex.getMessage());
+    log.info("================handleCustomException - getMessage : {}", ex.getMessage());
+    response.sendError(ex.getHttpStatus().value(), ex.getMessage());
   }
 
   @ExceptionHandler(AccessDeniedException.class)
@@ -71,7 +74,7 @@ public class GlobalExceptionHandlerController {
   @ExceptionHandler(Exception.class)
   public void handleException(HttpServletResponse res, Exception ex) throws IOException {
     log.info("================handleException - Exception");
-    log.info("================Exception : {}", (Object) ex.getStackTrace());
+    log.info("================Exception : getMessage : {}", ex.getMessage());
     res.sendError(HttpStatus.BAD_REQUEST.value(), "Something went wrong");
   }
 

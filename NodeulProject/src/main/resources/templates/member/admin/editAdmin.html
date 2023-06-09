@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <title>Edit</title>
+</head>
+<body>
+<h1>Edit</h1>
+<form th:object="${member}">
+    <div>
+        <label>이메일:</label>
+        <span th:text="*{memberEmail}"></span>
+    </div>
+    <div>
+        <label>이름:</label>
+        <span id="memberNameForm" style="display: none">
+            <input type="text" th:field="*{memberName}"/>
+            <div class="errorDiv" error="memberName" style="color: red"></div>
+        </span>
+        <span id="memberNameText">
+            <span th:text="*{memberName}"></span>
+            <button type="button" id="editNameBtn">이름 수정</button>
+        </span>
+    </div>
+    <div>
+        <label>전화번호:</label>
+        <span id="memberPhoneForm" style="display: none">
+            <input type="hidden" th:field="*{memberPhone}"/>
+            <select id="memberPhoneSelect">
+                <option value="010" selected>010</option>
+                <option value="011">011</option>
+                <option value="016">016</option>
+                <option value="02">02</option>
+                <option value="031">031</option>
+                <option value="032">032</option>
+                <option value="">직접 입력</option>
+            </select>
+            <input type="text" id="memberPhoneF" value="010" readonly/>
+            <span> - </span>
+            <input type="text" id="memberPhoneC" maxlength="4"/>
+            <span> - </span>
+            <input type="text" id="memberPhoneR" maxlength="4"/>
+            <div class="errorDiv" error="memberPhone" style="color: red"></div>
+        </span>
+        <span id="memberPhoneText">
+            <span th:text="*{memberPhone}"></span>
+            <button type="button" id="editPhoneBtn">전화번호 수정</button>
+        </span>
+    </div>
+    <div>
+        <label>성별:</label>
+        <span id="memberGenderForm" style="display: none">
+            <input type="hidden" th:field="*{memberGender}"/>
+            선택 안함 <input class="radio-gender" type="radio" name="memberGender" id="memberGenderN" value=""/>
+            남성 <input class="radio-gender" type="radio" name="memberGender" id="memberGenderM" value="남성"/>
+            여성 <input class="radio-gender" type="radio" name="memberGender" id="memberGenderF" value="여성"/>
+            <div class="errorDiv" error="memberGender" style="color: red"></div>
+        </span>
+        <span id="memberGenderText">
+            <span th:text="*{memberGender}"></span>
+            <button type="button" id="editGenderBtn">성별 수정</button>
+        </span>
+    </div>
+    <div>
+        <label>생년월일:</label>
+         <span id="memberBirthdayForm" style="display: none">
+            <input type="date" id="memberBirthday" name="memberBirthday" th:value="${#dates.format(member.memberBirthday, 'yyyy-MM-dd')}"/>
+            <div class="errorDiv" error="memberName" style="color: red"></div>
+         </span>
+        <span id="memberBirthdayText">
+            <span th:text="${#dates.format(member.memberBirthday, 'yyyy-MM-dd')}"></span>
+            <button type="button" id="editBirthdayBtn">생년월일 수정</button>
+        </span>
+    </div>
+    <div>
+        <button type="button" id="editBtn">수정</button>
+    </div>
+</form>
+<script th:inline="javascript">
+
+    parseModelAndInsertForm();
+    function parseModelAndInsertForm() {
+        // 모델의 전화번호 파싱해 폼에 삽입
+        let memberPhone = document.getElementById("memberPhone").value;
+        let memberPhoneSplit = memberPhone.split("-");
+        document.getElementById("memberPhoneF").value = memberPhoneSplit[0];
+        document.getElementById("memberPhoneC").value = memberPhoneSplit[1];
+        document.getElementById("memberPhoneR").value = memberPhoneSplit[2];
+
+        // 모델의 성별 파싱해 폼 선택 처리
+        let memberGender = document.getElementById("memberGender").value;
+        switch (memberGender) {
+            case "남성":
+                document.getElementById("memberGenderM").checked = true;
+                break
+            case "여성":
+                document.getElementById("memberGenderF").checked = true;
+                break
+            case "":
+                document.getElementById("memberGenderN").checked = true;
+                break
+        }
+    }
+
+    // 수정 버튼 이벤트 처리
+    document.getElementById("editBtn").addEventListener("click", function(event) {
+
+        let memberName = document.getElementById("memberName").value;
+        let memberBirthday = document.getElementById("memberBirthday").value;
+        let memberGender = "";
+        // 선택된 성별 찾아 값 넣기
+        for (const gender of document.querySelectorAll(`[name="memberGender"]`)) {
+            if (gender.checked) {
+                console.log(gender)
+                memberGender = gender.value;
+                break
+            }
+        }
+        let memberPhone = document.getElementById("memberPhoneF").value +
+            '-' + document.getElementById("memberPhoneC").value +
+            '-' + document.getElementById("memberPhoneR").value;
+        // 전화번호 입력이 없다면 빈문자열 처리
+        if (/^\d{2}--$|^\d{3}--$/.test(memberPhone)) {
+            memberPhone = "";
+        }
+        let formData = new URLSearchParams({
+            memberName: memberName,
+            memberPhone: memberPhone,
+            memberGender: memberGender,
+            memberBirthday: memberBirthday
+        });
+        fetch("/member/admin/" + /*[[${member.memberEmail}]]*/ '', {
+            method: 'PUT',
+            body: formData
+        })
+            .then((response) => {
+                if (response.ok) {
+                    alert("수정 완료")
+                    // 성공적인 응답 처리
+                    window.location.href="/members/list";
+                } else if (response.status === 400) {
+                    response.json().then(data => {
+                        // 에러 메시지 초기화
+                        for (let errorDiv of document.querySelectorAll(".errorDiv")){
+                            errorDiv.innerText = "";
+                        }
+                        // 응답 데이터를 파싱하여 에러 메시지 표시
+                        for (const error of data) {
+                            const inputField = document.querySelector(`[name="${error.field}"]`);
+                            const errorMessage = error.defaultMessage;
+
+                            // 해당 입력 필드 아래에 에러 메시지 표시
+                            const errorElement = document.querySelector(`[error="${error.field}"]`);
+                            errorElement.innerText = errorMessage;
+                            // inputField.parentNode.appendChild(errorElement);
+                        }
+                    });
+                } else {
+                    // 기타 상태 코드에 대한 처리
+                    alert("수정 실패")
+                    window.location.href="/members/list";
+                }
+            })
+    });
+
+
+    // 전화번호 앞자리 선택 이벤트 처리
+    document.getElementById("memberPhoneSelect").addEventListener("change", function(event) {
+        selectChangeEvent("memberPhoneSelect", "memberPhoneF");
+    });
+
+    // select 관련 폼 변경 처리
+    function selectChangeEvent(selectName, inputFormId) {
+        let selected = document.getElementById(selectName).value;
+        let memberEmailR = document.getElementById(inputFormId);
+        if (selected === '') {
+            memberEmailR.removeAttribute("readonly");
+            memberEmailR.value = "";
+            memberEmailR.focus();
+        } else {
+            memberEmailR.value = selected;
+            memberEmailR.setAttribute("readonly", "readonly");
+            if (selectName === "memberPhoneSelect") {
+                document.getElementById("memberPhoneC").focus();
+            }
+        }
+    }
+
+    // 전화번호 입력 폼 자동 이동 처리
+    document.getElementById("memberPhoneC").addEventListener("keyup", function(event) {
+        if (document.getElementById("memberPhoneC").value.length > 3) {
+            document.getElementById("memberPhoneR").focus();
+        }
+    });
+    document.getElementById("memberPhoneR").addEventListener("keyup", function(event) {
+        if (document.getElementById("memberPhoneR").value.length > 3) {
+            document.getElementById("memberPhoneR").blur();
+        }
+    });
+
+    // 수정 버튼 이벤트 처리
+    document.getElementById("editNameBtn").addEventListener("click", function(event) {
+        document.getElementById("memberNameForm").style.display = "inline";
+        document.getElementById("memberNameText").style.display = "none";
+    });
+    document.getElementById("editPhoneBtn").addEventListener("click", function(event) {
+        document.getElementById("memberPhoneForm").style.display = "inline";
+        document.getElementById("memberPhoneText").style.display = "none";
+    });
+    document.getElementById("editGenderBtn").addEventListener("click", function(event) {
+        document.getElementById("memberGenderForm").style.display = "inline";
+        document.getElementById("memberGenderText").style.display = "none";
+    });
+    document.getElementById("editBirthdayBtn").addEventListener("click", function(event) {
+        document.getElementById("memberBirthdayForm").style.display = "inline";
+        document.getElementById("memberBirthdayText").style.display = "none";
+    });
+</script>
+</body>
+</html>
