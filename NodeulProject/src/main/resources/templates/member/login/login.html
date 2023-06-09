@@ -1,87 +1,101 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
-<body>
-<h2>Login</h2>
-<form>
-    <div>
-        <label for="memberEmail">Email:</label>
-        <input type="text" id="memberEmail" name="memberEmail" required/>
-    </div>
-    <div>
-        <label for="memberPassword">Password:</label>
-        <input type="password" id="memberPassword" name="memberPassword" required/>
-    </div>
-    <div>
-        <button type="button" id="loginBtn">Login</button>
-    </div>
-    <hr>
-    <div>
-        <button type="button" id="checkSignBtn">토큰 확인</button>
-        <button type="button" id="removeTokenBtn">토큰 제거 (로그아웃)</button>
-        <button type="button" id="testTokenBtn">토큰 인가 확인 페이지 이동</button>
-    </div>
-    <hr>
-    <div id="tokenDiv"></div>
-    <div id="statusDiv"></div>
-</form>
-<script>
-    window.onload = function() {
-        checkSign();
-    }
-    // 로그인 버튼 클릭 이벤트 처리
-    document.getElementById("loginBtn").addEventListener("click", function() {
-        let memberEmail = document.getElementById("memberEmail").value;
-        let memberPassword = document.getElementById("memberPassword").value;
-        let formData = {
-            memberEmail: memberEmail,
-            memberPassword: memberPassword
-        }
-        fetch("/member/signin", {
-            method: 'POST',
-            body: new URLSearchParams(formData)
-        })
-            .then((response) => response.text())
-            .then((data) => {
-                console.log(data);
-                if (data === 'Sign-in ok') {
-                    location.href = '/';
-                }
-            });
-    });
+<!DOCTYPE HTML>
+<html th:replace="~{/layout/loginLayout :: layout(~{::menuTitle}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
+<menuTitle>로그인</menuTitle>
+<mainSection>
+    <section style="padding-top: 0;">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="login-wrap p-0" style="margin: 0 auto; width: 100%;">
+                        <h3 class="mb-4 mt-2 text-center">login</h3>
+                        <form class="signin-form">
+                            <div class="form-group mb-3">
+                                <input type="text" id="memberEmail" name="memberEmail" class="form-control" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <input type="password" id="memberPassword" name="memberPassword" class="form-control" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <button button type="button" id="loginBtn" class="form-control btn btn-primary px-3">Login</button>
+                            </div>
+                            <!--<div>
+                                <button type="button" class="btn btn-primary" id="checkSignBtn">토큰 확인</button>
+                                <button type="button" class="btn btn-primary" id="removeTokenBtn">토큰 제거 (로그아웃)</button>
+                                <button type="button" class="btn btn-primary" id="testTokenBtn">토큰 인가 확인 페이지 이동</button>
+                            </div>
+                            <hr>
+                            <div id="tokenDiv"></div>
+                            <div id="statusDiv"></div>-->
+                        </form>
+                        <div class="form-group d-md-flex justify-content-between">
+                            <div>
+                                <a href="#">회원가입</a>
+                            </div>
+                            <div>
+                                <a href="#">아이디/비밀번호찾기</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    // 토큰 확인 버튼 클릭 이벤트 처리
-    document.getElementById("checkSignBtn").addEventListener("click", function() {
-        checkSign();
-    });
-    // 토큰 제거 버튼 클릭 이벤트 처리
-    document.getElementById("removeTokenBtn").addEventListener("click", function() {
-        if(confirm("정말로 제거하시겠습니까? (로그아웃)")) {
-            window.location.href = "/member/signout";
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        window.onload = function() {
+            checkSign();
         }
-    });
-    // 토큰 확인 페이지로 이동 버튼 클릭 이벤트 처리
-    document.getElementById("testTokenBtn").addEventListener("click", function() {
-        window.location.href = "/members/test";
-    });
+        // 로그인 버튼 클릭 이벤트 처리
+        document.getElementById("loginBtn").addEventListener("click", function() {
+            let memberEmail = document.getElementById("memberEmail").value;
+            let memberPassword = document.getElementById("memberPassword").value;
+            let formData = {
+                memberEmail: memberEmail,
+                memberPassword: memberPassword
+            }
+            fetch("/member/signin", {
+                method: 'POST',
+                body: new URLSearchParams(formData)
+            })
+                .then((response) => response.text())
+                .then((data) => {
+                    console.log(data);
+                    if (data === 'Sign-in ok') {
+                        location.href = '/';
+                    }
+                });
+        });
 
-    // 토큰이 유효한지 여부 확인
-    function checkSign() {
-        fetch("/member/token")
-            .then((response) => response.text())
-            .then((data) => {
-                data = data.trim();
-                console.log(data);
-                if (data === 'Valid Token') {
-                    document.getElementById("statusDiv").innerHTML = '상태 : 로그인'
-                } else {
-                    document.getElementById("statusDiv").innerHTML = '상태 : 로그아웃'
-                }
-            });
-    }
-</script>
-</body>
+        // 토큰 확인 버튼 클릭 이벤트 처리
+        document.getElementById("checkSignBtn").addEventListener("click", function() {
+            checkSign();
+        });
+        // 토큰 제거 버튼 클릭 이벤트 처리
+        document.getElementById("removeTokenBtn").addEventListener("click", function() {
+            if(confirm("정말로 제거하시겠습니까? (로그아웃)")) {
+                window.location.href = "/member/signout";
+            }
+        });
+        // 토큰 확인 페이지로 이동 버튼 클릭 이벤트 처리
+        document.getElementById("testTokenBtn").addEventListener("click", function() {
+            window.location.href = "/members/test";
+        });
+
+        // 토큰이 유효한지 여부 확인
+        function checkSign() {
+            fetch("/member/token")
+                .then((response) => response.text())
+                .then((data) => {
+                    data = data.trim();
+                    console.log(data);
+                    if (data === 'Valid Token') {
+                        document.getElementById("statusDiv").innerHTML = '상태 : 로그인'
+                    } else {
+                        document.getElementById("statusDiv").innerHTML = '상태 : 로그아웃'
+                    }
+                });
+        }
+    </script>
+</mainSection>
 </html>
