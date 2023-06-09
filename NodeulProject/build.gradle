@@ -69,6 +69,7 @@ dependencies {
 	implementation 'com.sun.mail:javax.mail:1.6.2'
 	//결제모듈 연동
 	implementation 'com.github.iamport:iamport-rest-client-java:0.2.22'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
 	//Pdf미리보기 제작용
 	implementation 'org.apache.pdfbox:pdfbox:2.0.27'

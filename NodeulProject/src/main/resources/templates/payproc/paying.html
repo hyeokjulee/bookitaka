@@ -61,6 +61,10 @@
         IMP.init("imp71816073");
 
         function requestPay() {
+            if (verifyBefore(uuid, sum) === false) {
+                alert("사전 검증 실패");
+                return
+            }
             IMP.request_pay(
                 {
                     pg: "kcp.INIpayTest",
@@ -77,50 +81,77 @@
                     buyer_postcode: "123-456",
                 },
                 function (rsp) {
+                    if (rsp.success) {
                     console.log(rsp)
                     // callback
                     //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
-                    if (rsp.success) {
-                        console.log("결제 검증 시작")
-                        /** 결제 검증 **/
-                        $.ajax({
-                            type: 'POST',
-                            url: '/verifyIamport/' + rsp.imp_uid
-                        }).done(function (result) {
-                            console.log(result)
-                            // rsp.paid_amount와 result.response.amount(서버 검증) 비교 후 로직 실행
-                            if (rsp.paid_amount === result.response.amount) {
-                                console.log("결제 및 검증 완료")
-                                $.ajax({
-                                    type:'POST',
-                                    url:'/payproc/paid',
-                                    paymentUuid: rsp.merchant_uid,
-                                    paymentInfo: rsp.name,
-                                    paymentPrice : rsp.paid_amount,
-                                    payMethod : rsp.pay_method,
-                                    receiptUrl: rsp.receipt_url,
-                                    email : rsp.buyer_email,
-                                    impId : rsp.imp_uid,
-                                    mySheetMeans: "결제"
-                                }).done(function() {
-                                    window.location.href("/payproc/complete");
-                                }).fail(function(error){
-                                    alert("결제 후 구매진행 프로세스에서 오류 발생. 에러 메시지 :" + error);
-                                })
-                            } else {
-                                alert("결제 과정에서 에러 발생." + "에러코드 : " + rsp.error_code + "에러 메시지 : " + rsp.error_message);
-                                console.log("검증실패")
-                            }
-                        }).fail(function (error) {
-                            alert("검증실패, 문의해주세요." + "에러 메세지 :" + error);
-                        })
+                    if(verifyAfter(rsp.imp_uid, rsp.merchant_uid, rsp.paid_amount)) {
+                        alert("결제 성공 만세!!")
+                    }
+
                     } else {
-                        console.log("결제 시작부터 실패")
-                        alert("결제 실패욤 " + rsp.error_msg)
+                        console.log("결제 진행 실패")
+                        alert("결제 진행 실패")
                     }
                 }
             );
         }
+
+        function verifyBefore(merchant_uid, amount) {
+            console.log("사전 검증 시작")
+            const veriBeforeDto = { merchant_uid, amount };
+            fetch('/payproc/verifyBefore', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(veriBeforeDto)
+            })
+                .then(response => {
+                    if (response.status == 200) {
+                        console.log("사전 검증 완료");
+                        console.log(response);
+                        return true
+                    } else {
+                        alert('사전 검증 단계에서 오류 발생.');
+                        return false
+                    }
+                })
+                .catch(error => {
+                    // 요청 실패 시 오류 처리
+                    console.error('사전 검증 요청 실패:', error);
+                    return false
+                });
+        }
+
+        function verifyAfter(imp_uid, merchant_uid, amount) {
+                console.log("사후 검증 시작")
+                const veriAfterDto = { imp_uid, merchant_uid, amount };
+                fetch('/payproc/verifyAfter', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(veriAfterDto)
+                })
+                    .then(response => {
+                        if (response.status == 200) {
+                            console.log("사후 검증 완료");
+                            console.log(response);
+                            return true
+                        } else {
+                            alert('사후 검증 단계에서 오류 발생.');
+                            return false
+                        }
+                    })
+                    .catch(error => {
+                        // 요청 실패 시 오류 처리
+                        console.error('사후 검증 요청 실패:', error);
+                        return false
+                    });
+
+        }
+
     </script>
 </body>
 </html>

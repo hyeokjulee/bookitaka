@@ -21,10 +21,10 @@ public class PayprocServiceImpl implements PayprocService {
     private final PaymentRepository paymentRepository;
     private final SheetRepository sheetRepository;
     private final MysheetRepository mysheetRepository;
+
+
     @Override
     public boolean makePay(PayMakeDto payMakeDto, Member member) {
-
-        //결제 한번 더 확인.
 
         //payment 등록.
         Payment payment = new Payment();
@@ -62,7 +62,9 @@ public class PayprocServiceImpl implements PayprocService {
             sheetRepository.plusOneSheetBuyCnt(sheetNo.intValue());
 
             mysheetRepository.save(mysheet);
+
         }
+
 
         return true;
     }

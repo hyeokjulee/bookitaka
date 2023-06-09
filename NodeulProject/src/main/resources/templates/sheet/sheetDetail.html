@@ -140,7 +140,9 @@
 
 <script src="/pdfjs/build/pdf.js"></script>
 
-<script>
+<script th:inline="javascript">
+    let sheetNo =  /*[[ ${sheet.sheetNo} ]]*/'' ;
+
     function downloadFile(fileUuid) {
         // 파일 다운로드 요청을 보낼 URL
         var url = '/sheet/sheetFile/' + fileUuid;
@@ -165,7 +167,12 @@
             .catch(error => {
                 // 오류 처리
                 console.error(error);
-                alert(error.message);
+                if (confirm("구매 내역이 없습니다. 바로 구입하시겠습니까?")) {
+                    var selectedItems = [sheetNo];
+                    var encodedList = JSON.stringify(selectedItems);
+                    document.cookie = "carts=" + encodeURIComponent(encodedList) + "; path=/";
+                    window.location.href = "/payproc/paying";
+                }
             });
     }
 
