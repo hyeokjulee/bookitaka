@@ -5,16 +5,18 @@ import com.bookitaka.NodeulProject.member.dto.MemberResponseDTO;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.security.Token;
 import com.bookitaka.NodeulProject.member.service.MemberService;
-import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -73,15 +75,50 @@ public class MemberController {
         model.addAttribute("member", userResponseDTO);
         return "member/admin/editAdmin";
     }
+//    @GetMapping("/list")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+//    public String list(Model model) {
+//        List<Member> members = memberService.getAllMembers();
+////        model.addAttribute("members", members);
+//        List<Member> filteredMembers = members.stream()
+//                .filter(member -> member.getMemberRole().equals("ROLE_MEMBER"))
+//                .collect(Collectors.toList());
+//        model.addAttribute("members", filteredMembers);
+//        return "member/admin/list";
+//    }
+
     @GetMapping("/list")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String list(Model model) {
-        List<Member> members = memberService.getAllMembers();
-//        model.addAttribute("members", members);
-        List<Member> filteredMembers = members.stream()
-                .filter(member -> member.getMemberRole().equals("ROLE_MEMBER"))
-                .collect(Collectors.toList());
-        model.addAttribute("members", filteredMembers);
+    public String listMembers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "") String method,
+            @RequestParam(defaultValue = "") String keyword,
+            Model model) {
+        log.info(method);
+        log.info(keyword);
+        int pageSize = 10;
+        PageRequest pageable = PageRequest.of(page, size);
+        Page<Member> memberPage = memberService.getAllMembersPaging(pageable, keyword, method);
+
+        model.addAttribute("members", memberPage.getContent());
+        model.addAttribute("totalPages", memberPage.getTotalPages());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
+
+        int currentGroup = page / pageSize;
+        int startPage = currentGroup * pageSize;
+        int endPage = Math.min(startPage + pageSize, memberPage.getTotalPages());
+
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        // 이전 그룹의 첫 번째 페이지로 이동
+        int previousGroupStartPage = (currentGroup==0)?0:(currentGroup - 1) * pageSize;
+        model.addAttribute("previousGroupStartPage", previousGroupStartPage);
+        // 다음 그룹의 첫 번째 페이지로 이동
+        int nextGroupStartPage = (currentGroup==(endPage/pageSize))?endPage-1:(currentGroup + 1) * pageSize;
+        model.addAttribute("nextGroupStartPage", nextGroupStartPage);
+
         return "member/admin/list";
     }
 
