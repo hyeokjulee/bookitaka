@@ -10,6 +10,7 @@ import java.util.List;
 public class CouponServiceImpl implements CouponService {
 
     private final CouponRepository couponRepository;
+    private final CouponRepositoryCustom couponRepositoryCustom;
 
     @Override
     public Coupon addToCoupon(Coupon coupon) {
@@ -20,5 +21,15 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public List<Coupon> getCouponByMemberEmail(String memberEmail) {
         return couponRepository.findByMemberEmailOrderByCouponEnddate(memberEmail);
+    }
+
+    @Override
+    public int getCountByMemberEmail(String memberEmail) {
+        return couponRepository.countByMemberEmail(memberEmail);
+    }
+
+    @Override
+    public List<Coupon> getAllCoupons(CouponCri cri) {
+        return couponRepositoryCustom.findAllCoupon(cri);
     }
 }

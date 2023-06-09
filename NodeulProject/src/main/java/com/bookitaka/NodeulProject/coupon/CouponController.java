@@ -2,12 +2,12 @@ package com.bookitaka.NodeulProject.coupon;
 
 import com.bookitaka.NodeulProject.cart.Cart;
 import com.bookitaka.NodeulProject.cart.CartService;
-import com.bookitaka.NodeulProject.sheet.Sheet;
-import com.bookitaka.NodeulProject.sheet.SheetService;
+import com.bookitaka.NodeulProject.sheet.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +32,22 @@ public class CouponController {
     @GetMapping("/myCoupon") // 내쿠폰 페이지
     public String myCoupon() {
         return "coupon/myCoupon"; // 뷰 이름을 반환
+    }
+
+    @GetMapping("/list") // 쿠폰리스트
+    public String couponList(@RequestParam(name = "pageNum", defaultValue = "1") int page,
+                             @RequestParam(name = "amount", defaultValue = "5") int amount,
+                             Model model) {
+
+        CouponCri cri = new CouponCri(page, amount);
+        String email = request.getRemoteUser();
+        int totalNum = couponService.getCountByMemberEmail(email);
+
+        model.addAttribute("couponList", couponService.getAllCoupons(cri));
+        model.addAttribute("pageInfo", new CouponPageInfo(cri, totalNum));
+        model.addAttribute("cri", cri);
+
+        return "coupon/couponList"; // 뷰 이름을 반환
     }
 
     @PostMapping("/couponAdd") // 생성
