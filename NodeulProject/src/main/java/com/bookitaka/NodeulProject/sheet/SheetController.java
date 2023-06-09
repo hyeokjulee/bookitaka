@@ -1,40 +1,34 @@
 package com.bookitaka.NodeulProject.sheet;
 
-import com.bookitaka.NodeulProject.request.RequestService;
+import com.bookitaka.NodeulProject.member.model.Member;
+import com.bookitaka.NodeulProject.member.security.Token;
+import com.bookitaka.NodeulProject.member.service.MemberService;
+import com.bookitaka.NodeulProject.sheet.mysheet.Mysheet;
+import com.bookitaka.NodeulProject.sheet.mysheet.MysheetCri;
+import com.bookitaka.NodeulProject.sheet.mysheet.MysheetPageInfo;
+import com.bookitaka.NodeulProject.sheet.mysheet.MysheetService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriUtils;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/sheet")
@@ -43,6 +37,8 @@ import java.util.Map;
 public class SheetController {
 
     private final SheetService sheetService;
+    private final MysheetService mysheetService;
+    private final MemberService memberService;
 //    private final RequestService requestService;
 
     @Value("${file.bookImg.dir}")
@@ -50,6 +46,9 @@ public class SheetController {
 
     @Value("${file.sheetFile.dir}")
     private String sheetFileDir;
+
+    @Value("${file.preview.dir}")
+    private String previewDir;
 
     @GetMapping("/add")
     public String sheetAddForm(Model model) {
@@ -172,6 +171,27 @@ public class SheetController {
 
         return "sheet/sheetList";
     }
+    @GetMapping("/mysheet")
+    public String mySheetList(HttpServletRequest request,
+                              @RequestParam(name = "pageNum", defaultValue = "1") int page,
+                              @RequestParam(name = "amount", defaultValue = "10") int amount,
+                              @RequestParam(name = "searchType", defaultValue = SearchTypes.TITLE) String searchType,
+                              @RequestParam(name = "searchWord", defaultValue = "") String searchWord,
+                              Model model) {
+
+
+        MysheetCri cri = new MysheetCri(page, amount, searchType, searchWord);
+        Member member = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
+
+        int totalNum = Math.toIntExact(mysheetService.getMySheetCnt(searchType, searchWord, member));
+        model.addAttribute("sheetList", mysheetService.getAllMysheetByMember(cri, member));
+        model.addAttribute("pageInfo", new MysheetPageInfo(cri, totalNum));
+        model.addAttribute("cri", cri);
+
+        return "sheet/mysheet";
+
+    }
+
 
     @GetMapping("/{sheetNo}")
     public String sheetDetail(@PathVariable int sheetNo,
@@ -200,14 +220,53 @@ public class SheetController {
         return new UrlResource("file:" + bookImgDir + imgName);
     }
 
+    @PreAuthorize("hasRole('ROLE_MEMBER')")
     @GetMapping("/sheetFile/{fileUuid}")
-    public ResponseEntity<Resource> downloadSheetFile(@PathVariable String fileUuid)
+    public ResponseEntity<Resource> downloadSheetFile(HttpServletRequest request,
+                                                      @PathVariable String fileUuid)
             throws MalformedURLException {
 
+        //인증 과정
+        //누구인지 찾기
+        Member member = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
+
+        log.info("downloadController Fileuuid = {}", fileUuid);
+
+        //그 사람 mysheet기록, fileUuid같은걸로 찾기
+        Mysheet mysheet = mysheetService.canIDownloadSheet(fileUuid, member);
+        if (mysheet == null) { //null이면 badrequest보내기.
+            String errorMessage = "구입 내역 없음";
+            Resource errorResource = new ByteArrayResource(errorMessage.getBytes());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResource);
+        }
+
+        //아니면 날짜 체크하기
+        if (!mysheetService.checkMySheetIsAvailable(mysheet)) {
+            String errorMessage = "다운로드 기간 만료";
+            Resource errorResource = new ByteArrayResource(errorMessage.getBytes());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResource);
+        }
+
+        //안지났으면 프로세스 진행
         String fileName = sheetService.getFileNameByUuid(fileUuid);
         String fullFileName = fileUuid + fileName;
         UrlResource resource = new UrlResource("file:" + sheetFileDir + fullFileName);
         log.info("uploadFileName={}", fullFileName);
+        String encodedUploadFileName = UriUtils.encode(fileName, StandardCharsets.UTF_8);
+        String contentDisposition = "attachment; filename=\"" + encodedUploadFileName + "\"";
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                .body(resource);
+    }
+
+    @GetMapping("/preview/{fileUuid}")
+    public ResponseEntity<Resource> downloadPreviewFile(@PathVariable String fileUuid)
+            throws MalformedURLException {
+
+        String fileName = sheetService.getFileNameByUuid(fileUuid);
+        String fullFileName = fileUuid + fileName;
+        UrlResource resource = new UrlResource("file:" + previewDir + fullFileName);
+        log.info("previewFileName={}", fullFileName);
         String encodedUploadFileName = UriUtils.encode(fileName, StandardCharsets.UTF_8);
         String contentDisposition = "attachment; filename=\"" + encodedUploadFileName + "\"";
         return ResponseEntity.ok()

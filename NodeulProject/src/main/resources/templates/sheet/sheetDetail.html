@@ -49,7 +49,7 @@
         </div>
         <div>
             <label for="sheetFile">독후활동지 파일</label>
-            <a id="sheetFile" class="btn btn-primary" th:href="|/sheet/sheetFile/*{sheet.sheetFileuuid}|">다운로드</a>
+            <button th:attr="data-fileuuid=${sheet.sheetFileuuid}" onclick="downloadFile(this.getAttribute('data-fileuuid'))" id="sheetFile" class="btn btn-primary">다운로드</button>
         </div>
 
         <!--장바구니에 담기 버튼-->
@@ -139,6 +139,56 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 
 <script src="/pdfjs/build/pdf.js"></script>
+
+<script th:inline="javascript">
+    let sheetNo =  /*[[ ${sheet.sheetNo} ]]*/'' ;
+
+    function downloadFile(fileUuid) {
+        // 파일 다운로드 요청을 보낼 URL
+        var url = '/sheet/sheetFile/' + fileUuid;
+
+        fetch(url)
+            .then(response => {
+                if (response.ok) {
+                    return response.blob().then(blob => {
+                        var filename = getFileNameFromResponse(response); // 응답 헤더에서 파일 이름 추출
+                        // 응답으로 받은 Blob을 파일로 다운로드
+                        var link = document.createElement('a');
+                        link.href = URL.createObjectURL(blob);
+                        link.download = filename;
+                        link.click();
+                    });
+                } else {
+                    return response.text().then(errorMessage => {
+                        throw new Error(errorMessage);
+                    });
+                }
+            })
+            .catch(error => {
+                // 오류 처리
+                console.error(error);
+                if (confirm("구매 내역이 없습니다. 바로 구입하시겠습니까?")) {
+                    var selectedItems = [sheetNo];
+                    var encodedList = JSON.stringify(selectedItems);
+                    document.cookie = "carts=" + encodeURIComponent(encodedList) + "; path=/";
+                    window.location.href = "/payproc/paying";
+                }
+            });
+    }
+
+    function getFileNameFromResponse(response) {
+        var contentDisposition = response.headers.get('Content-Disposition');
+        var matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(contentDisposition);
+        var encodedFilename = matches[1].replace(/['"]/g, '');
+        var filename = decodeURIComponent(encodedFilename);
+        return filename;
+    }
+
+
+
+
+</script>
+
 <script>
     function cartAdd(sheetNo) {
         $.ajax({
@@ -192,7 +242,7 @@
     }
 
 
-    const pdfPath = '/sheet/sheetFile/[[${sheet.sheetFileuuid}]]'; // PDF 파일 경로
+    const pdfPath = '/sheet/preview/[[${sheet.sheetFileuuid}]]'; // PDF 파일 경로
 
 
     // const iframe = document.getElementById('pdf-iframe');
