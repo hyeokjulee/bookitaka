@@ -9,15 +9,12 @@ import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -55,7 +52,7 @@ public class MemberAPIController {
   }
 
   // 로그아웃
-  @GetMapping("/signout") @PostMapping("/signout") @PutMapping("/signout") @DeleteMapping("/signout")
+  @GetMapping("/signout")
   @ApiOperation(value = "${MemberController.signout}")
   @ApiResponses(value = {//
       @ApiResponse(code = 403, message = "Access denied"), //
@@ -125,7 +122,7 @@ public class MemberAPIController {
                                 @PathVariable String memberEmail,
                                 HttpServletRequest request) {
     log.info("================================Member : edit");
-    String memberAuthEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+    String memberAuthEmail = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN).getMemberEmail();
     log.info("memberEmail : {}", memberEmail);
     log.info("memberAuthEmail : {}", memberAuthEmail);
     if (!memberEmail.equals(memberAuthEmail)) {
@@ -273,7 +270,7 @@ public class MemberAPIController {
   }
 
   // 토큰 재발급 (회원)
-  @GetMapping("/refresh/token") @PostMapping("/refresh/token") @PutMapping("/refresh/token") @DeleteMapping("/refresh/token")
+  @GetMapping("/refresh/token")
   public ResponseEntity<String> refresh(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     log.info("================================Member : refresh");
     Member member = memberService.whoami(request.getCookies(), Token.REFRESH_TOKEN);
@@ -295,5 +292,4 @@ public class MemberAPIController {
     cookie.setPath("/"); // 쿠키의 유효 경로 설정 (루트 경로로 설정하면 모든 요청에서 사용 가능)
     response.addCookie(cookie);
   }
-
 }

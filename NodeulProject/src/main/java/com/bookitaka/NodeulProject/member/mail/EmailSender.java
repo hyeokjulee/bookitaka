@@ -1,4 +1,4 @@
-package com.bookitaka.NodeulProject.member.service;
+package com.bookitaka.NodeulProject.member.mail;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
