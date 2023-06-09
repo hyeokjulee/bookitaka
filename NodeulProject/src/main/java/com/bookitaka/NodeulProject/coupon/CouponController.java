@@ -24,7 +24,7 @@ public class CouponController {
     private final CouponService couponService;
     private final HttpServletRequest request;
 
-    @GetMapping("/buyCoupon") // 쿠폰구매 페이지
+    @GetMapping("/buy") // 쿠폰구매 페이지
     public String buyCoupon() {
         return "coupon/buyCoupon"; // 뷰 이름을 반환
     }
