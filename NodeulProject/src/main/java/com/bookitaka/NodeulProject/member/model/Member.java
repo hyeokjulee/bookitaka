@@ -7,10 +7,6 @@ import lombok.Setter;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Getter
