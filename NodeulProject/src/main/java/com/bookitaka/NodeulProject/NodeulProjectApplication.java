@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 @EnableJpaAuditing
 @SpringBootApplication
 public class NodeulProjectApplication {
+
 	public static void main(String[] args) {
 		SpringApplication.run(NodeulProjectApplication.class, args);
 	}
