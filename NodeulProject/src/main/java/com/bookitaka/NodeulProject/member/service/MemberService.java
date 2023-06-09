@@ -160,7 +160,7 @@ public class MemberService {
         if (memberRepository.existsByMemberEmailAndMemberName(memberEmail, memberName)) {
             String newPw = generateRandomPassword();
             // 메일전송
-            if (emailService.sendEmailWithTemplate(memberEmail, "templates/member/temp-password-email-template.html", "[북키타카] 임시비밀번호 발송", newPw)) {
+            if (emailService.sendEmailWithTemplate(memberEmail, "templates/member/mail/temp-password-email-template.html", "[북키타카] 임시비밀번호 발송", newPw)) {
                 // 메일전송 성공 시
                 // 임시 비밀번호로 비밀번호 변경 후 디비에 저장
                 log.info("================================== newPw : {}", newPw);
