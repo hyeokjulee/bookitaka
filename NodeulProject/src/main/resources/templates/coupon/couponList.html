@@ -3,72 +3,39 @@
 <head></head>
 <body>
 
-<menuTitle>독후활동지</menuTitle>
-<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?ageGroup=유아용}" style="all: unset;">연령별</a></sidebar>
-<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?genre=그림책}" style="all: unset;">장르별</a></sidebar>
-<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?genre=독서토론논제은행}" style="all: unset;">논제은행</a></sidebar>
-<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/request}" style="all: unset;">개별출제요청</a></sidebar>
-
+<menuTitle>내 쿠폰</menuTitle>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/}" style="all: unset;">내 정보</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/}" style="all: unset;">내 독후활동지</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/}" style="all: unset;">내 출제 요청</a></sidebar>
+<sidebar class="list-group-item sidebar-link active"><a th:href="@{/coupon/myCoupon}" style="all: unset;">내 쿠폰</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/}" style="all: unset;">내 결제</a></sidebar>
 
 <mainSection>
   <div class="text-center">
-    <h3 th:if="${genre != ''}" th:text="|장르별 보기 - ${genre}|" ></h3>
-    <h3 th:if="${ageGroup != ''}" th:text="|나이대별 보기 - ${ageGroup}|" ></h3>
+    <h3>쿠폰 구입</h3>
   </div>
-    <div class="row justify-content-center mt-4">
-      <div class="col-md-6">
-        <form id="sheetListForm" th:action="@{/sheet/list}" method="get">
-          <div class="form-row">
-            <div class="col">
-              <select class="form-control" name="searchType">
-                <option value="제목" th:selected="${cri.searchType == '제목'}">제목</option>
-                <option value="작가" th:selected="${cri.searchType == '작가'}">작가</option>
-                <option value="출판사" th:selected="${cri.searchType == '출판사'}">출판사</option>
-              </select>
-            </div>
 
-            <div class="col">
-              <div class="input-group">
-                <input th:value="${cri.searchWord}" type="text" class="form-control" name="searchWord" placeholder="검색어를 입력하세요">
-                <div class="input-group-append">
-                  <button class="btn btn-primary" type="submit">검색</button>
-                </div>
-                <input type="hidden" name="genre" th:value="${genre}">
-                <input type="hidden" name="ageGroup" th:value="${ageGroup}">
-              </div>
-            </div>
-            <div class="col">
-              <div class="btn-group">
-                <button type="button" onclick="handleSortBtn('최신순')" th:class="${cri.sort == '최신순' ? 'btn btn-primary active' : 'btn btn-primary'}" th:text="'최신순'">최신순</button>
-                <button type="button" onclick="handleSortBtn('조회순')" th:class="${cri.sort == '조회순' ? 'btn btn-primary active' : 'btn btn-primary'}" th:text="'조회순'">조회순</button>
-                <button type="button" onclick="handleSortBtn('구매순')" th:class="${cri.sort == '구매순' ? 'btn btn-primary active' : 'btn btn-primary'}" th:text="'구매순'">구매순</button>
-              </div>
-              <input type="hidden" id="sortBtnInput" name="sort" th:value="${cri.sort}" />
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
   <hr class="my-4">
+
   <div>
     <table class="table">
       <thead>
-      <tr>
-        <th>책 이미지</th>
-        <th>책 제목</th>
-        <th>작가</th>
-        <th>출판사</th>
-        <th>가격</th>
-      </tr>
+        <tr>
+          <th>No.</th>
+          <th>쿠폰</th>
+          <th>잔여 개수</th>
+          <th>구입일</th>
+          <th>만료일</th>
+        </tr>
       </thead>
       <tbody>
-      <tr th:each="sheet : ${sheetList}">
-        <td><img th:src="|/sheet/bookImg/*{sheet.sheetBookimguuid}*{sheet.sheetBookimgname}|" width="150" height="150"></td>
-        <td><a th:text="${sheet.sheetBooktitle}" th:href="@{|/sheet/${sheet.sheetNo}/?genre=${genre}&ageGroup=${ageGroup}&pageNum=${cri.pageNum}&amount=${cri.amount}&searchType=${cri.searchType}&searchWord=${cri.searchWord}&sort=${cri.sort}|}">북타이틀</a></td>
-        <td th:text="${sheet.sheetBookauthor}">작가이름</td>
-        <td th:text="${sheet.sheetBookpublisher}">출판사이름</td>
-        <td th:text="${sheet.sheetPrice}">10000</td>
-      </tr>
+        <tr th:each="coupon : ${couponList}">
+          <td th:text="${coupon.couponNo}">2</td>
+          <td>북키타카 쿠폰</td>
+          <td th:text="${coupon.couponLeft}">11</td>
+          <td th:text="${coupon.couponStartdate}">1112.11.10</td>
+          <td th:text="${coupon.couponEnddate}">만료됨</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -76,26 +43,18 @@
   <div class="pagination">
     <ul class="pagination justify-content-center">
       <li class="page-item" th:if="${pageInfo.hasPreviousPage}">
-        <a class="page-link" th:href="@{/sheet/list(genre=${genre}, ageGroup=${ageGroup}, pageNum=${pageInfo.pageNum - 1}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort})}">&laquo;</a>
+        <a class="page-link" th:href="@{/coupon/list(pageNum=${pageInfo.pageNum - 1}, amount=${pageInfo.amount})}">&laquo;</a>
       </li>
-      <li class="page-item" th:each="pageNum : ${pageInfo.getPageList()}" th:class="${pageNum} == ${pageInfo.pageNum} ? 'page-disabled active' : ''">
-        <a class="page-link" th:href="@{/sheet/list(genre=${genre}, ageGroup=${ageGroup}, pageNum=${pageNum}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort})}" th:text="${pageNum}"></a>
+      <li th:each="pageNum : ${pageInfo.getPageList()}" th:class="${pageNum} == ${pageInfo.pageNum} ? 'page-item page-disabled active' : 'page-item'">
+        <a class="page-link" th:href="@{/coupon/list(pageNum=${pageNum}, amount=${pageInfo.amount})}" th:text="${pageNum}"></a>
       </li>
       <li class="page-item" th:if="${pageInfo.hasNextPage}">
-        <a class="page-link" th:href="@{/sheet/list(genre=${genre}, ageGroup=${ageGroup}, pageNum=${pageInfo.pageNum + 1}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort})}">&raquo;</a>
+        <a class="page-link" th:href="@{/coupon/list(pageNum=${pageInfo.pageNum + 1}, amount=${pageInfo.amount})}">&raquo;</a>
       </li>
     </ul>
   </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
-<script>
-
-  function handleSortBtn(sortValue) {
-    document.getElementById("sortBtnInput").value = sortValue;
-    document.getElementById("sheetListForm").submit();
-  }
-
-</script>
 
 </mainSection>
 </body>

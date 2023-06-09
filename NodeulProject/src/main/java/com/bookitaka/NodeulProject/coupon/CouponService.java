@@ -1,6 +1,5 @@
 package com.bookitaka.NodeulProject.coupon;
 
-import com.bookitaka.NodeulProject.cart.Cart;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,4 +8,8 @@ import java.util.List;
 public interface CouponService {
     Coupon addToCoupon(Coupon coupon);
     List<Coupon> getCouponByMemberEmail(String memberEmail);
+
+    int getCountByMemberEmail(String memberEmail);
+
+    public List<Coupon> getAllCoupons(CouponCri cri);
 }
