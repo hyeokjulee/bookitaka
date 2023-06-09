@@ -31,10 +31,21 @@ public class MemberController {
     @GetMapping("/login")
     public String login(HttpServletRequest request) {
         log.info("=====================MemberController - login");
-        if (!memberService.isValidToken(request.getCookies())) {
+        if (memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN) == null) {
             return "login/login";
         } else {
-            return "/index";
+            return "index";
+        }
+    }
+
+    @GetMapping("/signup")
+    public String signup(HttpServletRequest request, Model model) {
+        log.info("=====================MemberController - signup");
+        model.addAttribute("member", new MemberDataDTO());
+        if (memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN) == null) {
+            return "login/signup";
+        } else {
+            return "index";
         }
     }
 
@@ -73,18 +84,23 @@ public class MemberController {
         model.addAttribute("members", filteredMembers);
         return "login/list";
     }
-    @GetMapping("/findEmail")
-    public String findId() { return "login/findEmail"; }
 
-    @GetMapping("/findPw")
-    public String findPw() {
-        return "login/findPw";
+    @GetMapping("/findEmail")
+    public String findId(HttpServletRequest request) {
+        if (memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN) == null) {
+            return "login/findEmail";
+        } else {
+            return "index";
+        }
     }
 
-    @GetMapping("/signup")
-    public String signup(Model model) {
-        model.addAttribute("member", new MemberDataDTO());
-        return "login/signup";
+    @GetMapping("/findPw")
+    public String findPw(HttpServletRequest request) {
+        if (memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN) == null) {
+            return "login/findPw";
+        } else {
+            return "index";
+        }
     }
 
     @GetMapping("/changePw")

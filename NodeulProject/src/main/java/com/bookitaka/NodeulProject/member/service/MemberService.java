@@ -3,6 +3,7 @@ package com.bookitaka.NodeulProject.member.service;
 import com.bookitaka.NodeulProject.member.dto.MemberFindEmailDTO;
 import com.bookitaka.NodeulProject.member.dto.MemberChangePwDTO;
 import com.bookitaka.NodeulProject.member.exception.CustomException;
+import com.bookitaka.NodeulProject.member.mail.EmailSender;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.model.MemberRoles;
 import com.bookitaka.NodeulProject.member.repository.MemberRepository;

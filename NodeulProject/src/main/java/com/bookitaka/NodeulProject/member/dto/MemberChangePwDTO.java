@@ -7,7 +7,6 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import java.util.Date;
 
 @Data
 @PasswordMatch(password = "newMemberPassword", passwordCheck = "newMemberPasswordCheck")
