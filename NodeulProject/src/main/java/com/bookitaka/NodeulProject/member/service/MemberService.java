@@ -180,11 +180,11 @@ public class MemberService {
 
     public Page<Member> getAllMembersPaging(Pageable pageable, String keyword, String method) {
         if (method.equals("이름")) {
-            return memberRepository.findByMemberNameContaining(keyword, pageable);
+            return memberRepository.findByMemberNameContainingAndMemberRoleNot(keyword, "ROLE_ADMIN", pageable);
         } else if (method.equals("이메일")) {
-            return memberRepository.findByMemberEmailContaining(keyword, pageable);
+            return memberRepository.findByMemberEmailContainingAndMemberRoleNot(keyword, "ROLE_ADMIN", pageable);
         } else {
-            return memberRepository.findAll(pageable);
+            return memberRepository.findByMemberRoleNot("ROLE_ADMIN", pageable);
         }
 
     }

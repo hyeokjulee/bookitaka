@@ -66,6 +66,7 @@ public class MemberController {
         model.addAttribute("member", userResponseDTO);
         return "member/my-info";
     }
+
     @GetMapping("/editAdmin/{memberEmail}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String editAdmin(Model model, @PathVariable String memberEmail) {
@@ -75,17 +76,6 @@ public class MemberController {
         model.addAttribute("member", userResponseDTO);
         return "member/admin/editAdmin";
     }
-//    @GetMapping("/list")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-//    public String list(Model model) {
-//        List<Member> members = memberService.getAllMembers();
-////        model.addAttribute("members", members);
-//        List<Member> filteredMembers = members.stream()
-//                .filter(member -> member.getMemberRole().equals("ROLE_MEMBER"))
-//                .collect(Collectors.toList());
-//        model.addAttribute("members", filteredMembers);
-//        return "member/admin/list";
-//    }
 
     @GetMapping("/list")
     public String listMembers(
@@ -99,11 +89,12 @@ public class MemberController {
         int pageSize = 10;
         PageRequest pageable = PageRequest.of(page, size);
         Page<Member> memberPage = memberService.getAllMembersPaging(pageable, keyword, method);
-
         model.addAttribute("members", memberPage.getContent());
         model.addAttribute("totalPages", memberPage.getTotalPages());
         model.addAttribute("currentPage", page);
         model.addAttribute("pageSize", size);
+        model.addAttribute("method", method);
+        model.addAttribute("keyword", keyword);
 
         int currentGroup = page / pageSize;
         int startPage = currentGroup * pageSize;
@@ -113,10 +104,11 @@ public class MemberController {
         model.addAttribute("endPage", endPage);
 
         // 이전 그룹의 첫 번째 페이지로 이동
-        int previousGroupStartPage = (currentGroup==0)?0:(currentGroup - 1) * pageSize;
+        int previousGroupStartPage = (currentGroup == 0) ? 0 : (currentGroup - 1) * pageSize;
         model.addAttribute("previousGroupStartPage", previousGroupStartPage);
+
         // 다음 그룹의 첫 번째 페이지로 이동
-        int nextGroupStartPage = (currentGroup==(endPage/pageSize))?endPage-1:(currentGroup + 1) * pageSize;
+        int nextGroupStartPage = (currentGroup <= (endPage / pageSize)) ? (endPage - 1) : (currentGroup + 1) * pageSize;
         model.addAttribute("nextGroupStartPage", nextGroupStartPage);
 
         return "member/admin/list";
@@ -161,7 +153,7 @@ public class MemberController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
     public String detail(HttpServletRequest request, Model model) {
         log.info("================================Members : detail");
-        model.addAttribute("member",memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN));
+        model.addAttribute("member", memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN));
         model.addAttribute("role", "member");
         return "member/detail";
     }
