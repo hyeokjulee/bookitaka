@@ -12,6 +12,7 @@
 <sidebar class="list-group-item"><a th:href="@{#}">내 결제</a></sidebar>
 
 <mainSection>
+
 <form th:object="${member}">
     <h3><span th:text="*{memberName}"></span>님의 회원 정보</h3>
     <hr>
@@ -108,7 +109,7 @@
     </div>
     <hr>
     <div class="row">
-        <span class="col-12 text-end"><a class="btn btn-primary" id="editBtn" style="display: none">저장하기</a></span>
+        <span class="col-12 text-center"><a class="btn btn-primary" id="editBtn" style="display: none">저장하기</a></span>
     </div>
 </form>
 
