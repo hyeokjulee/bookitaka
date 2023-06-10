@@ -5,7 +5,6 @@ import com.bookitaka.NodeulProject.member.dto.MemberResponseDTO;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.security.Token;
 import com.bookitaka.NodeulProject.member.service.MemberService;
-import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -56,13 +55,13 @@ public class MemberController {
         return "member/authPage";
     }
 
-    @GetMapping("/edit")
+    @GetMapping("/info")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
     public String edit(Model model, HttpServletRequest request) {
         log.info("=====================MemberController - edit");
         MemberResponseDTO userResponseDTO = modelMapper.map(memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN), MemberResponseDTO.class);
         model.addAttribute("member", userResponseDTO);
-        return "member/edit";
+        return "member/my-info";
     }
     @GetMapping("/editAdmin/{memberEmail}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
