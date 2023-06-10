@@ -2,9 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>회원 목록</title>
+    <style>
+        .active a {
+            color: red;
+        }
+    </style>
 </head>
 <body>
 <h1>회원 목록</h1>
+<form action="/members/list">
+    <select name="method">
+        <option>이메일</option>
+        <option>이름</option>
+    </select>
+    <input type="text" name="keyword" placeholder="검색어 입력">
+    <button type="button">검색</button>
+</form>
 <table>
     <thead>
     <tr>
@@ -24,6 +37,46 @@
     </tr>
     </tbody>
 </table>
+<div>
+    <span>
+      <a th:if="${currentPage > 0}"
+         th:href="@{/members/list(page=${previousGroupStartPage}, size=${pageSize})}"> &lt;&lt; </a>
+   </span>
+
+    <span>
+        <a th:if="${currentPage > 0}"
+           th:href="@{/members/list(page=${currentPage - 1}, size=${pageSize})}"> &lt; </a>
+    </span>
+
+    <span th:each="pageNumber : ${#numbers.sequence(startPage, endPage - 1)}"
+          th:class="${pageNumber == currentPage} ? 'active' : ''">
+      <a th:href="@{/members/list(page=${pageNumber}, size=${pageSize})}"
+         th:text="${pageNumber + 1}"></a>
+   </span>
+
+    <span>
+      <a th:if="${currentPage + 1 < totalPages}"
+         th:href="@{/members/list(page=${currentPage + 1}, size=${pageSize})}"> &gt; </a>
+   </span>
+
+    <span>
+      <a th:if="${currentPage + 1 < totalPages}"
+         th:href="@{/members/list(page=${nextGroupStartPage}, size=${pageSize})}"> &gt;&gt; </a>
+   </span>
+</div>
+
+<!--<div>-->
+<!--    <span>Group:</span>-->
+<!--    <span>-->
+<!--      <a th:if="${currentPage > 0}"-->
+<!--         th:href="@{/members/list(page=${currentPage - pageSize}, size=${pageSize})}">&lt;&lt; </a>-->
+<!--   </span>-->
+<!--    <span>-->
+<!--      <a th:if="${currentPage + pageSize < totalPages}"-->
+<!--         th:href="@{/members/list(page=${currentPage + pageSize}, size=${pageSize})}">&gt;&gt;</a>-->
+<!--   </span>-->
+<!--</div>-->
+
 <script th:inline="javascript">
     // 수정 버튼
     var editButtons = document.querySelectorAll("#editBtn");
