@@ -68,10 +68,12 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	//결제모듈 연동
 	implementation 'com.github.iamport:iamport-rest-client-java:0.2.22'
-	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
 	//Pdf미리보기 제작용
 	implementation 'org.apache.pdfbox:pdfbox:2.0.27'
+
+	// 개발용 (타임리프 서버 재시작 없이 빌드만 해서 적용)
+	developmentOnly("org.springframework.boot:spring-boot-devtools")
 
 }
 
