@@ -110,6 +110,22 @@ public class PayprocController {
         return ResponseEntity.ok().body("결제 완료");
     }
 
+    @PostMapping("/couponPaid")
+    @ResponseBody
+    public ResponseEntity<String> verifyAndRequestAfterCouponPay(@RequestBody PayMakeDto payMakeDto, @CookieValue("carts") String carts) {
+
+        VeriAfterDto veriAfterDto = new VeriAfterDto(payMakeDto.getImpId(), Math.toIntExact(payMakeDto.getPaymentPrice()));
+
+        log.info("verifyAfterDto = {}", veriAfterDto);
+        if (!verifyAfter(veriAfterDto)) {
+            // 예외 발생 시
+            return ResponseEntity.badRequest().body("사후 검증 오류");
+        }
+
+        payprocService.makeCouponPay(payMakeDto, memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN));
+
+        return ResponseEntity.ok().body("결제 완료");
+    }
 
     public boolean verifyAfter(VeriAfterDto veriAfterDto) {
         try {
@@ -258,7 +274,7 @@ public class PayprocController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> getSheets(@RequestBody List<Integer> sheetNos) {
         Map<String, Object> response = new HashMap<>();
-        List<Sheet> sheets = new ArrayList<>();;
+        List<Sheet> sheets = new ArrayList<>();
         for (var i = 0; i < sheetNos.size(); i++) {
             sheets.add(sheetService.getSheet(sheetNos.get(i)));
         }
