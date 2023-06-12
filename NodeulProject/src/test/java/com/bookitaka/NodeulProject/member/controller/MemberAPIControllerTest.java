@@ -109,7 +109,7 @@ class MemberAPIControllerTest {
     void logout() throws Exception {
         //given
         //when
-        ResultActions resultActions = mockMvc.perform(get("/member/signout/deltoken")
+        ResultActions resultActions = mockMvc.perform(get("/member/signout")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .param("memberEmail", testEmail)
                 .param("memberPassword", testPassword));

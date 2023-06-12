@@ -35,7 +35,7 @@
               <ul class="col-auto list list-unstyled mb-md-4 mb-lg-0">
                 <li class="float-start text-center" style="width: 60px" th:if="${#request.getRemoteUser() == null}"><a class="text-800 fs--1" th:href="@{/members/login}">로그인</a></li>
                 <li class="float-start text-center" style="width: 60px" th:if="${#request.getRemoteUser() == null}"><a class="text-800 fs--1" th:href="@{/members/signup}">회원가입</a></li>
-                <li class="float-start text-center" style="width: 60px" th:if="${#request.getRemoteUser() != null}"><a class="text-800 fs--1" th:href="@{/member/signout/deltoken}">로그아웃</a></li>
+                <li class="float-start text-center" style="width: 60px" th:if="${#request.getRemoteUser() != null}"><a class="text-800 fs--1" th:href="@{/member/signout}">로그아웃</a></li>
                 <li class="float-start text-center" style="width: 60px"><a class="text-800 fs--1" th:href="@{/faq/best}">고객지원</a></li>
                 <a th:href="@{/cart/cart}" class="cart-link">
                   <span class="icon-container-cart">
