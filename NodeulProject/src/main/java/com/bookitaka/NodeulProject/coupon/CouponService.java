@@ -6,10 +6,10 @@ import java.util.List;
 
 @Service
 public interface CouponService {
-    Coupon addToCoupon(Coupon coupon);
+//    Coupon addToCoupon(Coupon coupon);
     List<Coupon> getCouponByMemberEmail(String memberEmail);
 
     int getCountByMemberEmail(String memberEmail);
 
-    public List<Coupon> getAllCoupons(CouponCri cri);
+    List<Coupon> getAllCouponsByMemberEmail(CouponCri cri, String memberEmail);
 }

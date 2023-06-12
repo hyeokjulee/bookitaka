@@ -1,5 +1,7 @@
 package com.bookitaka.NodeulProject.payproc;
 
+import com.bookitaka.NodeulProject.coupon.Coupon;
+import com.bookitaka.NodeulProject.coupon.CouponRepository;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.payment.Payment;
 import com.bookitaka.NodeulProject.payment.PaymentRepository;
@@ -9,7 +11,7 @@ import com.bookitaka.NodeulProject.sheet.mysheet.MysheetRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
+
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +22,8 @@ public class PayprocServiceImpl implements PayprocService {
 
     private final PaymentRepository paymentRepository;
     private final SheetRepository sheetRepository;
+
+    private final CouponRepository couponRepository;
     private final MysheetRepository mysheetRepository;
 
 
@@ -69,4 +73,25 @@ public class PayprocServiceImpl implements PayprocService {
         return true;
     }
 
+    @Override
+    public boolean makeCouponPay(PayMakeDto payMakeDto, Member member) {
+        //payment 등록.
+        Payment payment = new Payment();
+        payment.setPaymentUuid(payMakeDto.getPaymentUuid()); //미리 받은 번호.
+        payment.setPaymentPrice(payMakeDto.getPaymentPrice());
+        payment.setPaymentInfo(payMakeDto.getPaymentInfo());
+        payment.setMember(member);
+
+        paymentRepository.save(payment);
+
+        //coupon 생성.
+        Coupon coupon = new Coupon();
+        coupon.setMemberEmail(member.getMemberEmail());
+
+        log.info("Payproc member = {}", member);
+
+        couponRepository.save(coupon);
+
+        return true;
+    }
 }

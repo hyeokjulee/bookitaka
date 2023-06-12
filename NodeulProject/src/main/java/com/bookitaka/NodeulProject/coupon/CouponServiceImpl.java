@@ -12,11 +12,11 @@ public class CouponServiceImpl implements CouponService {
     private final CouponRepository couponRepository;
     private final CouponRepositoryCustom couponRepositoryCustom;
 
-    @Override
-    public Coupon addToCoupon(Coupon coupon) {
-        // 쿠폰 생성
-        return couponRepository.save(coupon);
-    }
+//    @Override
+//    public Coupon addToCoupon(Coupon coupon) {
+//        // 쿠폰 생성
+//        return couponRepository.save(coupon);
+//    }
 
     @Override
     public List<Coupon> getCouponByMemberEmail(String memberEmail) {
@@ -29,7 +29,7 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public List<Coupon> getAllCoupons(CouponCri cri) {
-        return couponRepositoryCustom.findAllCoupon(cri);
+    public List<Coupon> getAllCouponsByMemberEmail(CouponCri cri, String memberEmail) {
+        return couponRepositoryCustom.findAllCouponByMemberEmail(cri, memberEmail);
     }
 }

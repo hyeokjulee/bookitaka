@@ -52,7 +52,7 @@ public class MemberAPIController {
   }
 
   // 로그아웃
-  @GetMapping("/signout")
+  @RequestMapping("/signout/deltoken")
   @ApiOperation(value = "${MemberController.signout}")
   @ApiResponses(value = {//
       @ApiResponse(code = 403, message = "Access denied"), //
@@ -299,6 +299,18 @@ public class MemberAPIController {
     if (token != null) {
       setCookie(response, token, Token.ACCESS_TOKEN, false);
       response.sendRedirect("/");
+    }
+    return ResponseEntity.badRequest().build();
+  }
+
+  @RequestMapping("/refresh/token/fetch")
+  public ResponseEntity<String> refresh1(HttpServletRequest request, HttpServletResponse response) {
+    log.info("================================Member : refresh fetch");
+    Member member = memberService.whoami(request.getCookies(), Token.REFRESH_TOKEN);
+    String token = memberService.refresh(request.getCookies(), member);
+    if (token != null) {
+      setCookie(response, token, Token.ACCESS_TOKEN, false);
+      return ResponseEntity.accepted().build();
     }
     return ResponseEntity.badRequest().build();
   }

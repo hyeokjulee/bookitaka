@@ -169,13 +169,15 @@
             method: 'PUT',
             body: formData,
             credentials: 'include',
-            redirect: "manual"
+            headers: {'ajax':"manual"}
         })
             .then((response) => {
                 console.log("response.status : " + response.status);
-                if (response.ok) {
+                if (response.status === 200) {
                     // 성공적인 응답 처리
                     window.location.reload();
+                } else if (response.status === 202) {
+                    console.log('재발급됨');
                 } else if (response.status === 0) {
                     window.location.href = response.url;
                 } else if (response.status === 400) {

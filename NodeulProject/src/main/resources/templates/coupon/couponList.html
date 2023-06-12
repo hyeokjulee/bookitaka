@@ -34,7 +34,9 @@
           <td>북키타카 쿠폰</td>
           <td th:text="${coupon.couponLeft}">11</td>
           <td th:text="${#temporals.format(coupon.couponStartdate, 'yyyy.MM.dd')}">1112.11.10</td>
-          <td th:text="${#temporals.format(coupon.couponEnddate, 'yyyy.MM.dd')}">만료됨</td>
+          <td th:if="${coupon.couponEnddate lt #temporals.createNow()}">만료됨</td>
+          <td th:unless="${coupon.couponEnddate lt #temporals.createNow()}"
+                th:text="${#temporals.format(coupon.couponEnddate, 'yyyy.MM.dd')}"></td>
         </tr>
       </tbody>
     </table>

@@ -2,6 +2,8 @@ package com.bookitaka.NodeulProject.coupon;
 
 import com.bookitaka.NodeulProject.cart.Cart;
 import com.bookitaka.NodeulProject.cart.CartService;
+import com.bookitaka.NodeulProject.member.model.Member;
+import com.bookitaka.NodeulProject.member.service.MemberService;
 import com.bookitaka.NodeulProject.sheet.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,17 +23,23 @@ import java.util.Map;
 @RequestMapping("/coupon")
 @RequiredArgsConstructor
 public class CouponController {
+    private final MemberService memberService;
     private final CouponService couponService;
     private final HttpServletRequest request;
 
     @GetMapping("/buy") // 쿠폰구매 페이지
     public String buyCoupon() {
-        return "coupon/buyCoupon"; // 뷰 이름을 반환
+        return "coupon/couponPaying"; // 뷰 이름을 반환
     }
 
     @GetMapping("/myCoupon") // 내쿠폰 페이지
     public String myCoupon() {
         return "coupon/myCoupon"; // 뷰 이름을 반환
+    }
+
+    @GetMapping("/couponPayComplete") // 쿠폰 결제 완료 페이지
+    public String couponPayComplete() {
+        return "coupon/couponPayComplete"; // 뷰 이름을 반환
     }
 
     @GetMapping("/list") // 쿠폰리스트
@@ -43,26 +51,26 @@ public class CouponController {
         String email = request.getRemoteUser();
         int totalNum = couponService.getCountByMemberEmail(email);
 
-        model.addAttribute("couponList", couponService.getAllCoupons(cri));
+        model.addAttribute("couponList", couponService.getAllCouponsByMemberEmail(cri, email));
         model.addAttribute("pageInfo", new CouponPageInfo(cri, totalNum));
         model.addAttribute("cri", cri);
 
         return "coupon/couponList"; // 뷰 이름을 반환
     }
 
-    @PostMapping("/couponAdd") // 생성
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> couponAdd() {
-        Map<String, Object> response = new HashMap<>();
-        String email = request.getRemoteUser();
-
-        Coupon coupon = new Coupon();
-        coupon.setMemberEmail(email);
-        couponService.addToCoupon(coupon);
-        response.put("success", true);
-
-        return ResponseEntity.ok(response);
-    }
+//    @PostMapping("/couponCreate") // 쿠폰 생성
+//    @ResponseBody
+//    public ResponseEntity<Map<String, Object>> couponCreate() {
+//        Map<String, Object> response = new HashMap<>();
+//        String email = request.getRemoteUser();
+//
+//        Coupon coupon = new Coupon();
+//        coupon.setMemberEmail(email);
+//        couponService.addToCoupon(coupon);
+//        response.put("success", true);
+//
+//        return ResponseEntity.ok(response);
+//    }
 
     @GetMapping("/getCount") // 남은 쿠폰 개수 반환
     @ResponseBody
@@ -75,6 +83,20 @@ public class CouponController {
 
         response.put("success", true);
         response.put("couponcount", couponcount);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/myInfo") // 내 정보
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> myInfo() {
+        Map<String, Object> response = new HashMap<>();
+
+        // 내 정보
+        String email = request.getRemoteUser();
+        Member member = memberService.search(email);
+        response.put("success", true);
+        response.put("member", member);
+
         return ResponseEntity.ok(response);
     }
 }
