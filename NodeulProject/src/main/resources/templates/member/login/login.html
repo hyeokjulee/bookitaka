@@ -1,5 +1,10 @@
-<!DOCTYPE HTML>
-<html th:replace="~{/layout/loginLayout :: layout(~{::menuTitle}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html th:replace="~{/layout/layout-No-Sidebar :: layout(~{::menuTitle}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>로그인</title>
+</head>
+<body>
+
 <menuTitle>로그인</menuTitle>
 <mainSection>
     <section style="padding-top: 0;">
@@ -10,10 +15,10 @@
                         <h3 class="mb-4 mt-2 text-center">login</h3>
                         <form class="signin-form">
                             <div class="form-group mb-3">
-                                <input type="text" id="memberEmail" name="memberEmail" class="form-control" required>
+                                <input type="text" id="memberEmail" name="memberEmail" class="form-control" placeholder="email"required>
                             </div>
                             <div class="form-group mb-3">
-                                <input type="password" id="memberPassword" name="memberPassword" class="form-control" required>
+                                <input type="password" id="memberPassword" name="memberPassword" class="form-control" placeholder="password" required>
                             </div>
                             <div class="form-group mb-3">
                                 <button button type="button" id="loginBtn" class="form-control btn btn-primary px-3">Login</button>
@@ -29,10 +34,11 @@
                         </form>
                         <div class="form-group d-md-flex justify-content-between">
                             <div>
-                                <a href="#">회원가입</a>
+                                <a th:href="@{/members/signup}">회원가입</a>
                             </div>
                             <div>
-                                <a href="#">아이디/비밀번호찾기</a>
+                                <a th:href="@{/members/findid}">아이디찾기 </a>|
+                                <a th:href="@{/members/findpw}"> 비밀번호찾기</a>
                             </div>
                         </div>
                     </div>

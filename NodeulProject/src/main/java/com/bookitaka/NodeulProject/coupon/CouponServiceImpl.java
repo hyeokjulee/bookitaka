@@ -29,7 +29,7 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public List<Coupon> getAllCoupons(CouponCri cri) {
-        return couponRepositoryCustom.findAllCoupon(cri);
+    public List<Coupon> getAllCouponsByMemberEmail(CouponCri cri, String memberEmail) {
+        return couponRepositoryCustom.findAllCouponByMemberEmail(cri, memberEmail);
     }
 }
