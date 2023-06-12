@@ -11,5 +11,5 @@ public interface CouponService {
 
     int getCountByMemberEmail(String memberEmail);
 
-    public List<Coupon> getAllCoupons(CouponCri cri);
+    List<Coupon> getAllCouponsByMemberEmail(CouponCri cri, String memberEmail);
 }
