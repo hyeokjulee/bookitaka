@@ -1027,6 +1027,10 @@ progress {
   --bs-gutter-y: 15rem;
 }
 
+.errorMsg {
+  color: red;
+}
+
 @media (min-width: 576px) {
   .col-sm {
     -webkit-box-flex: 1;
