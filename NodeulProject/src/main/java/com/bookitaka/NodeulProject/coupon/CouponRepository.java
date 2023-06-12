@@ -11,6 +11,4 @@ public interface CouponRepository extends JpaRepository<Coupon, Integer> {
     List<Coupon> findByMemberEmailOrderByCouponEnddate(String memberEmail);
 
     int countByMemberEmail(String memberEmail);
-
-    List<Coupon> findAllCoupon(CouponCri cri);
 }

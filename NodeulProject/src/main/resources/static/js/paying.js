@@ -1,8 +1,10 @@
 // 전역 변수
 var sum = 0;
-var title;
 var cnt = 0;
 var memberInfo = [];
+var sheetInfo = [];
+var sInfo = "";
+var decodedList;
 
 // 내 정보 초기화
 function memberSet(member) {
@@ -24,12 +26,13 @@ function showSheets(sheets) {
     row.append('<td>' + sheet.sheetPrice.toLocaleString() + '원</td>');
     tableBody.append(row);
     sum += parseInt(sheet.sheetPrice);
+
+    sheetInfo.push(sheet.sheetBooktitle);
   }
 
   $('#totalcnt').text("총 " + sheets.length + "건");
   $('#totalprice').text("합계 : " + sum.toLocaleString() + "원");
 
-  title = sheets[0].sheetBooktitle;
   cnt = sheets.length;
 }
 
@@ -54,10 +57,29 @@ function nosToSheets(decodedList) {
     });
 }
 
+// 결제완료시 쿠키에 있는 목록 선택 삭제 요청을 보냄
+function deleteSelectedCart() {
+  // AJAX 요청을 보냅니다.
+  $.ajax({
+    type: 'POST',
+    url: '/cart/deleteSelectedCart',
+    data: JSON.stringify(decodedList),
+    contentType: 'application/json',
+    success: function(response) {
+      if (response.success) {
+          console.log('선택 삭제 성공');
+        } else {
+          console.log('선택 삭제 실패');
+        }
+    },
+    error: function() {
+      console.log('선택 삭제 요청 실패');
+    }
+  });
+}
+
 // 페이지 로드 시 이전 페이지에서 선택했던 목록 표시
 $(document).ready(function() {
-    var decodedList;
-
     // 쿠키 값을 가져오기
     var cookies = document.cookie.split("; ");
     for (var i = 0; i < cookies.length; i++) {

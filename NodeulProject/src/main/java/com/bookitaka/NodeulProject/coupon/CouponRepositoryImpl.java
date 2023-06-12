@@ -19,12 +19,16 @@ public class CouponRepositoryImpl implements CouponRepositoryCustom {
     QCoupon qCoupon = new QCoupon("m");
 
     @Override
-    public List<Coupon> findAllCoupon(CouponCri cri) {
+    public List<Coupon> findAllCouponByMemberEmail(CouponCri cri, String email) {
         log.info("cri = {}", cri);
 
         JPAQuery<Coupon> query = qf.selectFrom(qCoupon);
 
+        query.where(qCoupon.memberEmail.eq(email));
+
         query.offset((cri.getPageNum() - 1) * cri.getAmount()).limit(cri.getAmount());
+
+        query.orderBy(qCoupon.couponNo.desc());
 
         return query.fetch();
     }

@@ -54,19 +54,25 @@
     <script>
         var IMP = window.IMP;
         IMP.init("imp71816073");
-
         function requestPay() {
             if (verifyBefore(uuid, sum) === false) {
                 alert("사전 검증 실패. 다시 시도해주세요.");
                 return
             }
+
+            if (sheetInfo.length == 1) {
+                sInfo = sheetInfo[0];
+            } else {
+                sInfo = sheetInfo[0] + "외 " + (cnt - 1) + "건";
+            }
+
             IMP.request_pay(
                 {
                     pg: "kcp.INIpayTest",
                     pay_method: "card",
                     merchant_uid: uuid,
 
-                    name: title + "외 " + (cnt - 1) + "건",
+                    name: sInfo,
                     amount: sum,
                     buyer_email: memberInfo[0],
                     buyer_name: memberInfo[1],
@@ -79,10 +85,23 @@
                     if (rsp.success) {
                     console.log(rsp)
                         refreshToken()
+
+                    sInfo += "(";
+                    sheetInfo.forEach(function(element) {
+                      sInfo += element + ", ";
+                    });
+                    sInfo = sInfo.slice(0, -2);
+                    sInfo += ")";
+
+                    // callback
+                    //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
+                    // if(verifyAfter(rsp.imp_uid, rsp.merchant_uid, rsp.paid_amount)) {
+                    //     alert("결제 성공 만세!!")
+                    // }
                         console.log("사후 검증 시작")
                         const payMakeDto = {
                             paymentUuid: rsp.merchant_uid,
-                            paymentInfo: rsp.name, //임시로 name만 해둠. 여기다가 정보 넣어주면 됨.
+                            paymentInfo: sInfo,
                             paymentPrice: rsp.paid_amount,
                             receiptUrl: rsp.receipt_url,
                             memberEmail : rsp.buyer_email,
@@ -101,7 +120,9 @@
                                         if (response.status == 200) {
                                             console.log("사후 검증 완료");
                                             console.log(response);
-                                            // window.location.href = "/payproc/complete"
+
+                                            deleteSelectedCart();
+                                            window.location.href = "/payproc/complete?sInfo=" + sInfo;
                                         } else {
                                             alert('사후 검증 단계에서 오류 발생, 결제가 취소됩니다');
                                             return

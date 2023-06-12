@@ -7,5 +7,5 @@ import java.util.List;
 @Repository
 public interface CouponRepositoryCustom {
 
-    List<Coupon> findAllCoupon(CouponCri cri);
+    List<Coupon> findAllCouponByMemberEmail(CouponCri cri, String email);
 }

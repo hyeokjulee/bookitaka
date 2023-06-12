@@ -43,7 +43,7 @@ public class CouponController {
         String email = request.getRemoteUser();
         int totalNum = couponService.getCountByMemberEmail(email);
 
-        model.addAttribute("couponList", couponService.getAllCoupons(cri));
+        model.addAttribute("couponList", couponService.getAllCouponsByMemberEmail(cri, email));
         model.addAttribute("pageInfo", new CouponPageInfo(cri, totalNum));
         model.addAttribute("cri", cri);
 
