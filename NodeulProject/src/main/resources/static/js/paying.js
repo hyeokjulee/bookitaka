@@ -89,10 +89,11 @@ $(document).ready(function() {
 
       if (name.trim() === "carts") {
         decodedList = JSON.parse(decodeURIComponent(value));
+
+        // 쿠키에 저장된 리스트 사용
+        nosToSheets(decodedList);
+
         break;
       }
     }
-
-    // 쿠키에 저장된 리스트 사용
-    nosToSheets(decodedList);
 });

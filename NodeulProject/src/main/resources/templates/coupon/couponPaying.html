@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <title>Paying</title>
+    <title>BuyCoupon</title>
 
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
@@ -10,53 +10,9 @@
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
-    <h1>결제하기</h1>
+    <h1>쿠폰 구입</h1>
 
-    <table class="table" id="payingTable">
-        <thead>
-            <tr>
-                <th scope="col"></th>
-                <th scope="col">자료명</th>
-                <th scope="col">금액</th>
-            </tr>
-        </thead>
-
-        <tbody class="table-group-divider" id="sheets">
-            <!-- 상품 목록이 동적으로 추가될 영역 -->
-        </tbody>
-
-        <tfoot>
-            <tr>
-                <th id="totalcnt"></th>
-                <th></th>
-                <th id="totalprice"></th>
-            </tr>
-        </tfoot>
-    </table>
-
-    <table class="table" id="myInfoTable">
-        <thead>
-            <tr>
-                <th scope="col">구매자 정보</th>
-                <th></th>
-            </tr>
-        </thead>
-
-        <tbody class="table-group-divider" id="infos">
-            <tr>
-                <th scope="row">이메일</th>
-                <td th:text="${member.memberEmail}"></td>
-            </tr>
-            <tr>
-                <th scope="row">이름</th>
-                <td th:text="${member.memberName}"></td>
-            </tr>
-            <tr>
-                <th scope="row">전화번호</th>
-                <td th:text="${member.memberPhone}"></td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="text-center">기존 160,000원 -> 할인가 100,000원<br>쿠폰을 구매하면 10만원에 독후활동지 80개를 구입하실 수 있습니다.</div>
 
     <div class="text-center">
         <button onclick="requestPay()" class="btn btn-secondary">결제하기</button>
@@ -68,26 +24,19 @@
     <!-- iamport.payment.js -->
     <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.2.0.js"></script>
 
-    <script src="/js/paying.js"></script>
+    <script src="/js/couponpaying.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/uuid@8.3.2/dist/umd/uuidv4.min.js"></script>
 
     <script>
         const uuid = uuidv4();
-    </script>
 
-    <script>
         var IMP = window.IMP;
         IMP.init("imp71816073");
+
         function requestPay() {
             if (verifyBefore(uuid, sum) === false) {
                 alert("사전 검증 실패");
                 return
-            }
-
-            if (sheetInfo.length == 1) {
-                sInfo = sheetInfo[0];
-            } else {
-                sInfo = sheetInfo[0] + "외 " + (cnt - 1) + "건";
             }
 
             IMP.request_pay(
@@ -96,8 +45,8 @@
                     pay_method: "card",
                     merchant_uid: uuid,
 
-                    name: sInfo,
-                    amount: sum,
+                    name: "북키타카 쿠폰",
+                    amount: 100,
                     buyer_email: memberInfo[0],
                     buyer_name: memberInfo[1],
                     buyer_tel: memberInfo[2],
@@ -109,13 +58,6 @@
                     if (rsp.success) {
                     console.log(rsp)
 
-                    sInfo += "(";
-                    sheetInfo.forEach(function(element) {
-                      sInfo += element + ", ";
-                    });
-                    sInfo = sInfo.slice(0, -2);
-                    sInfo += ")";
-
                     // callback
                     //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
                     // if(verifyAfter(rsp.imp_uid, rsp.merchant_uid, rsp.paid_amount)) {
@@ -124,14 +66,15 @@
                         console.log("사후 검증 시작")
                         const payMakeDto = {
                             paymentUuid: rsp.merchant_uid,
-                            paymentInfo: sInfo,
+
+                            paymentInfo: "북키타카 쿠폰",
+
                             paymentPrice: rsp.paid_amount,
                             receiptUrl: rsp.receipt_url,
                             payMethod: rsp.pay_method,
-                            impId: rsp.imp_uid,
-                            mySheetMeans: '개별구입'
+                            impId: rsp.imp_uid
                         };
-                                fetch('/payproc/paid', {
+                                fetch('/payproc/couponPaid', {
                                     method: 'POST',
                                     headers: {
                                         'Content-Type': 'application/json'
@@ -143,8 +86,7 @@
                                             console.log("사후 검증 완료");
                                             console.log(response);
 
-                                            deleteSelectedCart();
-                                            window.location.href = "/payproc/complete;
+                                            window.location.href = "/coupon/couponPayComplete;
                                         } else {
                                             alert('사후 검증 단계에서 오류 발생.');
                                             return
@@ -191,8 +133,6 @@
                     return false
                 });
         }
-
-
     </script>
 </body>
 </html>
