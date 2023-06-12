@@ -50,6 +50,23 @@ public class PayprocController {
         return "/payproc/paying";
     }
 
+    @GetMapping("/complete")
+    public String payCompletePage(@CookieValue("carts") String carts,
+                                  Model model) {
+        List<Long> sheetNumListInCart = parseCookie(carts);
+        List<Sheet> sheetList = new ArrayList<>();
+
+        for (Long sheetNo: sheetNumListInCart) {
+            sheetList.add(sheetService.getSheet(Math.toIntExact(sheetNo)));
+        }
+
+        model.addAttribute("sheetList", sheetList);
+
+
+        return "/payproc/payComplete";
+    }
+
+
     @PostMapping("/verifyBefore")
     @ResponseBody
     public int verifyBefore(@RequestBody VeriBeforeDto veriBeforeDto) throws JsonProcessingException {
@@ -75,9 +92,9 @@ public class PayprocController {
             String responseBody = response.getBody();
             HttpHeaders responseHeaders = response.getHeaders();
 
-            log.info("Status Code: = {}" + statusCode);
-            log.info("Response Body: = {}" + responseBody);
-            log.info("Response Headers: = {} " + responseHeaders);
+            log.info("Status Code: = {}", statusCode);
+            log.info("Response Body: = {}", responseBody);
+            log.info("Response Headers: = {}", responseHeaders);
 
             return statusCode ;
         }
@@ -95,6 +112,7 @@ public class PayprocController {
         log.info("verifyAfterDto = {}", veriAfterDto);
         if (!verifyAfter(veriAfterDto)) {
             // 예외 발생 시
+            cancelPayWhenFailAfterVeri(veriAfterDto, "사후 검증 오류");
             return ResponseEntity.badRequest().body("사후 검증 오류");
         }
 
@@ -105,7 +123,7 @@ public class PayprocController {
         payMakeDto.setSheetNoList(sheetNumListInCart);
         log.info("payMakeDto", payMakeDto);
 
-        payprocService.makePay(payMakeDto, memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN));
+        payprocService.makePay(payMakeDto);
 
         return ResponseEntity.ok().body("결제 완료");
     }
@@ -145,42 +163,46 @@ public class PayprocController {
         }
     }
 
+    public boolean cancelPayWhenFailAfterVeri(VeriAfterDto veriAfterDto, String reason) {
+        try {
+            /* 액세스 토큰(access token) 발급 */
+            String accessToken = getAccessToken();
 
-//    @PostMapping("/verifyAfter")
-//    public ResponseEntity<String> verifyAfter(@RequestBody VeriAfterDto veriAfterDto) {
-//        try {
-//            // req의 body에서 imp_uid, merchant_uid 추출
-//            String imp_uid = veriAfterDto.getImp_uid();
-//            String merchant_uid = veriAfterDto.getMerchant_uid();
-//
-//            // 액세스 토큰(access token) 발급 받기
-//            String accessToken = getAccessToken();
-//
-//            log.info("verifyAfter dto = {}", veriAfterDto);
-//            // imp_uid로 포트원 서버에서 결제 정보 조회
-//            String paymentData = getPaymentData(imp_uid, accessToken);
-//
-//            // ObjectMapper 인스턴스 생성
-//            ObjectMapper objectMapper = new ObjectMapper();
-//
-//            // JSON 문자열 파싱
-//            JsonNode jsonNode = objectMapper.readTree(paymentData);
-//
-//            // "amount" 필드 값 price로 가져오기
-//            int price = jsonNode.get("response").get("amount").asInt();
-//
-//
-//            if (veriAfterDto.getAmount() == price) {
-//
-//                return ResponseEntity.ok().body("결제 완료");
-//            }
-//            else {
-//                return ResponseEntity.badRequest().body("결제 정보 불일치");
-//            }
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
+            String url = "https://api.iamport.kr/payments/cancel";
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(accessToken);
+
+            String response = webClient.post()
+                    .uri(url)
+                    .headers(httpHeaders -> httpHeaders.addAll(headers))
+                    .bodyValue("{\"reason\":\"" + reason + "\",\"imp_uid\":\"" + veriAfterDto.getImpUid() + "\",\"checksum\":" + veriAfterDto.getAmount() + "}")
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+
+            log.info("response cancelPay = {}", response);
+            // ObjectMapper 인스턴스 생성
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            // JSON 문자열 파싱
+            JsonNode jsonNode = objectMapper.readTree(response);
+
+            // "code" 필드 값 가져오기
+            int code = jsonNode.get("code").asInt();
+
+            if (code == 0) {
+                log.info("환불 성공, code = {}", code);
+                return true;
+            } else {
+                log.info("환불 실패, code = {}", code);
+                return false;
+            }
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     private String getAccessToken() throws JsonProcessingException {
         String url = "https://api.iamport.kr/users/getToken";
@@ -246,11 +268,6 @@ public class PayprocController {
         }
 
         return numberList;
-    }
-
-    @GetMapping("/complete")
-    public String payCompletePage() {
-        return "/payproc/payComplete";
     }
 
 

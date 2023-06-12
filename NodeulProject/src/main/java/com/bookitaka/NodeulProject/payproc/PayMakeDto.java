@@ -14,6 +14,8 @@ public class PayMakeDto {
 
     private Long paymentPrice;
 
+    private String memberEmail;
+
     private String receiptUrl;
 
     private String payMethod;

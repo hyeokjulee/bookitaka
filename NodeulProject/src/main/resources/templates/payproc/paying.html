@@ -57,7 +57,7 @@
 
         function requestPay() {
             if (verifyBefore(uuid, sum) === false) {
-                alert("사전 검증 실패");
+                alert("사전 검증 실패. 다시 시도해주세요.");
                 return
             }
             IMP.request_pay(
@@ -78,17 +78,14 @@
                 function (rsp) {
                     if (rsp.success) {
                     console.log(rsp)
-                    // callback
-                    //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
-                    // if(verifyAfter(rsp.imp_uid, rsp.merchant_uid, rsp.paid_amount)) {
-                    //     alert("결제 성공 만세!!")
-                    // }
+                        refreshToken()
                         console.log("사후 검증 시작")
                         const payMakeDto = {
                             paymentUuid: rsp.merchant_uid,
                             paymentInfo: rsp.name, //임시로 name만 해둠. 여기다가 정보 넣어주면 됨.
                             paymentPrice: rsp.paid_amount,
                             receiptUrl: rsp.receipt_url,
+                            memberEmail : rsp.buyer_email,
                             payMethod: rsp.pay_method,
                             impId: rsp.imp_uid,
                             mySheetMeans: '개별구입'
@@ -96,7 +93,7 @@
                                 fetch('/payproc/paid', {
                                     method: 'POST',
                                     headers: {
-                                        'Content-Type': 'application/json'
+                                        'Content-Type': 'application/json',
                                     },
                                     body: JSON.stringify(payMakeDto)
                                 })
@@ -104,9 +101,9 @@
                                         if (response.status == 200) {
                                             console.log("사후 검증 완료");
                                             console.log(response);
-                                            window.location.href = "/payproc/complete"
+                                            // window.location.href = "/payproc/complete"
                                         } else {
-                                            alert('사후 검증 단계에서 오류 발생.');
+                                            alert('사후 검증 단계에서 오류 발생, 결제가 취소됩니다');
                                             return
                                         }
                                     })
@@ -150,6 +147,25 @@
                     console.error('사전 검증 요청 실패:', error);
                     return false
                 });
+        }
+
+        function refreshToken() {
+
+            fetch('/member/refreshf', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'ajax' : "true"
+                    }
+                })
+                .then(data => {
+                    console.log(data); // 서버에서 받은 응답 데이터를 출력 또는 처리
+                    console.log("토큰 재발급");
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
         }
 
     </script>
