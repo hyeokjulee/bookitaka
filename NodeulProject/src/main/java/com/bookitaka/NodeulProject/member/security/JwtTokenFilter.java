@@ -25,7 +25,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-    log.info("doFilterInternal - getRequestURI : {}", request.getRequestURI());
+    log.info("JwtTokenFilter - doFilterInternal - getRequestURI : {}", request.getRequestURI());
     // 쿠키에서 Token 을 가져옴
     String aToken = jwtTokenProvider.resolveToken(request.getCookies(), Token.ACCESS_TOKEN);
     String rToken = jwtTokenProvider.resolveToken(request.getCookies(), Token.REFRESH_TOKEN);
@@ -50,6 +50,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
       } catch (CustomException ex) {
         // a토큰이 만료되었고 r토큰은 유효한 경우
         if (ex.getMessage().equals("Expired JWT token") && validRToken) {
+          log.info("JwtTokenFilter - doFilterInternal - CustomException - [Expired JWT token]");
           // 토큰 재발급
           if (!request.getRequestURI().equals(refreshFetchUri)) {
             if (request.getHeader("ajax") != null) {
@@ -93,11 +94,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     try {
       // 토큰이 있으면 유효성 검사 (유효하면 true, 비유효하거나 만료됐다면 CustomException)
       if (rToken != null && jwtTokenProvider.validateToken(rToken)) {
-        log.info("doFilterInternal - validationRefreshToken - valid Token");
+        log.info("JwtTokenFilter - doFilterInternal - validationRefreshToken - [valid Token]");
         return true;
       }
     } catch (CustomException ex) {
-      log.info("doFilterInternal - validationRefreshToken - CustomException: {}", ex.getMessage());
+      log.info("JwtTokenFilter - doFilterInternal - validationRefreshToken - CustomException: {}", ex.getMessage());
     }
     return false;
   }
