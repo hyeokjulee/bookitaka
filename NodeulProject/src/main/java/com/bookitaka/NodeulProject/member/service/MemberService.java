@@ -11,6 +11,8 @@ import com.bookitaka.NodeulProject.member.security.JwtTokenProvider;
 import com.bookitaka.NodeulProject.member.security.Token;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -172,8 +174,19 @@ public class MemberService {
         return false;
     }
 
-    public List<Member> getAllMembers() {
-        return memberRepository.findAll();
+//    public List<Member> getAllMembers() {
+//        return memberRepository.findAll();
+//    }
+
+    public Page<Member> getAllMembersPaging(Pageable pageable, String keyword, String method) {
+        if (method.equals("이름")) {
+            return memberRepository.findByMemberNameContainingAndMemberRoleNot(keyword, "ROLE_ADMIN", pageable);
+        } else if (method.equals("이메일")) {
+            return memberRepository.findByMemberEmailContainingAndMemberRoleNot(keyword, "ROLE_ADMIN", pageable);
+        } else {
+            return memberRepository.findByMemberRoleNot("ROLE_ADMIN", pageable);
+        }
+
     }
 
     private String generateRandomPassword() {

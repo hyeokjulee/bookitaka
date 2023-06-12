@@ -1,26 +1,33 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{/layout/layout-No-Sidebar :: layout(~{::menuTitle}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>findPw</title>
 </head>
 <body>
-<h1>findPw</h1>
-<form>
-    <div>
-        <label>이메일:</label>
-        <input type="email" name="memberEmail" id="memberEmail"/>
-        <div class="errorDiv" error="memberEmail" style="color: red"></div>
 
+<menuTitle>비밀번호 찾기</menuTitle>
+<mainSection>
+
+<form class="container">
+    <p><i class="fa-solid fa-circle-exclamation"></i> 아래의 회원정보를 입력해 임시 비밀번호를 발급받으세요.</p>
+    <hr style="height: 2px; color: black">
+    <div class="row">
+        <span class="offset-1 col-2 text-truncate"><label for="memberEmail">이메일</label></span>
+        <span class="col-9">
+            <input class="form-control-inline" type="email" name="memberEmail" id="memberEmail"/>
+            <div class="errorDiv" error="memberEmail" style="color: red"></div>
+        </span>
     </div>
-    <div>
-        <label>이름:</label>
-        <input type="text" name="memberName" id="memberName"/>
-        <div class="errorDiv" error="memberName" style="color: red"></div>
+    <hr>
+    <div class="row">
+        <span class="offset-1 col-2 text-truncate"><label for="memberName">이름</label></span>
+        <span class="col-9">
+            <input class="form-control-inline" type="text" name="memberName" id="memberName"/>
+            <div class="errorDiv" error="memberName" style="color: red"></div>
+        </span>
     </div>
-
-    <div>
-        <Button type="button" id="findBtn">임시 비밀번호 발송</Button>
-
+    <hr>
+    <div class="text-center">
+        <a class="btn-lg btn-primary" id="findBtn">임시 비밀번호 발송</a>
     </div>
 </form>
 <script th:inline="javascript">
@@ -90,5 +97,6 @@
             })
     });
 </script>
+</mainSection>
 </body>
 </html>

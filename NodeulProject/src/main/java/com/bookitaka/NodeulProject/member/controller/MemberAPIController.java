@@ -9,6 +9,7 @@ import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -72,9 +73,17 @@ public class MemberAPIController {
   @ApiOperation(value = "${MemberController.signup}")
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong"), //
+      @ApiResponse(code = 402, message = "Agreement to the terms and conditions is required"),
       @ApiResponse(code = 422, message = "Member Email is already in use")})
-  public String signup(@ApiParam("Signup Member") @Validated @ModelAttribute MemberDataDTO user) {
+  public String signup(@ApiParam("Signup Member") @Validated @ModelAttribute MemberDataDTO user,
+                       @RequestParam(defaultValue = "false") Boolean agree1,
+                       @RequestParam(defaultValue = "false") Boolean agree2) {
     log.info("================================Member : signup");
+    log.info("agree1 : {}", agree1);
+    log.info("agree2 : {}", agree2);
+    if (!agree1 || !agree2) {
+      throw new CustomException("Agreement to the terms and conditions is required", HttpStatus.PAYMENT_REQUIRED);
+    }
     memberService.signup(modelMapper.map(user, Member.class));
     return "Sign-up ok";
   }
