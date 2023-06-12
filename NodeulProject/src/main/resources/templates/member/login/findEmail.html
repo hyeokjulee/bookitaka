@@ -1,23 +1,33 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{/layout/layout-No-Sidebar :: layout(~{::menuTitle}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>이메일 찾기</title>
 </head>
 <body>
-<h1>이메일 찾기</h1>
-<form>
-    <div>
-        <label>이름:</label>
-        <input type="text" name="memberName" id="memberName"/>
-        <div class="errorDiv" error="memberName" style="color: red"></div>
+
+<menuTitle>이메일 찾기</menuTitle>
+<mainSection>
+
+<form class="container">
+    <p><i class="fa-solid fa-circle-exclamation"></i> 아래의 회원정보를 입력해 가입한 이메일 정보가 있는지 확인하세요.</p>
+    <hr style="height: 2px; color: black">
+    <div class="row">
+        <span class="offset-1 col-2 text-truncate"><label for="memberName">이름</label></span>
+        <span class="col-9">
+            <input class="form-control-inline" type="text" name="memberName" id="memberName"/>
+            <div class="errorDiv" error="memberName" style="color: red"></div>
+        </span>
     </div>
-    <div>
-        <label>생년월일:</label>
-        <input type="date" name="memberBirthday" id="memberBirthday"/>
-        <div class="errorDiv" error="memberBirthday" style="color: red"></div>
+    <hr>
+    <div class="row">
+        <span class="offset-1 col-2 text-truncate"><label for="memberBirthday">생년월일</label></span>
+        <span class="col-9">
+            <input class="form-control-inline" type="date" name="memberBirthday" id="memberBirthday"/>
+            <div class="errorDiv" error="memberBirthday" style="color: red"></div>
+        </span>
     </div>
-    <div>
-        <button type="submit" id="findBtn">find</button>
+    <hr>
+    <div class="text-center">
+        <a class="btn-primary btn-lg" id="findBtn">이메일 찾기</a>
     </div>
 </form>
 <div class="errorDiv" error="asd" style="color: red"></div>
@@ -124,5 +134,6 @@
 
 
 </script>
+</mainSection>
 </body>
 </html>

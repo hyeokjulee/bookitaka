@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html th:fragment="layout (menuTitle, sidebar, mainSection)" xmlns:th="http://www.thymeleaf.org">
+<html th:fragment="layout (menuTitle, mainSection)" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -134,16 +134,7 @@
 
     <div class="container">
       <div class="row">
-        <div class="col-md-3">
-          <div class="card">
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item" th:replace="${sidebar}">
-                <strong>Enrolled</strong>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-md-9">
+        <div class="col-md-12">
         <div th:replace="${mainSection}"><img class="w-100" src="assets/img/gallery/ux-designer.png" alt="..." />
         </div>
         </div>
