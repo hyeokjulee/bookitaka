@@ -98,7 +98,8 @@ public class MemberController {
 
         int currentGroup = page / pageSize;
         int startPage = currentGroup * pageSize;
-        int endPage = Math.min(startPage + pageSize, memberPage.getTotalPages());
+        int totalPages = memberPage.getTotalPages();
+        int endPage = Math.min(startPage + pageSize, memberPage.getTotalPages()) - 1;
 
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
@@ -108,9 +109,21 @@ public class MemberController {
         model.addAttribute("previousGroupStartPage", previousGroupStartPage);
 
         // 다음 그룹의 첫 번째 페이지로 이동
-        int nextGroupStartPage = (currentGroup <= (endPage / pageSize)) ? (endPage - 1) : (currentGroup + 1) * pageSize;
+        int nextGroupStartPage = (currentGroup + 1) * pageSize;
+        log.info("=========================================== nextGroupStartPage : {}", nextGroupStartPage);
+
+        if (totalPages % 10 == 0 && startPage == totalPages - 10) {
+            nextGroupStartPage = endPage;
+        } else if (nextGroupStartPage > endPage + 1) {
+            nextGroupStartPage = endPage;
+        }
         model.addAttribute("nextGroupStartPage", nextGroupStartPage);
 
+        log.info("=========================================== currentPage : {}", page);
+        log.info("=========================================== totalPages : {}", memberPage.getTotalPages());
+        log.info("=========================================== startPage : {}", startPage);
+        log.info("=========================================== endPage : {}", endPage);
+        log.info("=========================================== nextGroupStartPage : {}", nextGroupStartPage);
         return "member/admin/list";
     }
 

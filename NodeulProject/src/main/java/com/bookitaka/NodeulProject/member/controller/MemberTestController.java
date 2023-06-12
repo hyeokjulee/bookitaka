@@ -39,11 +39,11 @@ public class MemberTestController {
   private final FaqRepository faqRepository;
 
   // 회원가입
-  @PostMapping("/signup")
+  @GetMapping("/signup")
   public void signup() {
     for (int i = 1; i <= 100; i++) {
       Member member = new Member();
-      member.setMemberEmail("member" + i + "@naver.com");
+      member.setMemberEmail("member" + i + "@gmail.com");
       member.setMemberPassword("0000");
       member.setMemberName("member" + i);
       member.setMemberPhone("010 - " + i);
