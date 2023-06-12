@@ -1,6 +1,9 @@
-
 # Created by https://www.toptal.com/developers/gitignore/api/intellij,java,gradle
 # Edit at https://www.toptal.com/developers/gitignore?templates=intellij,java,gradle
+
+bookImg/
+sheetFile/
+preview/
 
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
@@ -173,3 +176,7 @@ gradle-app.setting
 *.hprof
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,java,gradle
+application.properties
+application-KEY.properties
+
+NodeulProject/src/main/generated/**
