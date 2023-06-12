@@ -75,7 +75,6 @@ dependencies {
 
 	// 개발용 (타임리프 서버 재시작 없이 빌드만 해서 적용)
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
->>>>>>> origin/feat/member/choi
 }
 
 tasks.named('test') {
