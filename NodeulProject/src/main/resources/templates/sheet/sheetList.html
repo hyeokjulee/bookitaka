@@ -39,19 +39,21 @@
         <br>
         <input type="hidden" name="genre" th:value="${genre}">
         <input type="hidden" name="ageGroup" th:value="${ageGroup}">
-        <div class="form-row justify-content-start">
-            <div class="col-8">
-                <div class="btn-group">
-                    <button type="button" onclick="handleSortBtn('최신순')" th:class="${cri.sort == '최신순' ? 'btn btn-primary active' : 'btn btn-primary'}" th:text="'최신순'">최신순</button>
-                    <button type="button" onclick="handleSortBtn('조회순')" th:class="${cri.sort == '조회순' ? 'btn btn-primary active' : 'btn btn-primary'}" th:text="'조회순'">조회순</button>
-                    <button type="button" onclick="handleSortBtn('구매순')" th:class="${cri.sort == '구매순' ? 'btn btn-primary active' : 'btn btn-primary'}" th:text="'구매순'">구매순</button>
+            <div class="justify-content-start">
+                <div class="form-row">
+                    <div class="col-4">
+                        <div class="btn-group">
+                            <button type="button" onclick="handleSortBtn('최신순')" th:class="${cri.sort == '최신순' ? 'btn btn-primary active' : 'btn btn-primary'}" th:text="'최신순'">최신순</button>
+                            <button type="button" onclick="handleSortBtn('조회순')" th:class="${cri.sort == '조회순' ? 'btn btn-primary active' : 'btn btn-primary'}" th:text="'조회순'">조회순</button>
+                            <button type="button" onclick="handleSortBtn('구매순')" th:class="${cri.sort == '구매순' ? 'btn btn-primary active' : 'btn btn-primary'}" th:text="'구매순'">구매순</button>
+                        </div>
+                        <input type="hidden" id="sortBtnInput" name="sort" th:value="${cri.sort}" />
+                    </div>
                 </div>
-                <input type="hidden" id="sortBtnInput" name="sort" th:value="${cri.sort}" />
             </div>
-        </div>
     </form>
     </div>
-    <hr class="my-1">
+    <hr class="my-0">
     <table class="table">
         <tbody>
         <tr th:each="sheet, status : ${sheetList}" th:if="${status.index % 2 == 0}">
