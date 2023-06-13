@@ -173,11 +173,11 @@ public class MemberAPIController {
       @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 404, message = "The user doesn't exist"), //
       @ApiResponse(code = 500, message = "Member edit failed")})
-  public ResponseEntity<?> editAdmin(@Validated @ModelAttribute MemberUpdateDTO memberUpdateDTO,
+  public ResponseEntity<?> editAdmin(@Validated @ModelAttribute MemberUpdateAdminDTO memberUpdateAdminDTO,
                                      @PathVariable String memberEmail) {
     log.info("================================ Member : editAdmin");
     Member member = memberService.search(memberEmail);
-    modelMapper.map(memberUpdateDTO, member);
+    modelMapper.map(memberUpdateAdminDTO, member);
     if(memberService.modifyMember(member)) {
       // 수정 성공시
       return ResponseEntity.ok().build();

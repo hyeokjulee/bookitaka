@@ -21,7 +21,7 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
 
   List<Member> findByMemberName(String memberName);
 
-  Page<Member> findByMemberEmailContainingAndMemberRoleNot(String memberEmail, String memberRole, Pageable pageable);
-  Page<Member> findByMemberNameContainingAndMemberRoleNot(String memberName, String memberRole, Pageable pageable);
-  Page<Member> findByMemberRoleNot(String memberRole, Pageable pageable);
+  Page<Member> findByMemberEmailContainingAndMemberEmailNot(String keyword, String memberEmail, Pageable pageable);
+  Page<Member> findByMemberNameContainingAndMemberEmailNot(String memberName, String memberEmail, Pageable pageable);
+  Page<Member> findByMemberEmailNot(String memberEmail, Pageable pageable);
 }

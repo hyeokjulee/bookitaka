@@ -83,12 +83,13 @@ public class MemberController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "") String method,
             @RequestParam(defaultValue = "") String keyword,
+            HttpServletRequest request,
             Model model) {
         log.info(method);
         log.info(keyword);
         int pageSize = 10;
         PageRequest pageable = PageRequest.of(page, size);
-        Page<Member> memberPage = memberService.getAllMembersPaging(pageable, keyword, method);
+        Page<Member> memberPage = memberService.getAllMembersPaging(pageable, keyword, method, request.getCookies());
         model.addAttribute("members", memberPage.getContent());
         model.addAttribute("totalPages", memberPage.getTotalPages());
         model.addAttribute("currentPage", page);
@@ -110,7 +111,6 @@ public class MemberController {
 
         // 다음 그룹의 첫 번째 페이지로 이동
         int nextGroupStartPage = (currentGroup + 1) * pageSize;
-        log.info("=========================================== nextGroupStartPage : {}", nextGroupStartPage);
 
         if (totalPages % 10 == 0 && startPage == totalPages - 10) {
             nextGroupStartPage = endPage;
@@ -118,12 +118,6 @@ public class MemberController {
             nextGroupStartPage = endPage;
         }
         model.addAttribute("nextGroupStartPage", nextGroupStartPage);
-
-        log.info("=========================================== currentPage : {}", page);
-        log.info("=========================================== totalPages : {}", memberPage.getTotalPages());
-        log.info("=========================================== startPage : {}", startPage);
-        log.info("=========================================== endPage : {}", endPage);
-        log.info("=========================================== nextGroupStartPage : {}", nextGroupStartPage);
         return "member/admin/list";
     }
 
