@@ -52,7 +52,7 @@ public class MemberAPIController {
   }
 
   // 로그아웃
-  @GetMapping("/signout")
+  @RequestMapping("/signout")
   @ApiOperation(value = "${MemberController.signout}")
   @ApiResponses(value = {//
       @ApiResponse(code = 403, message = "Access denied"), //
@@ -60,12 +60,13 @@ public class MemberAPIController {
       @ApiResponse(code = 302, message = "redirect to login page")})
   public void logout(
       HttpServletRequest request,
-      HttpServletResponse response) throws IOException {
+      HttpServletResponse response,
+      @RequestParam(defaultValue = "/members/login") String redirectUri) throws IOException {
     log.info("================================Member : signout");
     memberService.signout(request.getRemoteUser());
     setCookie(response, null, Token.ACCESS_TOKEN,true);
     setCookie(response, null, Token.REFRESH_TOKEN,true);
-    response.sendRedirect("/members/login");
+    response.sendRedirect(redirectUri);
   }
 
   // 회원가입
@@ -291,14 +292,21 @@ public class MemberAPIController {
   }
 
   // 토큰 재발급 (회원)
-  @GetMapping("/refresh")
-  public ResponseEntity<String> refresh(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+  @RequestMapping("/refresh")
+  public ResponseEntity<String> refresh(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      @RequestParam(value = "redirectUri", defaultValue = "/") String redirectUri) throws IOException, ServletException {
     log.info("================================Member : refresh");
+    log.info("redirectUri : {}", redirectUri);
     Member member = memberService.whoami(request.getCookies(), Token.REFRESH_TOKEN);
     String token = memberService.refresh(request.getCookies(), member);
     if (token != null) {
       setCookie(response, token, Token.ACCESS_TOKEN, false);
-      response.sendRedirect("/");
+      if (redirectUri.equals("ajax")) {
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+      }
+      response.sendRedirect(redirectUri);
     }
     return ResponseEntity.badRequest().build();
   }

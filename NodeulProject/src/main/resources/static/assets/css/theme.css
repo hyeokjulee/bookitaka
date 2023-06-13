@@ -1027,6 +1027,10 @@ progress {
   --bs-gutter-y: 15rem;
 }
 
+.errorMsg {
+  color: red;
+}
+
 @media (min-width: 576px) {
   .col-sm {
     -webkit-box-flex: 1;
@@ -18556,6 +18560,18 @@ ul {
   -webkit-box-shadow: none;
   box-shadow: none;
   background-color: #F0F4F9;
+}
+
+@media screen and (max-width: 992px) {
+  .navbar .nav-item .dropdown-menu {
+    display: block;
+    border: none;
+    margin-top: 0;
+    top: 150%;
+    opacity: 1;
+    visibility: visible;
+    transition: .5s;
+  }
 }
 
 /*-----------------------------------------------

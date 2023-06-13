@@ -6,4 +6,5 @@ public interface PayprocService {
 
     boolean makePay(PayMakeDto payMakeDto);
 
+    boolean makeCouponPay(PayMakeDto payMakeDto, Member member);
 }
