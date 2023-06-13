@@ -45,7 +45,13 @@ class PayprocServiceImplTest {
 
         payMakeDto.setMySheetMeans("결제");
 
-        payprocService.makePay(payMakeDto, member);
+        payprocService.makePay(payMakeDto);
     }
+
+    @Test
+    public void cancelPayTest() {
+
+    }
+
 
 }

@@ -175,7 +175,7 @@
                 if (response.status === 200) {
                     // 성공적인 응답 처리
                     window.location.reload();
-                } else if (response.status === 202) {
+                } else if (response.status === 201) {
                     console.log("refreshed")
                     sendForm();
                 } else if (response.status === 400) {

@@ -48,13 +48,13 @@
     <div class="pagination">
         <ul class="pagination justify-content-center">
             <li class="page-item" th:if="${pageInfo.hasPreviousPage}">
-                <a class="page-link" th:href="@{/sheet/list(pageNum=${pageInfo.pageNum - 1}, amount=${pageInfo.amount})}">&laquo;</a>
+                <a class="page-link" th:href="@{/myPay(pageNum=${pageInfo.pageNum - 1}, amount=${pageInfo.amount})}">&laquo;</a>
             </li>
             <li class="page-item" th:each="pageNum : ${pageInfo.getPageList()}" th:class="${pageNum} == ${pageInfo.pageNum} ? 'page-disabled active' : ''">
-                <a class="page-link" th:href="@{/sheet/list(pageNum=${pageNum}, amount=${pageInfo.amount})}" th:text="${pageNum}"></a>
+                <a class="page-link" th:href="@{/myPay(pageNum=${pageNum}, amount=${pageInfo.amount})}" th:text="${pageNum}"></a>
             </li>
             <li class="page-item" th:if="${pageInfo.hasNextPage}">
-                <a class="page-link" th:href="@{/sheet/list(pageNum=${pageInfo.pageNum + 1}, amount=${pageInfo.amount})}">&raquo;</a>
+                <a class="page-link" th:href="@{/myPay(pageNum=${pageInfo.pageNum + 1}, amount=${pageInfo.amount})}">&raquo;</a>
             </li>
         </ul>
     </div>
