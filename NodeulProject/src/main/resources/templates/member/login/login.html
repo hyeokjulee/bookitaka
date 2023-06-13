@@ -12,16 +12,21 @@
             <div class="row justify-content-center">
                 <div class="col-md-6 col-lg-4">
                     <div class="login-wrap p-0" style="margin: 0 auto; width: 100%;">
-                        <h3 class="mb-4 mt-2 text-center">login</h3>
+                        <h3 class="mb-4 mt-2 text-center">로그인</h3>
                         <form class="signin-form">
-                            <div class="form-group mb-3">
-                                <input type="text" id="memberEmail" name="memberEmail" class="form-control" placeholder="email"required>
+                            <div class="alert alert-danger text-center" id="alertDiv" style="display: none;">
+                                일치하는 회원이 없습니다.
+                            </div><div class="alert alert-danger text-center" id="emptyAlertDiv" style="display: none;">
+                                아이디 또는 비밀번호를 입력해 주새요.
                             </div>
                             <div class="form-group mb-3">
-                                <input type="password" id="memberPassword" name="memberPassword" class="form-control" placeholder="password" required>
+                                <input type="text" id="memberEmail" name="memberEmail" class="form-control" placeholder="이메일"required>
                             </div>
                             <div class="form-group mb-3">
-                                <button button type="button" id="loginBtn" class="form-control btn btn-primary px-3">Login</button>
+                                <input type="password" id="memberPassword" name="memberPassword" class="form-control" placeholder="비밀번호" required>
+                            </div>
+                            <div class="form-group mb-3">
+                                <button button type="button" id="loginBtn" class="form-control btn btn-primary px-3">로그인</button>
                             </div>
                             <!--<div>
                                 <button type="button" class="btn btn-primary" id="checkSignBtn">토큰 확인</button>
@@ -32,7 +37,7 @@
                             <div id="tokenDiv"></div>
                             <div id="statusDiv"></div>-->
                         </form>
-                        <div class="form-group d-md-flex justify-content-between">
+                        <div class="form-group d-sm-flex justify-content-between">
                             <div>
                                 <a th:href="@{/members/signup}">회원가입</a>
                             </div>
@@ -54,21 +59,34 @@
         }
         // 로그인 버튼 클릭 이벤트 처리
         document.getElementById("loginBtn").addEventListener("click", function() {
+            document.getElementById("alertDiv").style.display = "none";
+            document.getElementById("emptyAlertDiv").style.display = "none";
+
             let memberEmail = document.getElementById("memberEmail").value;
             let memberPassword = document.getElementById("memberPassword").value;
+            if (memberEmail.trim() === '' || memberPassword.trim() === '') {
+                document.getElementById("emptyAlertDiv").style.display = "block";
+                return;
+            }
+
             let formData = {
                 memberEmail: memberEmail,
                 memberPassword: memberPassword
             }
+
             fetch("/member/signin", {
                 method: 'POST',
                 body: new URLSearchParams(formData)
             })
-                .then((response) => response.text())
-                .then((data) => {
-                    console.log(data);
-                    if (data === 'Sign-in ok') {
-                        location.href = '/';
+                .then((response) => {
+                    if (response.ok) {
+                        window.location.href = '/';
+                    } else if (response.status === 422) {
+                        document.getElementById("alertDiv").style.display = "block";
+                    } else {
+                        response.text().then(data => {
+                            console.log(data);
+                        });
                     }
                 });
         });
@@ -80,7 +98,7 @@
         // 토큰 제거 버튼 클릭 이벤트 처리
         document.getElementById("removeTokenBtn").addEventListener("click", function() {
             if(confirm("정말로 제거하시겠습니까? (로그아웃)")) {
-                window.location.href = "/member/signout/deltoken";
+                window.location.href = "/member/signout";
             }
         });
         // 토큰 확인 페이지로 이동 버튼 클릭 이벤트 처리
@@ -104,4 +122,5 @@
         }
     </script>
 </mainSection>
+</body>
 </html>

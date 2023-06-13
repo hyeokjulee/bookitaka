@@ -52,7 +52,7 @@ public class MemberAPIController {
   }
 
   // 로그아웃
-  @RequestMapping("/signout/deltoken")
+  @RequestMapping("/signout")
   @ApiOperation(value = "${MemberController.signout}")
   @ApiResponses(value = {//
       @ApiResponse(code = 403, message = "Access denied"), //
@@ -60,12 +60,13 @@ public class MemberAPIController {
       @ApiResponse(code = 302, message = "redirect to login page")})
   public void logout(
       HttpServletRequest request,
-      HttpServletResponse response) throws IOException {
+      HttpServletResponse response,
+      @RequestParam(defaultValue = "/members/login") String redirectUri) throws IOException {
     log.info("================================Member : signout");
     memberService.signout(request.getRemoteUser());
     setCookie(response, null, Token.ACCESS_TOKEN,true);
     setCookie(response, null, Token.REFRESH_TOKEN,true);
-    response.sendRedirect("/members/login");
+    response.sendRedirect(redirectUri);
   }
 
   // 회원가입
@@ -173,11 +174,11 @@ public class MemberAPIController {
       @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 404, message = "The user doesn't exist"), //
       @ApiResponse(code = 500, message = "Member edit failed")})
-  public ResponseEntity<?> editAdmin(@Validated @ModelAttribute MemberUpdateDTO memberUpdateDTO,
+  public ResponseEntity<?> editAdmin(@Validated @ModelAttribute MemberUpdateAdminDTO memberUpdateAdminDTO,
                                      @PathVariable String memberEmail) {
     log.info("================================ Member : editAdmin");
     Member member = memberService.search(memberEmail);
-    modelMapper.map(memberUpdateDTO, member);
+    modelMapper.map(memberUpdateAdminDTO, member);
     if(memberService.modifyMember(member)) {
       // 수정 성공시
       return ResponseEntity.ok().build();
@@ -291,26 +292,21 @@ public class MemberAPIController {
   }
 
   // 토큰 재발급 (회원)
-  @GetMapping("/refresh")
-  public ResponseEntity<String> refresh(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+  @RequestMapping("/refresh")
+  public ResponseEntity<String> refresh(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      @RequestParam(value = "redirectUri", defaultValue = "/") String redirectUri) throws IOException, ServletException {
     log.info("================================Member : refresh");
+    log.info("redirectUri : {}", redirectUri);
     Member member = memberService.whoami(request.getCookies(), Token.REFRESH_TOKEN);
     String token = memberService.refresh(request.getCookies(), member);
     if (token != null) {
       setCookie(response, token, Token.ACCESS_TOKEN, false);
-      response.sendRedirect("/");
-    }
-    return ResponseEntity.badRequest().build();
-  }
-
-  @RequestMapping("/refresh/token/fetch")
-  public ResponseEntity<String> refresh1(HttpServletRequest request, HttpServletResponse response) {
-    log.info("================================Member : refresh fetch");
-    Member member = memberService.whoami(request.getCookies(), Token.REFRESH_TOKEN);
-    String token = memberService.refresh(request.getCookies(), member);
-    if (token != null) {
-      setCookie(response, token, Token.ACCESS_TOKEN, false);
-      return ResponseEntity.accepted().build();
+      if (redirectUri.equals("ajax")) {
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+      }
+      response.sendRedirect(redirectUri);
     }
     return ResponseEntity.badRequest().build();
   }

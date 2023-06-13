@@ -50,6 +50,7 @@ public class SheetController {
     @Value("${file.preview.dir}")
     private String previewDir;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/add")
     public String sheetAddForm(Model model) {
         model.addAttribute("sheetRegDto", new SheetRegDto());
@@ -58,6 +59,7 @@ public class SheetController {
         return "/sheet/sheetAddForm";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/add")
     public String sheetAdd(@Validated @ModelAttribute SheetRegDto sheetRegDto,
                            BindingResult bindingResult,
@@ -148,6 +150,7 @@ public class SheetController {
 //        return "redirect:/sheet/list";
 //    }
 
+
     @GetMapping("/list")
     public String sheetList(@RequestParam(name = "genre", defaultValue = "") String genre,
                             @RequestParam(name = "ageGroup", defaultValue = "") String ageGroup,
@@ -171,6 +174,8 @@ public class SheetController {
 
         return "sheet/sheetList";
     }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
     @GetMapping("/mysheet")
     public String mySheetList(HttpServletRequest request,
                               @RequestParam(name = "pageNum", defaultValue = "1") int page,
@@ -220,7 +225,7 @@ public class SheetController {
         return new UrlResource("file:" + bookImgDir + imgName);
     }
 
-    @PreAuthorize("hasRole('ROLE_MEMBER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
     @GetMapping("/sheetFile/{fileUuid}")
     public ResponseEntity<Resource> downloadSheetFile(HttpServletRequest request,
                                                       @PathVariable String fileUuid)
@@ -285,6 +290,7 @@ public class SheetController {
 //        return "sheet/sheetDetail";
 //    }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/{sheetNo}/mod")
     public String sheetModForm(@PathVariable int sheetNo, Model model) {
 
@@ -312,6 +318,7 @@ public class SheetController {
         return "sheet/sheetModForm";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/{sheetNo}/mod")
     public String sheetMod(@PathVariable int sheetNo,
                            @Validated @ModelAttribute SheetUpdateDto sheetUpdateDto,
@@ -359,6 +366,7 @@ public class SheetController {
 
     
     @DeleteMapping("/{sheetNo}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> deleteSheet(@PathVariable int sheetNo){
         boolean result = sheetService.removeSheet(sheetNo);
         // 삭제 처리 완료 후, 응답을 보낸다

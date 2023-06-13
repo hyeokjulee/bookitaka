@@ -8,7 +8,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -25,13 +24,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-    log.info("doFilterInternal - getRequestURI : {}", request.getRequestURI());
+    log.info("JwtTokenFilter - doFilterInternal - getRequestURI : {}", request.getRequestURI());
     // 쿠키에서 Token 을 가져옴
     String aToken = jwtTokenProvider.resolveToken(request.getCookies(), Token.ACCESS_TOKEN);
     String rToken = jwtTokenProvider.resolveToken(request.getCookies(), Token.REFRESH_TOKEN);
-    String signoutUri = "/member/signout/deltoken";
+    String signoutUri = "/member/signout";
     String refreshUri = "/member/refresh";
-    String refreshFetchUri = "/member/refresh/token/fetch";
 
     // 둘 다 있는 경우
     if (aToken != null && rToken != null) {
@@ -40,7 +38,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         jwtTokenProvider.validateToken(aToken);
         // a토큰이 유효하고 r토큰이 유효하지 않은 경우
         if (!validRToken) {
-          // TODO : a토큰이 유효하고, r토큰이 유효하지 않은 경우
+          // 로그아웃
+          if (!request.getRequestURI().equals(signoutUri)) {
+            response.sendRedirect(signoutUri);
+            return;
+          }
         // 둘 다 유효한 경우
         } else {
           // 권한 부여
@@ -50,18 +52,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
       } catch (CustomException ex) {
         // a토큰이 만료되었고 r토큰은 유효한 경우
         if (ex.getMessage().equals("Expired JWT token") && validRToken) {
+          log.info("JwtTokenFilter - doFilterInternal - CustomException - [Expired JWT token]");
           // 토큰 재발급
-          if (!request.getRequestURI().equals(refreshFetchUri)) {
-            if (request.getHeader("ajax") != null) {
-              response.sendRedirect(refreshFetchUri);
-              return;
-            }
-            if (!request.getRequestURI().equals(refreshUri)) {
-              response.sendRedirect(refreshUri);
-              return;
-            }
+          if (!request.getRequestURI().equals(refreshUri)) {
+            String qParam = request.getHeader("ajax") == null
+                    ? request.getRequestURI()
+                    : "ajax";
+            response.sendRedirect(refreshUri + "?redirectUri=" + qParam);
+            return;
           }
-
         // a토큰이 유효하지 않고 r토큰은 유효한 경우 || 둘 다 유효하지 않은 경우
         } else {
           // 로그아웃
@@ -93,11 +92,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     try {
       // 토큰이 있으면 유효성 검사 (유효하면 true, 비유효하거나 만료됐다면 CustomException)
       if (rToken != null && jwtTokenProvider.validateToken(rToken)) {
-        log.info("doFilterInternal - validationRefreshToken - valid Token");
+        log.info("JwtTokenFilter - doFilterInternal - validationRefreshToken - [valid Token]");
         return true;
       }
     } catch (CustomException ex) {
-      log.info("doFilterInternal - validationRefreshToken - CustomException: {}", ex.getMessage());
+      log.info("JwtTokenFilter - doFilterInternal - validationRefreshToken - CustomException: {}", ex.getMessage());
     }
     return false;
   }

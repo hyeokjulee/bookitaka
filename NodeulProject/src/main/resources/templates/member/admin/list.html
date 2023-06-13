@@ -24,16 +24,31 @@
     <tr>
         <th>이름</th>
         <th>이메일</th>
-        <th>d</th>
+        <th>번호</th>
+        <th>생년월일</th>
+        <th>성별</th>
+        <th>버튼</th>
+        <th>권한수정</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="member : ${members}">
-        <td th:text="${member.memberName}"></td>
-        <td><a th:href="@{/members/__${member.memberEmail}__}" th:text="${member.memberEmail}"></a></td>
+        <td id="name" th:text="${member.memberName}"></td>
+        <td id="email"><a th:href="@{/members/__${member.memberEmail}__}" th:text="${member.memberEmail}"></a></td>
+        <td id="phone" th:text="${member.memberPhone}"></td>
+        <td id="birthday" th:text="${member.memberBirthday}"></td>
+        <td id="gender" th:text="${member.memberGender}"></td>
         <td>
             <button type="button" id="editBtn">edit</button>
             <button type="button" id="delBtn">delete</button>
+        </td>
+        <td>
+            <select class="roleSelect">
+                <option value="ROLE_MEMBER" th:selected="${member.memberRole == 'ROLE_MEMBER'}">회원</option>
+                <option value="ROLE_ADMIN" th:selected="${member.memberRole == 'ROLE_ADMIN'}">관리자</option>
+            </select>
+<!--            <button type="button" class="updateBtn" style="display: none;" th:data-role="${member.memberRole}">권한 수정-->
+<!--            </button>-->
         </td>
     </tr>
     <tr th:if="${members.isEmpty()}">
@@ -52,7 +67,7 @@
            th:href="@{/members/list(page=${currentPage - 1}, size=${pageSize}, method=${method}, keyword=${keyword})}"> &lt; </a>
     </span>
 
-    <span th:each="pageNumber : ${#numbers.sequence(startPage, endPage - 1)}"
+    <span th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}"
           th:class="${pageNumber == currentPage} ? 'active' : ''">
       <a th:if="${not #lists.isEmpty(members)}"
          th:href="@{/members/list(page=${pageNumber}, size=${pageSize}, method=${method}, keyword=${keyword})}"
@@ -97,12 +112,15 @@
                 var url = "/member/admin/" + email; // 이메일을 주소에 추가
 
                 fetch(url, {
-                    method: 'DELETE'
+                    method: 'DELETE',
+                    header:{'ajax':true}
                 })
                     .then((response) => {
                         if (response.ok) {
                             alert("삭제 완료")
                             location.reload();
+                        } else if (response.status === 201) {
+
                         } else {
                             // 기타 상태 코드에 대한 처리
                         }
@@ -110,6 +128,47 @@
             }
         });
     });
+
+    document.addEventListener('DOMContentLoaded', sendForm());
+
+    function sendForm() {
+        let selectElements = document.querySelectorAll('.roleSelect'); // 모든 select 요소 선택
+        selectElements.forEach(function (selectElement) {
+            // var updateBtn = selectElement.nextElementSibling; // 다음 sibling 요소인 updateBtn 버튼 선택
+            selectElement.addEventListener('change', function(){
+
+            // Update the selected value when the option changes
+            let memberEmail = selectElement.closest('tr').querySelector('#email').innerText;
+            let memberName = selectElement.closest('tr').querySelector('#name').innerText;
+            let memberPhone = selectElement.closest('tr').querySelector('#phone').innerText;
+            let memberGender = selectElement.closest('tr').querySelector('#gender').innerText;
+            let memberBirthday = selectElement.closest('tr').querySelector('#birthday').innerText;
+            let selectedValue = this.options[this.selectedIndex].value;
+
+            let formData = new URLSearchParams({
+                memberName: memberName,
+                memberPhone: memberPhone,
+                memberGender: memberGender,
+                memberBirthday: memberBirthday,
+                memberRole: selectedValue
+            });
+            fetch("/member/admin/" + memberEmail, {
+                method: 'PUT',
+                body: formData
+            })
+                .then((response) => {
+                    if (response.status === 200) {
+                        alert('권한 수정이 완료되었습니다');
+                        location.reload();
+                    } else if (response.status === 201) {
+                        sendForm();
+                    } else {
+                        // 기타 상태 코드에 대한 처리
+                    }
+                })
+            });
+        });
+    }
 
 </script>
 

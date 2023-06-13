@@ -119,7 +119,7 @@ public class MemberService {
             if (passwordEncoder.matches(newPw, member.getMemberPassword())) {
                 return 1;
             }
-            
+
             if (newPw.equals(newPwChk)) {
                 member.setMemberPassword(passwordEncoder.encode(newPw));
                 memberRepository.save(member);
@@ -178,13 +178,14 @@ public class MemberService {
 //        return memberRepository.findAll();
 //    }
 
-    public Page<Member> getAllMembersPaging(Pageable pageable, String keyword, String method) {
+    public Page<Member> getAllMembersPaging(Pageable pageable, String keyword, String method, Cookie[] cookies) {
+        String excludeMemberEmail = jwtTokenProvider.getMemberEmail(jwtTokenProvider.resolveToken(cookies, Token.ACCESS_TOKEN));
         if (method.equals("이름")) {
-            return memberRepository.findByMemberNameContainingAndMemberRoleNot(keyword, "ROLE_ADMIN", pageable);
+            return memberRepository.findByMemberNameContainingAndMemberEmailNot(keyword, excludeMemberEmail, pageable);
         } else if (method.equals("이메일")) {
-            return memberRepository.findByMemberEmailContainingAndMemberRoleNot(keyword, "ROLE_ADMIN", pageable);
+            return memberRepository.findByMemberEmailContainingAndMemberEmailNot(keyword, excludeMemberEmail, pageable);
         } else {
-            return memberRepository.findByMemberRoleNot("ROLE_ADMIN", pageable);
+            return memberRepository.findByMemberEmailNot(excludeMemberEmail, pageable);
         }
 
     }
