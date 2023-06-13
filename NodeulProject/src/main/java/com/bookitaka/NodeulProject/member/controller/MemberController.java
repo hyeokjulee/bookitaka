@@ -83,12 +83,13 @@ public class MemberController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "") String method,
             @RequestParam(defaultValue = "") String keyword,
+            HttpServletRequest request,
             Model model) {
         log.info(method);
         log.info(keyword);
         int pageSize = 10;
         PageRequest pageable = PageRequest.of(page, size);
-        Page<Member> memberPage = memberService.getAllMembersPaging(pageable, keyword, method);
+        Page<Member> memberPage = memberService.getAllMembersPaging(pageable, keyword, method, request.getCookies());
         model.addAttribute("members", memberPage.getContent());
         model.addAttribute("totalPages", memberPage.getTotalPages());
         model.addAttribute("currentPage", page);
@@ -98,7 +99,8 @@ public class MemberController {
 
         int currentGroup = page / pageSize;
         int startPage = currentGroup * pageSize;
-        int endPage = Math.min(startPage + pageSize, memberPage.getTotalPages());
+        int totalPages = memberPage.getTotalPages();
+        int endPage = Math.min(startPage + pageSize, memberPage.getTotalPages()) - 1;
 
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
@@ -108,9 +110,14 @@ public class MemberController {
         model.addAttribute("previousGroupStartPage", previousGroupStartPage);
 
         // 다음 그룹의 첫 번째 페이지로 이동
-        int nextGroupStartPage = (currentGroup <= (endPage / pageSize)) ? (endPage - 1) : (currentGroup + 1) * pageSize;
-        model.addAttribute("nextGroupStartPage", nextGroupStartPage);
+        int nextGroupStartPage = (currentGroup + 1) * pageSize;
 
+        if (totalPages % 10 == 0 && startPage == totalPages - 10) {
+            nextGroupStartPage = endPage;
+        } else if (nextGroupStartPage > endPage + 1) {
+            nextGroupStartPage = endPage;
+        }
+        model.addAttribute("nextGroupStartPage", nextGroupStartPage);
         return "member/admin/list";
     }
 

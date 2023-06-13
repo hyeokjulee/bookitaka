@@ -122,11 +122,13 @@
         if (/^\d{2}--$|^\d{3}--$/.test(memberPhone)) {
             memberPhone = "";
         }
+        let memberRole = /*[[${member.memberRole}]]*/ '';
         let formData = new URLSearchParams({
             memberName: memberName,
             memberPhone: memberPhone,
             memberGender: memberGender,
-            memberBirthday: memberBirthday
+            memberBirthday: memberBirthday,
+            memberRole: memberRole
         });
         fetch("/member/admin/" + /*[[${member.memberEmail}]]*/ '', {
             method: 'PUT',
