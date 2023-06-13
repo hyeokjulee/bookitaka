@@ -48,108 +48,49 @@
     <script src="https://cdn.jsdelivr.net/npm/uuid@8.3.2/dist/umd/uuidv4.min.js"></script>
 
     <script>
-        const uuid = uuidv4();
     </script>
 
     <script>
         var IMP = window.IMP;
         IMP.init("imp71816073");
         function requestPay() {
-            if (verifyBefore(uuid, sum) === false) {
-                alert("사전 검증 실패. 다시 시도해주세요.");
-                return
-            }
 
-            if (sheetInfo.length == 1) {
-                sInfo = sheetInfo[0];
-            } else {
-                sInfo = sheetInfo[0] + "외 " + (cnt - 1) + "건";
-            }
-
-            IMP.request_pay(
-                {
-                    pg: "kcp.INIpayTest",
-                    pay_method: "card",
-                    merchant_uid: uuid,
-
-                    name: sInfo,
-                    amount: sum,
-                    buyer_email: memberInfo[0],
-                    buyer_name: memberInfo[1],
-                    buyer_tel: memberInfo[2],
-
-                    buyer_addr: "서울특별시 강남구 삼성동",
-                    buyer_postcode: "123-456",
-                },
-                function (rsp) {
-                    if (rsp.success) {
-                    console.log(rsp)
-                        refreshToken()
-
-                    sInfo += "(";
-                    sheetInfo.forEach(function(element) {
-                      sInfo += element + ", ";
-                    });
-                    sInfo = sInfo.slice(0, -2);
-                    sInfo += ")";
-
-                    // callback
-                    //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
-                    // if(verifyAfter(rsp.imp_uid, rsp.merchant_uid, rsp.paid_amount)) {
-                    //     alert("결제 성공 만세!!")
-                    // }
-                        console.log("사후 검증 시작")
-                        const payMakeDto = {
-                            paymentUuid: rsp.merchant_uid,
-                            paymentInfo: sInfo,
-                            paymentPrice: rsp.paid_amount,
-                            receiptUrl: rsp.receipt_url,
-                            memberEmail : rsp.buyer_email,
-                            payMethod: rsp.pay_method,
-                            impId: rsp.imp_uid,
-                            mySheetMeans: '개별구입'
-                        };
-                                fetch('/payproc/paid', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify(payMakeDto)
-                                })
-                                    .then(response => {
-                                        if (response.status == 200) {
-                                            console.log("사후 검증 완료");
-                                            console.log(response);
-
-                                            deleteSelectedCart();
-                                            window.location.href = "/payproc/complete?sInfo=" + sInfo;
-                                        } else {
-                                            alert('사후 검증 단계에서 오류 발생, 결제가 취소됩니다');
-                                            return
-                                        }
-                                    })
-                                    .catch(error => {
-                                        // 요청 실패 시 오류 처리
-                                        console.error('사후 검증 요청 실패:', error);
-                                        return false
-                                    });
-
-
+                const uuid = uuidv4();
+                verifyBefore(uuid, sum).then(result => {
+                    console.log(result)
+                    if (sheetInfo.length == 1) {
+                        sInfo = sheetInfo[0];
                     } else {
-                        console.log("결제 진행 실패")
-                        alert("결제 진행 실패")
+                        sInfo = sheetInfo[0] + "외 " + (cnt - 1) + "건";
                     }
-                }
-            );
+
+                    IMP.request_pay(
+                        {
+                            pg: "kcp.INIpayTest",
+                            pay_method: "card",
+                            merchant_uid: uuid,
+
+                            name: sInfo,
+                            amount: sum,
+                            buyer_email: memberInfo[0],
+                            buyer_name: memberInfo[1],
+                            buyer_tel: memberInfo[2],
+
+                            buyer_addr: "서울특별시 강남구 삼성동",
+                            buyer_postcode: "123-456",
+                        }, afterPayProc(rsp));
+                })
+
         }
 
         function verifyBefore(merchant_uid, amount) {
             console.log("사전 검증 시작")
             const veriBeforeDto = { merchant_uid, amount };
-            fetch('/payproc/verifyBefore', {
+            return fetch('/payproc/verifyBefore', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'ajax' : "true"
                 },
                 body: JSON.stringify(veriBeforeDto)
             })
@@ -157,37 +98,76 @@
                     if (response.status == 200) {
                         console.log("사전 검증 완료");
                         console.log(response);
-                        return true
+                    } else if (response.status == 100) {
+                        console.log("토큰 재발급")
+                        verifyBefore(merchant_uid, amount)
                     } else {
                         alert('사전 검증 단계에서 오류 발생.');
-                        return false
+                        throw new Error("사전검증 오류")
                     }
                 })
                 .catch(error => {
                     // 요청 실패 시 오류 처리
                     console.error('사전 검증 요청 실패:', error);
-                    return false
+                    throw error;
                 });
         }
 
-        function refreshToken() {
+        function afterPayProc(rsp) {
+            if (rsp.success) {
 
-            fetch('/member/refreshf', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'ajax' : "true"
-                    }
-                })
-                .then(data => {
-                    console.log(data); // 서버에서 받은 응답 데이터를 출력 또는 처리
-                    console.log("토큰 재발급");
-                })
-                .catch(error => {
-                    console.error('Error:', error);
+                sInfo += "(";
+                sheetInfo.forEach(function (element) {
+                    sInfo += element + ", ";
                 });
+                sInfo = sInfo.slice(0, -2);
+                sInfo += ")";
 
+                console.log("사후 검증 시작")
+                const payMakeDto = {
+                    paymentUuid: rsp.merchant_uid,
+                    paymentInfo: sInfo,
+                    paymentPrice: rsp.paid_amount,
+                    receiptUrl: rsp.receipt_url,
+                    memberEmail: rsp.buyer_email,
+                    payMethod: rsp.pay_method,
+                    impId: rsp.imp_uid,
+                    mySheetMeans: '개별구입'
+                };
+                fetch('/payproc/paid', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'ajax': "true"
+                    },
+                    body: JSON.stringify(payMakeDto)
+                })
+                    .then(response => {
+                        if (response.status == 200) {
+                            console.log("사후 검증 완료");
+                            console.log(response);
+
+                            deleteSelectedCart();
+                            window.location.href = "/payproc/complete?sInfo=" + sInfo;
+                        } else if (response.status == 100) {
+                            console.log("토큰 재발급")
+                            afterPayProc(rsp)
+                        } else {
+                            alert('사후 검증 단계에서 오류 발생, 결제가 취소됩니다');
+                            throw new Error("사후검증 및 결제 오류")
+                        }
+                    })
+                    .catch(error => {
+                        // 요청 실패 시 오류 처리
+                        console.error('사후 검증 요청 실패:', error);
+                        throw error;
+                    });
+            } else {
+                console.log("결제 진행 실패")
+                alert("결제 진행 실패")
+            }
         }
+
 
     </script>
 </body>
