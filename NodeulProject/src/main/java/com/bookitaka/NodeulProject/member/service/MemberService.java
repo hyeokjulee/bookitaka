@@ -184,6 +184,8 @@ public class MemberService {
             return memberRepository.findByMemberNameContainingAndMemberEmailNot(keyword, excludeMemberEmail, pageable);
         } else if (method.equals("이메일")) {
             return memberRepository.findByMemberEmailContainingAndMemberEmailNot(keyword, excludeMemberEmail, pageable);
+        } else if (method.equals("이메일/이름")) {
+            return memberRepository.findByMemberEmailContainingAndMemberNameContainingAndMemberEmailNot(keyword, keyword, excludeMemberEmail, pageable);
         } else {
             return memberRepository.findByMemberEmailNot(excludeMemberEmail, pageable);
         }

@@ -2,7 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>detail</title>
     <style>
         .button {
             display: inline-block;
@@ -47,15 +46,8 @@
     <a id="editBtn" onclick="editLink()" class="button">수정</a>
 <script th:inline="javascript">
     function editLink() {
-        let role = /*[[${role}]]*/ '';
         let email = /*[[${member.memberEmail}]]*/ '';
-        let link;
-
-        if (role === 'admin') {
-            link = '/members/editAdmin/'+email;
-        } else {
-            link = '/members/edit';
-        }
+        let link = '/members/editAdmin/'+email;
 
         // 버튼 클릭 시 동적으로 링크를 설정합니다.
         document.getElementById('editBtn').setAttribute('href', link);

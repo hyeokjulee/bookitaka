@@ -13,10 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -78,6 +75,7 @@ public class MemberController {
     }
 
     @GetMapping("/list")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String listMembers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -151,18 +149,6 @@ public class MemberController {
     public String detailAdmin(@PathVariable String memberEmail, Model model) {
         log.info("================================Members : detailAdmin");
         model.addAttribute("member", memberService.search(memberEmail));
-        model.addAttribute("role", "admin");
         return "member/detail";
     }
-
-    // 내 정보 보기 (회원)
-    @GetMapping(value = "/me")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
-    public String detail(HttpServletRequest request, Model model) {
-        log.info("================================Members : detail");
-        model.addAttribute("member", memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN));
-        model.addAttribute("role", "member");
-        return "member/detail";
-    }
-
 }

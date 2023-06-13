@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AgeGroupRepository extends JpaRepository<SheetAgegroup, Long> {
 
-    SheetAgegroup findBySheetAgegroupName(String SheetAgegroupName);
+    SheetAgegroup findTopBySheetAgegroupName(String SheetAgegroupName);
 
 }
