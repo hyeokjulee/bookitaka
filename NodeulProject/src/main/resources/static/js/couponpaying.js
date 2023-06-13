@@ -1,5 +1,6 @@
 // 전역 변수
 var memberInfo = [];
+var sum = 100;
 
 // 내 정보 초기화
 function memberSet(member) {

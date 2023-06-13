@@ -19,4 +19,5 @@ public class NodeulProjectApplication {
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
 	}
+
 }
