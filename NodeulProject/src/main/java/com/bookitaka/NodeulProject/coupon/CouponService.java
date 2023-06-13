@@ -2,6 +2,7 @@ package com.bookitaka.NodeulProject.coupon;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -12,4 +13,6 @@ public interface CouponService {
     int getCountByMemberEmail(String memberEmail);
 
     List<Coupon> getAllCouponsByMemberEmail(CouponCri cri, String memberEmail);
+
+    boolean couponCheck(String memberEmail);
 }

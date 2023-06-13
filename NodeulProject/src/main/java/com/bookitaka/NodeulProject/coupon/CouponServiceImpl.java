@@ -3,6 +3,7 @@ package com.bookitaka.NodeulProject.coupon;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -31,5 +32,10 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public List<Coupon> getAllCouponsByMemberEmail(CouponCri cri, String memberEmail) {
         return couponRepositoryCustom.findAllCouponByMemberEmail(cri, memberEmail);
+    }
+
+    @Override
+    public boolean couponCheck(String memberEmail) {
+        return couponRepository.existsByMemberEmailAndCouponEnddateGreaterThan(memberEmail, LocalDateTime.now());
     }
 }

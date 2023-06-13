@@ -29,20 +29,23 @@ public class CouponController {
 
     @GetMapping("/buy") // 쿠폰구매 페이지
     public String buyCoupon() {
+        if (couponService.couponCheck(request.getRemoteUser())) { // 사용가능한 쿠폰이 있는 경우
+            return "redirect:list"; // 내쿠폰 페이지로
+        }
         return "coupon/couponPaying"; // 뷰 이름을 반환
     }
 
-    @GetMapping("/myCoupon") // 내쿠폰 페이지
-    public String myCoupon() {
-        return "coupon/myCoupon"; // 뷰 이름을 반환
-    }
+//    @GetMapping("/myCoupon") // 내쿠폰 페이지
+//    public String myCoupon() {
+//        return "coupon/myCoupon"; // 뷰 이름을 반환
+//    }
 
     @GetMapping("/couponPayComplete") // 쿠폰 결제 완료 페이지
     public String couponPayComplete() {
         return "coupon/couponPayComplete"; // 뷰 이름을 반환
     }
 
-    @GetMapping("/list") // 쿠폰리스트
+    @GetMapping("/list") // 내쿠폰 페이지
     public String couponList(@RequestParam(name = "pageNum", defaultValue = "1") int page,
                              @RequestParam(name = "amount", defaultValue = "5") int amount,
                              Model model) {
