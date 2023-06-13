@@ -1,0 +1,71 @@
+<!-- navbar.html -->
+<!-- ============================================-->
+<!-- <section> begin ============================-->
+<th:block th:fragment="navbar">
+<section class="bg-primary py-2">
+  <div class="container">
+    <div class="row justify-content-end">
+      <ul class="col-auto list list-unstyled mb-md-4 mb-lg-0">
+        <li class="float-start text-center" style="width: 60px" th:if="${#request.getRemoteUser() == null}"><a class="text-800 fs--1" th:href="@{/members/login}">로그인</a></li>
+        <li class="float-start text-center" style="width: 60px" th:if="${#request.getRemoteUser() == null}"><a class="text-800 fs--1" th:href="@{/members/signup}">회원가입</a></li>
+        <li class="float-start text-center" style="width: 60px" th:if="${#request.getRemoteUser() != null}"><a class="text-800 fs--1" th:href="@{/member/signout}">로그아웃</a></li>
+        <li class="float-start text-center" style="width: 60px"><a class="text-800 fs--1" th:href="@{/faq/best}">고객지원</a></li>
+        <a th:href="@{/cart/cart}" class="cart-link mx-3">
+                  <span class="icon-container-cart">
+                    <span class="fa-solid fa-cart-shopping fa-2x"></span>
+                    <span class="badge-cart" id="cartCnt">0</span>
+                  </span>
+        </a><!--장바구니-->
+      </ul>
+    </div>
+  </div>
+  <!-- end of .container-->
+
+</section>
+<!-- <section> close ============================-->
+<!-- ============================================-->
+
+
+<nav class="navbar navbar-expand-lg navbar-light sticky-top py-2" data-navbar-on-scroll="data-navbar-on-scroll">
+  <div class="container">
+    <a class="navbar-brand" th:href="@{/index}">
+      <img src="/assets/img/gallery/logo-n.png" height="80" alt="logo" />
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item dropdown px-4">
+          <a th:href="@{/sheet/list}" class="nav-link" aria-current="page" data-bs-toggle="dropdown">독후활동지</a>
+          <ul class="dropdown-menu bg-light m-0">
+            <li><a th:href="@{/sheet/list?ageGroup=유아용}" class="dropdown-item">연령별</a></li>
+            <li><a th:href="@{/sheet/list?genre=그림책}" class="dropdown-item">장르별</a></li>
+            <li><a th:href="@{/sheet/list?genre=독서토론논제은행}" class="dropdown-item">독서토론논제은행</a></li>
+            <li><a th:href="@{/sheet/request}" class="dropdown-item">개별출제요청</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown px-4">
+          <a th:href="@{/members/info}" class="nav-link" aria-current="page" data-bs-toggle="dropdown">마이페이지</a>
+          <div class="dropdown-menu bg-light m-0">
+            <a th:href="@{/members/info}" class="dropdown-item">내 정보</a>
+            <a th:href="@{/sheet/mysheet}" class="dropdown-item">독후활동지</a>
+            <a th:href="@{/sheet/myrequest}" class="dropdown-item">내 출제요청</a>
+            <a th:href="@{/coupon/list}" class="dropdown-item">내 쿠폰</a>
+            <a th:href="@{/manual/list}" class="dropdown-item">내 결제</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown px-4">
+          <a href="#" class="nav-link" aria-current="page" data-bs-toggle="dropdown">알림마당</a>
+          <div class="dropdown-menu bg-light m-0">
+            <a th:href="@{/manual/list}" class="dropdown-item">이용방법</a>
+            <a th:href="@{/notice/list}" class="dropdown-item">공지사항</a>
+            <a th:href="@{/faq/best}" class="dropdown-item">자주묻는질문</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+</th:block>
+<!---------------nav end-------------------->

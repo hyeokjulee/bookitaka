@@ -18562,6 +18562,18 @@ ul {
   background-color: #F0F4F9;
 }
 
+@media screen and (max-width: 992px) {
+  .navbar .nav-item .dropdown-menu {
+    display: block;
+    border: none;
+    margin-top: 0;
+    top: 150%;
+    opacity: 1;
+    visibility: visible;
+    transition: .5s;
+  }
+}
+
 /*-----------------------------------------------
 |   User Styles
 -----------------------------------------------*/

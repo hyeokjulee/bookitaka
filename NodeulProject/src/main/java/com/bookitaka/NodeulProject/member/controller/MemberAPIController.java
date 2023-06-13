@@ -304,7 +304,7 @@ public class MemberAPIController {
     if (token != null) {
       setCookie(response, token, Token.ACCESS_TOKEN, false);
       if (redirectUri.equals("ajax")) {
-        return ResponseEntity.accepted().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
       }
       response.sendRedirect(redirectUri);
     }
