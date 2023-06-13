@@ -102,7 +102,9 @@
     }
 
     // 수정 버튼 이벤트 처리
-    document.getElementById("editBtn").addEventListener("click", function(event) {
+    document.getElementById("editBtn").addEventListener("click", sendForm);
+
+    function sendForm() {
 
         let memberName = document.getElementById("memberName").value;
         let memberBirthday = document.getElementById("memberBirthday").value;
@@ -132,17 +134,20 @@
         });
         fetch("/member/admin/" + /*[[${member.memberEmail}]]*/ '', {
             method: 'PUT',
-            body: formData
+            body: formData,
+            header:{'ajax':true}
         })
             .then((response) => {
-                if (response.ok) {
+                if (response.status === 200) {
                     alert("수정 완료")
                     // 성공적인 응답 처리
                     window.location.href="/members/list";
+                } else if (response.status === 201) {
+                    sendForm();
                 } else if (response.status === 400) {
                     response.json().then(data => {
                         // 에러 메시지 초기화
-                        for (let errorDiv of document.querySelectorAll(".errorDiv")){
+                        for (let errorDiv of document.querySelectorAll(".errorDiv")) {
                             errorDiv.innerText = "";
                         }
                         // 응답 데이터를 파싱하여 에러 메시지 표시
@@ -158,11 +163,11 @@
                     });
                 } else {
                     // 기타 상태 코드에 대한 처리
-                    alert("수정 실패")
-                    window.location.href="/members/list";
+                    alert("수정 실패");
+                    window.location.href = "/members/list";
                 }
             })
-    });
+    }
 
 
     // 전화번호 앞자리 선택 이벤트 처리

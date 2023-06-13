@@ -15,9 +15,10 @@
         <option>검색기준</option>
         <option>이메일</option>
         <option>이름</option>
+        <option>이메일/이름</option>
     </select>
-    <input type="text" name="keyword" placeholder="검색어를 입력해주세요">
-    <button type="submit">검색</button>
+    <input type="text" name="keyword" placeholder="검색어를 입력해주세요" id="keyword">
+    <button type="button" id="searchButton">검색</button>
 </form>
 <table>
     <thead>
@@ -47,8 +48,6 @@
                 <option value="ROLE_MEMBER" th:selected="${member.memberRole == 'ROLE_MEMBER'}">회원</option>
                 <option value="ROLE_ADMIN" th:selected="${member.memberRole == 'ROLE_ADMIN'}">관리자</option>
             </select>
-<!--            <button type="button" class="updateBtn" style="display: none;" th:data-role="${member.memberRole}">권한 수정-->
-<!--            </button>-->
         </td>
     </tr>
     <tr th:if="${members.isEmpty()}">
@@ -56,6 +55,8 @@
     </tr>
     </tbody>
 </table>
+
+<!--페이징-->
 <div>
     <span>
       <a th:if="${currentPage > 0}"
@@ -86,9 +87,17 @@
 </div>
 
 <script th:inline="javascript">
+    document.getElementById("searchButton").addEventListener("click", function () {
+        let selectedOption = document.getElementsByName("method")[0].value;
+        if (selectedOption === "검색기준") {
+            alert("올바른 검색 기준을 선택해주세요.");
+        } else {
+            document.querySelector("form").submit();
+        }
+    });
+
     // 수정 버튼
     var editButtons = document.querySelectorAll("#editBtn");
-
     editButtons.forEach(function (button) {
         button.addEventListener("click", function (event) {
             event.preventDefault(); // 폼의 기본 동작(페이지 새로고침) 방지
@@ -102,70 +111,72 @@
 
     // 삭제 버튼
     var delButtons = document.querySelectorAll("#delBtn");
-
     delButtons.forEach(function (button) {
-        button.addEventListener("click", function (event) {
-            if (confirm("삭제하시겠습니까??")) {
-                event.preventDefault(); // 폼의 기본 동작(페이지 새로고침) 방지
-
-                var email = this.parentNode.previousElementSibling.textContent; // 해당 행의 이메일 값을 가져옴
-                var url = "/member/admin/" + email; // 이메일을 주소에 추가
-
-                fetch(url, {
-                    method: 'DELETE',
-                    header:{'ajax':true}
-                })
-                    .then((response) => {
-                        if (response.ok) {
-                            alert("삭제 완료")
-                            location.reload();
-                        } else if (response.status === 201) {
-
-                        } else {
-                            // 기타 상태 코드에 대한 처리
-                        }
-                    })
-            }
-        });
+        button.addEventListener("click", deleteMember);
     });
 
-    document.addEventListener('DOMContentLoaded', sendForm());
+    function deleteMember(event) {
+        if (confirm("삭제하시겠습니까??")) {
+            event.preventDefault(); // 폼의 기본 동작(페이지 새로고침) 방지
 
-    function sendForm() {
-        let selectElements = document.querySelectorAll('.roleSelect'); // 모든 select 요소 선택
-        selectElements.forEach(function (selectElement) {
-            // var updateBtn = selectElement.nextElementSibling; // 다음 sibling 요소인 updateBtn 버튼 선택
-            selectElement.addEventListener('change', function(){
+            var email = this.parentNode.previousElementSibling.textContent; // 해당 행의 이메일 값을 가져옴
+            var url = "/member/admin/" + email; // 이메일을 주소에 추가
 
-            // Update the selected value when the option changes
-            let memberEmail = selectElement.closest('tr').querySelector('#email').innerText;
-            let memberName = selectElement.closest('tr').querySelector('#name').innerText;
-            let memberPhone = selectElement.closest('tr').querySelector('#phone').innerText;
-            let memberGender = selectElement.closest('tr').querySelector('#gender').innerText;
-            let memberBirthday = selectElement.closest('tr').querySelector('#birthday').innerText;
-            let selectedValue = this.options[this.selectedIndex].value;
-
-            let formData = new URLSearchParams({
-                memberName: memberName,
-                memberPhone: memberPhone,
-                memberGender: memberGender,
-                memberBirthday: memberBirthday,
-                memberRole: selectedValue
-            });
-            fetch("/member/admin/" + memberEmail, {
-                method: 'PUT',
-                body: formData
+            fetch(url, {
+                method: 'DELETE',
+                header: {'ajax': true}
             })
                 .then((response) => {
-                    if (response.status === 200) {
-                        alert('권한 수정이 완료되었습니다');
+                    if (response.ok) {
+                        alert("삭제 완료")
                         location.reload();
                     } else if (response.status === 201) {
-                        sendForm();
+                        deleteMember();
                     } else {
                         // 기타 상태 코드에 대한 처리
                     }
                 })
+        }
+
+    }
+
+    // 권한 수정
+    document.addEventListener('DOMContentLoaded', sendForm);
+    function sendForm() {
+        let selectElements = document.querySelectorAll('.roleSelect'); // 모든 select 요소 선택
+        selectElements.forEach(function (selectElement) {
+            // var updateBtn = selectElement.nextElementSibling; // 다음 sibling 요소인 updateBtn 버튼 선택
+            selectElement.addEventListener('change', function () {
+
+                // Update the selected value when the option changes
+                let memberEmail = selectElement.closest('tr').querySelector('#email').innerText;
+                let memberName = selectElement.closest('tr').querySelector('#name').innerText;
+                let memberPhone = selectElement.closest('tr').querySelector('#phone').innerText;
+                let memberGender = selectElement.closest('tr').querySelector('#gender').innerText;
+                let memberBirthday = selectElement.closest('tr').querySelector('#birthday').innerText;
+                let selectedValue = this.options[this.selectedIndex].value;
+
+                let formData = new URLSearchParams({
+                    memberName: memberName,
+                    memberPhone: memberPhone,
+                    memberGender: memberGender,
+                    memberBirthday: memberBirthday,
+                    memberRole: selectedValue
+                });
+                fetch("/member/admin/" + memberEmail, {
+                    method: 'PUT',
+                    body: formData
+                })
+                    .then((response) => {
+                        if (response.status === 200) {
+                            alert('권한 수정이 완료되었습니다');
+                            location.reload();
+                        } else if (response.status === 201) {
+                            sendForm();
+                        } else {
+                            // 기타 상태 코드에 대한 처리
+                        }
+                    })
             });
         });
     }
