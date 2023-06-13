@@ -176,6 +176,7 @@ gradle-app.setting
 *.hprof
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij,java,gradle
+application.properties
 application-KEY.properties
 
 NodeulProject/src/main/generated/**

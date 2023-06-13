@@ -36,7 +36,7 @@
         function requestPay() {
             if (verifyBefore(uuid, sum) === false) {
                 alert("사전 검증 실패");
-                return
+                return;
             }
 
             IMP.request_pay(
@@ -46,7 +46,7 @@
                     merchant_uid: uuid,
 
                     name: "북키타카 쿠폰",
-                    amount: 100,
+                    amount: sum,
                     buyer_email: memberInfo[0],
                     buyer_name: memberInfo[1],
                     buyer_tel: memberInfo[2],
@@ -56,14 +56,14 @@
                 },
                 function (rsp) {
                     if (rsp.success) {
-                    console.log(rsp)
+                    console.log(rsp);
 
                     // callback
                     //rsp.imp_uid 값으로 결제 단건조회 API를 호출하여 결제결과를 판단합니다.
                     // if(verifyAfter(rsp.imp_uid, rsp.merchant_uid, rsp.paid_amount)) {
-                    //     alert("결제 성공 만세!!")
+                    //     alert("결제 성공 만세!!");
                     // }
-                        console.log("사후 검증 시작")
+                        console.log("사후 검증 시작");
                         const payMakeDto = {
                             paymentUuid: rsp.merchant_uid,
 
@@ -74,64 +74,82 @@
                             payMethod: rsp.pay_method,
                             impId: rsp.imp_uid
                         };
-                                fetch('/payproc/couponPaid', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify(payMakeDto)
-                                })
-                                    .then(response => {
-                                        if (response.status == 200) {
-                                            console.log("사후 검증 완료");
-                                            console.log(response);
 
-                                            window.location.href = "/coupon/couponPayComplete;
-                                        } else {
-                                            alert('사후 검증 단계에서 오류 발생.');
-                                            return
-                                        }
-                                    })
-                                    .catch(error => {
-                                        // 요청 실패 시 오류 처리
-                                        console.error('사후 검증 요청 실패:', error);
-                                        return false
-                                    });
-
+                        fetchCouponPaid(payMakeDto);
 
                     } else {
-                        console.log("결제 진행 실패")
-                        alert("결제 진행 실패")
+                        console.log("결제 진행 실패");
+                        alert("결제 진행 실패");
                     }
                 }
             );
         }
 
         function verifyBefore(merchant_uid, amount) {
-            console.log("사전 검증 시작")
+            console.log("사전 검증 시작");
             const veriBeforeDto = { merchant_uid, amount };
+
+            return fetchVerifyBefore(veriBeforeDto);
+
+        }
+
+        function fetchCouponPaid(payMakeDto) {
+            fetch('/payproc/couponPaid', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payMakeDto),
+                headers: {'ajax':true}
+            })
+            .then(response => {
+                if (response.status == 200) {
+                    console.log("사후 검증 완료");
+                    console.log(response);
+
+                    window.location.href = "/coupon/couponPayComplete";
+                } else if (response.status === 201) {
+                    console.log('사후 검증 단계에서 201');
+                    fetchCouponPaid(payMakeDto);
+                } else {
+                    console.log('사후 검증 단계에서 오류 발생.');
+                    return;
+                }
+            })
+            .catch(error => {
+                // 요청 실패 시 오류 처리
+                console.error('사후 검증 요청 실패:', error);
+                return false;
+            });
+        }
+
+        function fetchVerifyBefore(veriBeforeDto) {
             fetch('/payproc/verifyBefore', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(veriBeforeDto)
+                body: JSON.stringify(veriBeforeDto),
+                headers: {'ajax':true}
             })
-                .then(response => {
-                    if (response.status == 200) {
-                        console.log("사전 검증 완료");
-                        console.log(response);
-                        return true
-                    } else {
-                        alert('사전 검증 단계에서 오류 발생.');
-                        return false
-                    }
-                })
-                .catch(error => {
-                    // 요청 실패 시 오류 처리
-                    console.error('사전 검증 요청 실패:', error);
-                    return false
-                });
+            .then(response => {
+                if (response.status == 200) {
+                    console.log("사전 검증 완료");
+                    console.log(response);
+                    return true;
+                } else if (response.status === 201) {
+                    console.log('사전 검증 단계에서 201');
+                    fetchVerifyBefore(veriBeforeDto);
+                } else {
+                    console.log('사전 검증 단계에서 오류 발생.');
+                    return false;
+                }
+            })
+            .catch(error => {
+                // 요청 실패 시 오류 처리
+                console.error('사전 검증 요청 실패:', error);
+                return false;
+            });
         }
     </script>
 </body>
