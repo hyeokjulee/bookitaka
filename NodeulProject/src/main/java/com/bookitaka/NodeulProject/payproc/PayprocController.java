@@ -130,17 +130,20 @@ public class PayprocController {
 
     @PostMapping("/couponPaid")
     @ResponseBody
-    public ResponseEntity<String> verifyAndRequestAfterCouponPay(@RequestBody PayMakeDto payMakeDto, @CookieValue("carts") String carts) {
-
+    public ResponseEntity<String> verifyAndRequestAfterCouponPay(@RequestBody PayMakeDto payMakeDto) {
         VeriAfterDto veriAfterDto = new VeriAfterDto(payMakeDto.getImpId(), Math.toIntExact(payMakeDto.getPaymentPrice()));
 
         log.info("verifyAfterDto = {}", veriAfterDto);
+
         if (!verifyAfter(veriAfterDto)) {
             // 예외 발생 시
+            cancelPayWhenFailAfterVeri(veriAfterDto, "사후 검증 오류");
             return ResponseEntity.badRequest().body("사후 검증 오류");
         }
 
-        payprocService.makeCouponPay(payMakeDto, memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN));
+        log.info("payMakeDto", payMakeDto);
+
+        payprocService.makeCouponPay(payMakeDto);
 
         return ResponseEntity.ok().body("결제 완료");
     }

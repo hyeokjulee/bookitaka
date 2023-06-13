@@ -79,15 +79,17 @@ public class PayprocServiceImpl implements PayprocService {
     }
 
     @Override
-    public boolean makeCouponPay(PayMakeDto payMakeDto, Member member) {
+    public boolean makeCouponPay(PayMakeDto payMakeDto) {
         //payment 등록.
         Payment payment = new Payment();
         payment.setPaymentUuid(payMakeDto.getPaymentUuid()); //미리 받은 번호.
         payment.setPaymentPrice(payMakeDto.getPaymentPrice());
         payment.setPaymentInfo(payMakeDto.getPaymentInfo());
+        Member member = memberRepository.findByMemberEmail(payMakeDto.getMemberEmail());
         payment.setMember(member);
 
-        paymentRepository.save(payment);
+        Payment save = paymentRepository.save(payment);
+        log.info("makePay pay = {}", save);
 
         //coupon 생성.
         Coupon coupon = new Coupon();
