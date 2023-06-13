@@ -81,7 +81,6 @@
 
                 const uuid = uuidv4();
                 verifyBefore(uuid, sum).then(result => {
-                    console.log(result)
                     if (sheetInfo.length == 1) {
                         sInfo = sheetInfo[0];
                     } else {
@@ -102,7 +101,7 @@
 
                             buyer_addr: "서울특별시 강남구 삼성동",
                             buyer_postcode: "123-456",
-                        }, afterPayProc(rsp));
+                        }, function(rsp) {afterPayProc(rsp)});
                 })
 
         }
@@ -122,7 +121,7 @@
                     if (response.status == 200) {
                         console.log("사전 검증 완료");
                         console.log(response);
-                    } else if (response.status == 100) {
+                    } else if (response.status == 201) {
                         console.log("토큰 재발급")
                         verifyBefore(merchant_uid, amount)
                     } else {
@@ -173,7 +172,7 @@
 
                             deleteSelectedCart();
                             window.location.href = "/payproc/complete?sInfo=" + sInfo;
-                        } else if (response.status == 100) {
+                        } else if (response.status == 201) {
                             console.log("토큰 재발급")
                             afterPayProc(rsp)
                         } else {
