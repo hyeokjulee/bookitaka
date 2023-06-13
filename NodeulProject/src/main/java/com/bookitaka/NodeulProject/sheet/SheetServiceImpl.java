@@ -63,9 +63,11 @@ public class SheetServiceImpl implements SheetService{
         sheet.setSheetFileuuid(uploadSheetFile.uuid);
         sheet.setSheetFilename(uploadSheetFile.fileName);
 
-        sheet.setSheetGenre(genreRepository.findBySheetGenreName(sheetRegDto.getSheetGenreName()));
-        sheet.setSheetAgegroup(ageGroupRepository.findBySheetAgegroupName(sheetRegDto.getSheetAgegroupName()));
+        log.info("-----------------------");
+        sheet.setSheetGenre(genreRepository.findTopBySheetGenreName(sheetRegDto.getSheetGenreName()));
+        sheet.setSheetAgegroup(ageGroupRepository.findTopBySheetAgegroupName(sheetRegDto.getSheetAgegroupName()));
         sheet.setSheetContent(sheetRegDto.getSheetContent());
+        log.info("----------------------");
 
         return sheetRepository.createSheet(sheet);
     }

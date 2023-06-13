@@ -72,10 +72,6 @@ public class SheetController {
             bindingResult.reject("noSheetFile", "파일을 업로드해주세요.");
         }
 
-//        if (!sheetRegDto.getSheetGenreName().equals("독서토론논제은행") && sheetBookImg == null) {
-//            bindingResult.reject("noAgeGroup", "연령대를 선택해주세요.");
-//        }
-
 
         if (bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
@@ -102,22 +98,6 @@ public class SheetController {
         return "redirect:/sheet/" + sheet.getSheetNo();
     }
 
-    //
-//    @GetMapping("/booksearch")
-//    @ResponseBody
-//    public Map<String, Object> bookSearch(@RequestParam("keyword") String keyword,
-//                                          @RequestParam("authorSearch") String authorSearch,
-//                                          @RequestParam(name = "pageNum", defaultValue = "1") Integer pageNum,
-//                                          Model model ) {
-////        log.info("keyword = {}", keyword);
-////        log.info("authorSearch = {}", authorSearch);
-//        log.info("pageNum = {}", pageNum);
-//
-//        String currentPageNum = "";
-//        String total = "";
-//
-//        return requestService.searchBook(keyword, authorSearch, pageNum);
-//    }
 
         //테스트용 데이터 30개 넣기
 //    @PostMapping("/add")
@@ -279,16 +259,6 @@ public class SheetController {
                 .body(resource);
     }
 
-//    @GetMapping("/{sheetNo}/mod")
-//    public String modBookImgForm(@PathVariable int sheetNo, Model model) {
-//        //만든사람 or 관리자인지 인증 필요
-//        //아니면 자세히보기 등 다른페이지로 리다이렉트
-//        Sheet sheet = sheetService.getSheet(sheetNo);
-//        model.addAttribute("sheet", sheet);
-//        model.addAttribute("bookImgSrc", bookImgDir + sheet.getSheetBookimguuid() + sheet.getSheetBookimgname());
-//        model.addAttribute("sheetFileSrc", sheetFileDir + sheet.getSheetFileuuid() + sheet.getSheetFilename());
-//        return "sheet/sheetDetail";
-//    }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/{sheetNo}/mod")
@@ -311,7 +281,7 @@ public class SheetController {
         updateDto.setSheetAgegroupName(sheet.getSheetAgegroup().getSheetAgegroupName());
         updateDto.setSheetContent(sheet.getSheetContent());
 
-        model.addAttribute("sheetUpdataDto", updateDto);
+        model.addAttribute("sheetUpdateDto", updateDto);
         model.addAttribute("ageGroup", sheetService.getAllSheetAgeGroup());
         model.addAttribute("genre", sheetService.getAllSheetGenre());
 
@@ -331,6 +301,13 @@ public class SheetController {
         if (bindingResult.hasErrors()) {
             log.info("errors={}", bindingResult);
 
+            Sheet sheet = sheetService.getSheet(sheetNo);
+            sheetUpdateDto.setSheetBookimguuid(sheet.getSheetBookimguuid());
+            sheetUpdateDto.setSheetBookimgname(sheet.getSheetBookimgname());
+            sheetUpdateDto.setSheetFileuuid(sheet.getSheetFileuuid());
+            sheetUpdateDto.setSheetFilename(sheet.getSheetFilename());
+
+            model.addAttribute("sheetUpdateDto", sheetUpdateDto);
             model.addAttribute("ageGroup", sheetService.getAllSheetAgeGroup());
             model.addAttribute("genre", sheetService.getAllSheetGenre());
             return "sheet/sheetModForm";
