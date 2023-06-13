@@ -119,7 +119,7 @@ public class MemberController {
         return "member/admin/list";
     }
 
-    @GetMapping("/findEmail")
+    @GetMapping("/find-email")
     public String findId(HttpServletRequest request) {
         if (memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN) == null) {
             return "member/login/findEmail";
@@ -128,7 +128,7 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/findPw")
+    @GetMapping("/find-pw")
     public String findPw(HttpServletRequest request) {
         if (memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN) == null) {
             return "member/login/findPw";
