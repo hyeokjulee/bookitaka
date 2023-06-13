@@ -52,7 +52,7 @@
               <a th:href="@{/sheet/mysheet}" class="dropdown-item">독후활동지</a>
               <a th:href="@{/sheet/myrequest}" class="dropdown-item">내 출제요청</a>
               <a th:href="@{/coupon/list}" class="dropdown-item">내 쿠폰</a>
-              <a th:href="@{/manual/list}" class="dropdown-item">내 결제</a>
+              <a th:href="@{/myPay}" class="dropdown-item">내 결제</a>
             </div>
           </li>
           <li class="nav-item dropdown px-4">
@@ -61,6 +61,14 @@
               <a th:href="@{/manual/list}" class="dropdown-item">이용방법</a>
               <a th:href="@{/notice/list}" class="dropdown-item">공지사항</a>
               <a th:href="@{/faq/best}" class="dropdown-item">자주묻는질문</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown px-4">
+            <a href="#" class="nav-link" aria-current="page" data-bs-toggle="dropdown">관리</a>
+            <div class="dropdown-menu bg-light m-0">
+              <a th:href="@{/members/list}" class="dropdown-item">회원 관리</a>
+              <a th:href="@{/sheet/requestlist}" class="dropdown-item">받은 출제요청</a>
+              <a th:href="@{/sheet/add}" class="dropdown-item">활동지 등록</a>
             </div>
           </li>
         </ul>
