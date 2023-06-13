@@ -33,7 +33,7 @@ class AgeGroupRepositoryTest {
 
     @Test
     void findAgeGroupTest() {
-        SheetAgegroup agegroup = ageGroupRepository.findBySheetAgegroupName("유아용");
+        SheetAgegroup agegroup = ageGroupRepository.findTopBySheetAgegroupName("유아용");
         log.info("ageGroup = {} ", agegroup);
         Assertions.assertThat(agegroup.getSheetAgegroupNo()).isEqualTo(1);
     }
