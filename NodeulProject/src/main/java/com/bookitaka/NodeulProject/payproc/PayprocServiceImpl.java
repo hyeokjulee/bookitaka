@@ -3,6 +3,7 @@ package com.bookitaka.NodeulProject.payproc;
 import com.bookitaka.NodeulProject.coupon.Coupon;
 import com.bookitaka.NodeulProject.coupon.CouponRepository;
 import com.bookitaka.NodeulProject.member.model.Member;
+import com.bookitaka.NodeulProject.member.repository.MemberRepository;
 import com.bookitaka.NodeulProject.payment.Payment;
 import com.bookitaka.NodeulProject.payment.PaymentRepository;
 import com.bookitaka.NodeulProject.sheet.SheetRepository;
@@ -25,19 +26,23 @@ public class PayprocServiceImpl implements PayprocService {
 
     private final CouponRepository couponRepository;
     private final MysheetRepository mysheetRepository;
+    private final MemberRepository memberRepository;
 
 
     @Override
-    public boolean makePay(PayMakeDto payMakeDto, Member member) {
+    public boolean makePay(PayMakeDto payMakeDto) {
 
         //payment 등록.
         Payment payment = new Payment();
         payment.setPaymentUuid(payMakeDto.getPaymentUuid()); //미리 받은 번호.
         payment.setPaymentPrice(payMakeDto.getPaymentPrice());
         payment.setPaymentInfo(payMakeDto.getPaymentInfo());
+        Member member = memberRepository.findByMemberEmail(payMakeDto.getMemberEmail());
+
         payment.setMember(member);
 
-        paymentRepository.save(payment);
+        Payment save = paymentRepository.save(payment);
+        log.info("makePay pay = {}", save);
 
 
         // 현재 시간

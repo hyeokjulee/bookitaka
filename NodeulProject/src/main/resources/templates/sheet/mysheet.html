@@ -1,16 +1,5 @@
 <!DOCTYPE HTML>
 <html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
-<head>
- </head>
-<!--<style>-->
-<!--  .container {-->
-<!--    max-width: 560px;-->
-<!--  }-->
-<!--  .page-disabled {-->
-<!--    pointer-events: none;-->
-<!--    opacity: 0.5;-->
-<!--  }-->
-<!--</style>-->
 <body>
 
 <menuTitle>내 독후활동지 목록</menuTitle>
@@ -72,13 +61,13 @@
   <div class="pagination">
     <ul class="pagination justify-content-center">
       <li class="page-item" th:if="${pageInfo.hasPreviousPage}">
-        <a class="page-link" th:href="@{/sheet/list(pageNum=${pageInfo.pageNum - 1}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}">&laquo;</a>
+        <a class="page-link" th:href="@{/sheet/mysheet(pageNum=${pageInfo.pageNum - 1}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}">&laquo;</a>
       </li>
       <li class="page-item" th:each="pageNum : ${pageInfo.getPageList()}" th:class="${pageNum} == ${pageInfo.pageNum} ? 'page-disabled active' : ''">
-        <a class="page-link" th:href="@{/sheet/list(pageNum=${pageNum}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}" th:text="${pageNum}"></a>
+        <a class="page-link" th:href="@{/sheet/mysheet(pageNum=${pageNum}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}" th:text="${pageNum}"></a>
       </li>
       <li class="page-item" th:if="${pageInfo.hasNextPage}">
-        <a class="page-link" th:href="@{/sheet/list(pageNum=${pageInfo.pageNum + 1}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}">&raquo;</a>
+        <a class="page-link" th:href="@{/sheet/mysheet(pageNum=${pageInfo.pageNum + 1}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}">&raquo;</a>
       </li>
     </ul>
   </div>
