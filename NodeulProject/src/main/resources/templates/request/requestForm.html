@@ -71,7 +71,7 @@
             </div>
             <div class="mb-4">
                 <label class="form-label">희망일</label>
-                <input type="date" id="requestHopedate" name="requestHopedate" class="form-control" placeholder="희망하는 날짜를 입력하세요">
+                <input type="date" id="requestHopedate" th:min="${T(java.time.LocalDate).now()}" name="requestHopedate" class="form-control" placeholder="희망하는 날짜를 입력하세요">
             </div>
             <div class="d-flex justify-content-end">
                 <button class="btn btn-primary" type="submit">요청하기</button>

@@ -19,11 +19,11 @@
         <form th:action="@{/faq/edit}" method="post">
             <input type="hidden" name="faqNo" th:value="${editFaq.faqNo}">
             <div class="mb-3">
-                <label class="form-label" name="faqQuestion" th:text="${editFaq.faqQuestion}">자주묻는 질문</label>
+                <label class="form-label" name="faqQuestion" >자주묻는 질문</label>
                 <textarea name="faqQuestion" th:text="${editFaq.faqQuestion}" class="form-control" rows="3"></textarea>
             </div>
             <div class="mb-3">
-                <label class="form-label" name="faqAnswer" th:text="${editFaq.faqAnswer}">답변</label>
+                <label class="form-label" name="faqAnswer" >답변</label>
                 <textarea name="faqAnswer" th:text="${editFaq.faqAnswer}" class="form-control" rows="3"></textarea>
             </div>
             <div>

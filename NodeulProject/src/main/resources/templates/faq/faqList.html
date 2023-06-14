@@ -27,16 +27,39 @@
                 </form>
             </div>
         </div>
-
-        <a href="/faq/all">전체</a>
-        <a href="/faq/best">BEST</a>
+        <br>
+        <a href="/faq/all"><button class="btn btn-primary">전체</button></a>
+        <a href="/faq/best"><button class="btn btn-primary">BEST</button></a>
         <a th:each="eachCategory : ${faqAllCategory}" th:href="@{/faq/{category}(category=${eachCategory})}">
-            <span th:text="${eachCategory}"></span>
-        </a>
-
+            <button class="btn btn-primary" th:text="${eachCategory}"></button>
+        </a><br>
+        <!---------아코디언형식------------>
+        <div class="accordion" id="accordionPanelsStayOpenExample">
+            <div class="accordion-item" th:each="faq, stat : ${faqAll.content}">
+                <div th:id="'accordionItem' + ${stat.index}">
+                    <h2 class="accordion-header" th:id="'panelsStayOpen-heading' + ${stat.index}">
+                        <button th:text="${faq.faqQuestion}" class="accordion-button" type="button" data-bs-toggle="collapse" th:data-bs-target="'#panelsStayOpen-collapse' + ${stat.index}" aria-expanded="false" th:aria-controls="'panelsStayOpen-collapse' + ${stat.index}">
+                            Accordion Item #1
+                        </button>
+                    </h2>
+                    <div th:id="'panelsStayOpen-collapse' + ${stat.index}" class="accordion-collapse" th:aria-labelledby="'panelsStayOpen-heading' + ${stat.index}">
+                        <div class="accordion-body d-flex align-items-center">
+                            <div class="me-auto" th:text="${faq.faqAnswer}">
+                                Accordion Item #1
+                            </div>
+                            <form th:action="@{/faq/remove/{faqNo}(faqNo=${faq.faqNo})}" method="post">
+                                <input class="btn btn-primary me-2" id="deleteBtn" type="submit" value="삭제" onclick="deleteConfirm()">
+                            </form>
+                            <a class="btn btn-primary" th:href="@{/faq/edit/{faqNo}(faqNo=${faq.faqNo})}">수정</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <!--------------------->
         <hr class="my-4">
         <div>
-            <table class="table">
+<!--            <table class="table">
                 <thead>
                 <tr>
                     <th>질문</th>
@@ -63,8 +86,7 @@
                     </td>
                 </tr>
                 </tbody>
-            </table>
-
+            </table>-->
             <div class="d-flex justify-content-end">
                 <a class="btn btn-primary" th:href="@{/faq/add}">등록</a>
             </div>

@@ -7,18 +7,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
@@ -101,29 +91,34 @@ public class SheetServiceImpl implements SheetService{
         //미리보기 따로 저장을 위한 코드 시작
         // PDF 파일을 PDDocument로 로드
         PDDocument document = PDDocument.load(sheetFile.getInputStream());
+        int numberOfPages = document.getNumberOfPages();
 
-        // 저장할 페이지 수
-        int numPagesToSave = 3;
+        if (numberOfPages < 3) {
+            log.info("pdf가 3장이 안돼서 미리보기 생성 불가. 장수 = {}", numberOfPages);
+        } else {
 
-        // 앞부분만 따로 저장할 새로운 PDDocument 생성
-        PDDocument newDocument = new PDDocument();
-        for (int i = 0; i < numPagesToSave; i++) {
-            // 원본 문서에서 페이지 가져오기
-            PDPage page = document.getPage(i);
+            // 저장할 페이지 수
+            int numPagesToSave = 3;
 
-            // 새로운 문서에 페이지 추가
-            newDocument.addPage(page);
+            // 앞부분만 따로 저장할 새로운 PDDocument 생성
+            PDDocument newDocument = new PDDocument();
+            for (int i = 0; i < numPagesToSave; i++) {
+                // 원본 문서에서 페이지 가져오기
+                PDPage page = document.getPage(i);
+
+                // 새로운 문서에 페이지 추가
+                newDocument.addPage(page);
+            }
+
+
+            // 새로운 문서 저장
+            newDocument.save(previewDir + uuid + sheetFileName);
+
+            // 문서 닫기
+            newDocument.close();
+            document.close();
+            //미리보기 따로 저장을 위한 코드 끝
         }
-
-
-        // 새로운 문서 저장
-        newDocument.save(previewDir + uuid + sheetFileName);
-
-        // 문서 닫기
-        newDocument.close();
-        document.close();
-        //미리보기 따로 저장을 위한 코드 끝
-
         sheetFile.transferTo(new File(sheetFileFullPath));
         //테스트 데이터 넣기용
 //        Files.copy(sheetFile.getInputStream(), Paths.get(sheetFileFullPath), StandardCopyOption.REPLACE_EXISTING);

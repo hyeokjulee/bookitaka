@@ -28,27 +28,28 @@ public class MysheetServiceImpl implements MysheetService{
     private final MysheetRepository mysheetRepository;
     private final SheetRepository sheetRepository;
 
+    QMysheet qMysheet = QMysheet.mysheet;
+
 
     @Override
     public List<SheetForMemberDto> getAllMysheetByMember(MysheetCri mysheetCri, Member member) {
         //쿼리 DSL로 검색조건에 따른 검색 구현
-        QMysheet QMysheet = com.bookitaka.NodeulProject.sheet.mysheet.QMysheet.mysheet;
 
         BooleanBuilder builder = new BooleanBuilder();
-        builder.and(QMysheet.member.eq(member));
+        builder.and(qMysheet.member.eq(member));
 
         if (mysheetCri.getSearchType().equals(SearchTypes.TITLE)) {
-            builder.and(QMysheet.sheet.sheetBooktitle.contains(mysheetCri.getSearchWord()));
+            builder.and(qMysheet.sheet.sheetBooktitle.contains(mysheetCri.getSearchWord()));
         } else if (mysheetCri.getSearchType().equals(SearchTypes.AUTHOR)) {
-            builder.and(QMysheet.sheet.sheetBooktitle.contains(mysheetCri.getSearchWord()));
+            builder.and(qMysheet.sheet.sheetBooktitle.contains(mysheetCri.getSearchWord()));
         } else if (mysheetCri.getSearchType().equals(SearchTypes.PUBLISHER)) {
-            builder.and(QMysheet.sheet.sheetBooktitle.contains(mysheetCri.getSearchWord()));
+            builder.and(qMysheet.sheet.sheetBooktitle.contains(mysheetCri.getSearchWord()));
         }
 
 
         Predicate predicate = builder.getValue();
 
-        OrderSpecifier<Date> orderSpecifier = QMysheet.mysheetStartdate.desc();
+        OrderSpecifier<Date> orderSpecifier = qMysheet.mysheetStartdate.desc();
 
         //페이징 구현
         Pageable pageable = PageRequest.of(mysheetCri.getPageNum()-1, mysheetCri.getAmount(), Sort.by(Sort.Direction.DESC, "mysheetStartdate"));
@@ -84,10 +85,17 @@ public class MysheetServiceImpl implements MysheetService{
 
     @Override
     public Long getMySheetCnt(String searchType, String searchWord, Member member) {
-        QMysheet QMysheet = com.bookitaka.NodeulProject.sheet.mysheet.QMysheet.mysheet;
 
         BooleanBuilder builder = new BooleanBuilder();
-        builder.and(QMysheet.member.eq(member));
+        builder.and(qMysheet.member.eq(member));
+
+        if (searchType.equals(SearchTypes.TITLE)) {
+            builder.and(qMysheet.sheet.sheetBooktitle.contains(searchWord));
+        } else if (searchType.equals(SearchTypes.AUTHOR)) {
+            builder.and(qMysheet.sheet.sheetBooktitle.contains(searchWord));
+        } else if (searchType.equals(SearchTypes.PUBLISHER)) {
+            builder.and(qMysheet.sheet.sheetBooktitle.contains(searchWord));
+        }
 
         Predicate predicate = builder.getValue();
 

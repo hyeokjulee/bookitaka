@@ -1,6 +1,5 @@
 package com.bookitaka.NodeulProject.cart;
 
-import com.bookitaka.NodeulProject.member.service.MemberService;
 import com.bookitaka.NodeulProject.sheet.Sheet;
 import com.bookitaka.NodeulProject.sheet.SheetService;
 import lombok.RequiredArgsConstructor;

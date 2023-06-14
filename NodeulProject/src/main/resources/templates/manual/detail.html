@@ -24,15 +24,13 @@
                 <th class="col-10" style="font-weight: normal;" th:text="${manualDto.manualTitle}"></th>
             </tr>
         </table>
-
-        <div class="py-3 px-5">
-            <div class="text-lg">
-                <p th:text="${manualDto.manualContent}"></p>
+        <div class="py-3 px-5" style="overflow: auto;">
+            <div class="text-lg" th:utext="${manualDto.manualContent}">
             </div>
         </div>
 
         <!-- 수정/삭제 -->
-        <div class="d-flex justify-content-end">
+        <div class="d-flex justify-content-end mt-5">
             <a th:href="@{/manual/list}">
                 <button class="btn btn-primary">목록으로</button>
             </a>
