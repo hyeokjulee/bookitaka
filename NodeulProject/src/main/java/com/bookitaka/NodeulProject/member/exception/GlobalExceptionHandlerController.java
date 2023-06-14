@@ -74,7 +74,7 @@ public class GlobalExceptionHandlerController {
   @ExceptionHandler(Exception.class)
   public void handleException(HttpServletResponse res, Exception ex) throws IOException {
     log.info("================handleException - Exception");
-    log.info("================Exception : getMessage : {}", ex.getMessage());
+    log.info("================Exception : getMessage : {}", ex.getStackTrace());
     res.sendError(HttpStatus.BAD_REQUEST.value(), "Something went wrong");
   }
 

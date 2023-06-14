@@ -24,6 +24,8 @@ public class SheetRepositoryImpl implements SheetRepository{
 
     private final EntityManager em;
     private final JPAQueryFactory qf;
+    private final GenreRepository genreRepository;
+    private final AgeGroupRepository ageGroupRepository;
 
     QSheet qSheet = new QSheet("m");
 
@@ -153,10 +155,18 @@ public class SheetRepositoryImpl implements SheetRepository{
         Sheet findSheet = em.find(Sheet.class, sheetNo);
 
         if (findSheet !=null) {
-            ModelMapper modelMapper = new ModelMapper();
-
-            modelMapper.map(sheetUpdateDto, findSheet);
-            em.merge(findSheet);
+            findSheet.setSheetBooktitle(sheetUpdateDto.getSheetBooktitle());
+            findSheet.setSheetBookauthor(sheetUpdateDto.getSheetBookauthor());
+            findSheet.setSheetBookpublisher(sheetUpdateDto.getSheetBookpublisher());
+            findSheet.setSheetBookisbn(sheetUpdateDto.getSheetBookisbn());
+            findSheet.setSheetPrice(sheetUpdateDto.getSheetPrice());
+            findSheet.setSheetBookimguuid(sheetUpdateDto.getSheetBookimguuid());
+            findSheet.setSheetBookimgname(sheetUpdateDto.getSheetBookimgname());
+            findSheet.setSheetFileuuid(sheetUpdateDto.getSheetFileuuid());
+            findSheet.setSheetFilename(sheetUpdateDto.getSheetFilename());
+            findSheet.setSheetGenre(genreRepository.findTopBySheetGenreName(sheetUpdateDto.getSheetGenreName()));
+            findSheet.setSheetAgegroup(ageGroupRepository.findTopBySheetAgegroupName(sheetUpdateDto.getSheetAgegroupName()));
+            findSheet.setSheetContent(sheetUpdateDto.getSheetContent());
             return true;
         }
         return false;
