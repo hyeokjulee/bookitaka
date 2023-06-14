@@ -18555,8 +18555,8 @@ ul {
 
 .dropdown-menu {
   min-width: 16rem;
-  border: 0;
-  border-radius: 0;
+  border: pink 1px solid !important;
+  border-radius: 10px;
   -webkit-box-shadow: none;
   box-shadow: none;
   background-color: #F0F4F9;

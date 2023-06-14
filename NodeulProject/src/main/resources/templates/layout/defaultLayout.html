@@ -18,11 +18,12 @@
   <!-- ===============================================-->
   <link th:href="@{/assets/css/theme.css}" rel="stylesheet" />
   <link rel="stylesheet" href="/css/carticon.css">
+  <link rel="stylesheet" href="/css/sidebar.css">
+  <link rel="stylesheet" href="/css/paper.css">
 </head>
 
 
 <body>
-
 <!-- ===============================================-->
 <!--    Main Content-->
 <!-- ===============================================-->
@@ -36,21 +37,19 @@
 
   <!-- ============================================-->
   <!-- <section> begin ============================-->
-  <section class="pb-6 pt-6 bg-600">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <h6 class="font-sans-serif text-primary fw-bold">북키타카</h6>
-          <h1  class="fs-6 fs-xl-6 mb-5"><div th:replace="${menuTitle}" >알림마당</div></h1>
-        </div>
-      </div>
+  <div class="paper">
+  <div class="lines">
+<!--  <div class="bg-light">-->
+    <div class="container pt-5 pb-6">
+      <h6 class="font-sans-serif text-primary fw-bold">북키타카</h6>
+      <h1  class="fs-6 fs-xl-6"><div th:replace="${menuTitle}" >알림마당</div></h1>
     </div>
     <!-- end of .container-->
-
-  </section>
+<!--  </div>-->
+  </div>
+  </div>
   <!-- <section> close ============================-->
   <!-- ============================================-->
-
 
   <br><hr class="my-4">
 
@@ -61,13 +60,11 @@
     <div class="container">
       <div class="row">
         <div class="col-md-3">
-          <div class="card">
-            <ul class="list-group list-group-flush">
-              <li class="list-group-item" th:replace="${sidebar}">
+            <ul class="post-it">
+              <li th:replace="${sidebar}">
                 <strong>Enrolled</strong>
               </li>
             </ul>
-          </div>
         </div>
         <div class="col-md-9">
         <div th:replace="${mainSection}"><img class="w-100" src="/assets/img/gallery/ux-designer.png" alt="..." />
