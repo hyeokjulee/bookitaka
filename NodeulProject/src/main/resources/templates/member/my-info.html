@@ -97,12 +97,12 @@
     <div class="row">
         <span class="col-3 text-truncate"><label>생년월일</label></span>
         <span class="col-9 text-truncate" id="memberBirthdayForm" style="display: none">
-        <input class="form-control-sm" type="date" id="memberBirthday" name="memberBirthday" th:value="${#dates.format(member.memberBirthday, 'yyyy-MM-dd')}"/>
+        <input class="form-control-sm" type="date" id="memberBirthday" name="memberBirthday" th:value="${member.memberBirthday}"/>
         <div class="errorDiv" error="memberName" style="color: red"></div>
         </span>
         <span class="col-9 text-truncate" id="memberBirthdayText">
             <div class="row">
-                <span class="col-6" th:text="${#dates.format(member.memberBirthday, 'yyyy-MM-dd')}"></span>
+                <span class="col-6" th:text="${member.memberBirthday}"></span>
                 <span class="col-6"><a class="btn-primary btn-sm" id="editBirthdayBtn">생년월일 변경</a></span>
             </div>
         </span>
