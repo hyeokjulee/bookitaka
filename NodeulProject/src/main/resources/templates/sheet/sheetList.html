@@ -1,6 +1,13 @@
 <!DOCTYPE HTML>
 <html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <style>
+        .sheetBox {
+
+        }
+
+    </style>
+
 </head>
 <body>
 
@@ -54,20 +61,19 @@
     </form>
     </div>
     <hr class="my-0">
-    <table class="table">
-        <tbody>
-        <tr th:each="sheet, status : ${sheetList}" th:if="${status.index % 2 == 0}">
-            <td style="padding-top: 30px; padding-bottom: 30px;">
+    <div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div th:each="sheet : ${sheetList}" class="col-md-6 border-bottom border-bottom-gray" style="padding-top: 25px; padding-bottom: 25px;">
+                        <div class="row">
+                        <div class="col-md-4">
                         <a th:href="@{|/sheet/${sheet.sheetNo}/?genre=${genre}&ageGroup=${ageGroup}&pageNum=${cri.pageNum}&amount=${cri.amount}&searchType=${cri.searchType}&searchWord=${cri.searchWord}&sort=${cri.sort}|}">
-                            <img th:src="|/sheet/bookImg/*{sheet.sheetBookimguuid}*{sheet.sheetBookimgname}|" alt="Book Image">
+                            <img th:src="|/sheet/bookImg/*{sheet.sheetBookimguuid}*{sheet.sheetBookimgname}|" class="h-100 w-100" style="object-fit: contain" alt="Book Image">
                         </a>
                     </div>
-                    <div class="col-md-6 mr-0">
+                    <div class="col-md-8 mr-0">
                         <ul style="list-style-type: none;">
                             <li>
-                                <h5>
+                                <h5 class="mt-2">
                                     <a th:href="@{|/sheet/${sheet.sheetNo}/?genre=${genre}&ageGroup=${ageGroup}&pageNum=${cri.pageNum}&amount=${cri.amount}&searchType=${cri.searchType}&searchWord=${cri.searchWord}&sort=${cri.sort}|}">
                                         <span th:text="${#strings.length(sheet.sheetBooktitle) &lt;= 7 ? sheet.sheetBooktitle : sheet.sheetBooktitle.substring(0, 7) + '...'}"></span>
                                     </a>
@@ -84,43 +90,15 @@
                             </li>
                         </ul>
                     </div>
-                </div>
-            </td>
-            <td th:if="${status.index + 1 < #lists.size(sheetList)}" style="padding-top: 30px; padding-bottom: 30px;">
-                <div class="row">
-                    <div class="col-md-6">
-                        <a th:href="@{|/sheet/${sheetList[status.index + 1].sheetNo}/?genre=${genre}&ageGroup=${ageGroup}&pageNum=${cri.pageNum}&amount=${cri.amount}&searchType=${cri.searchType}&searchWord=${cri.searchWord}&sort=${cri.sort}|}">
-                            <img th:src="|/sheet/bookImg/*{sheetList[status.index + 1].sheetBookimguuid}*{sheetList[status.index + 1].sheetBookimgname}|" alt="Book Image">
-                        </a>
-                    </div>
-                    <div class="col-md-6">
-                        <ul style="list-style-type: none;">
-                            <li>
-                                <h5>
-                                    <a th:href="@{|/sheet/${sheetList[status.index + 1].sheetNo}/?genre=${genre}&ageGroup=${ageGroup}&pageNum=${cri.pageNum}&amount=${cri.amount}&searchType=${cri.searchType}&searchWord=${cri.searchWord}&sort=${cri.sort}|}">
-                                        <span th:text="${#strings.length(sheetList[status.index + 1].sheetBooktitle) &lt;= 7 ? sheetList[status.index + 1].sheetBooktitle : sheetList[status.index + 1].sheetBooktitle.substring(0, 7) + '...'}"></span>
-                                    </a>
-                                </h5>
-                            </li>
-                            <li>
-                                <h6>ㆍ작가: <span th:text="${sheetList[status.index + 1].sheetBookauthor}">작가이름</span></h6>
-                            </li>
-                            <li>
-                                <h6>ㆍ출판사: <span th:text="${sheetList[status.index + 1].sheetBookpublisher}">출판사이름</span></h6>
-                            </li>
-                            <li>
-                                <h6>ㆍ가격: <span th:text="${sheetList[status.index + 1].sheetPrice}">10000</span></h6>
-                            </li>
-                        </ul>
+                        </div>
                     </div>
                 </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
 
 
-    <div class="pagination">
+    </div>
+
+
+    <div class="pagination mt-3 text-center">
         <ul class="pagination justify-content-center">
             <li class="page-item" th:if="${pageInfo.hasPreviousPage}">
                 <a class="page-link" th:href="@{/sheet/list(genre=${genre}, ageGroup=${ageGroup}, pageNum=${pageInfo.pageNum - 1}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort})}">&laquo;</a>
