@@ -2,6 +2,7 @@ package com.bookitaka.NodeulProject.member.controller;
 
 import com.bookitaka.NodeulProject.member.dto.MemberDataDTO;
 import com.bookitaka.NodeulProject.member.dto.MemberResponseDTO;
+import com.bookitaka.NodeulProject.member.dto.MemberUpdateAdminDTO;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.security.Token;
 import com.bookitaka.NodeulProject.member.service.MemberService;
@@ -16,8 +17,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -64,14 +63,15 @@ public class MemberController {
         return "member/my-info";
     }
 
-    @GetMapping("/editAdmin/{memberEmail}")
+    // 회원 상세 보기 (관리자)
+    @GetMapping(value = "/{memberEmail}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String editAdmin(Model model, @PathVariable String memberEmail) {
-        log.info("=====================MemberController - editAdmin");
-        Member memberByEmail = memberService.search(memberEmail);
-        MemberResponseDTO userResponseDTO = modelMapper.map(memberByEmail, MemberResponseDTO.class);
-        model.addAttribute("member", userResponseDTO);
-        return "member/admin/editAdmin";
+    public String detailAdmin(@PathVariable String memberEmail, Model model) {
+        log.info("================================Members : detailAdmin");
+        Member searchMember = memberService.search(memberEmail);
+        MemberResponseDTO memberResponseDTO = modelMapper.map(searchMember, MemberResponseDTO.class);
+        model.addAttribute("member", memberResponseDTO);
+        return "member/admin/detail";
     }
 
     @GetMapping("/list")
@@ -143,12 +143,4 @@ public class MemberController {
         return "member/changePw";
     }
 
-    // 회원 상세 보기 (관리자)
-    @GetMapping(value = "/{memberEmail}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String detailAdmin(@PathVariable String memberEmail, Model model) {
-        log.info("================================Members : detailAdmin");
-        model.addAttribute("member", memberService.search(memberEmail));
-        return "member/detail";
-    }
 }

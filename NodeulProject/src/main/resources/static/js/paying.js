@@ -38,44 +38,63 @@ function showSheets(sheets) {
 
 // 활동지 번호들을 넘겨서 활동지들을 받고 목록을 표시하는 함수
 function nosToSheets(decodedList) {
-    $.ajax({
-      url: '/payproc/getSheets',  // 서버의 상품 삭제 API 엔드포인트
-      type: 'POST',
-      data: JSON.stringify(decodedList),
-      contentType: "application/json",
-      success: function(response) {
-        if (response.success) {
-          showSheets(response.sheets);  // 목록 갱신
-          memberSet(response.member);  // 내 정보 초기화
-        } else {
-          console.log('상품 목록 조회 실패');
+    fetch('/payproc/getSheets', {
+        method: 'POST',
+        body: JSON.stringify(decodedList),
+        headers: {
+            'ajax':true,
+            'Content-Type': 'application/json'
         }
-      },
-      error: function() {
-        console.log('상품 목록 조회 요청 실패');
-      }
+    })
+    .then((response) => {
+        if (response.status === 200) {
+            response.json().then((data) => {
+                if (data.success) {
+                    showSheets(data.sheets);  // 목록 갱신
+                    memberSet(data.member);  // 내 정보 초기화
+                } else {
+                    console.error('상품 목록 조회 실패');
+                }
+            });
+        } else if (response.status === 201) {
+            console.log("토큰 재발급");
+            nosToSheets(decodedList);
+        } else {
+            console.error('상품 목록 조회 요청 중 에러 발생', response.status);
+        }
+    }).catch(error => {
+        console.error('상품 목록 조회 요청 실패:', error);
     });
 }
 
 // 결제완료시 쿠키에 있는 목록 선택 삭제 요청을 보냄
 function deleteSelectedCart() {
-  // AJAX 요청을 보냅니다.
-  $.ajax({
-    type: 'POST',
-    url: '/cart/deleteSelectedCart',
-    data: JSON.stringify(decodedList),
-    contentType: 'application/json',
-    success: function(response) {
-      if (response.success) {
-          console.log('선택 삭제 성공');
-        } else {
-          console.log('선택 삭제 실패');
+    fetch('/cart/deleteSelectedCart', {
+        method: 'POST',
+        body: JSON.stringify(decodedList),
+        headers: {
+            'ajax':true,
+            'Content-Type': 'application/json'
         }
-    },
-    error: function() {
-      console.log('선택 삭제 요청 실패');
-    }
-  });
+    })
+    .then((response) => {
+        if (response.status === 200) {
+            response.json().then((data) => {
+                if (data.success) {
+                  console.log('선택 삭제 성공');
+                } else {
+                  console.log('선택 삭제 실패');
+                }
+            });
+        } else if (response.status === 201) {
+            console.log("토큰 재발급");
+            deleteSelectedCart();
+        } else {
+            console.error('선택 삭제 요청 중 에러 발생', response.status);
+        }
+    }).catch(error => {
+        console.error('선택 삭제 요청 실패:', error);
+    });
 }
 
 // 페이지 로드 시 이전 페이지에서 선택했던 목록 표시

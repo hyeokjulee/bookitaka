@@ -186,29 +186,33 @@
 
 
 
-
-</script>
-
-<script>
     function cartAdd(sheetNo) {
-        $.ajax({
-          url: '/cart/cartAdd',
-          type: 'POST',
-          data: { sheetNo: sheetNo },
-          success: function(response) {
-            if (response.fail) {
-              alert("이미 장바구니에 담겨있는 상품입니다.")
-            } else if (response.success) {
-              alert("추가에 성공하였습니다")
+        fetch("/cart/cartAdd", {
+            method: 'POST',
+            body: new URLSearchParams({ sheetNo: sheetNo }),
+            headers: {'ajax':true}
+        })
+        .then((response) => {
+            if (response.status === 200) {
+                response.json().then((data) => {
+                    if (data.fail) {
+                        alert("이미 장바구니에 담겨있는 상품입니다.");
+                    } else if (data.success) {
+                        if (confirm("추가에 성공하였습니다. 장바구니로 이동하시겠습니까?")) {
+                            window.location.href = "/cart/cart";
+                        }
+                    } else {
+                        console.error('추가에 실패하였습니다.');
+                    }
+                });
+            } else if (response.status === 201) {
+                console.log("토큰 재발급");
+                cartAdd(sheetNo);
             } else {
-              console.error('추가 요청이 실패하였습니다.', error);
-              alert('추가 요청이 실패하였습니다.')
+                console.error('추가 요청 중 에러 발생', response.status);
             }
-          },
-          error: function() {
-            console.error('추가 요청 중 에러가 발생하였습니다.', error);
-            alert("추가 요청 중 에러가 발생하였습니다.")
-          }
+        }).catch(error => {
+            console.error('추가 요청 실패:', error);
         });
     }
 
@@ -224,21 +228,21 @@
         fetch(`/sheet/${sheetNo}`, {
             method: 'DELETE'
         })
-            .then(response => {
-                if (response.ok) {
-                    // 삭제 성공 시 목록 페이지로 리다이렉트
-                    alert("삭제에 성공하였습니다")
-                    window.location.href = '/sheet/list';
+        .then(response => {
+            if (response.ok) {
+                // 삭제 성공 시 목록 페이지로 리다이렉트
+                alert("삭제에 성공하였습니다")
+                window.location.href = '/sheet/list';
 
-                } else {
-                    // 실패 시 에러 처리
-                    alert('삭제 요청이 실패하였습니다.')
-                }
-            })
-            .catch(error => {
-                console.error('삭제 요청 중 에러가 발생하였습니다.', error);
-                alert("삭제 요청 중 에러가 발생하였습니다.")
-            });
+            } else {
+                // 실패 시 에러 처리
+                alert('삭제 요청이 실패하였습니다.')
+            }
+        })
+        .catch(error => {
+            console.error('삭제 요청 중 에러가 발생하였습니다.', error);
+            alert("삭제 요청 중 에러가 발생하였습니다.")
+        });
     }
 
 
