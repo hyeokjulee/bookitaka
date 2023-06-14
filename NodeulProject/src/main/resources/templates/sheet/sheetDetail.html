@@ -1,52 +1,85 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-
-    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
-</head>
-<style>
-    .container {
-        max-width: 560px;
-    }
-</style>
 </head>
 <body>
 
-<div class="container">
+<menuTitle>독후활동지</menuTitle>
 
-    <div class="py-5 text-center">
-        <h2>상품 상세보기 </h2>
+<sidebar class="list-group-item"><a th:href="@{/sheet/list}">전체 보기</a></sidebar>
+<sidebar class="list-group-item"><a th:href="@{/sheet/list?ageGroup=유아용}">연령별로 보기</a></sidebar>
+<sidebar th:if="${ageGroup != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?ageGroup=유아용}">연령별 - 유아용</a></sidebar>
+<sidebar th:if="${ageGroup != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?ageGroup=초등저학년}">연령별 - 초등저학년</a></sidebar>
+<sidebar th:if="${ageGroup != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?ageGroup=초등고학년}">연령별 - 초등고학년</a></sidebar>
+<sidebar th:if="${ageGroup != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?ageGroup=중등}">연령별 - 중등</a></sidebar>
+<sidebar th:if="${ageGroup != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?ageGroup=고등}">연령별 - 고등</a></sidebar>
+<sidebar class="list-group-item"><a th:href="@{/sheet/list?genre=그림책}">장르별로 보기</a></sidebar>
+<sidebar th:if="${genre != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?genre=그림책}">장르별 - 그림책</a></sidebar>
+<sidebar th:if="${genre != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?genre=동화}">장르별 - 동화</a></sidebar>
+<sidebar th:if="${genre != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?genre=청소년소설}">장르별 - 청소년소설</a></sidebar>
+<sidebar th:if="${genre != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?genre=세계명작}">장르별 - 세계명작</a></sidebar>
+<sidebar th:if="${genre != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?genre=현대문학}">장르별 - 현대문학</a></sidebar>
+<sidebar th:if="${genre != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?genre=한국고전}">장르별 - 한국고전</a></sidebar>
+<sidebar class="list-group-item"><a th:href="@{/sheet/list?genre=독서토론논제은행}">논제은행</a></sidebar>
+<sidebar class="list-group-item"><a th:href="@{/sheet/request}">개별출제요청</a></sidebar>
+
+
+<mainSection>
+
+    <div class="row">
+        <div class="col-4">
+            <img class="h-100 w-100" style="object-fit: contain" id="sheetBookImg" th:src="|/sheet/bookImg/*{sheet.sheetBookimguuid}*{sheet.sheetBookimgname}|">
+        </div>
+
+        <div class="col-8">
+            <div class="row my-3">
+                <h3 type="text" id="sheetBooktitle" th:text="*{sheet.sheetBooktitle}" class="col-8"></h3>
+            </div>
+
+            <div class="row my-3">
+                <div class="col-6">
+                    <span class="">작가 : </span>
+                    <span type="text" id="sheetBookauthor" th:text="*{sheet.sheetBookauthor}" class=""></span>
+                </div>
+                <div class="col-6">
+                    <span class="">출판사 : </span>
+                    <span type="text" id="sheetPublisher" th:text="*{sheet.sheetBookpublisher}" class=""></span>
+                </div>
+            </div>
+
+            <div class="my-3">
+                <span class="">ISBN : </span>
+                <span type="text" id="sheetBookisbn" th:text="*{sheet.sheetBookisbn}" class=""></span>
+            </div>
+
+            <div class="row my-3">
+                <div class="col-6">
+                    <span class="">연령대 : </span>
+                    <span type="text" id="sheetAgeGroupName" th:text="*{sheet.sheetAgegroup.sheetAgegroupName}" class=""></span>
+                </div>
+                <div class="col-6">
+                    <span class="">장르 : </span>
+                    <span type="text" id="sheetGenreName" th:text="*{sheet.sheetGenre.sheetGenreName}" class=""></span>
+                </div>
+            </div>
+
+            <div class="my-3">
+                <span class="">가격 : </span>
+                <span type="text" id="sheetPrice" th:text="*{sheet.sheetPrice}" class=""></span>
+            </div>
+
+
+            <div class="my-3">
+                <div type="text" id="sheetContent" th:text="*{sheet.sheetContent}" class=""></div>
+            </div>
+
+
+        </div>
     </div>
 
-    <div>
-            <label for="sheetBooktitle">책 제목</label>
-            <input type="text" id="sheetBooktitle" th:field="*{sheet.sheetBooktitle}" class="form-control" readonly>
-        </div>
 
-        <div>
-            <label for="sheetBookauthor">작가</label>
-            <input type="text" id="sheetBookauthor" th:field="*{sheet.sheetBookauthor}" class="form-control" readonly>
-        </div>
+    <div>  </div>
 
-        <div>
-            <label for="sheetPublisher">출판사</label>
-            <input type="text" id="sheetPublisher" th:field="*{sheet.sheetBookpublisher}" class="form-control"readonly>
-        </div>
-        <div>
-            <label for="sheetBookisbn">ISBN</label>
-            <input type="text" id="sheetBookisbn" th:field="*{sheet.sheetBookisbn}" class="form-control" readonly>
-        </div>
-
-        <div>
-            <label for="sheetPrice">가격</label>
-            <input type="number" id="sheetPrice" th:field="*{sheet.sheetPrice}" class="form-control"readonly>
-        </div>
-        <div>
-            <label for="sheetBookImg">표지 이미지</label>
-            <img id="sheetBookImg" th:src="|/sheet/bookImg/*{sheet.sheetBookimguuid}*{sheet.sheetBookimgname}|" width="300" height="300">
-        </div>
         <div>
             <label for="sheetFile">독후활동지 파일</label>
             <button th:attr="data-fileuuid=${sheet.sheetFileuuid}" onclick="downloadFile(this.getAttribute('data-fileuuid'))" id="sheetFile" class="btn btn-primary">다운로드</button>
@@ -74,23 +107,8 @@
 
 
 
-    <div>
-            <label for="sheetContent">설명</label>
-            <textarea type="text" id="sheetContent" th:field="*{sheet.sheetContent}" class="form-control" readonly></textarea>
-        </div>
-
         <hr class="my-4">
 
-        <div>
-            <label for="sheetGenreName">장르</label>
-            <input type="text" id="sheetGenreName" th:field="*{sheet.sheetGenre.sheetGenreName}" class="form-control" readonly>
-        </div>
-
-
-        <div>
-            <label for="sheetAgeGroupName">연령대</label>
-            <input type="text" id="sheetAgeGroupName" th:field="*{sheet.sheetAgegroup.sheetAgegroupName}" class="form-control" readonly>
-        </div>
 
         <div>
             <label for="sheetBuyCnt">다운로드 수</label>
@@ -135,7 +153,6 @@
             </div>
         </div>
 
-</div> <!-- /container -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 
 <script src="/pdfjs/build/pdf.js"></script>
@@ -342,5 +359,6 @@
         previewBox.innerHTML = "<p>미리보기가 존재하지 않습니다</p>" //존재하지 않을시 전체 박스를 내용을 없앱니다.
     );
 </script>
+</mainSection>
 </body>
 </html>
