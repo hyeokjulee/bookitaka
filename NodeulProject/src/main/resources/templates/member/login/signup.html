@@ -6,6 +6,7 @@
 
 <menuTitle>회원가입</menuTitle>
 <mainSection>
+<link rel="stylesheet" href="/css/password.scss">
 
 <div class="my-5">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
@@ -256,7 +257,7 @@
     <div class="card-body">
         <div class="card">
             <div class="card-body">
-                <form th:object="${member}">
+                <form id="frm" th:object="${member}">
                     <div class="row mt-3">
                         <span class="col-3 text-truncate"><label th:for="memberEmailF">이메일</label></span>
                         <span class="col-9">
@@ -276,11 +277,15 @@
                         </span>
                     </div><hr>
                     <div class="row mt-3">
-                        <span class="col-3 text-truncate"><label th:for="memberPassword">비밀번호</label></span>
+                        <span class="col-3 text-truncate password"><label th:for="memberPassword">비밀번호</label></span>
                         <span class="col-9">
-                            <input class="form-control-inline" type="password" th:field="*{memberPassword}"/>
+                            <input class="form-control-inline" type="password" th:field="*{memberPassword}"><i class="far fa-eye mx-3"></i>
+                            <input class='pw-switch' type="checkbox" />
                             <div class="errorDiv" error="memberPassword" style="color: red"></div>
                         </span>
+                        <div class='pw-strength'></div>
+                        <ul class='pw-rules-list'>
+                        </ul>
                     </div>
                     <div class="row mt-3">
                         <span class="col-3 text-truncate"><label th:for="memberPasswordCheck">비밀번호(확인)</label></span>
@@ -518,7 +523,9 @@
             })
     }
 </script>
+<script>
 
+</script>
 </mainSection>
 </body>
 </html>
