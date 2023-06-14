@@ -46,9 +46,9 @@
         <br>
         <input type="hidden" name="genre" th:value="${genre}">
         <input type="hidden" name="ageGroup" th:value="${ageGroup}">
-            <div class="justify-content-start">
-                <div class="form-row">
-                    <div class="col-4">
+            <div class="justify-content-start mb-3">
+                <div class="text-end">
+                    <div>
                         <div class="btn-group">
                             <button type="button" onclick="handleSortBtn('최신순')" th:class="${cri.sort == '최신순' ? 'btn btn-primary active' : 'btn btn-primary'}" th:text="'최신순'">최신순</button>
                             <button type="button" onclick="handleSortBtn('조회순')" th:class="${cri.sort == '조회순' ? 'btn btn-primary active' : 'btn btn-primary'}" th:text="'조회순'">조회순</button>
@@ -98,7 +98,7 @@
     </div>
 
 
-    <div class="pagination mt-3 text-center">
+    <div class="pagination mt-3 justify-content-center">
         <ul class="pagination justify-content-center">
             <li class="page-item" th:if="${pageInfo.hasPreviousPage}">
                 <a class="page-link" th:href="@{/sheet/list(genre=${genre}, ageGroup=${ageGroup}, pageNum=${pageInfo.pageNum - 1}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort})}">&laquo;</a>
