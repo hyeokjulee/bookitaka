@@ -7297,7 +7297,7 @@ fieldset:disabled .btn {
   font-size: 1rem;
   color: #402B2B;
   text-align: left;
-  background-color: #FCFCFC;
+  background-color: #fff0f4;
   border: 0;
   border-radius: 0;
   overflow-anchor: none;
@@ -7318,7 +7318,7 @@ fieldset:disabled .btn {
 
 .accordion-button:not(.collapsed) {
   color: #23242A;
-  background-color: #FCFCFC;
+  background-color: #fff0f4;
   -webkit-box-shadow: inset 0 -1px 0 rgba(255, 254, 254, 0.125);
   box-shadow: inset 0 -1px 0 rgba(255, 254, 254, 0.125);
 }
@@ -7372,7 +7372,7 @@ fieldset:disabled .btn {
 }
 
 .accordion-item {
-  background-color: #FCFCFC;
+  background-color: #fffcfd;
   border: 1px solid rgba(255, 254, 254, 0.125);
 }
 
@@ -7404,6 +7404,7 @@ fieldset:disabled .btn {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
+
 
 .accordion-body {
   padding: 1.5rem 2.6rem;
