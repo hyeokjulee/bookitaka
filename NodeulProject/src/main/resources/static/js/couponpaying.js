@@ -11,19 +11,30 @@ function memberSet(member) {
 
 // 내 정보 조회
 function myInfo() {
-    $.ajax({
-      url: '/coupon/myInfo',  // 서버의 내 정보 조회 API 엔드포인트
-      type: 'POST',
-      success: function(response) {
-        if (response.success) {
-          memberSet(response.member);  // 내 정보 초기화
-        } else {
-          console.log('내 정보 조회 실패');
+    fetch('/coupon/myInfo', {
+        method: 'POST',
+        headers: {
+            'ajax':true,
+            'Content-Type': 'application/json'
         }
-      },
-      error: function() {
-        console.log('내 정보 조회 요청 실패');
-      }
+    })
+    .then((response) => {
+        if (response.status === 200) {
+            response.json().then((data) => {
+                if (data.success) {
+                  memberSet(data.member);  // 내 정보 초기화
+                } else {
+                  console.log('내 정보 조회 실패');
+                }
+            });
+        } else if (response.status === 201) {
+            console.log("토큰 재발급");
+            myInfo();
+        } else {
+            console.error('내 정보 조회 요청 중 에러 발생', response.status);
+        }
+    }).catch(error => {
+        console.error('내 정보 조회 요청 실패:', error);
     });
 }
 
