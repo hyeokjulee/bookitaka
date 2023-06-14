@@ -238,30 +238,11 @@
     }
 
 
-    const pdfPath = '/sheet/preview/[[${sheet.sheetFileuuid}]]'; // PDF 파일 경로
+    const pdfPath = '/sheet/preview/' + /*[[${sheet.sheetFileuuid}]]*/ '';// PDF 파일 경로
 
-
-    // const iframe = document.getElementById('pdf-iframe');
-    //
-    // pdfjsLib.getDocument(pdfPath).promise.then(pdf => {
-    //     pdf.getPage(1).then(page => {
-    //         const viewport = page.getViewport({ scale: 1 });
-    //         const canvas = document.createElement('canvas');
-    //         const context = canvas.getContext('2d');
-    //         canvas.height = viewport.height;
-    //         canvas.width = viewport.width;
-    //
-    //         page.render({
-    //             canvasContext: context,
-    //             viewport
-    //         }).promise.then(() => {
-    //             const dataURL = canvas.toDataURL('image/png');
-    //             iframe.src = dataURL;
-    //         });
-    //     });
-    // });
 
     const numPreviewPages = 1; // 한 번에 표시할 페이지 수
+    const previewBox= document.getElementById('pdf-preview-container');
     const previewContainer = document.getElementById('pdf-preview');
     const prevButton = document.getElementById('prev-page');
     const nextButton = document.getElementById('next-page');
@@ -357,7 +338,9 @@
     pdfjsLib.getDocument(pdfPath).promise.then(pdf => {
         pdfDocument = pdf;
         navigateToPage(1); // 첫 페이지를 렌더링하여 시작합니다.
-    });
+    }).catch(
+        previewBox.innerHTML = "<p>미리보기가 존재하지 않습니다</p>"
+    );
 </script>
 </body>
 </html>
