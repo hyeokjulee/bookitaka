@@ -5,16 +5,29 @@
 <body>
 
 <menuTitle>독후활동지</menuTitle>
-<sidebar class="list-group-item"><a th:href="@{/sheet/list?ageGroup=유아용}">연령별</a></sidebar>
-<sidebar class="list-group-item"><a th:href="@{/sheet/list?genre=그림책}">장르별</a></sidebar>
+
+<sidebar class="list-group-item"><a th:href="@{/sheet/list}">전체 보기</a></sidebar>
+<sidebar class="list-group-item"><a th:href="@{/sheet/list?ageGroup=유아용}">연령별로 보기</a></sidebar>
+<sidebar th:if="${ageGroup != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?ageGroup=유아용}">연령별 - 유아용</a></sidebar>
+<sidebar th:if="${ageGroup != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?ageGroup=초등저학년}">연령별 - 초등저학년</a></sidebar>
+<sidebar th:if="${ageGroup != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?ageGroup=초등고학년}">연령별 - 초등고학년</a></sidebar>
+<sidebar th:if="${ageGroup != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?ageGroup=중등}">연령별 - 중등</a></sidebar>
+<sidebar th:if="${ageGroup != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?ageGroup=고등}">연령별 - 고등</a></sidebar>
+<sidebar class="list-group-item"><a th:href="@{/sheet/list?genre=그림책}">장르별로 보기</a></sidebar>
+<sidebar th:if="${genre != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?genre=그림책}">장르별 - 그림책</a></sidebar>
+<sidebar th:if="${genre != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?genre=동화}">장르별 - 동화</a></sidebar>
+<sidebar th:if="${genre != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?genre=청소년소설}">장르별 - 청소년소설</a></sidebar>
+<sidebar th:if="${genre != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?genre=세계명작}">장르별 - 세계명작</a></sidebar>
+<sidebar th:if="${genre != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?genre=현대문학}">장르별 - 현대문학</a></sidebar>
+<sidebar th:if="${genre != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?genre=한국고전}">장르별 - 한국고전</a></sidebar>
 <sidebar class="list-group-item"><a th:href="@{/sheet/list?genre=독서토론논제은행}">논제은행</a></sidebar>
 <sidebar class="list-group-item"><a th:href="@{/sheet/request}">개별출제요청</a></sidebar>
 
 <mainSection>
     <div id="wrap">
-        <div class="text-center">
-            <h3 th:if="${genre != ''}" th:text="|장르별 보기 - ${genre}|" ></h3>
-            <h3 th:if="${ageGroup != ''}" th:text="|나이대별 보기 - ${ageGroup}|" ></h3>
+        <div class="text-center mb-5">
+            <h3 th:if="${genre != ''}" th:text="|장르별로 보기 - ${genre}|" ></h3>
+            <h3 th:if="${ageGroup != ''}" th:text="|연령별로 보기 - ${ageGroup}|" ></h3>
         </div>
         <form id="sheetListForm" th:action="@{/sheet/list}" method="get" class="text-center">
             <div class="row align-items-end justify-content-end">
@@ -39,9 +52,9 @@
         <br>
         <input type="hidden" name="genre" th:value="${genre}">
         <input type="hidden" name="ageGroup" th:value="${ageGroup}">
-            <div class="justify-content-start">
-                <div class="form-row">
-                    <div class="col-4">
+            <div class="justify-content-start mb-3">
+                <div class="text-end">
+                    <div>
                         <div class="btn-group">
                             <button type="button" onclick="handleSortBtn('최신순')" th:class="${cri.sort == '최신순' ? 'btn btn-primary active' : 'btn btn-primary'}" th:text="'최신순'">최신순</button>
                             <button type="button" onclick="handleSortBtn('조회순')" th:class="${cri.sort == '조회순' ? 'btn btn-primary active' : 'btn btn-primary'}" th:text="'조회순'">조회순</button>
@@ -54,20 +67,19 @@
     </form>
     </div>
     <hr class="my-0">
-    <table class="table">
-        <tbody>
-        <tr th:each="sheet, status : ${sheetList}" th:if="${status.index % 2 == 0}">
-            <td style="padding-top: 30px; padding-bottom: 30px;">
+    <div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div th:each="sheet : ${sheetList}" class="col-md-6 border-bottom border-bottom-gray" style="padding-top: 25px; padding-bottom: 25px;">
+                        <div class="row">
+                        <div class="col-md-4">
                         <a th:href="@{|/sheet/${sheet.sheetNo}/?genre=${genre}&ageGroup=${ageGroup}&pageNum=${cri.pageNum}&amount=${cri.amount}&searchType=${cri.searchType}&searchWord=${cri.searchWord}&sort=${cri.sort}|}">
-                            <img th:src="|/sheet/bookImg/*{sheet.sheetBookimguuid}*{sheet.sheetBookimgname}|" alt="Book Image">
+                            <img th:src="|/sheet/bookImg/*{sheet.sheetBookimguuid}*{sheet.sheetBookimgname}|" class="h-100 w-100" style="object-fit: contain" alt="Book Image">
                         </a>
                     </div>
-                    <div class="col-md-6 mr-0">
+                    <div class="col-md-8 mr-0">
                         <ul style="list-style-type: none;">
                             <li>
-                                <h5>
+                                <h5 class="mt-2">
                                     <a th:href="@{|/sheet/${sheet.sheetNo}/?genre=${genre}&ageGroup=${ageGroup}&pageNum=${cri.pageNum}&amount=${cri.amount}&searchType=${cri.searchType}&searchWord=${cri.searchWord}&sort=${cri.sort}|}">
                                         <span th:text="${#strings.length(sheet.sheetBooktitle) &lt;= 7 ? sheet.sheetBooktitle : sheet.sheetBooktitle.substring(0, 7) + '...'}"></span>
                                     </a>
@@ -84,43 +96,15 @@
                             </li>
                         </ul>
                     </div>
-                </div>
-            </td>
-            <td th:if="${status.index + 1 < #lists.size(sheetList)}" style="padding-top: 30px; padding-bottom: 30px;">
-                <div class="row">
-                    <div class="col-md-6">
-                        <a th:href="@{|/sheet/${sheetList[status.index + 1].sheetNo}/?genre=${genre}&ageGroup=${ageGroup}&pageNum=${cri.pageNum}&amount=${cri.amount}&searchType=${cri.searchType}&searchWord=${cri.searchWord}&sort=${cri.sort}|}">
-                            <img th:src="|/sheet/bookImg/*{sheetList[status.index + 1].sheetBookimguuid}*{sheetList[status.index + 1].sheetBookimgname}|" alt="Book Image">
-                        </a>
-                    </div>
-                    <div class="col-md-6">
-                        <ul style="list-style-type: none;">
-                            <li>
-                                <h5>
-                                    <a th:href="@{|/sheet/${sheetList[status.index + 1].sheetNo}/?genre=${genre}&ageGroup=${ageGroup}&pageNum=${cri.pageNum}&amount=${cri.amount}&searchType=${cri.searchType}&searchWord=${cri.searchWord}&sort=${cri.sort}|}">
-                                        <span th:text="${#strings.length(sheetList[status.index + 1].sheetBooktitle) &lt;= 7 ? sheetList[status.index + 1].sheetBooktitle : sheetList[status.index + 1].sheetBooktitle.substring(0, 7) + '...'}"></span>
-                                    </a>
-                                </h5>
-                            </li>
-                            <li>
-                                <h6>ㆍ작가: <span th:text="${sheetList[status.index + 1].sheetBookauthor}">작가이름</span></h6>
-                            </li>
-                            <li>
-                                <h6>ㆍ출판사: <span th:text="${sheetList[status.index + 1].sheetBookpublisher}">출판사이름</span></h6>
-                            </li>
-                            <li>
-                                <h6>ㆍ가격: <span th:text="${sheetList[status.index + 1].sheetPrice}">10000</span></h6>
-                            </li>
-                        </ul>
+                        </div>
                     </div>
                 </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
 
 
-    <div class="pagination">
+    </div>
+
+
+    <div class="pagination mt-3 justify-content-center">
         <ul class="pagination justify-content-center">
             <li class="page-item" th:if="${pageInfo.hasPreviousPage}">
                 <a class="page-link" th:href="@{/sheet/list(genre=${genre}, ageGroup=${ageGroup}, pageNum=${pageInfo.pageNum - 1}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort})}">&laquo;</a>

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public interface NoticeRepository extends PagingAndSortingRepository<Notice,Inte
 
     @Modifying
     @Query("update Notice n set n.noticeHit = n.noticeHit + 1 where n.noticeNo = :noticeNo")
-    int updateHit(Integer noticeNo);
+    int updateHit(@Param("noticeNo") Integer noticeNo);
 
    Page<Notice> findByNoticeTitleContaining(String keyword, Pageable pageable);
 

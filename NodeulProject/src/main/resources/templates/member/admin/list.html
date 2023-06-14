@@ -2,11 +2,6 @@
 <html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <style>
-        .active a {
-            color: red;
-        }
-    </style>
 </head>
 <body>
 <menuTitle>관리</menuTitle>
@@ -15,105 +10,104 @@
 <sidebar class="list-group-item"><a th:href="@{/sheet/add}">활동지 등록</a></sidebar>
 <mainsection>
     <div id="wrap">
+        <h1 class="fs-5 fs-xl-5 mb-5">회원 관리</h1>
         <div class="row g-0 align-items-center">
-            <div class="col-auto">
-                <h1 class="fs-5 fs-xl-5 mb-5">회원 관리</h1>
-            </div>
-            <div class="col-auto ms-auto align-self-end">
-                <form class="form-inline" action="/members/list" method="GET">
-                    <div class="input-group">
-                        <select name="method" class="form-control">
-                            <option selected>이메일/이름</option>
-                            <option>이메일</option>
-                            <option>이름</option>
-                        </select>
-                        <input class="form-control" name="keyword" type="text" placeholder="검색어를 입력해주세요" id="keyword"/>
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="submit" id="searchButton">검색</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-<!--    <form action="/members/list">-->
-<!--        <select name="method">-->
-<!--            <option>검색기준</option>-->
-<!--            <option>이메일</option>-->
-<!--            <option>이름</option>-->
-<!--            <option>이메일/이름</option>-->
-<!--        </select>-->
-<!--        <input type="text" name="keyword" placeholder="검색어를 입력해주세요" id="keyword">-->
-<!--        <button type="button" id="searchButton">검색</button>-->
-<!--    </form>-->
-    <table>
-        <thead>
-        <tr>
-            <th>이름</th>
-            <th>이메일</th>
-            <th>번호</th>
-            <th>생년월일</th>
-            <th>성별</th>
-            <th>버튼</th>
-            <th>권한수정</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="member : ${members}">
-            <td id="name" th:text="${member.memberName}"></td>
-            <td id="email"><a th:href="@{/members/__${member.memberEmail}__}" th:text="${member.memberEmail}"></a></td>
-            <td id="phone" th:text="${member.memberPhone}"></td>
-            <td id="birthday" th:text="${member.memberBirthday}"></td>
-            <td id="gender">
-                <span class="col-6" th:if="${member.memberGender != ''}" th:text="${member.memberGender}"></span>
-                <span class="col-6" th:if="${member.memberGender == ''}" th:text="미선택"></span>
-            </td>
-            <td>
-                <button type="button" id="delBtn">delete</button>
-            </td>
-            <td>
-                <select class="roleSelect">
-                    <option value="ROLE_MEMBER" th:selected="${member.memberRole == 'ROLE_MEMBER'}">회원</option>
-                    <option value="ROLE_ADMIN" th:selected="${member.memberRole == 'ROLE_ADMIN'}">관리자</option>
+            <form class="form-inline text-end" action="/members/list" method="GET">
+                <select name="method" class="form-select-inline" style="width: 180px">
+                    <option selected>이메일/이름</option>
+                    <option>이메일</option>
+                    <option>이름</option>
                 </select>
-            </td>
-        </tr>
-        <tr th:if="${members.isEmpty()}">
-            <td colspan="3" style="text-align: center;">일치하는 검색 결과가 없습니다.</td>
-        </tr>
-        </tbody>
-    </table>
-
-    <!--페이징-->
-    <div>
-    <span>
-      <a th:if="${currentPage > 0}"
-         th:href="@{/members/list(page=${previousGroupStartPage}, size=${pageSize}, method=${method}, keyword=${keyword})}"> &lt;&lt; </a>
-   </span>
-
-        <span>
-        <a th:if="${currentPage > 0}"
-           th:href="@{/members/list(page=${currentPage - 1}, size=${pageSize}, method=${method}, keyword=${keyword})}"> &lt; </a>
-    </span>
-
-        <span th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}"
-              th:class="${pageNumber == currentPage} ? 'active' : ''">
-      <a th:if="${not #lists.isEmpty(members)}"
-         th:href="@{/members/list(page=${pageNumber}, size=${pageSize}, method=${method}, keyword=${keyword})}"
-         th:text="${pageNumber + 1}"></a>
-   </span>
-
-        <span>
-      <a th:if="${currentPage + 1 < totalPages}"
-         th:href="@{/members/list(page=${currentPage + 1}, size=${pageSize}, method=${method}, keyword=${keyword})}"> &gt; </a>
-   </span>
-
-        <span>
-      <a th:if="${currentPage + 1 < totalPages}"
-         th:href="@{/members/list(page=${nextGroupStartPage}, size=${pageSize}, method=${method}, keyword=${keyword})}"> &gt;&gt; </a>
-   </span>
+                <span>
+                    <input class="form-control-inline" name="keyword" type="text" placeholder="검색어를 입력해주세요"
+                           id="keyword" th:if="${keyword != null}" th:value="${keyword}"/>
+                    <span>
+                        <button class="btn btn-primary" type="submit" id="searchButton">검색</button>
+                    </span>
+                </span>
+            </form>
+        </div>
     </div>
+    <hr class="my-4">
+    <div class="row g-0 align-items-center">
+        <table class="table table-hover text-center">
+            <thead>
+            <tr>
+                <th>이름</th>
+                <th>이메일</th>
+                <th>번호</th>
+                <th>생년월일</th>
+                <th>성별</th>
+                <th>회원삭제</th>
+                <th>권한수정</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member : ${members}" onclick="goDetail()">
+                <td id="name" th:text="${member.memberName}"></td>
+                <td id="email" th:text="${member.memberEmail}"></td>
+                <td id="phone" th:text="${member.memberPhone}"></td>
+                <td id="birthday" th:text="${member.memberBirthday}"></td>
+                <td id="gender">
+                            <span class="col-6" th:if="${member.memberGender != ''}"
+                                  th:text="${member.memberGender}"></span>
+                    <span class="col-6" th:if="${member.memberGender == ''}" th:text="미선택"></span>
+                </td>
+                <td>
+                    <button type="button" id="delBtn" class="btn btn-danger btn-sm">delete</button>
+                </td>
+                <td>
+                    <select class="roleSelect form-select-inline">
+                        <option value="ROLE_MEMBER" th:selected="${member.memberRole == 'ROLE_MEMBER'}">회원</option>
+                        <option value="ROLE_ADMIN" th:selected="${member.memberRole == 'ROLE_ADMIN'}">관리자</option>
+                    </select>
+                </td>
+            </tr>
+            <tr th:if="${members.isEmpty()}">
+                <td colspan="7" style="text-align: center;">일치하는 검색 결과가 없습니다.</td>
+            </tr>
+            </tbody>
+        </table>
 
+        <!--페이징-->
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <a class="page-link" th:if="${currentPage > 0}"
+                       th:href="@{/members/list(page=${previousGroupStartPage}, size=${pageSize}, method=${method}, keyword=${keyword})}">&lt;&lt;</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" th:if="${currentPage > 0}"
+                       th:href="@{/members/list(page=${currentPage - 1}, size=${pageSize}, method=${method}, keyword=${keyword})}">&lt;</a>
+                </li>
+                <th:block th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}">
+                    <li th:class="page-item" th:classappend="${pageNumber == currentPage ? 'active' : ''}">
+                        <a th:if="${not #lists.isEmpty(members)}"
+                           th:href="@{/members/list(page=${pageNumber}, size=${pageSize}, method=${method}, keyword=${keyword})}"
+                           th:text="${pageNumber + 1}" th:class="page-link"></a>
+                    </li>
+                </th:block>
+                <li class="page-item">
+                    <a class="page-link" th:if="${currentPage + 1 < totalPages}"
+                       th:href="@{/members/list(page=${currentPage + 1}, size=${pageSize}, method=${method}, keyword=${keyword})}">
+                        &gt; </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" th:if="${currentPage + 1 < totalPages}"
+                       th:href="@{/members/list(page=${nextGroupStartPage}, size=${pageSize}, method=${method}, keyword=${keyword})}">
+                        &gt;&gt; </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
     <script th:inline="javascript">
+        // detail
+        function goDetail() {
+            var emailElement = event.currentTarget.querySelector('#email');
+            selectedMemberEmail = emailElement.textContent;
+            window.location.href = '/members/' + selectedMemberEmail;
+        }
+
         // 삭제 버튼
         var delButtons = document.querySelectorAll("#delBtn");
         delButtons.forEach(function (button) {
@@ -189,7 +183,6 @@
         }
 
     </script>
-
 </mainsection>
 
 </body>
