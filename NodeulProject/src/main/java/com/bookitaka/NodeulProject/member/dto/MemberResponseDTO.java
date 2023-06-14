@@ -3,11 +3,6 @@ package com.bookitaka.NodeulProject.member.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import java.util.Date;
-
 @Data
 public class MemberResponseDTO {
 
@@ -21,4 +16,6 @@ public class MemberResponseDTO {
   private String memberGender;
   @ApiModelProperty(position = 4)
   private String memberBirthday;
+  @ApiModelProperty(position = 5)
+  private String memberRole;
 }
