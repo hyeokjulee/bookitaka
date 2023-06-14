@@ -186,10 +186,6 @@
 
 
 
-
-</script>
-
-<script>
     function cartAdd(sheetNo) {
         $.ajax({
           url: '/cart/cartAdd',
@@ -224,21 +220,21 @@
         fetch(`/sheet/${sheetNo}`, {
             method: 'DELETE'
         })
-            .then(response => {
-                if (response.ok) {
-                    // 삭제 성공 시 목록 페이지로 리다이렉트
-                    alert("삭제에 성공하였습니다")
-                    window.location.href = '/sheet/list';
+        .then(response => {
+            if (response.ok) {
+                // 삭제 성공 시 목록 페이지로 리다이렉트
+                alert("삭제에 성공하였습니다")
+                window.location.href = '/sheet/list';
 
-                } else {
-                    // 실패 시 에러 처리
-                    alert('삭제 요청이 실패하였습니다.')
-                }
-            })
-            .catch(error => {
-                console.error('삭제 요청 중 에러가 발생하였습니다.', error);
-                alert("삭제 요청 중 에러가 발생하였습니다.")
-            });
+            } else {
+                // 실패 시 에러 처리
+                alert('삭제 요청이 실패하였습니다.')
+            }
+        })
+        .catch(error => {
+            console.error('삭제 요청 중 에러가 발생하였습니다.', error);
+            alert("삭제 요청 중 에러가 발생하였습니다.")
+        });
     }
 
 

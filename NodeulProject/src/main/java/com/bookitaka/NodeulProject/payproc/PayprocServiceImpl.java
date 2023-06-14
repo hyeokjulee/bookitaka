@@ -12,6 +12,7 @@ import com.bookitaka.NodeulProject.sheet.mysheet.MysheetRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -30,6 +31,7 @@ public class PayprocServiceImpl implements PayprocService {
 
 
     @Override
+    @Transactional
     public boolean makePay(PayMakeDto payMakeDto) {
 
         //payment 등록.
@@ -79,6 +81,7 @@ public class PayprocServiceImpl implements PayprocService {
     }
 
     @Override
+    @Transactional
     public boolean makeCouponPay(PayMakeDto payMakeDto) {
         //payment 등록.
         Payment payment = new Payment();
