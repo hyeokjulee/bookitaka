@@ -52,25 +52,28 @@
                 </tbody>
             </table>
 
-            <!--<nav aria-label="Page navigation example">
+            <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
                     <li class="page-item disabled">
-                        <a class="page-link" >Previous</a>
+                        <a class="page-link">《</a>
                     </li>
-                    <th:block th:each="pageNumber : ${#numbers.sequence(0, manualList.totalPages - 1)}">
-                        <li class="page-item">
-                            <form th:action="@{/manual/search}" method="get">
-                                <input type="hidden" name="keyword" th:value="${keyword}" />
-                                <input type="hidden" name="page" th:value="${pageNumber}" />
-                                <button class="page-link" th:text="${pageNumber + 1}"></button>
-                            </form>
-                        </li>
+                    <th:block th:if="${manualList.totalPages > 0}">
+                        <th:block th:each="pageNumber : ${#numbers.sequence(0, manualList.totalPages - 1)}">
+                            <li class="page-item">
+                                <form th:action="@{/manual/search}" method="get">
+                                    <input type="hidden" name="keyword" th:value="${keyword}" />
+                                    <input type="hidden" name="page" th:value="${pageNumber}" />
+                                    <button class="page-link" th:text="${pageNumber + 1}"></button>
+                                </form>
+                            </li>
+                        </th:block>
                     </th:block>
                     <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
+                        <a class="page-link">》</a>
                     </li>
                 </ul>
-            </nav>-->
+            </nav>
+
             <div class="d-flex justify-content-end">
                 <a class="btn btn-primary" th:href="@{/manual/post}">글쓰기</a>
             </div>

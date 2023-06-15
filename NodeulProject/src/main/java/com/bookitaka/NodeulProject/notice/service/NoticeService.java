@@ -64,9 +64,11 @@ public class NoticeService {
 
     @Transactional
     public Page<NoticeDto> searchNotice(String keyword, Pageable pageable) {
-        Page<Notice> noticeEntities = noticeRepository.findByNoticeTitleContaining(keyword, pageable);
+        Page<Notice> noticeEntities = noticeRepository.findByNoticeTitleContainingOrNoticeContentContaining(keyword, keyword, pageable);
 
-        if (noticeEntities.isEmpty()) return Page.empty(); // 빈 페이지 반환
+        if (noticeEntities.isEmpty()) {
+            return Page.empty(); // 빈 페이지 반환
+        }
 
         return noticeEntities.map(this::convertEntityToDto);
     }

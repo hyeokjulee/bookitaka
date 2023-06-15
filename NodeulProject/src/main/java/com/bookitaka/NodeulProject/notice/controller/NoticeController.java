@@ -23,7 +23,7 @@ import java.util.List;
 @RequestMapping("/notice")
 public class NoticeController {
 
-    private static final int PAGE_SIZE = 10;
+    private static final int PAGE_SIZE = 5;
     private NoticeService noticeService;
 
     @GetMapping("/list")

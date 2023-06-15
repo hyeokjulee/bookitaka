@@ -4,6 +4,10 @@ import com.bookitaka.NodeulProject.manual.dto.ManualDto;
 import com.bookitaka.NodeulProject.manual.service.ManualService;
 import com.bookitaka.NodeulProject.notice.dto.NoticeDto;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,12 +22,14 @@ import java.util.List;
 @RequestMapping("/manual")
 public class ManualController {
 
+    private static final int PAGE_SIZE = 5;
     private ManualService manualService;
 
     @GetMapping("/list")
-    public String list(Model model){
-        List<ManualDto> manualList = manualService.getManualList();
-
+    public String list(Model model, @RequestParam(name="page", defaultValue = "0") int page){
+        Sort sort = Sort.by("manualNo").descending();
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE,sort);
+        Page<ManualDto> manualList = manualService.getManualList(pageable);
         model.addAttribute("manualList",manualList);
         return "manual/list.html";
     }
@@ -81,5 +87,15 @@ public class ManualController {
         manualService.deleteManual(manualNo);
 
         return "redirect:/manual/list";
+    }
+
+    @GetMapping("/search")
+    public String search(@RequestParam(value = "keyword") String keyword, @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+        Sort sort = Sort.by("manualNo").descending();
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
+        Page<ManualDto> manualDtoPage = manualService.searchManual(keyword, pageable);
+        model.addAttribute("manualList", manualDtoPage);
+        model.addAttribute("keyword", keyword); // 검색어 전달
+        return "manual/list.html";
     }
 }
