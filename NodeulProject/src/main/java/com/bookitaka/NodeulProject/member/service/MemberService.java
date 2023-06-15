@@ -226,6 +226,29 @@ public class MemberService {
         return false;
     }
 
+    public boolean isValidEmailToken(String token) {
+        try {
+            if (token != null && jwtTokenProvider.validateToken(token)) {
+                return true;
+            }
+        } catch (CustomException ex) {
+            return false;
+        }
+        return false;
+    }
+
+    public boolean isValidEmailTokenInCookies(Cookie[] cookies, String email) {
+        String token = jwtTokenProvider.resolveToken(cookies, Token.EMAIL_AUTH_TOKEN);
+        try {
+            if (token != null && jwtTokenProvider.validateToken(token) && jwtTokenProvider.getMemberEmail(token).equals(email)) {
+                return true;
+            }
+        } catch (CustomException ex) {
+            return false;
+        }
+        return false;
+    }
+
     public String refresh(Cookie[] cookies, Member member) {
         String req_rToken = jwtTokenProvider.resolveToken(cookies, Token.REFRESH_TOKEN);
         String db_rToken = member.getMemberRtoken();
@@ -233,5 +256,15 @@ public class MemberService {
             return jwtTokenProvider.createToken(member.getMemberEmail(), member.getMemberRole());
         }
         return null;
+    }
+
+    @Transactional
+    public boolean sendAuthEmail(String email) {
+        String token = jwtTokenProvider.createEmailAuthToken(email, "ROLE_EMAIL");
+        if (token != null) {
+            emailService.sendEmailWithTemplate(email, "templates/member/mail/temp-auth-email-template.html", "[북키타카] 회원가입 이메일 인증", "<a href=\"http://localhost:8080/members/emailauth?token="+token+"\">이메일 인증</a>");
+            return true;
+        }
+        return false;
     }
 }

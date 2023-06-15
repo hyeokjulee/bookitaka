@@ -6,7 +6,8 @@
 
 <menuTitle>회원가입</menuTitle>
 <mainSection>
-<link rel="stylesheet" href="/css/password.scss">
+<link rel="stylesheet" href="/css/password.css">
+<link rel="stylesheet" href="/css/tooltip.css">
 
 <div class="my-5">
     <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
@@ -259,8 +260,8 @@
             <div class="card-body">
                 <form id="frm" th:object="${member}">
                     <div class="row mt-3">
-                        <span class="col-3 text-truncate"><label th:for="memberEmailF">이메일</label></span>
-                        <span class="col-9">
+                        <span class="col-md-3 text-truncate"><label th:for="memberEmailF">이메일</label></span>
+                        <span class="col-md-9">
                             <input class="form-control-inline" type="text" id="memberEmailF"/> @
                             <input class="form-control-inline" type="text" id="memberEmailR"/>
                             <select class="form-select-inline" id="memberEmailSelect">
@@ -277,34 +278,47 @@
                         </span>
                     </div><hr>
                     <div class="row mt-3">
-                        <span class="col-3 text-truncate password"><label th:for="memberPassword">비밀번호</label></span>
-                        <span class="col-9">
-                            <input class="form-control-inline" type="password" th:field="*{memberPassword}"><i class="far fa-eye mx-3"></i>
-                            <input class='pw-switch' type="checkbox" />
-                            <div class="errorDiv" error="memberPassword" style="color: red"></div>
-                        </span>
-                        <div class='pw-strength'></div>
-                        <ul class='pw-rules-list'>
-                        </ul>
+                        <div class="col-md-9">
+                            <div class="row mt-3">
+                                <span class="col-md-4 text-truncate"><label th:for="memberPassword">비밀번호</label></span>
+                                <span class="col-md-6">
+                                    <input class="form-control-inline" type="password" th:field="*{memberPassword}">
+                                    <input class='pw-switch' type="checkbox" />
+                                    <div class="errorDiv" error="memberPassword" style="color: red"></div>
+                                </span>
+                            </div>
+                            <div class="row mt-3">
+                                <span class="col-md-4 text-truncate"><label th:for="memberPasswordCheck">비밀번호(확인)</label></span>
+                                <span class="col-md-6">
+                                    <input class="form-control-inline" type="password" th:field="*{memberPasswordCheck}"/>
+                                    <div class="errorDiv" error="memberPasswordCheck" style="color: red"></div>
+                                    <div class="errorDiv" error="PasswordMatch" style="color: red"></div>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 py-3">
+                            <div class='pw-strength'>
+                                <strong>비밀번호 강도</strong>
+                                <span class="progress">
+                                    <div class="progress-bar text-black" id="strProgressBar" role="progressbar" aria-label="Example with label" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress-bar text-black" id="strProgressBarBg" aria-label="Example with label" style="width: 100%; background-color: lightgray" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                </span>
+                            </div>
+                            <ul class='pw-rules-list'>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="row mt-3">
-                        <span class="col-3 text-truncate"><label th:for="memberPasswordCheck">비밀번호(확인)</label></span>
-                        <span class="col-9">
-                            <input class="form-control-inline" type="password" th:field="*{memberPasswordCheck}"/>
-                            <div class="errorDiv" error="memberPasswordCheck" style="color: red"></div>
-                            <div class="errorDiv" error="PasswordMatch" style="color: red"></div>
-                        </span>
-                    </div><hr>
-                    <div class="row mt-3">
-                        <span class="col-3 text-truncate"><label th:for="memberName">이름</label></span>
-                        <span class="col-9">
+                    <hr>
+                    <div class="row my-3">
+                        <span class="col-md-3 text-truncate"><label th:for="memberName">이름</label></span>
+                        <span class="col-md-9">
                             <input class="form-control-inline" type="text" th:field="*{memberName}"/>
                             <div class="errorDiv" error="memberName" style="color: red"></div>
                         </span>
                     </div><hr>
-                    <div class="row mt-3">
-                        <span class="col-3 text-truncate"><label th:for="memberPhoneC">전화번호</label></span>
-                        <span class="col-9">
+                    <div class="row my-3">
+                        <span class="col-md-3 text-truncate"><label th:for="memberPhoneC">전화번호</label></span>
+                        <span class="col-md-9">
                             <select class="form-select-inline" id="memberPhoneSelect">
                                 <option value="010" selected>010</option>
                                 <option value="011">011</option>
@@ -322,9 +336,9 @@
                             <div class="errorDiv" error="memberPhone" style="color: red"></div>
                         </span>
                     </div><hr>
-                    <div class="row mt-3">
-                        <span class="col-3 text-truncate"><label>성별</label></span>
-                        <span class="col-9">
+                    <div class="row my-3">
+                        <span class="col-md-3 text-truncate"><label>성별</label></span>
+                        <span class="col-md-9">
                             <label for="memberGenderN">선택 안함</label>
                             <input class="form-check-input radio-gender" type="radio" name="memberGender" id="memberGenderN" value="" checked/><span>ㅤ</span>
                             <label for="memberGenderM">남성</label>
@@ -334,13 +348,13 @@
                             <div class="errorDiv" error="memberGender" style="color: red"></div>
                         </span>
                     </div><hr>
-                    <div class="row mt-3">
-                        <span class="col-3 text-truncate"><label th:for="memberBirthday">생년월일</label></span>
-                        <span class="col-9">
+                    <div class="row my-3">
+                        <span class="col-md-3 text-truncate"><label th:for="memberBirthday">생년월일</label></span>
+                        <span class="col-md-9">
                             <input class="form-control-inline" type="date" th:field="*{memberBirthday}" th:max="${T(java.time.LocalDate).now()}"/>
                             <div class="errorDiv" error="memberBirthday" style="color: red"></div>
                         </span>
-                    </div><hr>
+                    </div>
                 </form>
             </div>
         </div>
@@ -524,7 +538,64 @@
     }
 </script>
 <script>
+    const pwRules = [
+        {  regex: /[a-zA-Z]/,  message: ' 영문자 포함'},
+        {  regex: /[0-9]/,  message: ' 숫자 포함'},
+        {  regex: /[@,$,!,%,*,?,&,.]/,  message: ' 특수문자 포함 <span tooltip="@$!%*?&."><i class="fa-regular fa-circle-question"></i></span>'},
+        {  regex: /.{8,}/,  message: ' 8자 이상'}
+    ];
 
+    const passwordInput = document.querySelector('#memberPassword');
+    const pwSwitch = document.querySelector('.pw-switch');
+    const pwStrength = document.querySelector('.pw-strength');
+    const pwRulesList = document.querySelector('.pw-rules-list');
+
+
+    function togglePasswordVisibility() {
+        const pwInput = document.querySelector('#memberPassword');
+        const pwInputChk = document.querySelector('#memberPasswordCheck');
+        const inputType = pwInput.attributes.type;
+        inputType.value = inputType.value === 'text' ? 'password' : 'text';
+        const inputTypeChk = pwInputChk.attributes.type;
+        inputTypeChk.value = inputTypeChk.value === 'text' ? 'password' : 'text';
+    }
+
+    function checkPasswordStrength(event) {
+        const password = event.target.value;
+        pwRulesList.innerHTML = '';
+
+        pwRules.forEach(rule => {
+            rule.isPassed = rule.regex.test(password);
+            let li  = document.createElement('li');
+            li.classList.add(rule.isPassed?'passed':'failed');
+            li.innerHTML = rule.message;
+            pwRulesList.appendChild(li);
+        });
+
+        const rulesPassed = pwRules.filter(rule => rule.isPassed).length;
+        const progressBar = document.getElementById('strProgressBar');
+        const progressBarBg = document.getElementById('strProgressBarBg');
+        const status = ['강도', '매우 약함', '약함', '부족', '적정'];
+        const statusColor = ['', '#ffdddd', '#ffe5dd', '#ffeedd', '#e5ffdd'];
+        progressBar.style.width = Math.floor(rulesPassed/pwRules.length*100) + '%';
+        progressBarBg.style.width = 100 - Math.floor(rulesPassed/pwRules.length*100) + '%';
+        progressBar.style.backgroundColor = statusColor[rulesPassed];
+        progressBar.innerText = status[rulesPassed];
+    }
+
+
+    pwSwitch.addEventListener('change', togglePasswordVisibility);
+    passwordInput.addEventListener('input', checkPasswordStrength);
+
+    onload = function() {
+        pwRules.forEach(rule => {
+            rule.isPassed = rule.regex.test('');
+            let li  = document.createElement('li');
+            li.classList.add(rule.isPassed?'passed':'failed');
+            li.innerHTML = rule.message;
+            pwRulesList.appendChild(li);
+        });
+    }
 </script>
 </mainSection>
 </body>
