@@ -50,14 +50,8 @@
             </div>
         </div>
     </section>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        window.onload = function() {
-            checkSign();
-        }
-        // 로그인 버튼 클릭 이벤트 처리
-        document.getElementById("loginBtn").addEventListener("click", function() {
+        const loginProcess = function() {
             document.getElementById("alertDiv").style.display = "none";
             document.getElementById("emptyAlertDiv").style.display = "none";
 
@@ -77,48 +71,30 @@
                 method: 'POST',
                 body: new URLSearchParams(formData)
             })
-                .then((response) => {
-                    if (response.ok) {
-                        window.location.href = '/';
-                    } else if (response.status === 422) {
-                        document.getElementById("alertDiv").style.display = "block";
-                    } else {
-                        response.text().then(data => {
-                            console.log(data);
-                        });
-                    }
-                });
-        });
-
-        // 토큰 확인 버튼 클릭 이벤트 처리
-        document.getElementById("checkSignBtn").addEventListener("click", function() {
-            checkSign();
-        });
-        // 토큰 제거 버튼 클릭 이벤트 처리
-        document.getElementById("removeTokenBtn").addEventListener("click", function() {
-            if(confirm("정말로 제거하시겠습니까? (로그아웃)")) {
-                window.location.href = "/member/signout";
+            .then((response) => {
+                if (response.ok) {
+                    window.location.href = '/';
+                } else if (response.status === 422) {
+                    document.getElementById("alertDiv").style.display = "block";
+                } else {
+                    response.text().then(data => {
+                        console.log(data);
+                    });
+                }
+            });
+        }
+        document.getElementById("loginBtn").addEventListener("click", loginProcess);
+        document.getElementById("memberEmail").addEventListener("keyup", function (e) {
+            if (e.key === 'Enter') {
+                loginProcess();
             }
         });
-        // 토큰 확인 페이지로 이동 버튼 클릭 이벤트 처리
-        document.getElementById("testTokenBtn").addEventListener("click", function() {
-            window.location.href = "/members/test";
+        document.getElementById("memberPassword").addEventListener("keyup", function (e) {
+            if (e.key === 'Enter') {
+                loginProcess();
+            }
         });
 
-        // 토큰이 유효한지 여부 확인
-        function checkSign() {
-            fetch("/member/token")
-                .then((response) => response.text())
-                .then((data) => {
-                    data = data.trim();
-                    console.log(data);
-                    if (data === 'Valid Token') {
-                        document.getElementById("statusDiv").innerHTML = '상태 : 로그인'
-                    } else {
-                        document.getElementById("statusDiv").innerHTML = '상태 : 로그아웃'
-                    }
-                });
-        }
     </script>
 </mainSection>
 </body>
