@@ -2,8 +2,6 @@ package com.bookitaka.NodeulProject.member.controller;
 
 import com.bookitaka.NodeulProject.member.dto.MemberDataDTO;
 import com.bookitaka.NodeulProject.member.dto.MemberResponseDTO;
-import com.bookitaka.NodeulProject.member.dto.MemberUpdateAdminDTO;
-import com.bookitaka.NodeulProject.member.exception.CustomException;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.security.Token;
 import com.bookitaka.NodeulProject.member.service.MemberService;
@@ -12,15 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
 @Controller
@@ -82,7 +76,6 @@ public class MemberController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String listMembers(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "") String method,
             @RequestParam(defaultValue = "") String keyword,
             HttpServletRequest request,
@@ -90,12 +83,11 @@ public class MemberController {
         log.info(method);
         log.info(keyword);
         int pageSize = 10;
-        PageRequest pageable = PageRequest.of(page, size);
+        PageRequest pageable = PageRequest.of(page, pageSize);
         Page<Member> memberPage = memberService.getAllMembersPaging(pageable, keyword, method, request.getCookies());
         model.addAttribute("members", memberPage.getContent());
         model.addAttribute("totalPages", memberPage.getTotalPages());
         model.addAttribute("currentPage", page);
-        model.addAttribute("pageSize", size);
         model.addAttribute("method", method);
         model.addAttribute("keyword", keyword);
 

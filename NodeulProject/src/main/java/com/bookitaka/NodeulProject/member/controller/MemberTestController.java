@@ -53,7 +53,7 @@ public class MemberTestController {
     }
   }
 
-  @PostMapping("/faq")
+  @GetMapping("/faq")
   public void faq() {
 
     for (int i = 1; i <= 50; i++) {

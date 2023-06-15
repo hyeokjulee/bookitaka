@@ -41,13 +41,45 @@ public class FaqController {
                        @RequestParam(name = "keyword", defaultValue = "") String keyword) {
         model.addAttribute("faqCategory", faqCategory);
         model.addAttribute("faqAllCategory", service.getAllFaqCategory());
-
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
         Pageable pageable = PageRequest.of(page, size);
+
+        log.info("================================================ keyword : {}", keyword);
+        int currentGroup = page / size;
+        int startPage = currentGroup * size;
+        int endPage;
+        int totalPages;
+
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("keyword", keyword);
         if(keyword.isBlank()) {
+            totalPages = service.getAllFaqByFaqCategory(faqCategory, pageable).getTotalPages();
+            endPage = Math.min(startPage + size, totalPages) - 1;
             model.addAttribute("faqAll", service.getAllFaqByFaqCategory(faqCategory, pageable));
+            model.addAttribute("totalPages", totalPages);
+            model.addAttribute("endPage", endPage);
         } else {
+            totalPages = service.getAllFaqContaningKeyword(keyword, pageable).getTotalPages();
+            endPage = Math.min(startPage + size, totalPages) - 1;
             model.addAttribute("faqAll", service.getAllFaqContaningKeyword(keyword, pageable));
+            model.addAttribute("totalPages", totalPages);
+            model.addAttribute("endPage", endPage);
         }
+
+        // 이전 그룹의 첫 번째 페이지로 이동
+        int previousGroupStartPage = (currentGroup == 0) ? 0 : (currentGroup - 1) * size;
+        model.addAttribute("previousGroupStartPage", previousGroupStartPage);
+
+        // 다음 그룹의 첫 번째 페이지로 이동
+        int nextGroupStartPage = (currentGroup + 1) * size;
+
+        if (totalPages % 5 == 0 && startPage == totalPages - 5) {
+            nextGroupStartPage = endPage;
+        } else if (nextGroupStartPage > endPage + 1) {
+            nextGroupStartPage = endPage;
+        }
+        model.addAttribute("nextGroupStartPage", nextGroupStartPage);
         return "/faq/faqList";
     }
 

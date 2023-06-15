@@ -7,6 +7,7 @@
 
 <menuTitle>비밀번호 수정</menuTitle>
 <mainSection>
+    <link rel="stylesheet" href="/css/password.css">
     <div class="card">
         <div class="card-header">
             <blockquote class="blockquote mb-0">
@@ -20,7 +21,7 @@
                         <div class="row mt-3">
                             <div class="col-md-9">
                                 <div class="row mt-3">
-                            <span class="col-md-4 text-truncate"><label
+                            <span class="col-md-4 text-truncate"><i class="fa-solid fa-lock px-2"></i><label
                                     th:for="oldMemberPassword">현재 비밀번호</label></span>
                                     <span class="col-md-6">
                         <input class="form-control-inline" type="password" name="oldMemberPassword"
@@ -30,7 +31,7 @@
                     </span>
                                 </div>
                                 <div class="row mt-3">
-                            <span class="col-md-4 text-truncate"><label
+                            <span class="col-md-4 text-truncate"><i class="fa-solid fa-lock px-2"></i><label
                                     th:for="newMemberPassword">새로운 비밀번호</label></span>
                                     <span class="col-md-6">
                         <input class="form-control-inline" type="password" name="newMemberPassword"
@@ -39,7 +40,7 @@
                     </span>
                                 </div>
                                 <div class="row mt-3">
-                                    <span class="col-md-4 text-truncate"><label
+                                    <span class="col-md-4 text-truncate"><i class="fa-solid fa-lock px-2"></i><label
                                             th:for="newMemberPasswordCheck">비밀번호(확인)</label></span>
                                     <span class="col-md-6">
                         <input class="form-control-inline" type="password" name="newMemberPasswordCheck"
@@ -71,8 +72,9 @@
             </div>
         </div>
     </div>
+
     <div class="container text-center mt-3" style="margin-bottom: 100px">
-        <div class="mt-3 text-center">
+        <div class="mt-5 text-center">
             <a class="btn-lg btn-primary" id="editBtn">비밀번호 수정</a>
         </div>
     </div>
