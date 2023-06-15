@@ -38,12 +38,12 @@
             <div class="accordion-item" th:each="faq, stat : ${faqAll.content}">
                 <div th:id="'accordionItem' + ${stat.index}">
                     <h2 class="accordion-header" th:id="'panelsStayOpen-heading' + ${stat.index}">
-                        <button th:text="${faq.faqQuestion}" class="accordion-button" type="button" data-bs-toggle="collapse" th:data-bs-target="'#panelsStayOpen-collapse' + ${stat.index}" aria-expanded="false" th:aria-controls="'panelsStayOpen-collapse' + ${stat.index}">
+                        <button style="font-size: 25px;" th:text="${faq.faqQuestion}" class="accordion-button" type="button" data-bs-toggle="collapse" th:data-bs-target="'#panelsStayOpen-collapse' + ${stat.index}" aria-expanded="false" th:aria-controls="'panelsStayOpen-collapse' + ${stat.index}">
                             Accordion Item #1
                         </button>
                     </h2>
                     <div th:id="'panelsStayOpen-collapse' + ${stat.index}" class="accordion-collapse" th:aria-labelledby="'panelsStayOpen-heading' + ${stat.index}">
-                        <div class="accordion-body d-flex align-items-center">
+                        <div class="accordion-body d-flex align-items-center " style="overflow: auto;">
                             <div class="me-auto" th:text="${faq.faqAnswer}">
                                 Accordion Item #1
                             </div>

@@ -26,7 +26,7 @@
 
 <mainSection>
 
-    <div class="row">
+    <div class="row py-5 px-3" style="background-color: whitesmoke; border-radius: 30px;">
         <div class="col-4">
             <img class="h-100 w-100" style="object-fit: contain" id="sheetBookImg" th:src="|/sheet/bookImg/*{sheet.sheetBookimguuid}*{sheet.sheetBookimgname}|">
         </div>
@@ -51,7 +51,6 @@
                 <span class="">ISBN : </span>
                 <span type="text" id="sheetBookisbn" th:text="*{sheet.sheetBookisbn}" class=""></span>
             </div>
-
             <div class="row my-3">
                 <div class="col-6">
                     <span class="">연령대 : </span>
@@ -62,33 +61,47 @@
                     <span type="text" id="sheetGenreName" th:text="*{sheet.sheetGenre.sheetGenreName}" class=""></span>
                 </div>
             </div>
-
+            <div class="row my-3">
+                <div class="col-6">
+                    <span class="">다운로드 수 : </span>
+                    <span type="text" id="sheetBuyCnt" th:text="*{sheet.sheetBuycnt}" class=""></span>
+                </div>
+                <div class="col-6">
+                    <span class="">조회수 : </span>
+                    <span type="text" id="sheetHit" th:text="*{sheet.sheetHit}" class=""></span>
+                </div>
+            </div>
+            <div class="row my-3">
+                <div class="col-6">
+                    <span class="">등록일 : </span>
+                    <span type="text" id="sheetRegdate" th:text="*{sheet.sheetRegdate}" class=""></span>
+                </div>
+                <div class="col-6">
+                    <span class="">수정일 : </span>
+                    <span type="text" id="sheetModdate" th:text="*{sheet.sheetModdate}" class=""></span>
+                </div>
+            </div>
             <div class="my-3">
                 <span class="">가격 : </span>
                 <span type="text" id="sheetPrice" th:text="*{sheet.sheetPrice}" class=""></span>
             </div>
-
-
             <div class="my-3">
                 <div type="text" id="sheetContent" th:text="*{sheet.sheetContent}" class=""></div>
             </div>
 
+            <div class="row my-3">
+                <div class="col-6">
+                <button th:attr="data-fileuuid=${sheet.sheetFileuuid}" onclick="downloadFile(this.getAttribute('data-fileuuid'))" id="sheetFile" class="btn btn-warning">파일다운로드</button>
+            <!--장바구니에 담기 버튼-->
+                    <a th:onclick="'cartAdd(\'' + ${sheet.sheetNo} + '\')'"><button class="btn btn-success btn-lg">Add to cart</button></a>
+                </div>
+            </div>
 
+            <!--<div>
+                <a th:onclick="'cartAdd(\'' + ${sheet.sheetNo} + '\')'" class="btn btn-secondary">장바구니에 담기</a>
+            </div>-->
         </div>
     </div>
-
-
-    <div>  </div>
-
-        <div>
-            <label for="sheetFile">독후활동지 파일</label>
-            <button th:attr="data-fileuuid=${sheet.sheetFileuuid}" onclick="downloadFile(this.getAttribute('data-fileuuid'))" id="sheetFile" class="btn btn-primary">다운로드</button>
-        </div>
-
-        <!--장바구니에 담기 버튼-->
-        <div>
-            <a th:onclick="'cartAdd(\'' + ${sheet.sheetNo} + '\')'" class="btn btn-secondary">장바구니에 담기</a>
-        </div>
 
 <!--    <iframe id="pdf-iframe" src="" width="100%" height="800px"></iframe>-->
     <div id="pdf-preview-container">
@@ -104,13 +117,9 @@
         </div>
     </div>
 
-
-
-
         <hr class="my-4">
 
-
-        <div>
+       <!-- <div>
             <label for="sheetBuyCnt">다운로드 수</label>
             <input type="text" id="sheetBuyCnt" th:field="*{sheet.sheetBuycnt}" class="form-control" readonly>
         </div>
@@ -128,9 +137,7 @@
         <div>
             <label for="sheetModdate">수정일자</label>
             <input type="text" id="sheetModdate" th:field="*{sheet.sheetModdate}" class="form-control" value="수정하지 않음" readonly>
-        </div>
-
-        <hr class="my-4">
+        </div>-->
 
         <div class="row">
             <div class="col">
