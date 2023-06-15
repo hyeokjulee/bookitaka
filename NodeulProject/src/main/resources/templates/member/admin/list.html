@@ -43,18 +43,18 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="member : ${members}" onclick="goDetail()">
-                <td id="name" th:text="${member.memberName}"></td>
-                <td id="email" th:text="${member.memberEmail}"></td>
-                <td id="phone" th:text="${member.memberPhone}"></td>
-                <td id="birthday" th:text="${member.memberBirthday}"></td>
-                <td id="gender">
+            <tr th:each="member : ${members}">
+                <td id="name" th:text="${member.memberName}" onclick="goDetail(this)"></td>
+                <td id="email" th:text="${member.memberEmail}" onclick="goDetail(this)"></td>
+                <td id="phone" th:text="${member.memberPhone}" onclick="goDetail(this)"></td>
+                <td id="birthday" th:text="${member.memberBirthday}" onclick="goDetail(this)"></td>
+                <td id="gender" onclick="goDetail()">
                             <span class="col-6" th:if="${member.memberGender != ''}"
                                   th:text="${member.memberGender}"></span>
                     <span class="col-6" th:if="${member.memberGender == ''}" th:text="미선택"></span>
                 </td>
                 <td>
-                    <button type="button" id="delBtn" class="btn btn-danger btn-sm">delete</button>
+                    <button type="button" id="delBtn" class="btn btn-outline-danger btn-sm">delete</button>
                 </td>
                 <td>
                     <select class="roleSelect form-select-inline">
@@ -102,10 +102,10 @@
     </div>
     <script th:inline="javascript">
         // detail
-        function goDetail() {
-            var emailElement = event.currentTarget.querySelector('#email');
-            selectedMemberEmail = emailElement.textContent;
-            window.location.href = '/members/' + selectedMemberEmail;
+        function goDetail(element) {
+            var emailElement = element.parentNode.querySelector('#email');
+            var memberEmail = emailElement.textContent;
+            window.location.href = "/members/" + memberEmail;
         }
 
         // 삭제 버튼
