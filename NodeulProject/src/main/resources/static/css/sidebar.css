@@ -8,10 +8,10 @@
  * Nav
  */
 .post-it {
-    border-radius: 5px;
+    border-radius: 3px;
 }
 .post-it > sidebar{
-
+    height: 55px;
     list-style: none;
     overflow: hidden;
     text-decoration: none;
@@ -105,6 +105,34 @@
 .post-it  > sidebar:nth-child(8) {
     background: #eeffdd;
     transform: rotate(2deg);
+}
+.post-it  > sidebar:nth-child(9) {
+    background: #e5ffdd;
+    transform: rotate(-1deg);
+}
+.post-it  > sidebar:nth-child(10) {
+    background: #ddffdd;
+    transform: rotate(0deg);
+}
+.post-it  > sidebar:nth-child(11) {
+    background: #ddffe5;
+    transform: rotate(-2deg);
+}
+.post-it  > sidebar:nth-child(12) {
+    background: #ddffee;
+    transform: rotate(0deg);
+}
+.post-it  > sidebar:nth-child(13) {
+    background: #ddfff6;
+    transform: rotate(2deg);
+}
+.post-it  > sidebar:nth-child(14) {
+    background: #ddffff;
+    transform: rotate(-1deg);
+}
+.post-it  > sidebar:nth-child(15) {
+    background: #ddf6ff;
+    transform: rotate(0deg);
 }
 .post-it::after {
     content: "";
