@@ -370,8 +370,11 @@
     pdfjsLib.getDocument(pdfPath).promise.then(pdf => {
         pdfDocument = pdf;
         navigateToPage(1); // 첫 페이지를 렌더링하여 시작합니다.
-    }).catch(
+    }).catch(err => {
         previewBox.innerHTML = "<p>미리보기가 존재하지 않습니다</p>" //존재하지 않을시 전체 박스를 내용을 없앱니다.
+        console.error(err)
+    }
+
     );
 </script>
 </mainSection>
