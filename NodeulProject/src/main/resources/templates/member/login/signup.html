@@ -260,7 +260,7 @@
             <div class="card-body">
                 <form id="frm" th:object="${member}">
                     <div class="row mt-3">
-                        <span class="col-md-3 text-truncate"><label th:for="memberEmailF">이메일</label></span>
+                        <span class="col-md-3 text-truncate"><i class="fa-solid fa-envelope px-2"></i><label th:for="memberEmailF">이메일</label></span>
                         <span class="col-md-9">
                             <input class="form-control-inline" type="text" id="memberEmailF"/> @
                             <input class="form-control-inline" type="text" id="memberEmailR"/>
@@ -273,6 +273,7 @@
                                 <option value="hanmail.net">한메일 (hanmail.net)</option>
                                 <option value="nate.com">네이트 (nate.com)</option>
                             </select>
+                            <span tooltip="회원정보 찾기 및 요청 응답 등의 용도"><i class="fa-solid fa-triangle-exclamation px-2"></i></span>
                             <div class="errorDiv" error="memberEmail" id="memberEmailErrorDiv" style="color: red"></div>
                             <div id="dupliDiv" style="color: red"></div>
                         </span>
@@ -280,7 +281,7 @@
                     <div class="row mt-3">
                         <div class="col-md-9">
                             <div class="row mt-3">
-                                <span class="col-md-4 text-truncate"><label th:for="memberPassword">비밀번호</label></span>
+                                <span class="col-md-4 text-truncate"><i class="fa-solid fa-lock px-2"></i><label th:for="memberPassword">비밀번호</label></span>
                                 <span class="col-md-6">
                                     <input class="form-control-inline" type="password" th:field="*{memberPassword}">
                                     <input class='pw-switch' type="checkbox" />
@@ -288,7 +289,7 @@
                                 </span>
                             </div>
                             <div class="row mt-3">
-                                <span class="col-md-4 text-truncate"><label th:for="memberPasswordCheck">비밀번호(확인)</label></span>
+                                <span class="col-md-4 text-truncate"><i class="fa-solid fa-lock px-2"></i><label th:for="memberPasswordCheck">비밀번호(확인)</label></span>
                                 <span class="col-md-6">
                                     <input class="form-control-inline" type="password" th:field="*{memberPasswordCheck}"/>
                                     <div class="errorDiv" error="memberPasswordCheck" style="color: red"></div>
@@ -296,7 +297,7 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="col-md-3 py-3">
+                        <div class="col-md-2 py-3">
                             <div class='pw-strength'>
                                 <strong>비밀번호 강도</strong>
                                 <span class="progress">
@@ -307,17 +308,18 @@
                             <ul class='pw-rules-list'>
                             </ul>
                         </div>
+                        <span class="col-md-1"></span>
                     </div>
                     <hr>
                     <div class="row my-3">
-                        <span class="col-md-3 text-truncate"><label th:for="memberName">이름</label></span>
+                        <span class="col-md-3 text-truncate"><i class="fa-solid fa-user px-2"></i><label th:for="memberName">이름</label></span>
                         <span class="col-md-9">
                             <input class="form-control-inline" type="text" th:field="*{memberName}"/>
                             <div class="errorDiv" error="memberName" style="color: red"></div>
                         </span>
                     </div><hr>
                     <div class="row my-3">
-                        <span class="col-md-3 text-truncate"><label th:for="memberPhoneC">전화번호</label></span>
+                        <span class="col-md-3 text-truncate"><i class="fa-solid fa-phone px-2"></i><label th:for="memberPhoneC">전화번호</label></span>
                         <span class="col-md-9">
                             <select class="form-select-inline" id="memberPhoneSelect">
                                 <option value="010" selected>010</option>
@@ -337,7 +339,7 @@
                         </span>
                     </div><hr>
                     <div class="row my-3">
-                        <span class="col-md-3 text-truncate"><label>성별</label></span>
+                        <span class="col-md-3 text-truncate"><i class="fa-solid fa-venus-mars px-2"></i><label>성별</label></span>
                         <span class="col-md-9">
                             <label for="memberGenderN">선택 안함</label>
                             <input class="form-check-input radio-gender" type="radio" name="memberGender" id="memberGenderN" value="" checked/><span>ㅤ</span>
@@ -349,7 +351,7 @@
                         </span>
                     </div><hr>
                     <div class="row my-3">
-                        <span class="col-md-3 text-truncate"><label th:for="memberBirthday">생년월일</label></span>
+                        <span class="col-md-3 text-truncate"><i class="fa-solid fa-cake-candles px-2"></i><label th:for="memberBirthday">생년월일</label></span>
                         <span class="col-md-9">
                             <input class="form-control-inline" type="date" th:field="*{memberBirthday}" th:max="${T(java.time.LocalDate).now()}"/>
                             <div class="errorDiv" error="memberBirthday" style="color: red"></div>
@@ -541,7 +543,7 @@
     const pwRules = [
         {  regex: /[a-zA-Z]/,  message: ' 영문자 포함'},
         {  regex: /[0-9]/,  message: ' 숫자 포함'},
-        {  regex: /[@,$,!,%,*,?,&,.]/,  message: ' 특수문자 포함 <span tooltip="@$!%*?&."><i class="fa-regular fa-circle-question"></i></span>'},
+        {  regex: /[@,$,!,%,*,?,&,.]/,  message: ' 특수문자 포함 <span tooltip="@$!%*?&." flow="left"><i class="fa-regular fa-circle-question"></i></span>'},
         {  regex: /.{8,}/,  message: ' 8자 이상'}
     ];
 
@@ -592,6 +594,7 @@
             rule.isPassed = rule.regex.test('');
             let li  = document.createElement('li');
             li.classList.add(rule.isPassed?'passed':'failed');
+            li.classList.add('text-truncate');
             li.innerHTML = rule.message;
             pwRulesList.appendChild(li);
         });
