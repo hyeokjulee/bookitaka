@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<menuTitle>관리자 페이지</menuTitle>
+<sidebar class="list-group-item"><a th:href="@{/members/list}">회원 관리</a></sidebar>
+<sidebar class="list-group-item"><a th:href="@{/sheet/requestlist}">받은 출제요청</a></sidebar>
+<sidebar class="list-group-item"><a th:href="@{/sheet/add}">활동지 등록</a></sidebar>
+
+<mainSection>
+<style>
+    @import url("https://fonts.googleapis.com/css?family=Montserrat:400,400i,700");
+    * {
+        box-sizing: border-box;
+    }
+    body {
+        --gap: 20px;
+        margin: 0;
+        padding: var(--gap);
+        display: grid;
+        grid-gap: var(--gap);
+        min-height: 100vh;
+        grid-template-rows: auto 1fr;
+        overflow-x: hidden;
+    }
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: var(--gap);
+    }
+    .copy {
+        text-align: center;
+        background: floralwhite;
+        border: 0;
+        border-radius: 5px;
+        box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+        transition: 0.1s;
+        padding-top: var(--gap);
+    }
+    .copy:hover, .copy:focus {
+        transform: scale(1.02);
+        box-shadow: 0 20px 20px rgba(0, 0, 0, 0.2);
+    }
+    .copy:active {
+        outline: 0;
+        transform: scale(1.01);
+        box-shadow: 0 10px 10px rgba(0, 0, 0, 0.2);
+    }
+    .copy span {
+        font-size: 100px;
+        font-family: georgia, serif;
+    }
+
+</style>
+    <h2 class="mb-5">홈페이지 관리</h2>
+    <div class="grid mb-7">
+        <a class="copy" data-clipboard-text="“" th:href="@{/members/list}" ><h2>회원 관리</h2></a>
+        <a class="copy" th:href="@{/sheet/requestlist}"><h2>받은 출제요청</h2></a>
+        <a class="copy" th:href="@{/sheet/add}"><h2>활동지 등록</h2></a>
+    </div>
+</mainSection>
+</body>
+</html>

@@ -1,16 +1,23 @@
 package com.bookitaka.NodeulProject.faq;
 
+import com.bookitaka.NodeulProject.member.controller.MemberAPIController;
+import com.bookitaka.NodeulProject.member.model.Member;
+import com.bookitaka.NodeulProject.member.model.MemberRoles;
+import com.bookitaka.NodeulProject.member.security.Token;
+import com.bookitaka.NodeulProject.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
@@ -24,6 +31,7 @@ public class FaqController {
 
     private final FaqService service;
     private final ModelMapper modelMapper;
+    private final MemberService memberService;
 
     // 1대1 문의 정적 페이지
     @GetMapping("/qna")
@@ -36,9 +44,9 @@ public class FaqController {
     // FAQ 카테고리 별 목록
     @GetMapping("/{faqCategory}")
     public String list(@PathVariable String faqCategory,
-                       Model model,
                        @RequestParam(name = "page", defaultValue = "0") int page,
-                       @RequestParam(name = "keyword", defaultValue = "") String keyword) {
+                       @RequestParam(name = "keyword", defaultValue = "") String keyword,
+                       HttpServletRequest request, Model model) {
         model.addAttribute("faqCategory", faqCategory);
         model.addAttribute("faqAllCategory", service.getAllFaqCategory());
         model.addAttribute("currentPage", page);
@@ -80,6 +88,14 @@ public class FaqController {
             nextGroupStartPage = endPage;
         }
         model.addAttribute("nextGroupStartPage", nextGroupStartPage);
+
+        // 관리자 확인
+        Member whoami = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
+        if (whoami != null && whoami.getMemberRole().equals(MemberRoles.ADMIN)) {
+            model.addAttribute("role",  whoami.getMemberRole());
+            log.info("================================================ memberRole : {}", whoami.getMemberRole());
+        }
+
         return "/faq/faqList";
     }
 
@@ -94,23 +110,25 @@ public class FaqController {
 
     // FAQ 등록 처리
     @PostMapping("/add")
-    public String addProc(Model model,
-                          @Validated @ModelAttribute FaqRegisterDto faqRegisterDto,
-                          BindingResult bindingResult,
-                          HttpServletResponse response) throws UnsupportedEncodingException {
+    public ResponseEntity<?> addProc(Model model,
+                                     @Validated @ModelAttribute FaqRegisterDto faqRegisterDto,
+                                     BindingResult bindingResult) {
         log.info("Controller addProc : faqRegisterDto = " + faqRegisterDto);
-
-        if(bindingResult.hasErrors()){
-            model.addAttribute("faqAllCategory", service.getAllFaqCategory());
-            return "/faq/faqAddForm";
-        }
-
         // faqDto -> faq 변환
         Faq faq = modelMapper.map(faqRegisterDto, Faq.class);
-        service.registerFaq(faq);
+        boolean result = service.registerFaq(faq);
 
-        model.addAttribute("statusCode", response.getStatus());
-        return "redirect:/faq/" + URLEncoder.encode(faqRegisterDto.getFaqCategory(), "UTF-8");
+        // validation 오류
+        if(bindingResult.hasErrors()){
+            model.addAttribute("faqAllCategory", service.getAllFaqCategory());
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }
+
+        // 등록 실패 오류
+        if (!result) {
+            return ResponseEntity.unprocessableEntity().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     // FAQ 삭제 처리

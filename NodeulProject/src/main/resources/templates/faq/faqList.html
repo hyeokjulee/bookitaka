@@ -61,11 +61,11 @@
                             <div class="me-auto" th:text="${faq.faqAnswer}">
                                 Accordion Item #1
                             </div>
-                            <form th:action="@{/faq/remove/{faqNo}(faqNo=${faq.faqNo})}" method="post">
+                            <form th:action="@{/faq/remove/{faqNo}(faqNo=${faq.faqNo})}" method="post" th:if="${role == 'ROLE_ADMIN'}">
                                 <input class="btn btn-primary me-2" id="deleteBtn" type="submit" value="삭제"
                                        onclick="deleteConfirm()">
                             </form>
-                            <a class="btn btn-primary" th:href="@{/faq/edit/{faqNo}(faqNo=${faq.faqNo})}">수정</a>
+                            <a th:if="${role == 'ROLE_ADMIN'}" class="btn btn-primary" th:href="@{/faq/edit/{faqNo}(faqNo=${faq.faqNo})}">수정</a>
                         </div>
                     </div>
                 </div>
@@ -103,7 +103,7 @@
                             </tbody>
                         </table>-->
             <div class="d-flex justify-content-end">
-                <a class="btn btn-primary" th:href="@{/faq/add}">등록</a>
+                <a th:if="${role == 'ROLE_ADMIN'}" class="btn btn-primary" th:href="@{/faq/add}">등록</a>
             </div>
             <!--페이징-->
             <nav aria-label="Page navigation example">

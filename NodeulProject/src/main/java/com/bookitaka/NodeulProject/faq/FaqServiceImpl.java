@@ -17,8 +17,12 @@ public class FaqServiceImpl implements FaqService{
     private final FaqRepository faqRepository;
 
     @Override
-    public void registerFaq(Faq faq) {
-        faqRepository.save(faq);
+    public boolean registerFaq(Faq faq) {
+        if (faq != null) {
+            faqRepository.save(faq);
+            return true;
+        }
+        return false;
     }
 
 //    @Override
