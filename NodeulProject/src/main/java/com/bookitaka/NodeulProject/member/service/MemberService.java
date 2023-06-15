@@ -234,14 +234,4 @@ public class MemberService {
         }
         return null;
     }
-
-    @Transactional
-    public boolean sendAuthEmail(String email) {
-        String token = jwtTokenProvider.createEmailAuthToken(email, "ROLE_EMAIL");
-        if (token != null) {
-            emailService.sendEmailWithTemplate(email, "templates/member/mail/temp-auth-email-template.html", "[북키타카] 회원가입 이메일 인증", "<a href=\"http://localhost:8080/members/emailauth?token="+token+"\">이메일 인증</a>");
-            return true;
-        }
-        return false;
-    }
 }
