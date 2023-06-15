@@ -1,31 +1,37 @@
 <!DOCTYPE html>
-<html th:replace="~{/layout/layout-No-Sidebar :: layout(~{::menuTitle}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{/layout/layout-No-Sidebar-No-Title :: layout(~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
 <head>
 </head>
 <body>
 
-<menuTitle>로그인</menuTitle>
 <mainSection>
+    <style>
+        input::placeholder {
+            color: transparent;
+        }
+    </style>
     <section style="padding-top: 0;">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-md-6 col-lg-4">
-                    <div class="login-wrap p-0" style="margin: 0 auto; width: 100%;">
-                        <h3 class="mb-4 mt-2 text-center">로그인</h3>
+                <div class="card col-md-6 col-lg-4 shadow">
+                    <div class="card-body p-0 mt-4" style="margin: 0 auto; width: 100%;">
+                        <h3 class="mb-4 text-center">로그인</h3>
                         <form class="signin-form">
                             <div class="alert alert-danger text-center" id="alertDiv" style="display: none;">
                                 아이디 또는 비밀번호를 확인해 주세요.
                             </div><div class="alert alert-danger text-center" id="emptyAlertDiv" style="display: none;">
                                 아이디 또는 비밀번호를 입력해 주새요.
                             </div>
-                            <div class="form-group mb-3">
-                                <input type="text" id="memberEmail" name="memberEmail" class="form-control" placeholder="이메일"required>
+                            <div class="form-floating mb-3">
+                                <input type="email" id="memberEmail" name="memberEmail" class="form-control" placeholder=" ">
+                                <label for="memberEmail">이메일</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="password" id="memberPassword" name="memberPassword" class="form-control" placeholder=" ">
+                                <label for="memberPassword">비밀번호</label>
                             </div>
                             <div class="form-group mb-3">
-                                <input type="password" id="memberPassword" name="memberPassword" class="form-control" placeholder="비밀번호" required>
-                            </div>
-                            <div class="form-group mb-3">
-                                <button button type="button" id="loginBtn" class="form-control btn btn-primary px-3">로그인</button>
+                                <button button type="button" id="loginBtn" class="form-control btn btn-primary px-3 mb-3">로그인</button>
                             </div>
                             <!--<div>
                                 <button type="button" class="btn btn-primary" id="checkSignBtn">토큰 확인</button>
@@ -36,7 +42,7 @@
                             <div id="tokenDiv"></div>
                             <div id="statusDiv"></div>-->
                         </form>
-                        <div class="form-group d-sm-flex justify-content-between">
+                        <div class="form-group d-sm-flex justify-content-between mb-4">
                             <div>
                                 <a th:href="@{/members/signup}">회원가입</a>
                             </div>
