@@ -7284,6 +7284,15 @@ fieldset:disabled .btn {
   }
 }
 
+.price-container {
+  font-size: 22px;
+  margin: 0;
+}
+
+.sheetdetail-title{
+  font-weight: 600;
+}
+
 .accordion-button {
   position: relative;
   display: -webkit-box;

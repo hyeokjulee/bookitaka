@@ -6,6 +6,8 @@ public interface FaqCategory {
 
 
     String faqCategoryArr[] = {
+            "전체",
+            "BEST",
             "회원",
             "활동지",
             "결제",

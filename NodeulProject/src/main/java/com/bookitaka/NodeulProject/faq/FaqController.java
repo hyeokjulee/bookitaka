@@ -1,5 +1,10 @@
 package com.bookitaka.NodeulProject.faq;
 
+import com.bookitaka.NodeulProject.member.controller.MemberAPIController;
+import com.bookitaka.NodeulProject.member.model.Member;
+import com.bookitaka.NodeulProject.member.model.MemberRoles;
+import com.bookitaka.NodeulProject.member.security.Token;
+import com.bookitaka.NodeulProject.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -11,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
@@ -24,6 +30,7 @@ public class FaqController {
 
     private final FaqService service;
     private final ModelMapper modelMapper;
+    private final MemberService memberService;
 
     // 1대1 문의 정적 페이지
     @GetMapping("/qna")
@@ -36,18 +43,58 @@ public class FaqController {
     // FAQ 카테고리 별 목록
     @GetMapping("/{faqCategory}")
     public String list(@PathVariable String faqCategory,
-                       Model model,
                        @RequestParam(name = "page", defaultValue = "0") int page,
-                       @RequestParam(name = "keyword", defaultValue = "") String keyword) {
+                       @RequestParam(name = "keyword", defaultValue = "") String keyword,
+                       HttpServletRequest request, Model model) {
         model.addAttribute("faqCategory", faqCategory);
         model.addAttribute("faqAllCategory", service.getAllFaqCategory());
-
+        model.addAttribute("currentPage", page);
+        model.addAttribute("pageSize", size);
         Pageable pageable = PageRequest.of(page, size);
+
+        log.info("================================================ keyword : {}", keyword);
+        int currentGroup = page / size;
+        int startPage = currentGroup * size;
+        int endPage;
+        int totalPages;
+
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("keyword", keyword);
         if(keyword.isBlank()) {
+            totalPages = service.getAllFaqByFaqCategory(faqCategory, pageable).getTotalPages();
+            endPage = Math.min(startPage + size, totalPages) - 1;
             model.addAttribute("faqAll", service.getAllFaqByFaqCategory(faqCategory, pageable));
+            model.addAttribute("totalPages", totalPages);
+            model.addAttribute("endPage", endPage);
         } else {
+            totalPages = service.getAllFaqContaningKeyword(keyword, pageable).getTotalPages();
+            endPage = Math.min(startPage + size, totalPages) - 1;
             model.addAttribute("faqAll", service.getAllFaqContaningKeyword(keyword, pageable));
+            model.addAttribute("totalPages", totalPages);
+            model.addAttribute("endPage", endPage);
         }
+
+        // 이전 그룹의 첫 번째 페이지로 이동
+        int previousGroupStartPage = (currentGroup == 0) ? 0 : (currentGroup - 1) * size;
+        model.addAttribute("previousGroupStartPage", previousGroupStartPage);
+
+        // 다음 그룹의 첫 번째 페이지로 이동
+        int nextGroupStartPage = (currentGroup + 1) * size;
+
+        if (totalPages % 5 == 0 && startPage == totalPages - 5) {
+            nextGroupStartPage = endPage;
+        } else if (nextGroupStartPage > endPage + 1) {
+            nextGroupStartPage = endPage;
+        }
+        model.addAttribute("nextGroupStartPage", nextGroupStartPage);
+
+        // 관리자 확인
+        Member whoami = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
+        if (whoami != null && whoami.getMemberRole().equals(MemberRoles.ADMIN)) {
+            model.addAttribute("role",  whoami.getMemberRole());
+            log.info("================================================ memberRole : {}", whoami.getMemberRole());
+        }
+
         return "/faq/faqList";
     }
 

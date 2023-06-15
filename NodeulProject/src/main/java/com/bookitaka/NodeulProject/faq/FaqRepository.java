@@ -15,6 +15,7 @@ public interface FaqRepository extends PagingAndSortingRepository<Faq, Long> {
 
 //    Page<Faq> findAllByFaqAnswerContainsAndFaqQuestionContains(String keyword, Pageable pageable);
     Page<Faq> findAllByFaqQuestionContaining(String keyword, Pageable pageable);
+    Page<Faq> findAllByOrderByFaqRegdateDesc(Pageable pageable);
 //    Page<Faq> findAllByFaqQuestionOrFaqAnswerContaining(String keyword, Pageable pageable);
 
 
