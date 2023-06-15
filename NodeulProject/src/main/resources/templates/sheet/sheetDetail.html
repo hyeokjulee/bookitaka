@@ -26,77 +26,105 @@
 
 <mainSection>
 
-    <div class="row py-5 px-3" style="background-color: whitesmoke; border-radius: 30px;">
+    <div class="row py-5 px-3" style="background-color: #FAF7F8; border-radius: 30px;">
         <div class="col-4">
             <img class="h-100 w-100" style="object-fit: contain" id="sheetBookImg" th:src="|/sheet/bookImg/*{sheet.sheetBookimguuid}*{sheet.sheetBookimgname}|">
         </div>
 
         <div class="col-8">
             <div class="row my-3">
-                <h3 type="text" id="sheetBooktitle" th:text="*{sheet.sheetBooktitle}" class="col-8"></h3>
+                <h3 type="text" id="sheetBooktitle" th:text="*{sheet.sheetBooktitle}" class="col-8" style="font-weight: bold;"></h3>
             </div>
 
             <div class="row my-3">
                 <div class="col-6">
-                    <span class="">작가 : </span>
+                    <span class="sheetdetail-title">작가 : </span>
                     <span type="text" id="sheetBookauthor" th:text="*{sheet.sheetBookauthor}" class=""></span>
                 </div>
                 <div class="col-6">
-                    <span class="">출판사 : </span>
+                    <span class="sheetdetail-title">출판사 : </span>
                     <span type="text" id="sheetPublisher" th:text="*{sheet.sheetBookpublisher}" class=""></span>
                 </div>
             </div>
 
             <div class="my-3">
-                <span class="">ISBN : </span>
+                <span class="sheetdetail-title">ISBN : </span>
                 <span type="text" id="sheetBookisbn" th:text="*{sheet.sheetBookisbn}" class=""></span>
             </div>
             <div class="row my-3">
                 <div class="col-6">
-                    <span class="">연령대 : </span>
+                    <span class="sheetdetail-title">연령대 : </span>
                     <span type="text" id="sheetAgeGroupName" th:text="*{sheet.sheetAgegroup.sheetAgegroupName}" class=""></span>
                 </div>
                 <div class="col-6">
-                    <span class="">장르 : </span>
+                    <span class="sheetdetail-title">장르 : </span>
                     <span type="text" id="sheetGenreName" th:text="*{sheet.sheetGenre.sheetGenreName}" class=""></span>
                 </div>
             </div>
             <div class="row my-3">
                 <div class="col-6">
-                    <span class="">다운로드 수 : </span>
+                    <span class="sheetdetail-title">다운로드 수 : </span>
                     <span type="text" id="sheetBuyCnt" th:text="*{sheet.sheetBuycnt}" class=""></span>
                 </div>
                 <div class="col-6">
-                    <span class="">조회수 : </span>
+                    <span class="sheetdetail-title">조회수 : </span>
                     <span type="text" id="sheetHit" th:text="*{sheet.sheetHit}" class=""></span>
                 </div>
             </div>
             <div class="row my-3">
                 <div class="col-6">
-                    <span class="">등록일 : </span>
+                    <span class="sheetdetail-title">등록일 : </span>
                     <span type="text" id="sheetRegdate" th:text="*{sheet.sheetRegdate}" class=""></span>
                 </div>
-                <div class="col-6">
-                    <span class="">수정일 : </span>
+                <div class="col-6 ">
+                    <span class="sheetdetail-title">수정일 : </span>
                     <span type="text" id="sheetModdate" th:text="*{sheet.sheetModdate}" class=""></span>
                 </div>
             </div>
             <div class="my-3">
-                <span class="">가격 : </span>
-                <span type="text" id="sheetPrice" th:text="*{sheet.sheetPrice}" class=""></span>
-            </div>
-            <div class="my-3">
-                <div type="text" id="sheetContent" th:text="*{sheet.sheetContent}" class=""></div>
-            </div>
-
-            <div class="row my-3">
-                <div class="col-6">
-                <button th:attr="data-fileuuid=${sheet.sheetFileuuid}" onclick="downloadFile(this.getAttribute('data-fileuuid'))" id="sheetFile" class="btn btn-warning">파일다운로드</button>
-            <!--장바구니에 담기 버튼-->
-                    <a th:onclick="'cartAdd(\'' + ${sheet.sheetNo} + '\')'"><button class="btn btn-success btn-lg">Add to cart</button></a>
+                <div id="myTabContent" class="tab-content">
+                    <div id="more-information">
+                        <span class="sheetdetail-title">소개 : </span>
+                        <span type="text" id="sheetContent" th:text="*{sheet.sheetContent}">
+                        </span>
+                    </div>
                 </div>
             </div>
+            <div class="price-container my-3">
+                <span class="sheetdetail-title">가격 : </span>
+                <span type="text" id="sheetPrice" th:text="*{sheet.sheetPrice}" class=""></span>
+            </div>
+            <div class="row my-3">
+                <div class="d-flex">
+                    <!-- 파일 다운로드 버튼 -->
+                    <div class="mx-2">
+                        <button class="btn btn-secondary btn-lg">
+                            <a th:attr="data-fileuuid=${sheet.sheetFileuuid}" onclick="downloadFile(this.getAttribute('data-fileuuid'))" id="sheetFile">파일다운로드</a>
+                        </button>
+                    </div>
 
+                    <!-- 장바구니에 담기 버튼 -->
+                    <div class="mx-3">
+                        <button class="btn btn-success btn-lg">
+                           <a th:onclick="'cartAdd(\'' + ${sheet.sheetNo} + '\')'">장바구니담기</a>
+                        </button>
+                    </div>
+
+                    <!-- 목록으로 버튼 -->
+                    <div>
+                        <form th:action="@{/sheet/list}">
+                            <button class="btn btn-primary btn-lg" type="submit">목록으로</button>
+                            <input type="hidden" name="genre" th:value="${genre}">
+                            <input type="hidden" name="ageGroup" th:value="${ageGroup}">
+                            <input type="hidden" name="pageNum" th:value="${cri.pageNum}">
+                            <input type="hidden" name="amount" th:value="${cri.amount}">
+                            <input type="hidden" name="searchType" th:value="${cri.searchType}">
+                            <input type="hidden" name="searchWord" th:value="${cri.searchWord}">
+                            <input type="hidden" name="sort" th:value="${cri.sort}">
+                        </form>
+                    </div>
+                </div>
+            </div>
             <!--<div>
                 <a th:onclick="'cartAdd(\'' + ${sheet.sheetNo} + '\')'" class="btn btn-secondary">장바구니에 담기</a>
             </div>-->
@@ -111,33 +139,13 @@
             <div id="pdf-page-3" class="pdf-page"></div>
         </div>
         <div id="pdf-nav">
-            <button id="prev-page">Previous</button>
-            <button id="next-page">Next</button>
-            <button id="close-btn">X</button>
+            <button id="prev-page" class="btn btn-light">Previous</button>
+            <button id="next-page" class="btn btn-light">Next</button>
+            <button id="close-btn" class="btn btn-light">X</button>
         </div>
     </div>
 
         <hr class="my-4">
-
-       <!-- <div>
-            <label for="sheetBuyCnt">다운로드 수</label>
-            <input type="text" id="sheetBuyCnt" th:field="*{sheet.sheetBuycnt}" class="form-control" readonly>
-        </div>
-
-        <div>
-            <label for="sheetHit">조회 수</label>
-            <input type="text" id="sheetHit" th:field="*{sheet.sheetHit}" class="form-control" readonly>
-        </div>
-
-        <div>
-            <label for="sheetRegdate">등록일자</label>
-            <input type="text" id="sheetRegdate" th:field="*{sheet.sheetRegdate}" class="form-control" readonly>
-        </div>
-
-        <div>
-            <label for="sheetModdate">수정일자</label>
-            <input type="text" id="sheetModdate" th:field="*{sheet.sheetModdate}" class="form-control" value="수정하지 않음" readonly>
-        </div>-->
 
         <div class="row">
             <div class="col">
@@ -146,7 +154,7 @@
             <div class="col">
                 <button id="removeBtn" th:onclick="'deleteCheck(\'' + ${sheet.sheetNo} + '\')'"  class="w-100 btn btn-danger" type="submit">상품 삭제</button>
             </div>
-            <div class="col">
+            <!--<div class="col">
                 <form th:action="@{/sheet/list}">
                     <button class="w-100 btn btn-secondary" type="submit">목록으로</button>
                     <input type="hidden" name="genre" th:value="${genre}">
@@ -157,7 +165,7 @@
                     <input type="hidden" name="searchWord" th:value="${cri.searchWord}">
                     <input type="hidden" name="sort" th:value="${cri.sort}">
                 </form>
-            </div>
+            </div>-->
         </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
