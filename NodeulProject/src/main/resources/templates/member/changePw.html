@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{/layout/layout-No-Sidebar :: layout(~{::menuTitle}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>비밀번호 수정</title>
 </head>
 <body>
-<h1>비밀번호 수정</h1>
+
+<menuTitle>비밀번호 수정</menuTitle>
+<mainSection>
 <form>
     <div>
         <label>현재 비밀번호:</label>
@@ -127,5 +128,6 @@
             })
     }
 </script>
+</mainSection>
 </body>
 </html>
