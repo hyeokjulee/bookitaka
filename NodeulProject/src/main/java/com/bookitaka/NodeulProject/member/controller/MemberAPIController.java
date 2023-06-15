@@ -76,17 +76,18 @@ public class MemberAPIController {
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 402, message = "Agreement to the terms and conditions is required"),
       @ApiResponse(code = 422, message = "Member Email is already in use")})
-  public String signup(@ApiParam("Signup Member") @Validated @ModelAttribute MemberDataDTO user,
-                       @RequestParam(defaultValue = "false") Boolean agree1,
-                       @RequestParam(defaultValue = "false") Boolean agree2) {
+  public ResponseEntity<?> signup(
+          @ApiParam("Signup Member") @Validated @ModelAttribute MemberDataDTO memberDataDTO,
+          @RequestParam(defaultValue = "false") Boolean agree1,
+          @RequestParam(defaultValue = "false") Boolean agree2) {
     log.info("================================Member : signup");
     log.info("agree1 : {}", agree1);
     log.info("agree2 : {}", agree2);
     if (!agree1 || !agree2) {
       throw new CustomException("Agreement to the terms and conditions is required", HttpStatus.PAYMENT_REQUIRED);
     }
-    memberService.signup(modelMapper.map(user, Member.class));
-    return "Sign-up ok";
+    memberService.signup(modelMapper.map(memberDataDTO, Member.class));
+    return ResponseEntity.ok().body("Sign-up ok");
   }
 
   // 이미 존재하는 아이디 확인 (회원가입 시)

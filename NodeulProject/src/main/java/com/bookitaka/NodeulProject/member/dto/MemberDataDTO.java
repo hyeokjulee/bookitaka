@@ -24,7 +24,7 @@ public class MemberDataDTO {
   @ApiModelProperty(position = 2)
   private String memberPassword;
 
-  @NotBlank(message = "비밀번호(확인)를 입력해 주세요.")
+  @NotBlank(message = "비밀번호(확인)을 입력해 주세요.")
   @ApiModelProperty(position = 3)
   private String memberPasswordCheck;
 
