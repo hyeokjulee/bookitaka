@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -32,4 +33,17 @@ public class CouponRepositoryImpl implements CouponRepositoryCustom {
 
         return query.fetch();
     }
+
+    @Override
+    public List<Coupon> findAllValidCouponByMemberEmail(String email) {
+
+        JPAQuery<Coupon> query = qf.selectFrom(qCoupon);
+
+        query.where(qCoupon.memberEmail.eq(email))
+                .where(qCoupon.couponEnddate.after(LocalDateTime.now()))
+                .orderBy(qCoupon.couponEnddate.asc());
+
+        return query.fetch();
+    }
+
 }

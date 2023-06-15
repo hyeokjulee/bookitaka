@@ -21,6 +21,7 @@
             <tr>
                 <th scope="col"></th>
                 <th scope="col">자료명</th>
+                <th id="couponLeft" th:data-left="${couponCnt}" th:text="|쿠폰사용 : (남은갯수 ${couponCnt})|" scope="col">쿠폰사용 : (남은갯수 0)</th>
                 <th scope="col">금액</th>
             </tr>
             </thead>
@@ -33,6 +34,7 @@
             <tr>
                 <th id="totalcnt"></th>
                 <th></th>
+                <th>쿠폰 전체 적용 <input id="couponAll" type="checkbox"></th>
                 <th id="totalprice"></th>
             </tr>
             </tfoot>
@@ -162,7 +164,8 @@
                     memberEmail: rsp.buyer_email,
                     payMethod: rsp.pay_method,
                     impId: rsp.imp_uid,
-                    mySheetMeans: '개별구입'
+                    mySheetMeans: '개별구입',
+                    usedCouponCnt : usedCoupon
                 };
                 fetch('/payproc/paid', {
                     method: 'POST',

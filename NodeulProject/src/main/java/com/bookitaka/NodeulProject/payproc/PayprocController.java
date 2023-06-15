@@ -1,5 +1,6 @@
 package com.bookitaka.NodeulProject.payproc;
 
+import com.bookitaka.NodeulProject.coupon.CouponService;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.security.Token;
 import com.bookitaka.NodeulProject.member.service.MemberService;
@@ -32,6 +33,7 @@ import java.util.Map;
 public class PayprocController {
     private final MemberService memberService;
     private final SheetService sheetService;
+    private final CouponService couponService;
     private final HttpServletRequest request;
     private final PayprocService payprocService;
 
@@ -46,7 +48,10 @@ public class PayprocController {
 
     @GetMapping("/paying")
     public String paying(Model model, HttpServletRequest request) {
-        model.addAttribute("member", memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN));
+
+        Member member = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
+        model.addAttribute("couponCnt", couponService.getValidCouponCntByMemberEmail(member.getMemberEmail()));
+        model.addAttribute("member", member);
         return "/payproc/paying";
     }
 

@@ -5,6 +5,7 @@ var memberInfo = [];
 var sheetInfo = [];
 var sInfo = "";
 var decodedList;
+var usedCoupon = 0;
 
 // 내 정보 초기화
 function memberSet(member) {
@@ -23,6 +24,7 @@ function showSheets(sheets) {
     var row = $('<tr></tr>');
     row.append('<td><img src="/sheet/bookImg/' + sheet.sheetBookimguuid + sheet.sheetBookimgname + '" width="150" height="150"></td>');
     row.append('<td>' + sheet.sheetBooktitle + '</td>');
+    row.append('<td>'+ '<input type="checkbox" name="selectedCoupon" data-price=\"' + sheet.sheetPrice + '\"> </td>');
     row.append('<td>' + sheet.sheetPrice.toLocaleString() + '원</td>');
     tableBody.append(row);
     sum += parseInt(sheet.sheetPrice);
@@ -115,4 +117,52 @@ $(document).ready(function() {
         break;
       }
     }
+});
+
+// 건수랑 합계, 쿠폰 남은 갯수까지 새로고침
+function refresh() {
+    var totalCoupons = $('[name="selectedCoupon"]').length;
+    var checkedCoupons = $('[name="selectedCoupon"]:checked').length;
+    var isAllChecked = totalCoupons === checkedCoupons;
+    var prices = $('[name="selectedCoupon"]:not(:checked)').map(function() {
+        return parseInt($(this).data('price'));
+    }).get();
+    var sum = 0;
+    prices.forEach(function(price) {
+        sum += price;
+        window.sum = sum;
+    });
+
+    window.usedCoupon = checkedCoupons;
+
+    let couponLeftCnt = parseInt($('#couponLeft').data("left")) - checkedCoupons;
+    $('#couponLeft').text("쿠폰사용 : (남은갯수 " + couponLeftCnt + ")");
+    $('#couponAll').prop('checked', isAllChecked);
+    $('#totalprice').text("합계 : " + sum.toLocaleString() + "원");
+
+}
+
+// 쿠폰 전체선택 버튼 클릭 시 전체선택 처리
+$(document).on('change', '#couponAll', function() {
+    var isChecked = $(this).prop('checked');
+    $('[name="selectedCoupon"]').prop('checked', isChecked).trigger("change");
+});
+
+// 쿠폰 체크박스의 변경 이벤트 핸들러
+$(document).on('change', '[name="selectedCoupon"]', function() {
+    let checkbox = $(this);
+    let row = checkbox.closest('tr');
+    let priceCell = row.find('td:eq(3)'); // 4번째 열에 위치한 가격 정보
+
+    if (checkbox.is(':checked')) {
+        // 체크되었을 때의 동작
+        var savedPrice = parseInt(priceCell.text().replace(/[^0-9]/g, '')); // 현재 텍스트에 있는 가격 추출
+        priceCell.text("0(쿠폰사용)");
+    } else {
+        // 체크가 해제되었을 때의 동작
+        var savedPrice = checkbox.data('price'); // 저장된 가격 가져오기
+        priceCell.text(savedPrice.toLocaleString() + '원'); // 원래 가격으로 변경
+    }
+
+    refresh(); // 삭제시 건수랑 합계 새로고침
 });

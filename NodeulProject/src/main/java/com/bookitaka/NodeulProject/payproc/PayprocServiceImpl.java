@@ -2,6 +2,7 @@ package com.bookitaka.NodeulProject.payproc;
 
 import com.bookitaka.NodeulProject.coupon.Coupon;
 import com.bookitaka.NodeulProject.coupon.CouponRepository;
+import com.bookitaka.NodeulProject.coupon.CouponRepositoryCustom;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.repository.MemberRepository;
 import com.bookitaka.NodeulProject.payment.Payment;
@@ -26,6 +27,7 @@ public class PayprocServiceImpl implements PayprocService {
     private final SheetRepository sheetRepository;
 
     private final CouponRepository couponRepository;
+    private final CouponRepositoryCustom couponRepositoryCustom;
     private final MysheetRepository mysheetRepository;
     private final MemberRepository memberRepository;
 
@@ -46,7 +48,26 @@ public class PayprocServiceImpl implements PayprocService {
         Payment save = paymentRepository.save(payment);
         log.info("makePay pay = {}", save);
 
+        //쿠폰 사용하기
+        List<Coupon> coupons = couponRepositoryCustom.findAllValidCouponByMemberEmail(payMakeDto.getMemberEmail());
+        log.info("makePay coupons = {}", coupons);
+        int usedCouponCnt = payMakeDto.getUsedCouponCnt();
+        for (Coupon coupon : coupons) { //남은거 전체 for문
+            int leftCoupon = coupon.getCouponLeft();
+            if (leftCoupon >= usedCouponCnt) {
+                //현재 쿠폰 남은양이 더 많다면
+                coupon.setCouponLeft(leftCoupon - usedCouponCnt);
+                //그냥 빼기
+                couponRepository.save(coupon);
+                break;
+            } else { //현재 쿠폰 남은양이 더 적다면
+                coupon.setCouponLeft(0); //현재꺼는 0으로
+                usedCouponCnt -= leftCoupon; //남은 숫자
+                couponRepository.save(coupon);
+            }
 
+        }
+        
         // 현재 시간
         Date nowDate = new Date();
 

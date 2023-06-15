@@ -14,5 +14,9 @@ public interface CouponService {
 
     List<Coupon> getAllCouponsByMemberEmail(CouponCri cri, String memberEmail);
 
+    int getValidCouponCntByMemberEmail(String memberEmail);
+
     boolean couponCheck(String memberEmail);
+
+    boolean useCoupon(Long couponNo, int amount);
 }
