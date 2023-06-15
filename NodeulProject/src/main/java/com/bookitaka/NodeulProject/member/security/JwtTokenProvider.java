@@ -36,6 +36,9 @@ public class JwtTokenProvider {
   @Value("${security.jwt.token.refresh.expire-length:1209600000}")
   private long refresh_validityInMilliseconds = 1209600000; // 14d
 
+  @Value("${email.jwt.token.expire-length:300000}")
+  private long emailAuth_validityInMilliseconds = 300000; // 14d
+
   @PostConstruct
   protected void init() {
     secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
@@ -51,6 +54,10 @@ public class JwtTokenProvider {
 
   public String createRefreshToken(String memberEmail, String memberRole) {
     return _buildToken(memberEmail, memberRole, refresh_validityInMilliseconds);
+  }
+
+  public String createEmailAuthToken(String memberEmail, String role) {
+    return _buildToken(memberEmail, role, emailAuth_validityInMilliseconds);
   }
 
   private String _buildToken(String memberEmail, String memberRole, long expTime) {
