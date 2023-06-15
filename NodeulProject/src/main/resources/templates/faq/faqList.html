@@ -1,13 +1,17 @@
 <!DOCTYPE HTML>
-<html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
 </head>
 <body>
 
 <menuTitle>알림마당</menuTitle>
-<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?ageGroup=유아용}" style="all: unset;">연령별</a></sidebar>
-<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?genre=그림책}" style="all: unset;">장르별</a></sidebar>
-<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?genre=독서토론논제은행}" style="all: unset;">논제은행</a></sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?ageGroup=유아용}" style="all: unset;">연령별</a>
+</sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?genre=그림책}" style="all: unset;">장르별</a>
+</sidebar>
+<sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/list?genre=독서토론논제은행}" style="all: unset;">논제은행</a>
+</sidebar>
 <sidebar class="list-group-item sidebar-link"><a th:href="@{/sheet/request}" style="all: unset;">개별출제요청</a></sidebar>
 
 <mainSection>
@@ -17,38 +21,49 @@
                 <h1 class="fs-5 fs-xl-5 mb-5">자주묻는질문</h1>
             </div>
             <div class="col-auto ms-auto align-self-end">
-                <form class="form-inline" action="#" method="GET">
+                <form class="form-inline" th:action="@{/faq/{faqCategory}(faqCategory=${faqCategory})}" method="GET">
                     <div class="input-group">
-                        <input class="form-control" name="keyword" type="text" placeholder="검색어를 입력해주세요" />
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="submit">검색</button>
-                        </div>
+                        <input class="form-control" name="keyword" type="text" placeholder="검색어를 입력해주세요"
+                        id="keyword" th:if="${keyword != null}" th:value="${keyword}"/>
+                        <span>
+                        <button class="btn btn-primary" type="submit" id="searchButton">검색</button>
+                    </span>
                     </div>
                 </form>
             </div>
         </div>
         <br>
-        <a href="/faq/all"><button class="btn btn-primary">전체</button></a>
-        <a href="/faq/best"><button class="btn btn-primary">BEST</button></a>
         <a th:each="eachCategory : ${faqAllCategory}" th:href="@{/faq/{category}(category=${eachCategory})}">
-            <button class="btn btn-primary" th:text="${eachCategory}"></button>
-        </a><br>
+            <button class="btn btn-outline-secondary" th:text="${eachCategory}"></button>
+        </a>
+        <hr class="my-4">
+        <div class="row">
+            <div class="col-md">
+                <p class="my-2" th:if="${faqAll.content.isEmpty()}" style="text-align: center">등록된 게시물이 없습니다.</p>
+            </div>
+        </div>
+
         <!---------아코디언형식------------>
         <div class="accordion" id="accordionPanelsStayOpenExample">
             <div class="accordion-item" th:each="faq, stat : ${faqAll.content}">
                 <div th:id="'accordionItem' + ${stat.index}">
                     <h2 class="accordion-header" th:id="'panelsStayOpen-heading' + ${stat.index}">
-                        <button style="font-size: 25px;" th:text="${faq.faqQuestion}" class="accordion-button" type="button" data-bs-toggle="collapse" th:data-bs-target="'#panelsStayOpen-collapse' + ${stat.index}" aria-expanded="false" th:aria-controls="'panelsStayOpen-collapse' + ${stat.index}">
+                        <button style="font-size: 25px;" th:text="${faq.faqQuestion}" class="accordion-button"
+                                type="button" data-bs-toggle="collapse"
+                                th:data-bs-target="'#panelsStayOpen-collapse' + ${stat.index}" aria-expanded="false"
+                                th:aria-controls="'panelsStayOpen-collapse' + ${stat.index}">
                             Accordion Item #1
                         </button>
                     </h2>
-                    <div th:id="'panelsStayOpen-collapse' + ${stat.index}" class="accordion-collapse" th:aria-labelledby="'panelsStayOpen-heading' + ${stat.index}">
+                    <div th:id="'panelsStayOpen-collapse' + ${stat.index}" class="accordion-collapse"
+                         th:aria-labelledby="'panelsStayOpen-heading' + ${stat.index}">
                         <div class="accordion-body d-flex align-items-center " style="overflow: auto;">
                             <div class="me-auto" th:text="${faq.faqAnswer}">
                                 Accordion Item #1
                             </div>
                             <form th:action="@{/faq/remove/{faqNo}(faqNo=${faq.faqNo})}" method="post">
-                                <input class="btn btn-primary me-2" id="deleteBtn" type="submit" value="삭제" onclick="deleteConfirm()">
+                                <input class="btn btn-primary me-2" id="deleteBtn" type="submit" value="삭제"
+                                       onclick="deleteConfirm()">
                             </form>
                             <a class="btn btn-primary" th:href="@{/faq/edit/{faqNo}(faqNo=${faq.faqNo})}">수정</a>
                         </div>
@@ -56,48 +71,70 @@
                 </div>
             </div>
         </div>
-            <!--------------------->
+        <!--------------------->
         <hr class="my-4">
         <div>
-<!--            <table class="table">
-                <thead>
-                <tr>
-                    <th>질문</th>
-                    <th>답변</th>
-                    <th>카테고리</th>
-                    <th>베스트</th>
-                    <th>삭제</th>
-                    <th>수정</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="faq : ${faqAll.content}">
-                    <td th:text="${faq.faqQuestion}"></td>
-                    <td th:text="${faq.faqAnswer}"></td>
-                    <td th:text="${faq.faqCategory}"></td>
-                    <td th:text="${faq.faqBest}"></td>
-                    <td>
-                        <form th:action="@{/faq/remove/{faqNo}(faqNo=${faq.faqNo})}" method="post">
-                            <input class="btn btn-primary" id="deleteBtn" type="submit" value="삭제" onclick="deleteConfirm()">
-                        </form>
-                    </td>
-                    <td>
-                        <a class="btn btn-primary" th:href="@{/faq/edit/{faqNo}(faqNo=${faq.faqNo})}">수정</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>-->
+            <!--            <table class="table">
+                            <thead>
+                            <tr>
+                                <th>질문</th>
+                                <th>답변</th>
+                                <th>카테고리</th>
+                                <th>베스트</th>
+                                <th>삭제</th>
+                                <th>수정</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="faq : ${faqAll.content}">
+                                <td th:text="${faq.faqQuestion}"></td>
+                                <td th:text="${faq.faqAnswer}"></td>
+                                <td th:text="${faq.faqCategory}"></td>
+                                <td th:text="${faq.faqBest}"></td>
+                                <td>
+                                    <form th:action="@{/faq/remove/{faqNo}(faqNo=${faq.faqNo})}" method="post">
+                                        <input class="btn btn-primary" id="deleteBtn" type="submit" value="삭제" onclick="deleteConfirm()">
+                                    </form>
+                                </td>
+                                <td>
+                                    <a class="btn btn-primary" th:href="@{/faq/edit/{faqNo}(faqNo=${faq.faqNo})}">수정</a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>-->
             <div class="d-flex justify-content-end">
                 <a class="btn btn-primary" th:href="@{/faq/add}">등록</a>
             </div>
-            <!-- 페이지 이동 버튼-->
-            <div th:each="pageNumber : ${#numbers.sequence(0, faqAll.totalPages - 1)}">
-                <form th:action="@{/faq/{category}(category=${faqCategory})}" method="get">
-                    <input type="hidden" name="page" th:value="${pageNumber}" />
-                    <button th:text="${pageNumber + 1}"></button>
-                </form>
-            </div>
-
+            <!--페이징-->
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item">
+                        <a class="page-link" th:if="${currentPage > 0}"
+                           th:href="@{/faq/{category}(category=${faqCategory}, page=${previousGroupStartPage}, keyword=${keyword})}">&lt;&lt;</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:if="${currentPage > 0}"
+                           th:href="@{/faq/{category}(category=${faqCategory}, page=${currentPage - 1}, keyword=${keyword})}">&lt;</a>
+                    </li>
+                    <th:block th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}">
+                        <li th:class="page-item" th:classappend="${pageNumber == currentPage ? 'active' : ''}">
+                            <a th:if="${not #lists.isEmpty(faqAll.content)}"
+                               th:href="@{/faq/{category}(category=${faqCategory}, page=${pageNumber}, keyword=${keyword})}"
+                               th:text="${pageNumber + 1}" th:class="page-link"></a>
+                        </li>
+                    </th:block>
+                    <li class="page-item">
+                        <a class="page-link" th:if="${currentPage + 1 < totalPages}"
+                           th:href="@{/faq/{category}(category=${faqCategory}, page=${currentPage + 1}, keyword=${keyword})}">
+                            &gt; </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:if="${currentPage + 1 < totalPages}"
+                           th:href="@{/faq/{category}(category=${faqCategory}, page=${nextGroupStartPage}, keyword=${keyword})}">
+                            &gt;&gt; </a>
+                    </li>
+                </ul>
+            </nav>
             <script th:inline="javascript">
                 function deleteConfirm() {
                     // 삭제 확인 후, 확인 시 삭제처리

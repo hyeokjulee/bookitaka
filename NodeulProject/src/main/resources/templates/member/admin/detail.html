@@ -18,12 +18,12 @@
         <h3><span th:text="*{memberName}"></span>님의 회원 정보</h3>
         <hr>
         <div class="row">
-            <span class="col-3 text-truncate"><label th:for="memberEmail">이메일</label></span>
+            <span class="col-3 text-truncate"><i class="fa-solid fa-envelope px-2"></i><label th:for="memberEmail">이메일</label></span>
             <span class="col-9 text-truncate" th:text="*{memberEmail}"></span>
         </div>
         <hr>
         <div class="row">
-            <span class="col-3 text-truncate"><label th:for="memberName">이름</label></span>
+            <span class="col-3 text-truncate"><i class="fa-solid fa-user px-2"></i><label th:for="memberName">이름</label></span>
             <span class="col-9 text-truncate" id="memberNameForm" style="display: none">
             <input class="form-control-sm" type="text" th:field="*{memberName}"/>
             <div class="errorDiv" error="memberName" style="color: red"></div>
@@ -37,7 +37,7 @@
         </div>
         <hr>
         <div class="row">
-            <span class="col-3 text-truncate"><label>전화번호</label></span>
+            <span class="col-3 text-truncate"><i class="fa-solid fa-phone px-2"></i><label>전화번호</label></span>
             <span class="col-9 text-truncate" id="memberPhoneForm" style="display: none">
             <input type="hidden" th:field="*{memberPhone}"/>
             <select class="form-select-sm" id="memberPhoneSelect">
@@ -65,7 +65,7 @@
         </div>
         <hr>
         <div class="row">
-            <span class="col-3 text-truncate"><label>성별</label></span>
+            <span class="col-3 text-truncate"><i class="fa-solid fa-venus-mars px-2"></i><label>성별</label></span>
             <span class="col-9 text-truncate" id="memberGenderForm" style="display: none">
             <input type="hidden" th:field="*{memberGender}"/>
             <label for="memberGenderN">선택 안함</label>
@@ -89,7 +89,7 @@
         </div>
         <hr>
         <div class="row">
-            <span class="col-3 text-truncate"><label>생년월일</label></span>
+            <span class="col-3 text-truncate"><i class="fa-solid fa-cake-candles px-2"></i><label>생년월일</label></span>
             <span class="col-9 text-truncate" id="memberBirthdayForm" style="display: none">
         <input class="form-control-sm" type="date" id="memberBirthday" name="memberBirthday"
                th:value="${member.memberBirthday}"/>
@@ -104,7 +104,7 @@
         </div>
         <hr>
         <div class="row">
-            <span class="col-3 text-truncate"><label>권한</label></span>
+            <span class="col-3 text-truncate"><i class="fa-solid fa-key px-2"></i><label>권한</label></span>
             <span class="col-9 text-truncate" id="memberRoleForm" style="display: none">
                 <input type="hidden" th:field="*{memberRole}"/>
                 <label for="memberRoleMember">회원</label>
