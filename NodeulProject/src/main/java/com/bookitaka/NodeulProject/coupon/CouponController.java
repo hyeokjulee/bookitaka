@@ -3,9 +3,11 @@ package com.bookitaka.NodeulProject.coupon;
 import com.bookitaka.NodeulProject.cart.Cart;
 import com.bookitaka.NodeulProject.cart.CartService;
 import com.bookitaka.NodeulProject.member.model.Member;
+import com.bookitaka.NodeulProject.member.security.Token;
 import com.bookitaka.NodeulProject.member.service.MemberService;
 import com.bookitaka.NodeulProject.sheet.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -28,11 +30,19 @@ public class CouponController {
     private final HttpServletRequest request;
 
     @GetMapping("/buy") // 쿠폰구매 페이지
-    public String buyCoupon() {
-        if (couponService.couponCheck(request.getRemoteUser())) { // 사용가능한 쿠폰이 있는 경우
-            return "redirect:list"; // 내쿠폰 페이지로
-        }
+    public String buyCoupon(Model model) {
+        model.addAttribute("member", memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN));
         return "coupon/couponPaying"; // 뷰 이름을 반환
+    }
+
+    @PostMapping("/check")
+    public ResponseEntity<String> checkCoupon() {
+        String memberEmail = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN).getMemberEmail();
+        if (couponService.couponCheck(memberEmail)) { // 사용가능한 쿠폰이 있는 경우
+            return ResponseEntity.status(HttpStatus.OK).body("{\"coupon\": \"have\"}");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body("{\"coupon\": \"no\"}");
+        }
     }
 
 //    @GetMapping("/myCoupon") // 내쿠폰 페이지

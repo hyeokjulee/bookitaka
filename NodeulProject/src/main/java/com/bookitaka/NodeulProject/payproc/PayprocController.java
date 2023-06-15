@@ -143,7 +143,12 @@ public class PayprocController {
 
         log.info("payMakeDto", payMakeDto);
 
-        payprocService.makeCouponPay(payMakeDto);
+        try {
+            payprocService.makeCouponPay(payMakeDto);
+        } catch (Exception e) {
+            cancelPayWhenFailAfterVeri(veriAfterDto, "사후 검증 오류");
+            return ResponseEntity.badRequest().body("사후 검증 오류");
+        }
 
         return ResponseEntity.ok().body("결제 완료");
     }
