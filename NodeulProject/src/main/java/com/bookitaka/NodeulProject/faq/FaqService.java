@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface FaqService {
 
-    void registerFaq(Faq faq);
+    boolean registerFaq(Faq faq);
 //    List<Faq> getAllFaq();
     Optional<Faq> getOneFaq(Long faqNo);
     void modifyFaq(Faq faqModified);

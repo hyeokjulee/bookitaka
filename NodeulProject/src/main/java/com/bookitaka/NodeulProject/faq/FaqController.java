@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -109,23 +110,25 @@ public class FaqController {
 
     // FAQ 등록 처리
     @PostMapping("/add")
-    public String addProc(Model model,
-                          @Validated @ModelAttribute FaqRegisterDto faqRegisterDto,
-                          BindingResult bindingResult,
-                          HttpServletResponse response) throws UnsupportedEncodingException {
+    public ResponseEntity<?> addProc(Model model,
+                                     @Validated @ModelAttribute FaqRegisterDto faqRegisterDto,
+                                     BindingResult bindingResult) {
         log.info("Controller addProc : faqRegisterDto = " + faqRegisterDto);
-
-        if(bindingResult.hasErrors()){
-            model.addAttribute("faqAllCategory", service.getAllFaqCategory());
-            return "/faq/faqAddForm";
-        }
-
         // faqDto -> faq 변환
         Faq faq = modelMapper.map(faqRegisterDto, Faq.class);
-        service.registerFaq(faq);
+        boolean result = service.registerFaq(faq);
 
-        model.addAttribute("statusCode", response.getStatus());
-        return "redirect:/faq/" + URLEncoder.encode(faqRegisterDto.getFaqCategory(), "UTF-8");
+        // validation 오류
+        if(bindingResult.hasErrors()){
+            model.addAttribute("faqAllCategory", service.getAllFaqCategory());
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }
+
+        // 등록 실패 오류
+        if (!result) {
+            return ResponseEntity.unprocessableEntity().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     // FAQ 삭제 처리

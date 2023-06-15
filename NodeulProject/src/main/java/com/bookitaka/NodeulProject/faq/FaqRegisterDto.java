@@ -12,16 +12,16 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class FaqRegisterDto {
 
-    @NotBlank(message = "질문은 필수입니다.")
+    @NotBlank(message = "질문을 입력주세요.")
     private String faqQuestion;
 
-    @NotBlank(message = "답변은 필수입니다.")
+    @NotBlank(message = "답변을 입력해주세요.")
     private String faqAnswer;
 
-    @NotNull
+    @NotNull(message = "카테고리를 선택해주세요.")
     private String faqCategory;
 
-    @NotNull
+    @NotNull(message = "답변을 입력해주세요.")
     private int faqBest;
 
 }
