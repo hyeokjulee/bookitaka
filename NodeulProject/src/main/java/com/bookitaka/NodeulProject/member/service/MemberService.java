@@ -226,29 +226,6 @@ public class MemberService {
         return false;
     }
 
-    public boolean isValidEmailToken(String token) {
-        try {
-            if (token != null && jwtTokenProvider.validateToken(token)) {
-                return true;
-            }
-        } catch (CustomException ex) {
-            return false;
-        }
-        return false;
-    }
-
-    public boolean isValidEmailTokenInCookies(Cookie[] cookies, String email) {
-        String token = jwtTokenProvider.resolveToken(cookies, Token.EMAIL_AUTH_TOKEN);
-        try {
-            if (token != null && jwtTokenProvider.validateToken(token) && jwtTokenProvider.getMemberEmail(token).equals(email)) {
-                return true;
-            }
-        } catch (CustomException ex) {
-            return false;
-        }
-        return false;
-    }
-
     public String refresh(Cookie[] cookies, Member member) {
         String req_rToken = jwtTokenProvider.resolveToken(cookies, Token.REFRESH_TOKEN);
         String db_rToken = member.getMemberRtoken();
