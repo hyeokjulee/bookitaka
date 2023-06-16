@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>MyCoupon</title>
 
   <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
-  <h1>MyCoupon</h1>
-
+  <menuTitle>내 쿠폰</menuTitle>
+  <sidebar><th:block th:replace="layout/sidebar/mypage-sidebar :: mypage"></th:block></sidebar>
+  <mainSection>
   <span id="couponCnt">쿠폰 개수 : 0</span>
 
   <script src="/js/mycoupon.js"></script>
+  </mainSection>
 </body>
 </html>

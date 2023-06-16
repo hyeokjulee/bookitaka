@@ -4,11 +4,7 @@
 <body>
 
 <menuTitle>내 쿠폰</menuTitle>
-<sidebar class="list-group-item sidebar-link"><a th:href="@{/}" style="all: unset;">내 정보</a></sidebar>
-<sidebar class="list-group-item sidebar-link"><a th:href="@{/}" style="all: unset;">내 독후활동지</a></sidebar>
-<sidebar class="list-group-item sidebar-link"><a th:href="@{/}" style="all: unset;">내 출제 요청</a></sidebar>
-<sidebar class="list-group-item sidebar-link active"><a th:href="@{/coupon/myCoupon}" style="all: unset;">내 쿠폰</a></sidebar>
-<sidebar class="list-group-item sidebar-link"><a th:href="@{/}" style="all: unset;">내 결제</a></sidebar>
+<sidebar><th:block th:replace="layout/sidebar/mypage-sidebar :: mypage"></th:block></sidebar>
 
 <mainSection>
   <div>

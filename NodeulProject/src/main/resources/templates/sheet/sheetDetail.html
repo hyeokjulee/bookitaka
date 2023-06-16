@@ -5,24 +5,7 @@
 <body>
 
 <menuTitle>독후활동지</menuTitle>
-
-<sidebar class="list-group-item"><a th:href="@{/sheet/list}">전체 보기</a></sidebar>
-<sidebar class="list-group-item"><a th:href="@{/sheet/list?ageGroup=유아용}">연령별로 보기</a></sidebar>
-<sidebar th:if="${ageGroup != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?ageGroup=유아용}">연령별 - 유아용</a></sidebar>
-<sidebar th:if="${ageGroup != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?ageGroup=초등저학년}">연령별 - 초등저학년</a></sidebar>
-<sidebar th:if="${ageGroup != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?ageGroup=초등고학년}">연령별 - 초등고학년</a></sidebar>
-<sidebar th:if="${ageGroup != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?ageGroup=중등}">연령별 - 중등</a></sidebar>
-<sidebar th:if="${ageGroup != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?ageGroup=고등}">연령별 - 고등</a></sidebar>
-<sidebar class="list-group-item"><a th:href="@{/sheet/list?genre=그림책}">장르별로 보기</a></sidebar>
-<sidebar th:if="${genre != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?genre=그림책}">장르별 - 그림책</a></sidebar>
-<sidebar th:if="${genre != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?genre=동화}">장르별 - 동화</a></sidebar>
-<sidebar th:if="${genre != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?genre=청소년소설}">장르별 - 청소년소설</a></sidebar>
-<sidebar th:if="${genre != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?genre=세계명작}">장르별 - 세계명작</a></sidebar>
-<sidebar th:if="${genre != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?genre=현대문학}">장르별 - 현대문학</a></sidebar>
-<sidebar th:if="${genre != ''}" class="list-group-item mx-1"><a th:href="@{/sheet/list?genre=한국고전}">장르별 - 한국고전</a></sidebar>
-<sidebar class="list-group-item"><a th:href="@{/sheet/list?genre=독서토론논제은행}">논제은행</a></sidebar>
-<sidebar class="list-group-item"><a th:href="@{/sheet/request}">개별출제요청</a></sidebar>
-
+<sidebar><th:block th:replace="layout/sidebar/sheet-sidebar :: sheet"></th:block></sidebar>
 
 <mainSection>
 

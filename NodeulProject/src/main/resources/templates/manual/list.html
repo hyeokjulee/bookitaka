@@ -5,9 +5,7 @@
 <body>
 
 <menuTitle>알림마당</menuTitle>
-<sidebar class="list-group-item"><a th:href="@{/manual/list}">이용방법</a></sidebar>
-<sidebar class="list-group-item"><a th:href="@{/notice/list}">공지사항</a></sidebar>
-<sidebar class="list-group-item"><a th:href="@{/faq/best}">자주묻는질문</a></sidebar>
+<sidebar><th:block th:replace="layout/sidebar/notification-sidebar :: notification"></th:block></sidebar>
 
 <mainSection>
     <div id="wrap">

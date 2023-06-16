@@ -1,11 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-sheet My Request.html
+<menuTitle>내 출제요청</menuTitle>
+<sidebar><th:block th:replace="layout/sidebar/mypage-sidebar :: mypage"></th:block></sidebar>
+<mainSection>
+    sheet My Request.html
+</mainSection>
 
 </body>
 </html>
