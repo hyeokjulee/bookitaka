@@ -41,8 +41,8 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public Optional<Request> getOneRequest(Long RequestNo) {
-        return Optional.empty();
+    public Optional<Request> getOneRequest(Long requestNo) {
+        return requestRepository.findById(requestNo);
     }
 
     @Override

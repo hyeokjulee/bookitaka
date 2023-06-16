@@ -85,4 +85,12 @@ public class RequestController {
         return "request/requestList";
     }
 
+    @GetMapping("/detail/{requestNo}")
+    public String requestDetail(@PathVariable Long requestNo, Model model){
+        Request request = requestService.getOneRequest(requestNo).orElse(null);
+        log.info("requestDetail request = {}", request);
+        model.addAttribute("request", request);
+        return "request/requestDetail";
+    }
+
 }
