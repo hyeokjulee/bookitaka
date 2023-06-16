@@ -18439,9 +18439,17 @@ ul {
 /* -------------------------------------------------------------------------- */
 .badge {
   font-weight: 500;
-  border-radius: 0;
-  font-size: 1rem;
-  padding: .58rem 1.8rem;
+  border-radius: 0.5rem;
+  font-size: 0.5rem;
+  padding: .35rem 0.65rem;
+}
+
+.badge-pink {
+  background-color: #FF96C8;
+}
+.badge-gray {
+  /*color: black;*/
+  background-color: #BDBDBD;
 }
 
 .badge-circle {
