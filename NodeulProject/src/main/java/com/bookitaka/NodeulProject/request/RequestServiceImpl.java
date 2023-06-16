@@ -1,5 +1,6 @@
 package com.bookitaka.NodeulProject.request;
 
+import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.sheet.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +58,17 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public Page<Request> getAllRequestByRequestIsdone(int requestIsdone, Pageable pageable) {
-        return requestRepository.findAllByRequestIsdoneOrderByRequestRegdateDesc(requestIsdone, pageable);
+        if(requestIsdone == -1) {
+            return requestRepository.findAll(pageable);
+        } else {
+            return requestRepository.findAllByRequestIsdone(requestIsdone, pageable);
+        }
+    }
+
+    @Override
+    public Page<Request> getMyRequest(Member member, Pageable pageable) {
+        String memberEmail = member.getMemberEmail();
+        return requestRepository.findAllByRequestEmail(memberEmail, pageable);
     }
 
     @Override
