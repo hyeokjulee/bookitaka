@@ -1,5 +1,6 @@
 package com.bookitaka.NodeulProject.request;
 
+import com.bookitaka.NodeulProject.member.model.Member;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ public interface RequestService {
     void removeRequest(Request request);
 
     Page<Request> getAllRequestByRequestIsdone(int requestIsdone, Pageable pageable);
+    Page<Request> getMyRequest(Member member, Pageable pageable);
 
     public Map<String, Object> searchBook(String keyword, String authorSearch, Integer pageNum);
 
