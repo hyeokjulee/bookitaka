@@ -130,15 +130,16 @@ function refresh() {
     var sum = 0;
     prices.forEach(function(price) {
         sum += price;
-        window.sum = sum;
     });
-
+    window.sum = sum;
     window.usedCoupon = checkedCoupons;
 
     let couponLeftCnt = parseInt($('#couponLeft').data("left")) - checkedCoupons;
     $('#couponLeft').text("쿠폰사용 : (남은갯수 " + couponLeftCnt + ")");
     $('#couponAll').prop('checked', isAllChecked);
     $('#totalprice').text("합계 : " + sum.toLocaleString() + "원");
+
+
 
 }
 
@@ -156,13 +157,15 @@ $(document).on('change', '[name="selectedCoupon"]', function() {
 
     if (checkbox.is(':checked')) {
         // 체크되었을 때의 동작
-        var savedPrice = parseInt(priceCell.text().replace(/[^0-9]/g, '')); // 현재 텍스트에 있는 가격 추출
         priceCell.text("0(쿠폰사용)");
+        sheetInfo[row.index()] = sheetInfo[row.index()] + "(쿠폰)" //쿠폰구입은 쿠폰이라고 붙여주기
     } else {
         // 체크가 해제되었을 때의 동작
         var savedPrice = checkbox.data('price'); // 저장된 가격 가져오기
         priceCell.text(savedPrice.toLocaleString() + '원'); // 원래 가격으로 변경
+        sheetInfo[row.index()] = sheetInfo[row.index()].slice(0, -4); //쿠폰이라고 붙였던거 떼기
+
     }
 
-    refresh(); // 삭제시 건수랑 합계 새로고침
+    refresh();
 });

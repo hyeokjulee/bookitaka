@@ -114,11 +114,19 @@ public class PayprocController {
 
         VeriAfterDto veriAfterDto = new VeriAfterDto(payMakeDto.getImpId(), Math.toIntExact(payMakeDto.getPaymentPrice()));
 
-        log.info("verifyAfterDto = {}", veriAfterDto);
-        if (!verifyAfter(veriAfterDto)) {
-            // 예외 발생 시
-            cancelPayWhenFailAfterVeri(veriAfterDto, "사후 검증 오류");
-            return ResponseEntity.badRequest().body("사후 검증 오류");
+        //쿠폰 남은양 체크
+        int couponLeftCnt = couponService.getCountByMemberEmail(payMakeDto.getMemberEmail());
+        if (couponLeftCnt < payMakeDto.getUsedCouponCnt()) {//남은양보다 더 많은 쿠폰을 쓰는 요청은 돌려보내기
+            return ResponseEntity.badRequest().body("쿠폰 사용 불가");
+        }
+
+        if (payMakeDto.getPaymentPrice() != 0) {
+            log.info("verifyAfterDto = {}", veriAfterDto);
+            if (!verifyAfter(veriAfterDto)) {
+                // 예외 발생 시
+                cancelPayWhenFailAfterVeri(veriAfterDto, "사후 검증 오류");
+                return ResponseEntity.badRequest().body("사후 검증 오류");
+            }
         }
 
         List<Long> sheetNumListInCart = parseCookie(carts);

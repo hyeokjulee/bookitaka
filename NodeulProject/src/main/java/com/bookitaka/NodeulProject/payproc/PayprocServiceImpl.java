@@ -48,6 +48,7 @@ public class PayprocServiceImpl implements PayprocService {
         Payment save = paymentRepository.save(payment);
         log.info("makePay pay = {}", save);
 
+
         //쿠폰 사용하기
         List<Coupon> coupons = couponRepositoryCustom.findAllValidCouponByMemberEmail(payMakeDto.getMemberEmail());
         log.info("makePay coupons = {}", coupons);

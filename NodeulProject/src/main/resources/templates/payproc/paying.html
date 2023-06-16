@@ -87,14 +87,24 @@
         var IMP = window.IMP;
         IMP.init("imp71816073");
         function requestPay() {
+            console.log(sum);
+            const uuid = uuidv4();
+            if (sheetInfo.length == 1) {
+                sInfo = sheetInfo[0];
+            } else {
+                sInfo = sheetInfo[0].replace("(쿠폰)", "") + "외 " + (cnt - 1) + "건";
+            }
+            sInfo += "(";
+            sheetInfo.forEach(function (element) {
+                sInfo += element + ", ";
+            });
+            sInfo = sInfo.slice(0, -2);
+            sInfo += ")";
 
-                const uuid = uuidv4();
+            if (sum === 0) {
+                freePayProc(uuid);
+            } else {
                 verifyBefore(uuid, sum).then(result => {
-                    if (sheetInfo.length == 1) {
-                        sInfo = sheetInfo[0];
-                    } else {
-                        sInfo = sheetInfo[0] + "외 " + (cnt - 1) + "건";
-                    }
 
                     IMP.request_pay(
                         {
@@ -110,9 +120,11 @@
 
                             buyer_addr: "서울특별시 강남구 삼성동",
                             buyer_postcode: "123-456",
-                        }, function(rsp) {afterPayProc(rsp)});
+                        }, function (rsp) {
+                            afterPayProc(rsp)
+                        });
                 })
-
+            }
         }
 
         function verifyBefore(merchant_uid, amount) {
@@ -147,13 +159,6 @@
 
         function afterPayProc(rsp) {
             if (rsp.success) {
-
-                sInfo += "(";
-                sheetInfo.forEach(function (element) {
-                    sInfo += element + ", ";
-                });
-                sInfo = sInfo.slice(0, -2);
-                sInfo += ")";
 
                 console.log("사후 검증 시작")
                 const payMakeDto = {
@@ -199,6 +204,47 @@
                 console.log("결제 진행 실패")
                 alert("결제 진행 실패")
             }
+        }
+
+        function freePayProc(uuid) {
+            console.log("전체 쿠폰구입")
+            const payMakeDto = {
+                paymentUuid: uuid,
+                paymentInfo: sInfo,
+                paymentPrice: 0,
+                receiptUrl: "",
+                memberEmail: memberInfo[0],
+                payMethod: "쿠폰구입",
+                impId: "쿠폰구입",
+                mySheetMeans: '개별구입',
+                usedCouponCnt : usedCoupon
+            };
+            fetch('/payproc/paid', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'ajax': "true"
+                },
+                body: JSON.stringify(payMakeDto)
+            })
+                .then(response => {
+                    if (response.status == 200) {
+                        window.location.href = "/payproc/complete?sInfo=" + sInfo;
+                    } else if (response.status == 201) {
+                        console.log("토큰 재발급");
+                        freePayProc(uuid);
+                    }
+                    else {
+                        response.text().then(errorMsg => {
+                            alert("결제 요청 실패" + errorMsg);
+                            throw new Error(errorMsg); });
+                    }
+                }).catch(error => {
+                    // 요청 실패 시 오류 처리
+                    console.error('결제 요청 실패:', error);
+                    throw error;
+                });
+
         }
 
 

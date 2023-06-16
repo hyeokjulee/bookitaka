@@ -47,7 +47,6 @@ public class Sheet {
 
     private Date sheetRegdate;
 
-    @LastModifiedDate
     private Date sheetModdate;
 
 
