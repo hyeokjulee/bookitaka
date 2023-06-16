@@ -7293,6 +7293,13 @@ fieldset:disabled .btn {
   font-weight: 600;
 }
 
+.sheetinput-title{
+  font-weight: 600;
+  padding-inline: 50px;
+  display: inline-block;
+  width: 200px;
+}
+
 .accordion-button {
   position: relative;
   display: -webkit-box;
