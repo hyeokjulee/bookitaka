@@ -198,24 +198,27 @@ $(document).on('change', '[name="selectedItem"]', function() {
 
 // 구매하기 버튼 클릭 시 결제하기 페이지로 이동 처리
 $(document).on('click', '.btn-paying', function() {
-    if (!confirm("결제 페이지로 이동하시겠습니까?")) {
-        return;
-    }
 
-  // 선택된 체크박스들을 수집합니다.
+    // 선택된 체크박스들을 수집합니다.
   var selectedItems = [];
   $('input[name="selectedItem"]:checked').each(function() {
     selectedItems.push($(this).val());
   });
 
   if (selectedItems.length != 0) {
-      // 리스트를 문자열로 변환
-      var encodedList = JSON.stringify(selectedItems);
+      if (confirm("결제 페이지로 이동하시겠습니까?")) {
+          // 리스트를 문자열로 변환
+          var encodedList = JSON.stringify(selectedItems);
 
-      // 쿠키에 리스트 값 설정
-      document.cookie = "carts=" + encodeURIComponent(encodedList) + "; path=/";
+          // 쿠키에 리스트 값 설정
+          document.cookie = "carts=" + encodeURIComponent(encodedList) + "; path=/";
 
-      window.location.href = "/payproc/paying";
+          window.location.href = "/payproc/paying";
+      } else {
+          return;
+      }
+  } else {
+      alert("선택한 제품이 없습니다.")
   }
 });
 
