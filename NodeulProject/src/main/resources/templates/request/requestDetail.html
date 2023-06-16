@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<menuTitle>내 출제요청</menuTitle>
+<sidebar><th:block th:replace="layout/sidebar/mypage-sidebar :: mypage"></th:block></sidebar>
+
+<mainSection>
+    <div id="wrap">
+        <div class="row g-0 align-items-center">
+            <div class="col-auto">
+                <h1 class="fs-5 fs-xl-5 mb-5">출제요청 자세히 보기</h1>
+            </div>
+        </div>
+
+        <table class="table table-bordered mt-0">
+            <tr class="row">
+                <th class="col-2 text-center table-light">책 제목</th>
+                <th class="col-10" style="font-weight: normal;" th:text="${request.requestBooktitle}"></th>
+            </tr>
+            <tr class="row">
+                <th class="col-2 text-center table-light">작가</th>
+                <th class="col-4" style="font-weight: normal;" th:text="${request.requestBookauthor}"></th>
+                <th class="col-2 text-center table-light">출판사</th>
+                <th class="col-4" style="font-weight: normal;" th:text="${request.requestBookpublisher}"></th>
+            </tr>
+        </table>
+        <table class="table table-bordered mt-0">
+            <tr class="row">
+                <th class="col-2 text-center table-light">요청자 이메일</th>
+                <th class="col-4" style="font-weight: normal;" th:text="${request.requestEmail}"></th>
+                <th class="col-2 text-center table-light">요청자 연락처</th>
+                <th class="col-4" style="font-weight: normal;" th:text="${request.requestPhone}"></th>
+            </tr>
+            <tr class="row">
+                <th class="col-2 text-center table-light">요청 등록 날짜</th>
+                <th class="col-4" style="font-weight: normal;" th:text="${request.requestRegdate}"></th>
+                <th class="col-2 text-center table-light">요청 희망 날짜</th>
+                <th class="col-4" style="font-weight: normal;" th:text="${request.requestHopedate}"></th>
+            </tr>
+        </table>
+        <table class="table table-bordered mt-0">
+            <tr class="row table-light">
+                <th class="col-12 fw-bolder px-3">요청 내용</th>
+            </tr>
+            <tr class="row">
+                <td class="col-12 h-50 px-3" th:utext="${request.requestContent}"></td>
+            </tr>
+        </table>
+
+    </div>
+</mainSection>
+</body>
+</html>

@@ -1,7 +1,5 @@
 package com.bookitaka.NodeulProject.request;
 
-import com.bookitaka.NodeulProject.faq.Faq;
-import com.bookitaka.NodeulProject.faq.FaqRegisterDto;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.security.Token;
 import com.bookitaka.NodeulProject.member.service.MemberService;
@@ -11,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -65,13 +64,22 @@ public class RequestController {
         requestService.registerRequest(request);
 
         model.addAttribute("statusCode", response.getStatus());
-        return "request/myRequestList";
+        return "redirect:/sheet/request/myrequest";
     }
 
     @GetMapping("/myrequest")
-    public String listMyRequest() {
+    public String listMyRequest(Model model,
+                                HttpServletRequest request,
+                                @RequestParam(name = "page", defaultValue = "0") int page) {
+        Member currentMember = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
+        model.addAttribute("currentMember", currentMember);
 
-        return "request/myRequestList";
+        int size = 3;
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Request> myRequest = requestService.getMyRequest(currentMember, pageable);
+        model.addAttribute("myRequest", myRequest);
+        return "request/myRequest";
     }
 
     @GetMapping("/list")
@@ -79,10 +87,19 @@ public class RequestController {
                                       @RequestParam(name = "page", defaultValue = "0") int page,
                                       Model model) {
         int size = 3;
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "requestRegdate"));
         Page<Request> requestList = requestService.getAllRequestByRequestIsdone(requestIsdone, pageable);
         model.addAttribute("requestList", requestList);
+        model.addAttribute("requestIsdone", requestIsdone);
         return "request/requestList";
+    }
+
+    @GetMapping("/detail/{requestNo}")
+    public String requestDetail(@PathVariable Long requestNo, Model model){
+        Request request = requestService.getOneRequest(requestNo).orElse(null);
+        log.info("requestDetail request = {}", request);
+        model.addAttribute("request", request);
+        return "request/requestDetail";
     }
 
 }

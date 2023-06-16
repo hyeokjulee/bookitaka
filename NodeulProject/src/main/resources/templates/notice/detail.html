@@ -8,48 +8,50 @@
 <sidebar><th:block th:replace="layout/sidebar/notification-sidebar :: notification"></th:block></sidebar>
 
 <mainSection>
-<div id="wrap">
-    <div class="row g-0 align-items-center">
-        <div class="col-auto">
+  <div id="wrap">
+      <div class="row g-0 align-items-center">
+         <div class="col-auto">
             <h1 class="fs-5 fs-xl-5 mb-5">공지사항</h1>
-        </div>
-    </div>
-
-    <table class="table table-bordered mb-0">
-        <tr>
-            <th class="col-1 text-center table-light ">제목</th>
-            <th class="col-10" style="font-weight: normal;" th:text="${noticeDto.noticeTitle}"></th>
-        </tr>
-    </table>
-    <table class="table table-bordered mt-0">
-        <tr>
-            <th class="col-1 text-center table-light">등록일</th>
-            <th class="col-3" style="font-weight: normal;" th:inline="text">[[${#temporals.format(noticeDto.noticeRegdate, 'yyyy-MM-dd HH:mm')}]]</th>
-            <th class="col-1 text-center table-light">수정일</th>
-            <th class="col-3" style="font-weight: normal;" th:inline="text">[[${#temporals.format(noticeDto.noticeModdate, 'yyyy-MM-dd HH:mm')}]]</th>
-            <th class="col-1 text-center table-light">조회수</th>
-            <th class="col-2" style="font-weight: normal;" th:text="${noticeDto.noticeHit}"></th>
-        </tr>
-    </table>
-    <div class="py-3 px-5" style="overflow: auto;">
-        <div class="text-lg" th:utext="${noticeDto.noticeContent}">
-        </div>
-    </div>
-
-<!-- 수정/삭제 -->
-    <div class="d-flex justify-content-end mt-5">
-        <a th:href="@{/notice/list}">
-            <button class="btn btn-primary">목록으로</button>
-        </a>
-            <a th:href="@{'/notice/post/edit/' + ${noticeDto.noticeNo}}">
-                <button class="btn btn-primary">수정</button>
+         </div>
+      </div>
+      <div class="card" style="border-radius: 20px; overflow: hidden; border: 3px solid #ffe3ea;">
+          <div class="card-body p-0">
+              <table class="table table-bordered mb-0 table-babypink">
+                  <tr>
+                      <th class="col-1 text-center" style="background-color: #ffedf2" >제목</th>
+                      <th class="col-10" style="font-weight: normal;" th:text="${noticeDto.noticeTitle}"></th>
+                  </tr>
+              </table>
+              <table class="table table-bordered mt-0 table-babypink">
+                  <tr>
+                      <th class="col-1 text-center" style="background-color: #ffedf2">등록일</th>
+                      <th class="col-3" style="font-weight: normal;" th:inline="text">[[${#temporals.format(noticeDto.noticeRegdate, 'yyyy-MM-dd HH:mm')}]]</th>
+                      <th class="col-1 text-center" style="background-color: #ffedf2">수정일</th>
+                      <th class="col-3" style="font-weight: normal;" th:inline="text">[[${#temporals.format(noticeDto.noticeModdate, 'yyyy-MM-dd HH:mm')}]]</th>
+                      <th class="col-1 text-center" style="background-color: #ffedf2">조회수</th>
+                      <th class="col-2" style="font-weight: normal;" th:text="${noticeDto.noticeHit}"></th>
+                  </tr>
+              </table>
+              <div class="py-4 px-4" style="overflow: auto;">
+                  <div class="text-lg mb-8" th:utext="${noticeDto.noticeContent}">
+                  </div>
+              </div>
+          </div>
+      </div>
+         <!-- 수정/삭제 -->
+        <div class="d-flex justify-content-end mt-5">
+            <a th:href="@{/notice/list}">
+                <button class="btn btn-primary">목록으로</button>
             </a>
-        <form id="delete-form" th:action="@{'/notice/post/' + ${noticeDto.noticeNo}}" method="post">
-            <input type="hidden" name="_method" value="delete"/>
-            <button class="btn btn-primary" id="delete-btn">삭제</button>
-        </form>
-    </div>
-</div>
+                <a th:href="@{'/notice/post/edit/' + ${noticeDto.noticeNo}}">
+                    <button class="btn btn-primary">수정</button>
+                </a>
+            <form id="delete-form" th:action="@{'/notice/post/' + ${noticeDto.noticeNo}}" method="post">
+                <input type="hidden" name="_method" value="delete"/>
+                <button class="btn btn-primary" id="delete-btn">삭제</button>
+            </form>
+        </div>
+  </div>
 </mainSection>
 </body>
 </html>
