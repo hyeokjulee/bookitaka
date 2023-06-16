@@ -5,7 +5,9 @@
 <body>
 
 <menuTitle>알림마당</menuTitle>
-<sidebar><th:block th:replace="layout/sidebar/notification-sidebar :: notification"></th:block></sidebar>
+<sidebar>
+    <th:block th:replace="layout/sidebar/notification-sidebar :: notification"></th:block>
+</sidebar>
 
 <mainSection>
     <div id="wrap">
@@ -16,38 +18,39 @@
         </div>
         <form th:object="${faqRegisterDto}">
             <div class="mb-3">
-                <label class="form-label" for="faqQuestion">자주묻는 질문</label>
-                <span class="errorDiv" error="faqQuestion" style="color: red"></span>
-                <!--                <span class="errorMsg" th:errors="*{faqQuestion}">질문 오류</span><br>-->
-                <textarea name="faqQuestion" id="faqQuestion" th:field="*{faqQuestion}" class="form-control"
+                <div class="row">
+                    <span class="col-auto">
+                        <label class="form-label" for="faqQuestion">자주묻는 질문</label>
+                    </span>
+                    <span class="errorDiv col-3" error="faqQuestion" style="color: red"></span>
+                    <span class="col-auto ms-auto">
+                        <label class="form-check-label" for="faqBest">BEST</label>
+                        <input type="checkbox" name="faqBest" id="faqBest" class="form-check-input form-check-inline" role="switch">
+                    </span>
+                    <span class="col-auto">
+                        <label for="faqCategory">카테고리</label>
+                        <select name="faqCategory" id="faqCategory" class="form-select-sm">
+                            <option th:each="category, stat : ${faqAllCategory}"
+                                    th:if="${stat.index >= 2}" th:value="${category}" th:text="${category}"></option>
+                        </select>
+                    </span>
+                </div>
+                <textarea name="faqQuestion" id="faqQuestion" th:field="*{faqQuestion}" class="form-control my-2"
                           rows="3"></textarea>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="faqAnswer">답변</label>
-                <span class="errorDiv" error="faqAnswer" style="color: red"></span>
+                <div class="row">
+                    <span class="col-auto">
+                        <label class="form-label" for="faqAnswer">답변</label>
+                    </span>
+                    <span class="errorDiv col-auto" error="faqAnswer" style="color: red"></span>
 
-                <!--                <span class="errorMsg" th:errors="*{faqAnswer}">답변 오류</span><br>-->
-                <textarea name="faqAnswer" id="faqAnswer" th:field="*{faqAnswer}" class="form-control"
-                          rows="3"></textarea>
-            </div>
-            <!--    <span class="errorMsg" th:errors="*{faqQuestion}">질문 오류</span>-->
-            <!--    <br> 질문 <textarea name="faqQuestion" th:field="*{faqQuestion}"></textarea>-->
-            <!--    <span class="errorMsg" th:errors="*{sheetBooktitle}">답변 오류</span>-->
-            <!--    <br> 답변 <textarea name="faqAnswer"></textarea>-->
-            <div>
-                카테고리
-                <select name="faqCategory" id="category">
-                    <option th:each="category, stat : ${faqAllCategory}"
-                            th:if="${stat.index >= 2}" th:value="${category}" th:text="${category}"></option>
-                </select>
-
+                </div>
+                    <textarea name="faqAnswer" id="faqAnswer" th:field="*{faqAnswer}" class="form-control my-2"
+                              rows="10"></textarea>
             </div>
 
-            <div>
-                <br> most/best 여부
-                <input type="checkbox" name="faqBest" id="mostbest">
-            </div>
-            <hr>
+            <hr class="my-4">
             <div class="d-flex justify-content-end">
                 <button class="btn btn-primary" type="submit" id="addBtn">FAQ 등록</button>
                 <button class="btn btn-primary cancelBtn" type="button">취소</button>
@@ -68,8 +71,8 @@
             event.preventDefault(); // 기본 동작(폼 제출) 막기
             let faqQuestion = document.getElementById("faqQuestion").value;
             let faqAnswer = document.getElementById("faqAnswer").value;
-            let faqCategory = document.getElementById("category").value;
-            let faqBest = document.getElementById("mostbest").checked ? 1 : 0;
+            let faqCategory = document.getElementById("faqCategory").value;
+            let faqBest = document.getElementById("faqBest").checked ? 1 : 0;
 
             let formData = new URLSearchParams({
                 faqQuestion: faqQuestion,

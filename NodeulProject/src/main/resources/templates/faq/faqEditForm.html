@@ -15,28 +15,39 @@
         </div>
         <form >
             <div class="mb-3">
-                <label class="form-label" name="faqQuestion" >자주묻는 질문</label>
-                <span class="errorDiv" error="faqQuestion" style="color: red"></span>
-                <textarea name="faqQuestion" th:text="${editFaq.faqQuestion}" class="form-control" rows="3" id="faqQuestion"></textarea>
+                <div class="row">
+                    <span class="col-auto">
+                        <label class="form-label" for="faqQuestion">자주묻는 질문</label>
+                    </span>
+                    <span class="errorDiv col-3" error="faqQuestion" style="color: red"></span>
+                    <span class="col-auto ms-auto">
+                        <label for="faqBest">BEST</label>
+                        <input type="checkbox" role="switch" name="faqBest" id="faqBest" class="form-check-input form-check-inline"  th:checked="${editFaq.faqBest == 1}">
+                        </span>
+
+                    <span class="col-auto">
+                        <label for="faqCategory">카테고리</label>
+                        <select name="faqCategory" id="faqCategory" class="form-select-sm">
+                            <option th:each="category, stat : ${faqAllCategory}"
+                                    th:if="${stat.index >= 2}" th:value="${category}" th:text="${category}" th:selected="${category == editFaq.faqCategory}"></option>
+                        </select>
+                    </span>
+                </div>
+                <textarea name="faqQuestion" id="faqQuestion" th:text="${editFaq.faqQuestion}" class="form-control my-2"
+                          rows="3"></textarea>
             </div>
             <div class="mb-3">
-                <label class="form-label" name="faqAnswer" >답변</label>
-                <span class="errorDiv" error="faqAnswer" style="color: red"></span>
-                <textarea name="faqAnswer" th:text="${editFaq.faqAnswer}" class="form-control" rows="3" id="faqAnswer"></textarea>
-            </div>
-            <div>
-                카테고리
-                <select name="faqCategory" id="faqCategory">
-                    <option th:each="category, stat : ${faqAllCategory}"
-                            th:if="${stat.index >= 2}" th:value="${category}" th:text="${category}" th:selected="${category == editFaq.faqCategory}"></option>
-                </select>
+                <div class="row">
+                    <span class="col-auto">
+                        <label class="form-label" for="faqAnswer">답변</label>
+                    </span>
+                    <span class="errorDiv col-auto" error="faqAnswer" style="color: red"></span>
+                </div>
+                <textarea name="faqAnswer" id="faqAnswer" th:text="${editFaq.faqAnswer}" class="form-control my-2"
+                          rows="10"></textarea>
             </div>
 
-            <div>
-                <br> most/best 여부
-                <input type="checkbox" name="faqBest" th:checked="${editFaq.faqBest == 1}" id="faqBest">
-            </div>
-            <hr>
+            <hr class="my-4">
             <div class="d-flex justify-content-end">
                 <button class="btn btn-primary" type="submit" id="editBtn">FAQ 수정</button>
                 <button class="btn btn-primary cancelBtn" type="button">취소</button>
