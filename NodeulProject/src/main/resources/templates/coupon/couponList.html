@@ -4,11 +4,7 @@
 <body>
 
 <menuTitle>내 쿠폰</menuTitle>
-<sidebar class="list-group-item sidebar-link"><a th:href="@{/}" style="all: unset;">내 정보</a></sidebar>
-<sidebar class="list-group-item sidebar-link"><a th:href="@{/}" style="all: unset;">내 독후활동지</a></sidebar>
-<sidebar class="list-group-item sidebar-link"><a th:href="@{/}" style="all: unset;">내 출제 요청</a></sidebar>
-<sidebar class="list-group-item sidebar-link active"><a th:href="@{/coupon/myCoupon}" style="all: unset;">내 쿠폰</a></sidebar>
-<sidebar class="list-group-item sidebar-link"><a th:href="@{/}" style="all: unset;">내 결제</a></sidebar>
+<sidebar><th:block th:replace="layout/sidebar/mypage-sidebar :: mypage"></th:block></sidebar>
 
 <mainSection>
   <div>
@@ -50,6 +46,7 @@
     </ul>
   </div>
 
+  <div class="text-center">기존 160,000원 -> 할인가 100,000원<br>쿠폰을 구매하면 10만원에 독후활동지 80개를 구입하실 수 있습니다.</div>
   <div class="text-center">
     <button onclick="couponBuy()" class="btn btn-primary">쿠폰 구입</button>
   </div>
@@ -58,7 +55,23 @@
 
   <script>
     function couponBuy() {
-      window.location.href = "/coupon/buy";
+      fetch('/coupon/check', {
+        method: 'POST',
+      }).then(response => response.json())
+              .then(data => {
+                // 응답 데이터 처리
+                if (data.coupon === "have") {
+                  if (confirm("사용 가능한 쿠폰이 이미 존재합니다. 그래도 구입하시겠습니까?")) {
+                    window.location.href = "/coupon/buy"
+                  }
+                } else {
+                  window.location.href = "/coupon/buy"
+                }
+              })
+              .catch(error => {
+                // 에러 처리
+                console.error(error);
+              });
     }
   </script>
 

@@ -10,10 +10,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 
 @Slf4j
@@ -167,6 +164,7 @@ public class SheetRepositoryImpl implements SheetRepository{
             findSheet.setSheetGenre(genreRepository.findTopBySheetGenreName(sheetUpdateDto.getSheetGenreName()));
             findSheet.setSheetAgegroup(ageGroupRepository.findTopBySheetAgegroupName(sheetUpdateDto.getSheetAgegroupName()));
             findSheet.setSheetContent(sheetUpdateDto.getSheetContent());
+            findSheet.setSheetModdate(new Date());
             return true;
         }
         return false;

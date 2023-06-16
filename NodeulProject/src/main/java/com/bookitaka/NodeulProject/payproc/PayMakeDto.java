@@ -25,4 +25,6 @@ public class PayMakeDto {
 
     private String mySheetMeans;
 
+    private int usedCouponCnt;
+
 }

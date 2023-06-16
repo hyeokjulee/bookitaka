@@ -35,7 +35,27 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
+    public int getValidCouponCntByMemberEmail(String memberEmail) {
+        int validCouponCnt = 0;
+        List<Coupon> couponList = couponRepositoryCustom.findAllValidCouponByMemberEmail(memberEmail);
+        for (Coupon coupon: couponList) {
+            validCouponCnt += coupon.getCouponLeft();
+        }
+
+        return validCouponCnt;
+    }
+
+    @Override
     public boolean couponCheck(String memberEmail) {
         return couponRepository.existsByMemberEmailAndCouponEnddateGreaterThan(memberEmail, LocalDateTime.now());
+    }
+
+    @Override
+    public boolean useCoupon(Long couponNo, int amount) {
+        if (couponRepository.updateUsedCoupon(couponNo, amount) >= 1) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -1,7 +1,12 @@
 package com.bookitaka.NodeulProject.cart;
 
+import com.bookitaka.NodeulProject.member.model.Member;
+import com.bookitaka.NodeulProject.member.security.Token;
+import com.bookitaka.NodeulProject.member.service.MemberService;
 import com.bookitaka.NodeulProject.sheet.Sheet;
 import com.bookitaka.NodeulProject.sheet.SheetService;
+import com.bookitaka.NodeulProject.sheet.mysheet.MysheetRepository;
+import com.bookitaka.NodeulProject.sheet.mysheet.MysheetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,6 +27,8 @@ public class CartController {
     private final CartService cartService;
     private final SheetService sheetService;
     private final HttpServletRequest request;
+    private final MysheetService mysheetService;
+    private final MemberService memberService;
 
     @GetMapping("/cart") // 목록 페이지
     public String cart() {
@@ -78,9 +85,13 @@ public class CartController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> cartAdd(@RequestParam int sheetNo) {
         Map<String, Object> response = new HashMap<>();
-        String email = request.getRemoteUser();
+        Member member = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
+        String email = member.getMemberEmail();
 
-        if(cartService.getCartByMemberEmailAndSheetNo(email, sheetNo).isEmpty()) {
+        if (mysheetService.canIDownloadSheet(sheetService.getSheet(sheetNo).getSheetFileuuid(), member) != null) {
+            response.put("bought", true);
+        }
+        else if(cartService.getCartByMemberEmailAndSheetNo(email, sheetNo).isEmpty()) {
             Cart cart = new Cart();
             cart.setMemberEmail(email);
             cart.setSheetNo(sheetNo);

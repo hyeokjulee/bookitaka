@@ -5,11 +5,7 @@
 <body>
 
 <menuTitle>마이페이지</menuTitle>
-<sidebar class="list-group-item"><a th:href="@{/members/info}">내 정보</a></sidebar>
-<sidebar class="list-group-item"><a th:href="@{#}">내 독후활동지</a></sidebar>
-<sidebar class="list-group-item"><a th:href="@{#}">내 출제요청</a></sidebar>
-<sidebar class="list-group-item"><a th:href="@{#}">내 쿠폰</a></sidebar>
-<sidebar class="list-group-item"><a th:href="@{#}">내 결제</a></sidebar>
+<sidebar><th:block th:replace="layout/sidebar/mypage-sidebar :: mypage"></th:block></sidebar>
 
 <mainSection>
 

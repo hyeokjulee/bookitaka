@@ -1,0 +1,9 @@
+<!--
+이거 달아주면 적용됩니다.
+<sidebar><th:block th:replace="layout/sidebar/admin-sidebar :: admin"></th:block></sidebar>
+-->
+<th:block th:fragment="admin">
+    <list class="list-group-item"><a th:href="@{/members/list}">회원 관리</a></list>
+    <list class="list-group-item"><a th:href="@{/sheet/requestlist}">받은 출제요청</a></list>
+    <list class="list-group-item"><a th:href="@{/sheet/add}">활동지 등록</a></list>
+</th:block>
