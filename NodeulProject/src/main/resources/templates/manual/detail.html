@@ -15,16 +15,20 @@
             </div>
         </div>
 
-        <table class="table table-bordered mb-0">
+    <div class="card" style="border-radius: 20px; overflow: hidden; border: 3px solid #ffe3ea;">
+        <div class="card-body p-0">
+          <table class="table table-bordered mb-0 table-babypink">
             <tr>
-                <th class="col-1 text-center table-light ">제목</th>
+                <th class="col-1 text-center table-light" style="background-color: #ffedf2">제목</th>
                 <th class="col-10" style="font-weight: normal;" th:text="${manualDto.manualTitle}"></th>
             </tr>
-        </table>
-        <div class="py-3 px-5" style="overflow: auto;">
-            <div class="text-lg" th:utext="${manualDto.manualContent}">
+          </table>
+            <div class="py-4 px-4" style="overflow: auto;">
+                <div class="text-lg mb-8" th:utext="${manualDto.manualContent}">
+                </div>
             </div>
         </div>
+    </div>
 
         <!-- 수정/삭제 -->
         <div class="d-flex justify-content-end mt-5">
