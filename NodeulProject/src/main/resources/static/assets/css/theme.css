@@ -7289,6 +7289,11 @@ fieldset:disabled .btn {
   margin: 0;
 }
 
+.table-babypink {
+  border-color: #ffe3ea;
+}
+
+
 .sheetdetail-title{
   font-weight: 600;
 }
