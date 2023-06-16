@@ -20,7 +20,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="req : ${myRequest}">
+            <tr th:each="req : ${myRequest}" th:onclick="'window.location.href = \'' + @{/sheet/request/detail/{requestNo}(requestNo=${req.requestNo})} + '\''">
                 <td th:text="${req.requestBooktitle}">책 제목</td>
                 <td th:text="${req.requestBookauthor}">작가</td>
                 <td th:text="${req.requestBookpublisher}">출판사</td>
