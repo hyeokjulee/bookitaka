@@ -50,7 +50,7 @@
         <td th:text="|*{sheet.sheetBookauthor} / *{sheet.sheetBookpublisher}|">작가 / 출판사</td>
         <td th:text="${sheet.mysheetEndDate}"> 다운로드 만료일 </td>
         <td>
-          <a th:if="${sheet.timeLimit}" th:href="|/sheet/sheetFile/*{sheet.sheetFileUuid}|" class="btn btn-primary">다운로드 받기</a>
+          <a th:if="${sheet.timeLimit}" th:href="|/sheet/sheetFile/*{sheet.sheetFileUuid}|" class="btn btn-primary">다운로드</a>
           <button th:if="${not sheet.timeLimit}" th:data-sheetNo="${sheet.sheetNo}" th:onclick="|buyExpired(*{sheet.sheetNo})|" class="expireBtn btn btn-secondary">기한 만료</button>
         </td>
       </tr>
