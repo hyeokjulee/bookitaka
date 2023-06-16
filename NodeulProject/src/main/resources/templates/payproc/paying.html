@@ -236,6 +236,7 @@
             })
                 .then(response => {
                     if (response.status == 200) {
+                        deleteSelectedCart()
                         window.location.href = "/payproc/complete?sInfo=" + sInfo;
                     } else if (response.status == 201) {
                         console.log("토큰 재발급");

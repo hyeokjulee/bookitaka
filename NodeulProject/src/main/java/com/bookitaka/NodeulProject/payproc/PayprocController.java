@@ -1,5 +1,6 @@
 package com.bookitaka.NodeulProject.payproc;
 
+import com.bookitaka.NodeulProject.cart.CartService;
 import com.bookitaka.NodeulProject.coupon.CouponService;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.security.Token;
@@ -19,7 +20,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +52,13 @@ public class PayprocController {
 
 
     @GetMapping("/paying")
-    public String paying(Model model, HttpServletRequest request) {
+    public String paying(@CookieValue(value = "carts", required = false) Cookie cartsCookie,
+                         Model model, HttpServletRequest request) {
+
+        //쿠키에 들은 값이 없으면(뒤로가기 등 이상한 방식으로 들어옴)
+        if (cartsCookie == null) {
+            return "redirect:/cart/cart";
+        }
 
         Member member = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
         model.addAttribute("couponCnt", couponService.getValidCouponCntByMemberEmail(member.getMemberEmail()));
@@ -56,14 +67,39 @@ public class PayprocController {
     }
 
     @GetMapping("/complete")
-    public String payCompletePage(@CookieValue("carts") String carts,
+    public String payCompletePage(@CookieValue(value = "carts", required = false) Cookie cartsCookie,
+                                  HttpServletResponse response,
                                   Model model) {
-        List<Long> sheetNumListInCart = parseCookie(carts);
+
+        //쿠키에 들은 값이 없으면(뒤로가기 앞으로가기 등 이상한 루트로 들어옴) mySheet로
+        if (cartsCookie == null) {
+            return "redirect:/sheet/mysheet";
+        }
+
+        String decodedCarts = null;
+        try {
+            decodedCarts = URLDecoder.decode(cartsCookie.getValue(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            // 디코딩 실패 처리
+            e.printStackTrace();
+        }
+
+        List<Long> sheetNumListInCart = parseCookie(decodedCarts);
+
         List<Sheet> sheetList = new ArrayList<>();
 
-        for (Long sheetNo: sheetNumListInCart) {
+        for (Long sheetNo : sheetNumListInCart) {
             sheetList.add(sheetService.getSheet(Math.toIntExact(sheetNo)));
         }
+
+        //쿠키 삭제 요청 보내기
+        if (cartsCookie != null) {
+            cartsCookie.setMaxAge(0); // 쿠키 만료 날짜를 과거로 설정하여 무효화
+            cartsCookie.setPath("/"); // 쿠키의 경로 설정 (삭제하려는 쿠키와 동일한 경로)
+            response.addCookie(cartsCookie); // 응답 헤더에 쿠키 추가
+        }
+
+        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");//뒤로가기 방지
 
         model.addAttribute("sheetList", sheetList);
 
