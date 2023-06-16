@@ -94,12 +94,6 @@
             } else {
                 sInfo = sheetInfo[0].replace("(쿠폰)", "") + "외 " + (cnt - 1) + "건";
             }
-            sInfo += "(";
-            sheetInfo.forEach(function (element) {
-                sInfo += element + ", ";
-            });
-            sInfo = sInfo.slice(0, -2);
-            sInfo += ")";
 
             if (sum === 0) {
                 freePayProc(uuid);
@@ -159,6 +153,12 @@
 
         function afterPayProc(rsp) {
             if (rsp.success) {
+                sInfo += "(";
+                sheetInfo.forEach(function (element) {
+                    sInfo += element + ", ";
+                });
+                sInfo = sInfo.slice(0, -2);
+                sInfo += ")";
 
                 console.log("사후 검증 시작")
                 const payMakeDto = {
@@ -207,6 +207,13 @@
         }
 
         function freePayProc(uuid) {
+            sInfo += "(";
+            sheetInfo.forEach(function (element) {
+                sInfo += element + ", ";
+            });
+            sInfo = sInfo.slice(0, -2);
+            sInfo += ")";
+
             console.log("전체 쿠폰구입")
             const payMakeDto = {
                 paymentUuid: uuid,

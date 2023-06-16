@@ -22,7 +22,7 @@ function showSheets(sheets) {
   for (var i = 0; i < sheets.length; i++) {
     var sheet = sheets[i];
     var row = $('<tr></tr>');
-    row.append('<td><img src="/sheet/bookImg/' + sheet.sheetBookimguuid + sheet.sheetBookimgname + '" width="150" height="150"></td>');
+    row.append('<td><img src="/sheet/bookImg/' + sheet.sheetBookimguuid + sheet.sheetBookimgname + '" width="150" height="150" style="object-fit: contain"></td>');
     row.append('<td>' + sheet.sheetBooktitle + '</td>');
     row.append('<td>'+ '<input type="checkbox" name="selectedCoupon" data-price=\"' + sheet.sheetPrice + '\"> </td>');
     row.append('<td>' + sheet.sheetPrice.toLocaleString() + '원</td>');
@@ -120,7 +120,7 @@ $(document).ready(function() {
 });
 
 // 건수랑 합계, 쿠폰 남은 갯수까지 새로고침
-function refresh(couponLeftCnt) {
+function refresh() {
     var totalCoupons = $('[name="selectedCoupon"]').length;
     var checkedCoupons = $('[name="selectedCoupon"]:checked').length;
     var isAllChecked = totalCoupons === checkedCoupons;
@@ -134,19 +134,26 @@ function refresh(couponLeftCnt) {
     window.sum = sum;
     window.usedCoupon = checkedCoupons;
 
+    let couponLeftCnt = parseInt($('#couponLeft').data("left")) - checkedCoupons;
 
     $('#couponLeft').text("쿠폰사용 : (남은갯수 " + couponLeftCnt + ")");
     $('#couponAll').prop('checked', isAllChecked);
     $('#totalprice').text("합계 : " + sum.toLocaleString() + "원");
 
-
-
 }
 
 // 쿠폰 전체선택 버튼 클릭 시 전체선택 처리
 $(document).on('change', '#couponAll', function() {
-    var isChecked = $(this).prop('checked');
-    $('[name="selectedCoupon"]').prop('checked', isChecked).trigger("change");
+    var totalCoupons = $('[name="selectedCoupon"]').length;
+    let totalLeftCoupon = parseInt($('#couponLeft').data("left"));
+    if (totalCoupons > totalLeftCoupon) {
+        alert("쿠폰이 부족합니다")
+        $(this).prop('checked', false);
+    } else {
+        var isChecked = $(this).prop('checked');
+        $('[name="selectedCoupon"]').prop('checked', isChecked).trigger("change");
+    }
+
 });
 
 // 쿠폰 체크박스의 변경 이벤트 핸들러
@@ -175,5 +182,5 @@ $(document).on('change', '[name="selectedCoupon"]', function() {
 
     }
 
-    refresh(couponLeftCnt);
+    refresh();
 });
