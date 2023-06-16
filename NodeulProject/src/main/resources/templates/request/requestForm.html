@@ -19,22 +19,31 @@
         </div>
         <form action="/sheet/request" method="post">
             <div class="mb-4">
-                <label class="form-label">이메일</label>
-                <input type="text" th:value="${currentMember.memberEmail}" id="requestEmail" name="requestEmail" class="form-control" placeholder="이메일을 입력하세요" >
+                <div class="d-flex align-items-center">
+                    <span class="sheetinput-title">이메일</span>
+                    <input type="text" th:value="${currentMember.memberEmail}" id="requestEmail" name="requestEmail" class="form-control my-1" placeholder="이메일을 입력하세요" style="width: 300px;">
+                </div>
             </div>
             <div class="mb-4">
-                <label class="form-label">이름</label>
-                <input type="text" th:value="${currentMember.memberName}" id="requestName" name="requestName" class="form-control" placeholder="이름을 입력하세요">
+                <div class="d-flex align-items-center">
+                <span class="sheetinput-title">이름</span>
+                <input type="text" th:value="${currentMember.memberName}" id="requestName" name="requestName" class="form-control my-1" placeholder="이름을 입력하세요" style="width:300px;">
+                </div>
             </div>
             <div class="mb-4">
-                <label class="form-label">연락처</label>
-                <input type="text" th:value="${currentMember.memberPhone}" id="requestPhone" name="requestPhone" class="form-control" placeholder="연락처를 입력하세요">
+                 <div class="d-flex align-items-center">
+                 <span class="sheetinput-title">연락처</span>
+                 <input type="text" th:value="${currentMember.memberPhone}" id="requestPhone" name="requestPhone" class="form-control my-1" placeholder="연락처를 입력하세요" style="width: 300px;">
+                 </div>
             </div>
+
             <hr class="my-4">
+
             <div class="mb-4">
-                <label class="form-label">도서 검색하기</label>
+                <span class="sheetinput-title">요청 도서 검색하기</span>
                 <button type="button" class="btn btn-primary" onclick="openModal()">도서검색</button>
             </div>
+
             <hr class="my-4">
 
             <!--    도서 검색 모달 창  -->
@@ -48,30 +57,42 @@
                 </div>
             </div>
 
+
             <div class="mb-4">
-                <label class="form-label">책 제목</label>
+                <div class="d-flex align-items-center">
+                <span class="sheetinput-title">책 제목</span>
                 <input type="text" id="sheetBooktitle" name="requestBooktitle" class="form-control" placeholder="책 제목을 입력하세요" readonly>
+                </div>
             </div>
             <div class="mb-4">
-                <label class="form-label">작가</label>
-                <input type="text" id="sheetBookauthor" name="requestBookauthor" class="form-control" placeholder="작가를 입력하세요" readonly>
+                <div class="d-flex align-items-center">
+                <span class="sheetinput-title">작가</span>
+                <input type="text" id="sheetBookauthor" name="requestBookauthor" class="form-control" placeholder="작가를 입력하세요" readonly >
+                </div>
             </div>
             <div class="mb-4">
-                <label class="form-label">출판사</label>
-                <input type="text" id="sheetBookpublisher" name="requestBookpublisher" class="form-control" placeholder="출판사를 입력하세요" readonly>
+                <div class="d-flex align-items-center">
+                <span class="sheetinput-title">출판사</span>
+                <input type="text" id="sheetBookpublisher" name="requestBookpublisher" class="form-control" placeholder="출판사를 입력하세요" readonly >
+                </div>
             </div>
             <div class="mb-4">
-                <label class="form-label">ISBN</label>
-                <input type="text" id="sheetBookisbn" name="requestBookisbn" class="form-control" placeholder="isbn을 입력하세요" readonly>
+                <div class="d-flex align-items-center">
+                <span class="sheetinput-title">ISBN</span>
+                <input type="text" id="sheetBookisbn" name="requestBookisbn" class="form-control" placeholder="isbn을 입력하세요" readonly >
+                </div>
             </div>
-            <hr class="my-4">
             <div class="mb-4">
-                <label class="form-label">요구사항</label>
+                <div class="d-flex align-items-center">
+                <span class="sheetinput-title">요구사항</span>
                 <textarea type="text" id="sheetContent" name="requestContent" class="form-control" rows="3" placeholder="설명을 입력하세요"></textarea>
+                </div>
             </div>
             <div class="mb-4">
-                <label class="form-label">희망일</label>
+                <div class="d-flex align-items-center">
+                <span class="sheetinput-title">희망일</span>
                 <input type="date" id="requestHopedate" th:min="${T(java.time.LocalDate).now()}" name="requestHopedate" class="form-control" placeholder="희망하는 날짜를 입력하세요">
+                </div>
             </div>
             <div class="d-flex justify-content-end">
                 <button class="btn btn-primary" type="submit">요청하기</button>
