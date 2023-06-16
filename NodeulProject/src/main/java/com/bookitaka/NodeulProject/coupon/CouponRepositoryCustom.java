@@ -8,4 +8,7 @@ import java.util.List;
 public interface CouponRepositoryCustom {
 
     List<Coupon> findAllCouponByMemberEmail(CouponCri cri, String email);
+
+    List<Coupon> findAllValidCouponByMemberEmail(String email);
+
 }
