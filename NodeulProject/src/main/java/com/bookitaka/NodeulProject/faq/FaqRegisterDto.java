@@ -21,7 +21,7 @@ public class FaqRegisterDto {
     @NotNull(message = "카테고리를 선택해주세요.")
     private String faqCategory;
 
-    @NotNull(message = "답변을 입력해주세요.")
+    @NotNull
     private int faqBest;
 
 }

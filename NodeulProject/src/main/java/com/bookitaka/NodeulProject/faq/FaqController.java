@@ -117,10 +117,10 @@ public class FaqController {
         // faqDto -> faq 변환
         Faq faq = modelMapper.map(faqRegisterDto, Faq.class);
         boolean result = service.registerFaq(faq);
+        model.addAttribute("faqAllCategory", service.getAllFaqCategory());
 
         // validation 오류
         if(bindingResult.hasErrors()){
-            model.addAttribute("faqAllCategory", service.getAllFaqCategory());
             return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         }
 
@@ -128,7 +128,7 @@ public class FaqController {
         if (!result) {
             return ResponseEntity.unprocessableEntity().build();
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok().build();
     }
 
     // FAQ 삭제 처리
@@ -151,15 +151,20 @@ public class FaqController {
 
     // FAQ 수정 처리
     @PostMapping("/edit")
-    public String editProc(Model model, @ModelAttribute FaqModifyDto faqModifyDto, HttpServletResponse response) throws UnsupportedEncodingException {
+    public ResponseEntity<?> editProc(@Validated @ModelAttribute FaqModifyDto faqModifyDto, BindingResult bindingResult, Model model) {
         log.info("Controller editProc : faqModifyDto = " + faqModifyDto);
 
         // faqDto -> faq 변환
         Faq faq = modelMapper.map(faqModifyDto, Faq.class);
         service.modifyFaq(faq);
+        model.addAttribute("faqAllCategory", service.getAllFaqCategory());
 
-        model.addAttribute("statusCode", response.getStatus());
-        return "redirect:/faq/" + URLEncoder.encode(faq.getFaqCategory(), "UTF-8");
+        // validation 오류
+        if(bindingResult.hasErrors()){
+            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        }
+
+        return ResponseEntity.ok().build();
     }
 
 

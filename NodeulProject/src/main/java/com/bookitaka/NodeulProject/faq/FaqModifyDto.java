@@ -1,5 +1,6 @@
 package com.bookitaka.NodeulProject.faq;
 
+import com.bookitaka.NodeulProject.member.validation.Password;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,10 +15,10 @@ public class FaqModifyDto {
 
     private Long faqNo;
 
-    @NotBlank(message = "질문은 필수입니다.")
+    @NotBlank(message = "질문을 입력주세요.")
     private String faqQuestion;
 
-    @NotBlank(message = "답변은 필수입니다.")
+    @NotBlank(message = "답변을 입력해주세요.")
     private String faqAnswer;
 
     @NotNull
