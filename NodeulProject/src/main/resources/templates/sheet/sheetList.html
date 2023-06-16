@@ -97,8 +97,8 @@
                                         <span class="col-sm-8 author clamp-3" th:text="${sheet.sheetBookpublisher}" style="padding-left: 0">출판사이름</span>
                                     </div>
                                     <div class="row my-3 position-absolute bottom-0 end-0 bg-light rounded-1 me-3">
-                                        <span class="col-sm-3"><strong class="text-black text-truncate">가격</strong></span>
-                                        <span class="col-sm-9 author clamp-3 text-end" th:text="${#numbers.formatInteger(sheet.sheetPrice, 3, 'COMMA') + '원'}"></span>
+                                        <!--<span class="col-sm-3"><strong class="text-black text-truncate">가격</strong></span>-->
+                                        <span class="col-sm-12 author clamp-3 text-end" th:text="${#numbers.formatInteger(sheet.sheetPrice, 3, 'COMMA') + '원'}"></span>
                                     </div>
                                 </div>
                             </li>
