@@ -25,7 +25,7 @@
             <h6 class="pt-3 fw-bold">도서 정보</h6>
             <div class=""><div class="label-detail">작가</div><div class="content-detail" id="sheetBookauthor" th:text="*{sheet.sheetBookauthor}">작가명</div></div>
             <div class=""><div class="label-detail">출판사</div><div class="content-detail" id="sheetPublisher" th:text="*{sheet.sheetBookpublisher}">출판사명</div></div>
-            <div class="" th:if="*{sheet.sheetBookisbn} != null"><div class="label-detail">ISBN</div><span class="content-detail" id="sheetBookisbn" th:text="*{sheet.sheetBookisbn}">ISBN</span></div>
+            <div class="" th:if="*{sheet.sheetBookisbn != null}"><div class="label-detail">ISBN</div><span class="content-detail" id="sheetBookisbn" th:text="*{sheet.sheetBookisbn}">ISBN</span></div>
             <h6 class="pt-3 fw-bold">활동지 정보</h6>
             <div class="my-2"><span class="label-detail me-2">연령대ㅤㅤ</span><span class="content-detail" id="sheetAgeGroupName" th:text="*{sheet.sheetAgegroup.sheetAgegroupName}">연령대</span></div>
             <div class="my-2"><span class="label-detail me-2">장르ㅤㅤㅤ</span><span class="content-detail" id="sheetGenreName" th:text="*{sheet.sheetGenre.sheetGenreName}">장르</span></div>
