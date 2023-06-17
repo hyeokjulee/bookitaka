@@ -17,17 +17,19 @@
                 <h1 class="fs-5 fs-xl-5 mb-5">개별출제요청</h1>
             </div>
         </div>
-        <form action="/sheet/request" method="post">
+        <form action="/sheet/request" method="post" th:action="@{/sheet/request}" th:object="${requestDto}">
             <div class="mb-4">
                 <div class="d-flex align-items-center">
                     <span class="sheetinput-title">이메일</span>
                     <input type="text" th:value="${currentMember.memberEmail}" id="requestEmail" name="requestEmail" class="form-control my-1" placeholder="이메일을 입력하세요" style="width: 300px;">
+                    <div class="errorMsg" th:errors="*{requestEmail}">이메일 오류</div>
                 </div>
             </div>
             <div class="mb-4">
                 <div class="d-flex align-items-center">
                 <span class="sheetinput-title">이름</span>
                 <input type="text" th:value="${currentMember.memberName}" id="requestName" name="requestName" class="form-control my-1" placeholder="이름을 입력하세요" style="width:300px;">
+                    <div class="errorMsg" th:errors="*{requestName}">이름 오류</div>
                 </div>
             </div>
             <div class="mb-4">
@@ -62,6 +64,7 @@
                 <div class="d-flex align-items-center">
                 <span class="sheetinput-title">책 제목</span>
                 <input type="text" id="sheetBooktitle" name="requestBooktitle" class="form-control" placeholder="책 제목을 입력하세요" readonly>
+                    <div class="errorMsg" th:errors="*{requestBooktitle}">책 제목 오류</div>
                 </div>
             </div>
             <div class="mb-4">
