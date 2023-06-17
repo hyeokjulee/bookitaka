@@ -13,15 +13,17 @@ import java.util.Date;
 @AllArgsConstructor
 public class RequestDto {
 
-    @NotBlank @Email
+    @NotBlank(message = "이메일은 비워둘 수 없습니다.")
+    @Email(message = "이메일 형식이 아닙니다.")
     private String requestEmail;
 
-    @NotBlank
+    @NotBlank(message = "이름은 비워둘 수 없습니다.")
     private String requestName;
 
     private String requestPhone;
     private String requestBookisbn;
-    @NotBlank
+
+    @NotBlank(message = "도서 정보는 비워둘 수 없습니다. 도서를 검색해주세요.")
     private String requestBooktitle;
     private String requestBookauthor;
     private String requestBookpublisher;
