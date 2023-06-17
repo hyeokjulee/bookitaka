@@ -5,9 +5,7 @@
 <body>
 
 <menuTitle>관리자 페이지</menuTitle>
-<sidebar class="list-group-item"><a th:href="@{/members/list}">회원 관리</a></sidebar>
-<sidebar class="list-group-item"><a th:href="@{/sheet/requestlist}">받은 출제요청</a></sidebar>
-<sidebar class="list-group-item"><a th:href="@{/sheet/add}">활동지 등록</a></sidebar>
+<sidebar><th:block th:replace="layout/sidebar/admin-sidebar :: admin"></th:block></sidebar>
 
 <mainSection>
 <style>
