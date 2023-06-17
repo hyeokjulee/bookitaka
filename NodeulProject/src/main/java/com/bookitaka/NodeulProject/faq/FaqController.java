@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -100,6 +101,7 @@ public class FaqController {
     }
 
     // FAQ 등록 폼
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/add")
 //    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String addForm(Model model) {
@@ -109,6 +111,7 @@ public class FaqController {
     }
 
     // FAQ 등록 처리
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/add")
     public ResponseEntity<?> addProc(Model model,
                                      @Validated @ModelAttribute FaqRegisterDto faqRegisterDto,
@@ -132,6 +135,7 @@ public class FaqController {
     }
 
     // FAQ 삭제 처리
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/remove/{faqNo}")
     public String remove(Model model, @PathVariable Long faqNo, HttpServletResponse response) throws UnsupportedEncodingException {
         Faq removefaq = service.getOneFaq(faqNo).get();
@@ -141,6 +145,7 @@ public class FaqController {
     }
 
     // FAQ 수정 폼
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/edit/{faqNo}")
     public String editForm(Model model, @PathVariable Long faqNo) {
         model.addAttribute("faqAllCategory", service.getAllFaqCategory());
@@ -150,6 +155,7 @@ public class FaqController {
     }
 
     // FAQ 수정 처리
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/edit")
     public ResponseEntity<?> editProc(@Validated @ModelAttribute FaqModifyDto faqModifyDto, BindingResult bindingResult, Model model) {
         log.info("Controller editProc : faqModifyDto = " + faqModifyDto);
