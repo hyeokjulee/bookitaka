@@ -99,7 +99,7 @@ public class RequestController {
         model.addAttribute("currentMember", currentMember);
 
         int size = 3;
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "requestRegdate"));
 
         Page<Request> myRequest = requestService.getMyRequest(currentMember, pageable);
         model.addAttribute("myRequest", myRequest);

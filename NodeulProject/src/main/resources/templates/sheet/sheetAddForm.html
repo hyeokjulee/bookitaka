@@ -130,6 +130,18 @@
             }
         }
 
+        window.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                // 모달창이 띄워져 있는지 확인
+                if (document.querySelector('#bookSearchModal').style.display === 'block') {
+                    // search 함수 호출
+                    search();
+                    // form submit 방지
+                    event.preventDefault();
+                }
+            }
+        });
+
         function search(pageNum) {
             var keyword = $("#keyword").val();
             var authorSearch = $("#authorSearch").val();
@@ -170,7 +182,6 @@
                 }
             });
         }
-
 
         function getBookValue(element) {
             var title = $(element).children(".sheetBooktitle").text();
