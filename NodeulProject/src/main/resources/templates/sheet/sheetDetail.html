@@ -47,28 +47,32 @@
             </div>
         </div>
     </div>
-    <h2 class="fw-bold pt-5">활동지 미리보기</h2>
-    <div class="px-3" style="background-color: #FAF7F8; border-radius: 20px;">
-        <iframe id="pdf-iframe" src="" width="100%" height="800px"></iframe>
-        <div id="pdf-preview-container">
-            <div id="pdf-preview" style="width: 100%; height: 800px; overflow-x: scroll;">
-                <div id="pdf-page-1" class="pdf-page"></div>
-                <div id="pdf-page-2" class="pdf-page"></div>
-                <div id="pdf-page-3" class="pdf-page"></div>
-            </div>
-            <div id="pdf-nav">
-                <button id="prev-page" class="btn btn-light">Previous</button>
-                <button id="next-page" class="btn btn-light">Next</button>
-                <button id="close-btn" class="btn btn-light">X</button>
+    <div class="card position-relative mt-5">
+        <div class="card-body">
+            <h2 class="fw-bold my-3">활동지 미리보기</h2>
+            <div id="preViewWrap" class="px-3" style="background-color: #FAF7F8; border-radius: 20px;">
+        <!--        <iframe id="pdf-iframe" src="" width="100%" height="800px"></iframe>-->
+                <div class="p-4 text-center" id="pdf-preview-container">
+                    <div id="pdf-preview" style="width: 100%; height: 100%; overflow-x: scroll;">
+                        <div id="pdf-page-1" class="pdf-page"></div>
+                        <div id="pdf-page-2" class="pdf-page"></div>
+                        <div id="pdf-page-3" class="pdf-page"></div>
+                    </div>
+                    <div id="pdf-nav">
+                        <button id="prev-page" class="position-absolute top-50 start-0 translate-middle-y w-25 h-50 fw-bold fs-8" style="background-color: rgba(0,0,0,0); color: lightpink; border: 0 solid white"><</button>
+                        <button id="next-page" class="position-absolute top-50 end-0 translate-middle-y w-25 h-50 fw-bold fs-8" style="background-color: rgba(0,0,0,0); color: lightpink; border: 0 solid white">></button>
+                        <button id="close-btn" class="btn btn-info position-absolute top-0 end-0 m-2" style="border: 0 solid white">닫기</button>
+                    </div>
+                </div>
+
             </div>
         </div>
-
     </div>
 
 
         <hr class="my-4">
 
-        <div class="row">
+        <div class="row" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
             <div class="col">
                 <a th:href="|/sheet/${sheet.sheetNo}/mod|" class="w-100 btn btn-warning" type="submit">상품 정보 수정</a>
             </div>
@@ -298,10 +302,14 @@
     function togglePreview() {
         if (previewContainer.style.display === 'none') {
             previewContainer.style.display = 'block';
-            closeButton.innerText = 'X'
+            closeButton.innerText = '닫기'
+            nextButton.style.display = 'block';
+            prevButton.style.display = 'block';
         } else {
             previewContainer.style.display = 'none';
             closeButton.innerText = '미리보기'
+            nextButton.style.display = 'none';
+            prevButton.style.display = 'none';
         }
     }
 
