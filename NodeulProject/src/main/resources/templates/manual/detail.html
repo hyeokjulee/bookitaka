@@ -35,13 +35,15 @@
             <a th:href="@{/manual/list}">
                 <button class="btn btn-primary">목록으로</button>
             </a>
+            <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
             <a th:href="@{'/manual/post/edit/' + ${manualDto.manualNo}}">
                 <button class="btn btn-primary">수정</button>
             </a>
-            <form id="delete-form" th:action="@{'/manual/post/' + ${manualDto.manualNo}}" method="post">
+            <form id="delete-form" th:action="@{'/manual/post/' + ${manualDto.manualNo}}" method="post" style="display: inline-block;">
                 <input type="hidden" name="_method" value="delete"/>
                 <button class="btn btn-primary" id="delete-btn" onclick="deleteConfirm(event)">삭제</button>
             </form>
+            </div>
         </div>
     </div>
 
