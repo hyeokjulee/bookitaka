@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="/css/sheet-detail.css">
     <div class="row container-detail position-relative bg-white">
         <div class="images col-md-4 text-center">
-            <img class="img-detail img-fluid" id="sheetBookImg" th:src="|/sheet/bookImg/*{sheet.sheetBookimguuid}*{sheet.sheetBookimgname}|" />
+            <img th:if="${sheet.sheetBookimguuid == null}" class="img-detail img-fluid" id="sheetBookImg" th:src="|/assets/img/defaultImg.jpeg|">
+            <img th:if="${sheet.sheetBookimguuid != null}" class="img-detail img-fluid" id="sheetBookImg" th:src="|/sheet/bookImg/*{sheet.sheetBookimguuid}*{sheet.sheetBookimgname}|" />
         </div>
         <div class="product col-md-8 px-5">
             <p class="p-detail">북키타카 독후활동지</p>
@@ -118,7 +119,7 @@
 
         fetch(url)
             .then(response => {
-                if (response.ok) {
+                if (response.status === 200) {
                     return response.blob().then(blob => {
                         var filename = getFileNameFromResponse(response); // 응답 헤더에서 파일 이름 추출
                         // 응답으로 받은 Blob을 파일로 다운로드
@@ -127,6 +128,20 @@
                         link.download = filename;
                         link.click();
                     });
+                } else if (response.status === 206) {
+                    response.text().then(msg => {
+                        if (confirm(msg + ". 바로 구매하시겠습니까?")) {
+                            var selectedItems = [sheetNo];
+                            var encodedList = JSON.stringify(selectedItems);
+                            document.cookie = "carts=" + encodeURIComponent(encodedList) + "; path=/";
+                            window.location.href = "/payproc/paying";
+                        }
+                        }
+                    )
+                } else if (response.status === 403) {
+                    if (confirm("로그인시에 이용 가능합니다. 로그인하시겠습니까?")) {
+                        window.location.href = "/member/login";
+                    }
                 } else {
                     return response.text().then(errorMessage => {
                         throw new Error(errorMessage);
@@ -180,6 +195,10 @@
             } else if (response.status === 201) {
                 console.log("토큰 재발급");
                 cartAdd(sheetNo);
+            } else if (response.status === 403) {
+                if (confirm("로그인시에 이용 가능합니다. 로그인하시겠습니까?")) {
+                    window.location.href = "/member/login";
+                }
             } else {
                 console.error('추가 요청 중 에러 발생', response.status);
             }
