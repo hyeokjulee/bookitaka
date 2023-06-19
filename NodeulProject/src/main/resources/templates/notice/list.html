@@ -83,7 +83,7 @@
                 </ul>
             </nav>
 
-            <div class="d-flex justify-content-end">
+            <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="d-flex justify-content-end">
                 <a class="btn btn-primary" th:href="@{/notice/post}">글쓰기</a>
             </div>
         </div>
