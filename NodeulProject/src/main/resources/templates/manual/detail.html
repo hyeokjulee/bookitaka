@@ -40,10 +40,22 @@
             </a>
             <form id="delete-form" th:action="@{'/manual/post/' + ${manualDto.manualNo}}" method="post">
                 <input type="hidden" name="_method" value="delete"/>
-                <button class="btn btn-primary" id="delete-btn">삭제</button>
+                <button class="btn btn-primary" id="delete-btn" onclick="deleteConfirm(event)">삭제</button>
             </form>
         </div>
     </div>
+
+    <script th:inline="javascript">
+        function deleteConfirm(event) {
+            // 삭제 확인 후, 확인 시 삭제처리
+            if (confirm('정말 삭제하시겠습니까?')) {
+                event.target.closest('form').submit();
+            } else {
+                event.preventDefault(); // 기본 동작을 막음
+            }
+        }
+    </script>
+
 </mainSection>
 </body>
 </html>
