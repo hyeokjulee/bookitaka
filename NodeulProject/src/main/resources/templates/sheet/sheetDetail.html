@@ -185,6 +185,7 @@
                     } else if (data.bought) {
                         alert("이미 구입한 상품입니다.");
                     } else if (data.success) {
+                        showCartCount();
                         if (confirm("추가에 성공하였습니다. 장바구니로 이동하시겠습니까?")) {
                             window.location.href = "/cart/cart";
                         }

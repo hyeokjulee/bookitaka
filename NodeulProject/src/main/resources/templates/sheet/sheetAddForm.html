@@ -4,17 +4,17 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
-<menuTitle>상품</menuTitle>
+<menuTitle>독후활동지 등록</menuTitle>
 <sidebar><th:block th:replace="layout/sidebar/admin-sidebar :: admin"></th:block></sidebar>
 
 <mainSection>
     <div id="wrap">
         <div class="row g-0 align-items-center">
             <div class="col-auto">
-                <h1 class="fs-5 fs-xl-5 mb-5">상품등록</h1>
+                <h1 class="fs-5 fs-xl-5 mb-5">독후활동지 등록</h1>
             </div>
         </div>
-        <form form action="/sheet/add" th:action="@{/sheet/add}" th:object="${sheetRegDto}" method="post" enctype="multipart/form-data">
+        <form id="addForm" action="/sheet/add" th:action="@{/sheet/add}" th:object="${sheetRegDto}" method="post" enctype="multipart/form-data">
             <hr class="my-4">
             <div class="mb-4">
                 <label class="form-label">도서 검색하기</label>
@@ -109,13 +109,28 @@
             </div>
 
             <div class="d-flex justify-content-end">
-                <button class="btn btn-primary" type="submit">상품 등록</button>
+                <button id="addBtn" class="btn btn-primary" th:onclick="handleAddBtn()">상품 등록</button>
                 <button class="btn btn-primary" type="button"
-                        onclick="location.href='items.html'"
-                        th:onclick="|location.href='@{/form/items}'|">취소</button>
+                        th:onclick="handleCancelBtn()">취소</button>
             </div>
         </form>
     </div>
+
+    <script>
+
+        let addForm = document.getElementById("addForm");
+
+        function handleAddBtn() {
+            if (confirm("활동지를 등록하시겠습니까?")) {
+                addForm.submit();
+            }
+        }
+
+        function handleCancelBtn() {
+            history.back();
+        }
+
+    </script>
 
     <script>
         var modal = document.getElementById("bookSearchModal");
@@ -195,6 +210,8 @@
 
             $("#bookSearchModal").css("display", "none");
         }
+
+
 
     </script>
 </mainSection>
