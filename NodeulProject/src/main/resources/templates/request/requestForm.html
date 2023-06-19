@@ -108,6 +108,7 @@
     <script>
         var modal = document.getElementById("bookSearchModal");
 
+        // 모달 창 보이게
         function openModal() {
             modal.style.display = "block";
         }
@@ -118,6 +119,7 @@
             }
         }
 
+        // 모달창 띄워져 있을 때 엔터 누르면 도서 검색 버튼 클릭 되도록 설정
         window.addEventListener('keydown', function(event) {
             if (event.key === 'Enter') {
                 // 모달창이 띄워져 있는지 확인
@@ -130,6 +132,7 @@
             }
         });
 
+        // 도서 검색 open api
         function search(pageNum) {
             var keyword = $("#keyword").val();
             var authorSearch = $("#authorSearch").val();
@@ -171,6 +174,7 @@
             });
         }
 
+        // 검색 리스트 클릭 시 도서 정보 폼으로 이동
         function getBookValue(element) {
             var title = $(element).children(".sheetBooktitle").text();
             var author = $(element).children(".sheetBookauthor").text();
