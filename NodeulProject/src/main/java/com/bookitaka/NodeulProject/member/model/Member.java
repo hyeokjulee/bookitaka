@@ -35,5 +35,5 @@ public class Member implements Serializable {
 
     private String memberRtoken;
 
-    private String memberJoindate;
+    private Date memberJoindate;
 }
