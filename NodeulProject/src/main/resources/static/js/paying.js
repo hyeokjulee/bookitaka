@@ -22,7 +22,11 @@ function showSheets(sheets) {
   for (var i = 0; i < sheets.length; i++) {
     var sheet = sheets[i];
     var row = $('<tr></tr>');
-    row.append('<td><img src="/sheet/bookImg/' + sheet.sheetBookimguuid + sheet.sheetBookimgname + '" width="150" height="150" style="object-fit: contain"></td>');
+    if (sheet.sheetBookimguuid === null) {
+        row.append('<td><img src="/assets/img/defaultImg.jpeg" width="150" height="150" style="object-fit: contain"></td>');
+    } else {
+        row.append('<td><img src="/sheet/bookImg/' + sheet.sheetBookimguuid + sheet.sheetBookimgname + '" width="150" height="150" style="object-fit: contain"></td>');
+    }
     row.append('<td>' + sheet.sheetBooktitle + '</td>');
     row.append('<td>'+ '<input type="checkbox" name="selectedCoupon" data-price=\"' + sheet.sheetPrice + '\"> </td>');
     row.append('<td>' + sheet.sheetPrice.toLocaleString() + '원</td>');
