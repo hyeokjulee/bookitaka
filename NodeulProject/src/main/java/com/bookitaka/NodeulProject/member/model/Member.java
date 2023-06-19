@@ -34,4 +34,6 @@ public class Member implements Serializable {
     private String memberRole;
 
     private String memberRtoken;
+
+    private String memberJoindate;
 }
