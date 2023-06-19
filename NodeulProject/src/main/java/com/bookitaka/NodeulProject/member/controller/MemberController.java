@@ -31,7 +31,7 @@ public class MemberController {
         if (memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN) == null) {
             return "member/login/login";
         } else {
-            return "index";
+            return "redirect:/";
         }
     }
 
@@ -42,7 +42,7 @@ public class MemberController {
         if (memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN) == null) {
             return "member/login/signup";
         } else {
-            return "index";
+            return "redirect:/";
         }
     }
 
@@ -122,7 +122,7 @@ public class MemberController {
         if (memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN) == null) {
             return "member/login/findEmail";
         } else {
-            return "index";
+            return "redirect:/";
         }
     }
 
@@ -131,7 +131,7 @@ public class MemberController {
         if (memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN) == null) {
             return "member/login/findPw";
         } else {
-            return "index";
+            return "redirect:/";
         }
     }
 
