@@ -48,9 +48,17 @@
             <!--    도서 검색 모달 창  -->
             <div id="bookSearchModal" class="modal">
                 <div class="modal-content">
-                    <h2>도서 검색</h2>
-                    제목 <input type="text" id="keyword" class="form-control"><br>
-                    작가 <input type="text" id="authorSearch" class="form-control"><br>
+                    <h2 class="mb-5 mt-5">도서 검색</h2>
+                    <div class="d-flex align-items-center mb-4">
+                        <span class="sheetinput-title">책 제목</span>
+                        <input type="text" id="keyword" class="form-control " placeholder="제목을 입력해주세요" style="width: 400px;">
+                    </div>
+                    <div class="d-flex align-items-center mb-4">
+                        <span class="sheetinput-title">작가</span>
+                        <input type="text" id="authorSearch" class="form-control" placeholder="제목을 입력해주세요" style="width: 400px;">
+                    </div>
+                    <!--<span>제목:</span><input type="text" id="keyword" class="form-control" placeholder="제목을 입력해주세요" style="width: 400px;"><br>-->
+                    <!--<span>작가:</span><input type="text" id="authorSearch" placeholder="작가를 입력해주세요" class="form-control" style="width: 400px;"><br>-->
                     <button type="button" class="btn btn-primary" onclick="search()">검색</button><br><br>
                     <div id="searchResult"></div>
                 </div>
