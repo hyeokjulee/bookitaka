@@ -7299,10 +7299,10 @@ fieldset:disabled .btn {
 }
 
 .sheetinput-title{
-  font-weight: 600;
-  padding-inline: 50px;
   display: inline-block;
   width: 200px;
+  font-weight: 600;
+  padding-inline: 50px;
 }
 
 .accordion-button {
