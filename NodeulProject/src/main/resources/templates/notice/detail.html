@@ -25,9 +25,13 @@
               <table class="table table-bordered mt-0 table-babypink">
                   <tr>
                       <th class="col-1 text-center" style="background-color: #ffedf2">등록일</th>
-                      <th class="col-3" style="font-weight: normal;" th:inline="text">[[${#temporals.format(noticeDto.noticeRegdate, 'yyyy-MM-dd HH:mm')}]]</th>
+                      <th class="col-3" style="font-weight: normal;" th:inline="text">
+                          <span th:text="${#temporals.format(noticeDto.noticeRegdate, 'yyyy-MM-dd HH:mm')}"></span>
+                      </th>
                       <th class="col-1 text-center" style="background-color: #ffedf2">수정일</th>
-                      <th class="col-3" style="font-weight: normal;" th:inline="text">[[${#temporals.format(noticeDto.noticeModdate, 'yyyy-MM-dd HH:mm')}]]</th>
+                      <th class="col-3" style="font-weight: normal;" th:inline="text">
+                          <span th:if="${noticeDto.noticeModdate != noticeDto.noticeRegdate}" th:text="${#temporals.format(noticeDto.noticeModdate, 'yyyy-MM-dd HH:mm')}"></span>
+                      </th>
                       <th class="col-1 text-center" style="background-color: #ffedf2">조회수</th>
                       <th class="col-2" style="font-weight: normal;" th:text="${noticeDto.noticeHit}"></th>
                   </tr>

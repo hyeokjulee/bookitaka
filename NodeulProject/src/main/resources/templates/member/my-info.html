@@ -105,18 +105,21 @@
     </div>
     <hr>
     <div class="row">
-        <span class="col-3 text-truncate"><i class="fa-solid fa-cake-candles px-2"></i><label>생년월일</label></span>
-        <span class="col-9 text-truncate" id="memberJoinDate">
-        <input class="form-control-sm" type="date" id="memberBirthday" name="memberBirthday" th:value="${member.member}"/>
+        <span class="col-3 text-truncate"><i class="fa-solid fa-calendar-days px-2"></i><label>가입일</label></span>
+        <span class="col-9 text-truncate">
+            <div class="row">
+                <span class="col-12" th:text="${#dates.format(member.memberJoindate, 'yyyy-MM-dd (HH시 mm분)')}"></span>
+            </div>
         </span>
     </div>
     <hr>
-    <div class="row">
+    <div class="row mb-5">
         <span class="col-12 text-center"><a class="btn btn-primary" id="editBtn" style="display: none">저장하기</a></span>
     </div>
 </form>
 
 <script th:inline="javascript">
+    console.log(/*[[${member.memberJoindate}]]*/ 'log');
 
     parseModelAndInsertForm();
     function parseModelAndInsertForm() {
