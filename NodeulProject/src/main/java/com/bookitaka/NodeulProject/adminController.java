@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-//@RequestMapping("/admin")
+@RequestMapping("/admin")
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 public class adminController {
-//    @GetMapping
-//    public String mainPage() {
-//        return "admin/admin";
-//    }
+    @GetMapping
+    public String mainPage() {
+        return "admin/admin";
+    }
 }
