@@ -14,9 +14,10 @@
                 <h1 class="fs-5 fs-xl-5 mb-5">공지사항</h1>
             </div>
             <div class="col-auto ms-auto align-self-end">
-                <form class="form-inline" action="/notice/search" method="GET">
+                <form class="form-inline" action="/notice/list" method="GET">
                     <div class="input-group">
-                        <input class="form-control" name="keyword" type="text" placeholder="검색어를 입력해주세요" />
+                        <input class="form-control-inline" name="keyword" type="text" placeholder="검색어를 입력해주세요"
+                               id="keyword" th:if="${keyword != null}" th:value="${keyword}"/>
                         <div class="input-group-append">
                             <button class="btn btn-primary" type="submit">검색</button>
                         </div>
@@ -60,29 +61,43 @@
                 </tr>
                 </tbody>
             </table>
+            <div class="row pt-3">
+                <div class="col-md">
+                    <p class="my-2" th:if="${noticeList.isEmpty() && keyword != ''}" style="text-align: center">일치하는 검색 결과가 없습니다.</p>
+                    <p class="my-2" th:if="${noticeList.isEmpty() && keyword.isEmpty()}" style="text-align: center">등록된 게시물이 없습니다.</p>
+                </div>
+            </div>
 
             <nav aria-label="Page navigation example">
                 <ul class="pagination justify-content-center">
-                    <li class="page-item disabled">
-                        <a class="page-link">《</a>
+                    <li class="page-item">
+                        <a class="page-link" th:if="${currentPage > 0}"
+                           th:href="@{/notice/list(page=${previousGroupStartPage}, keyword=${keyword})}">&lt;&lt;</a>
                     </li>
-                    <th:block th:if="${noticeList.totalPages > 0}">
-                        <th:block th:each="pageNumber : ${#numbers.sequence(0, noticeList.totalPages - 1)}">
-                            <li class="page-item">
-                                <form th:action="@{/notice/search}" method="get">
-                                    <input type="hidden" name="keyword" th:value="${keyword}" />
-                                    <input type="hidden" name="page" th:value="${pageNumber}" />
-                                    <button class="page-link" th:text="${pageNumber + 1}"></button>
-                                </form>
-                            </li>
-                        </th:block>
+                    <li class="page-item">
+                        <a class="page-link" th:if="${currentPage > 0}"
+                           th:href="@{/notice/list(page=${currentPage - 1}, keyword=${keyword})}">&lt;</a>
+                    </li>
+                    <th:block th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}">
+                        <li th:class="page-item" th:classappend="${pageNumber == currentPage ? 'active' : ''}">
+                            <a th:if="${not #lists.isEmpty(noticeList.getContent())}"
+                               th:href="@{/notice/list(page=${pageNumber},  keyword=${keyword})}"
+                               th:text="${pageNumber + 1}" th:class="page-link"></a>
+                        </li>
                     </th:block>
                     <li class="page-item">
-                        <a class="page-link">》</a>
+                        <a class="page-link" th:if="${currentPage + 1 < totalPages}"
+                           th:href="@{/notice/list(page=${currentPage + 1},  keyword=${keyword})}">
+                            &gt; </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:if="${currentPage + 1 < totalPages}"
+                           th:href="@{/notice/list(page=${nextGroupStartPage},  keyword=${keyword})}">
+                            &gt;&gt; </a>
                     </li>
                 </ul>
             </nav>
-
+            <hr class="my-4" th:if="${noticeList.isEmpty()}">
             <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="d-flex justify-content-end">
                 <a class="btn btn-primary" th:href="@{/notice/post}">글쓰기</a>
             </div>

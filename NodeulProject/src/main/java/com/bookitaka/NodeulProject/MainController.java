@@ -38,9 +38,9 @@ public class MainController {
         List<Sheet> topSheets = sheetService.getAllSheets("", "", buyCri);
         log.info("topSheets = {}", topSheets);
 
-        Page<ManualDto> manualList = manualService.getManualList(PageRequest.of(0, 5 , Sort.by("manualNo").descending()));
+        Page<ManualDto> manualList = manualService.getManualList(PageRequest.of(0, 5 , Sort.by("manualNo").descending()),null);
 
-        Page<NoticeDto> noticeList = noticeService.getNoticeList(PageRequest.of(0, 5, Sort.by("noticeRegdate").descending()));
+        Page<NoticeDto> noticeList = noticeService.getNoticeList(PageRequest.of(0, 5, Sort.by("noticeRegdate").descending()),null);
 
         model.addAttribute("newSheets", newSheets);
         model.addAttribute("topSheets", topSheets);

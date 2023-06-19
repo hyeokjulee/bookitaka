@@ -38,15 +38,16 @@
                 </form>
             </div>
         </div>
-        <hr class="my-4">
+        <hr class="my-4" th:if="${faqAll.content.isEmpty()}">
         <div class="row">
             <div class="col-md">
-                <p class="my-2" th:if="${faqAll.content.isEmpty()}" style="text-align: center">등록된 게시물이 없습니다.</p>
+                <p class="my-2" th:if="${faqAll.content.isEmpty() && keyword!=''}" style="text-align: center">일치하는 검색 결과가 없습니다.</p>
+                <p class="my-2" th:if="${faqAll.content.isEmpty() && keyword.isEmpty()}" style="text-align: center">등록된 게시물이 없습니다.</p>
             </div>
         </div>
 
         <!---------아코디언형식------------>
-        <div class="accordion" id="accordionPanelsStayOpenExample">
+        <div class="accordion pt-2" id="accordionPanelsStayOpenExample">
             <div class="accordion-item" th:each="faq, stat : ${faqAll.content}">
                 <div th:id="'accordionItem' + ${stat.index}" >
                         <h2 class="accordion-header " th:id="'panelsStayOpen-heading' + ${stat.index}">

@@ -22,28 +22,57 @@ import java.util.List;
 @RequestMapping("/manual")
 public class ManualController {
 
-    private static final int PAGE_SIZE = 5;
+    private static final int PAGE_SIZE = 10;
     private ManualService manualService;
 
     @GetMapping("/list")
-    public String list(Model model, @RequestParam(name="page", defaultValue = "0") int page){
+    public String list(Model model,
+                       @RequestParam(name = "page", defaultValue = "0") int page,
+                       @RequestParam(name = "keyword", defaultValue = "") String keyword) {
         Sort sort = Sort.by("manualNo").descending();
-        Pageable pageable = PageRequest.of(page, PAGE_SIZE,sort);
-        Page<ManualDto> manualList = manualService.getManualList(pageable);
-        model.addAttribute("manualList",manualList);
-        return "manual/list.html";
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
+        Page<ManualDto> manualList = manualService.getManualList(pageable, keyword);
+
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("manualList", manualList);
+
+        model.addAttribute("totalPages", manualList.getTotalPages());
+        model.addAttribute("currentPage", page);
+        int size = 10;
+        int currentGroup = page / size;
+        int startPage = currentGroup * size;
+        int totalPages = manualList.getTotalPages();
+        int endPage = Math.min(startPage + size, manualList.getTotalPages()) - 1;
+
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        // 이전 그룹의 첫 번째 페이지로 이동
+        int previousGroupStartPage = (currentGroup == 0) ? 0 : (currentGroup - 1) * size;
+        model.addAttribute("previousGroupStartPage", previousGroupStartPage);
+
+        // 다음 그룹의 첫 번째 페이지로 이동
+        int nextGroupStartPage = (currentGroup + 1) * size;
+
+        if (totalPages % size == 0 && startPage == totalPages - size) {
+            nextGroupStartPage = endPage;
+        } else if (nextGroupStartPage > endPage + 1) {
+            nextGroupStartPage = endPage;
+        }
+        model.addAttribute("nextGroupStartPage", nextGroupStartPage);
+        return "manual/list";
     }
 
     @GetMapping("/post")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String write(Model model){
+    public String write(Model model) {
         model.addAttribute("manualDto", new ManualDto());
         return "manual/write.html";
     }
 
     @PostMapping("/post")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String write(@Validated @ModelAttribute ManualDto manualDto, BindingResult bindingResult, Model model){
+    public String write(@Validated @ModelAttribute ManualDto manualDto, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
 
@@ -55,25 +84,25 @@ public class ManualController {
     }
 
     @GetMapping("/post/{manualNo}")
-    public String detail(@PathVariable("manualNo") Integer manualNo, Model model){
+    public String detail(@PathVariable("manualNo") Integer manualNo, Model model) {
         ManualDto manualDto = manualService.getManual(manualNo);
-        model.addAttribute("manualDto",manualDto);
+        model.addAttribute("manualDto", manualDto);
 
         return "manual/detail.html";
     }
 
     @GetMapping("/post/edit/{manualNo}")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String edit(@PathVariable("manualNo") Integer manualNo, Model model){
+    public String edit(@PathVariable("manualNo") Integer manualNo, Model model) {
         ManualDto manualDto = manualService.getManual(manualNo);
-        model.addAttribute("manualDto",manualDto);
+        model.addAttribute("manualDto", manualDto);
 
         return "manual/update.html";
     }
 
     @PostMapping("/post/edit/{manualNo}")
 //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String updateManual(@Validated @ModelAttribute("manualDto") ManualDto manualDto,BindingResult bindingResult) {
+    public String updateManual(@Validated @ModelAttribute("manualDto") ManualDto manualDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "manual/update.html";
         }
@@ -83,19 +112,9 @@ public class ManualController {
 
     @DeleteMapping("/post/{manualNo}")
     //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public String delete(@PathVariable("manualNo") Integer manualNo){
+    public String delete(@PathVariable("manualNo") Integer manualNo) {
         manualService.deleteManual(manualNo);
 
         return "redirect:/manual/list";
-    }
-
-    @GetMapping("/search")
-    public String search(@RequestParam(value = "keyword") String keyword, @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        Sort sort = Sort.by("manualNo").descending();
-        Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
-        Page<ManualDto> manualDtoPage = manualService.searchManual(keyword, pageable);
-        model.addAttribute("manualList", manualDtoPage);
-        model.addAttribute("keyword", keyword); // 검색어 전달
-        return "manual/list.html";
     }
 }

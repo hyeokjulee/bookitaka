@@ -38,6 +38,13 @@
             </tr>
             </tbody>
         </table>
+        <div class="row pt-3">
+            <div class="col-md">
+                <p class="my-2" th:if="${myPayList.isEmpty()}" style="text-align: center">결제내역이 없습니다.</p>
+            </div>
+        </div>
+        <hr class="my-4" th:if="${myPayList.isEmpty()}">
+
     </div>
 
     <div class="pagination">
