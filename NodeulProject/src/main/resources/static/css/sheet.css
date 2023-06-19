@@ -39,10 +39,10 @@
     height: 100%;
 }
 /* * Typography */
-body, p, a, li {
-    font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    font-size: 15px;
-}
+/*body, p, a, li {*/
+/*    font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;*/
+/*    font-size: 15px;*/
+/*}*/
 h2, h3 {
     margin-top: 6px;
     margin-bottom: 6px;
@@ -205,7 +205,7 @@ a.button:hover, a.button:focus {
     position: absolute;
     top: 7px;
     right: 5px;
-    font-family: 'fontawesome';
+    /*font-family: 'fontawesome';*/
 }
 .input_field:focus + .input_label::after, .input--filled .input_label::after {
     -webkit-transform: translate3d(0, 0, 0);
@@ -275,7 +275,7 @@ a.button:hover, a.button:focus {
     position: relative;
     display: inline-block;
     padding-right: 10px;
-    font-family: "fontawesome";
+    /*font-family: "fontawesome";*/
     font-size: 18px;
     font-weight: 400;
     color: rgba(49, 49, 49, 0.45);
@@ -717,4 +717,16 @@ a.button:hover, a.button:focus {
     color: #fff;
     font-size: 12px;
     text-align: center;
+}
+.badge-cart {
+    position: absolute;
+    top: -15px;
+    right: -4px;
+    background-color: orange;
+    font-family: 'Lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: white;
+    border-radius: 50%;
+    padding: 1px 6px;
+    font-size: 12px;
+    line-height: normal;
 }

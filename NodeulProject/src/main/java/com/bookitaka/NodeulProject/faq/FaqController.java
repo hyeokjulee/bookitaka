@@ -90,13 +90,6 @@ public class FaqController {
         }
         model.addAttribute("nextGroupStartPage", nextGroupStartPage);
 
-        // 관리자 확인
-        Member whoami = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
-        if (whoami != null && whoami.getMemberRole().equals(MemberRoles.ADMIN)) {
-            model.addAttribute("role",  whoami.getMemberRole());
-            log.info("================================================ memberRole : {}", whoami.getMemberRole());
-        }
-
         return "/faq/faqList";
     }
 
