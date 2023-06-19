@@ -228,6 +228,9 @@ public class MemberService {
 
     public String refresh(Cookie[] cookies, Member member) {
         String req_rToken = jwtTokenProvider.resolveToken(cookies, Token.REFRESH_TOKEN);
+        if (member.getMemberRtoken() == null) {
+            return null;
+        }
         String db_rToken = member.getMemberRtoken();
         if (req_rToken != null && req_rToken.equals(db_rToken)) {
             return jwtTokenProvider.createToken(member.getMemberEmail(), member.getMemberRole());

@@ -122,15 +122,17 @@ public class MemberAPIController {
 
   // 회원 탈퇴 (회원)
   @DeleteMapping(value = "/{memberEmail}")
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
+  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
   @ApiOperation(value = "${MemberController.withdrawal}", authorizations = { @Authorization(value="apiKey") })
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 404, message = "The user doesn't exist")})
-  public ResponseEntity<?> withdrawal(@ApiParam("MemberEmail") @PathVariable String memberEmail, HttpServletRequest request) {
+  public ResponseEntity<?> withdrawal(@ApiParam("MemberEmail") @PathVariable String memberEmail, HttpServletRequest request, HttpServletResponse response) {
     log.info("================================Member : withdrawal");
     if (memberEmail.equals(memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN).getMemberEmail())) {
+      setCookie(response, null, Token.ACCESS_TOKEN,true);
+      setCookie(response, null, Token.REFRESH_TOKEN,true);
       memberService.delete(memberEmail);
     } else {
       return ResponseEntity.badRequest().build();
