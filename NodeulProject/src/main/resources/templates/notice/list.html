@@ -27,7 +27,7 @@
 
         <hr class="my-4">
         <div>
-            <table class="table">
+            <table class="table table-hover">
                 <thead>
                 <tr>
                     <th class="col-1">번호</th>
@@ -39,14 +39,12 @@
                 <tbody>
 
                 <!-- CONTENTS !-->
-                <tr th:each="notice : ${noticeList}">
+                <tr th:each="notice : ${noticeList}" onclick="detail(this)">
                     <td>
-                        <span th:text="${notice.noticeNo}"></span>
+                        <span th:text="${notice.noticeNo}" id="noticeNo"></span>
                     </td>
                     <td>
-                        <a th:href="@{'/notice/post/' + ${notice.noticeNo}}">
-                            <span th:text="${notice.noticeTitle}"></span>
-                        </a>
+                        <span th:text="${notice.noticeTitle}"></span>
                     </td>
                 <td>
                 <span th:if="${#temporals.format(notice.noticeRegdate, 'yyyyMMdd') == #temporals.format(#temporals.createNow(), 'yyyyMMdd')}">
@@ -90,6 +88,12 @@
             </div>
         </div>
     </div>
+    <script th:inline="javascript">
+        function detail(element) {
+            let noticeNo = element.querySelector('#noticeNo').textContent;
+            window.location.href = "/notice/post/" + noticeNo;
+        }
+    </script>
 </mainSection>
 </body>
 </html>
