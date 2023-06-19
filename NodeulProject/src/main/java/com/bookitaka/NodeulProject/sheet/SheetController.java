@@ -218,20 +218,25 @@ public class SheetController {
 
         log.info("downloadController Fileuuid = {}", fileUuid);
 
-        //그 사람 mysheet기록, fileUuid같은걸로 찾기
-        Mysheet mysheet = mysheetService.canIDownloadSheet(fileUuid, member);
-        if (mysheet == null) { //null이면 badrequest보내기.
-            String errorMessage = "구입 내역이 없습니다";
-            Resource errorResource = new ByteArrayResource(errorMessage.getBytes());
-            return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(errorResource);
+        //관리자가 아닐때만 조건 체크(관리자면 무조건 다운가능)
+        if (!member.getMemberRole().equals("ROLE_ADMIN")) {
+            //그 사람 mysheet기록, fileUuid로 찾기
+            Mysheet mysheet = mysheetService.canIDownloadSheet(fileUuid, member);
+            if (mysheet == null) { //null이면 badrequest보내기.
+                String errorMessage = "구입 내역이 없습니다";
+                Resource errorResource = new ByteArrayResource(errorMessage.getBytes());
+                return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(errorResource);
+            }
+
+            //아니면 날짜 체크하기
+            if (!mysheetService.checkMySheetIsAvailable(mysheet)) {
+                String errorMessage = "다운로드 기간이 만료된 상품입니다";
+                Resource errorResource = new ByteArrayResource(errorMessage.getBytes());
+                return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(errorResource);
+            }
         }
 
-        //아니면 날짜 체크하기
-        if (!mysheetService.checkMySheetIsAvailable(mysheet)) {
-            String errorMessage = "다운로드 기간이 만료된 상품입니다";
-            Resource errorResource = new ByteArrayResource(errorMessage.getBytes());
-            return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(errorResource);
-        }
+
 
         //안지났으면 프로세스 진행
         String fileName = sheetService.getFileNameByUuid(fileUuid);
