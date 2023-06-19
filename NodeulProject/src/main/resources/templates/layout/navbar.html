@@ -7,6 +7,7 @@
       <div class="row justify-content-between">
         <span class="col-auto text-center" style="width: 60px"><a class="text-800 fs--1" th:href="@{/members/login}"><i class="fa-solid fa-house"></i></a></span>
         <ul class="col-auto list list-unstyled mb-md-4 mb-lg-0">
+          <li class="float-start text-center me-2" th:if="${#request.getRemoteUser() != null}"><a class="text-800 fs--1" th:href="@{/members/info}" th:text="'[' + ${#request.getRemoteUser()} + ']'">이메일</a></li>
           <li class="float-start text-center" style="width: 60px" th:if="${#request.getRemoteUser() == null}"><a class="text-800 fs--1" th:href="@{/members/login}">로그인</a></li>
           <li class="float-start text-center" style="width: 60px" th:if="${#request.getRemoteUser() == null}"><a class="text-800 fs--1" th:href="@{/members/signup}">회원가입</a></li>
           <li class="float-start text-center" style="width: 60px" th:if="${#request.getRemoteUser() != null}"><a class="text-800 fs--1" th:href="@{/member/signout}">로그아웃</a></li>
