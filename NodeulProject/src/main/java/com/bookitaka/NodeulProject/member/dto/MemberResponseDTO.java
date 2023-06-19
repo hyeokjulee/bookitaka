@@ -18,4 +18,6 @@ public class MemberResponseDTO {
   private String memberBirthday;
   @ApiModelProperty(position = 5)
   private String memberRole;
+  @ApiModelProperty(position = 6)
+  private String memberJoindate;
 }
