@@ -48,9 +48,14 @@
                             <span th:text="${notice.noticeTitle}"></span>
                         </a>
                     </td>
-                    <td>
-                        <span th:text="${#temporals.format(notice.noticeRegdate, 'yyyy-MM-dd HH:mm')}"></span>
-                    </td>
+                <td>
+                <span th:if="${#temporals.format(notice.noticeRegdate, 'yyyyMMdd') == #temporals.format(#temporals.createNow(), 'yyyyMMdd')}">
+                    <span th:text="'오늘 ' +${#temporals.format(notice.noticeRegdate, 'HH:mm')}"></span>
+                </span>
+                <span th:unless="${#temporals.format(notice.noticeRegdate, 'yyyyMMdd') == #temporals.format(#temporals.createNow(), 'yyyyMMdd')}">
+                    <span th:text="${#temporals.format(notice.noticeRegdate, 'yyyy.MM.dd')}"></span>
+                </span>
+                </td>
                     <td>
                         <span th:text="${notice.noticeHit}"></span>
                     </td>
