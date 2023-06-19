@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
@@ -69,6 +70,16 @@ public class RequestServiceImpl implements RequestService {
     public Page<Request> getMyRequest(Member member, Pageable pageable) {
         String memberEmail = member.getMemberEmail();
         return requestRepository.findAllByRequestEmail(memberEmail, pageable);
+    }
+
+    @Transactional
+    @Override
+    public boolean changestatus(Long requestNo, int requestIsdone) {
+        if(requestRepository.updateRequestIsdone(requestNo, requestIsdone) == 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
