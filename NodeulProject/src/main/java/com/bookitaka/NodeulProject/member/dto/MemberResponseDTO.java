@@ -3,6 +3,8 @@ package com.bookitaka.NodeulProject.member.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class MemberResponseDTO {
 
@@ -19,5 +21,6 @@ public class MemberResponseDTO {
   @ApiModelProperty(position = 5)
   private String memberRole;
   @ApiModelProperty(position = 6)
-  private String memberJoindate;
+  private Date memberJoindate;
+
 }
