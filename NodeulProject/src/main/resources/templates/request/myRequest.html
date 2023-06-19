@@ -24,8 +24,12 @@
                 <td th:text="${req.requestBooktitle}">책 제목</td>
                 <td th:text="${req.requestBookauthor}">작가</td>
                 <td th:text="${req.requestBookpublisher}">출판사</td>
-                <td th:text="${req.requestHopedate}">희망일</td>
-                <td th:text="${req.requestRegdate != null ? #temporals.format(req.requestRegdate.toLocalDateTime(), 'yyyy-MM-dd') : ''}">요청일</td>
+                <td th:text="${#strings.replace(req.requestHopedate, '-', '.')}">희망일</td>
+                <td th:if="${req.requestRegdate != null}" th:with="isToday=${#temporals.format(req.requestRegdate.toLocalDateTime(), 'yyyy-MM-dd').equals(T(java.time.LocalDate).now().toString())}">
+                    <span th:if="${isToday}" th:text="${#temporals.format(req.requestRegdate.toLocalDateTime(), 'a hh:mm')}">요청일</span>
+                    <span th:unless="${isToday}" th:text="${#temporals.format(req.requestRegdate.toLocalDateTime(), 'yyyy.MM.dd')}">요청일</span>
+                </td>
+                <td th:if="${req.requestRegdate == null}" th:text="-">요청일</td>
             </tr>
             </tbody>
         </table>

@@ -37,6 +37,8 @@ public class RequestController {
     private final MemberService memberService;
     private final ModelMapper modelMapper;
 
+    int size = 10;
+
     // 도서 검색 open api
     @GetMapping("/booksearch")
     @ResponseBody
@@ -103,7 +105,6 @@ public class RequestController {
         Member currentMember = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
         model.addAttribute("currentMember", currentMember);
 
-        int size = 3;
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "requestRegdate"));
 
         Page<Request> myRequest = requestService.getMyRequest(currentMember, pageable);
@@ -117,7 +118,6 @@ public class RequestController {
     public String listRequestForAdmin(@RequestParam(name = "requestIsdone", defaultValue = "0") int requestIsdone,
                                       @RequestParam(name = "page", defaultValue = "0") int page,
                                       Model model) {
-        int size = 3;
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "requestRegdate"));
         Page<Request> requestList = requestService.getAllRequestByRequestIsdone(requestIsdone, pageable);
         model.addAttribute("requestList", requestList);

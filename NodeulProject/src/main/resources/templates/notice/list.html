@@ -48,14 +48,18 @@
                             <span th:text="${notice.noticeTitle}"></span>
                         </a>
                     </td>
-                <td>
-                <span th:if="${#temporals.format(notice.noticeRegdate, 'yyyyMMdd') == #temporals.format(#temporals.createNow(), 'yyyyMMdd')}">
-                    <span th:text="'오늘 ' +${#temporals.format(notice.noticeRegdate, 'HH:mm')}"></span>
-                </span>
-                <span th:unless="${#temporals.format(notice.noticeRegdate, 'yyyyMMdd') == #temporals.format(#temporals.createNow(), 'yyyyMMdd')}">
-                    <span th:text="${#temporals.format(notice.noticeRegdate, 'yyyy.MM.dd')}"></span>
-                </span>
-                </td>
+                    <td th:if="${notice.noticeRegdate != null}" th:with="isToday=${#temporals.format(notice.noticeRegdate, 'yyyy-MM-dd').equals(T(java.time.LocalDate).now().toString())}">
+                        <span th:if="${isToday}" th:text="${#temporals.format(notice.noticeRegdate, 'a hh:mm')}">요청일</span>
+                        <span th:unless="${isToday}" th:text="${#temporals.format(notice.noticeRegdate, 'yyyy.MM.dd')}">요청일</span>
+                    </td>
+<!--                    <td>-->
+<!--                        <span th:if="${#temporals.format(notice.noticeRegdate, 'yyyyMMdd') == #temporals.format(#temporals.createNow(), 'yyyyMMdd')}">-->
+<!--                            <span th:text="'오늘 ' +${#temporals.format(notice.noticeRegdate, 'HH:mm')}"></span>-->
+<!--                        </span>-->
+<!--                        <span th:unless="${#temporals.format(notice.noticeRegdate, 'yyyyMMdd') == #temporals.format(#temporals.createNow(), 'yyyyMMdd')}">-->
+<!--                            <span th:text="${#temporals.format(notice.noticeRegdate, 'yyyy.MM.dd')}"></span>-->
+<!--                        </span>-->
+<!--                    </td>-->
                     <td>
                         <span th:text="${notice.noticeHit}"></span>
                     </td>
