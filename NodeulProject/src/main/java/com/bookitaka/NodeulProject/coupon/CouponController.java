@@ -50,10 +50,7 @@ public class CouponController {
 //        return "coupon/myCoupon"; // 뷰 이름을 반환
 //    }
 
-    @GetMapping("/couponPayComplete") // 쿠폰 결제 완료 페이지
-    public String couponPayComplete() {
-        return "coupon/couponPayComplete"; // 뷰 이름을 반환
-    }
+
 
     @GetMapping("/list") // 내쿠폰 페이지
     public String couponList(@RequestParam(name = "pageNum", defaultValue = "1") int page,

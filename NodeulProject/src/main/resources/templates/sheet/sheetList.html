@@ -60,7 +60,10 @@
                                         <div class="bk-wrapper">
                                             <div class="bk-book bk-bookdefault">
                                                 <div class="bk-front">
-                                                    <div class="bk-cover"><img class="img-fluid" th:src="|/sheet/bookImg/*{sheet.sheetBookimguuid}*{sheet.sheetBookimgname}|"></div>
+                                                    <div class="bk-cover">
+                                                        <img class="img-fluid" th:if="${sheet.sheetBookimguuid == null}" th:src="|/assets/img/defaultImg.jpeg|">
+                                                        <img class="img-fluid" th:if="${sheet.sheetBookimguuid != null}" th:src="|/sheet/bookImg/*{sheet.sheetBookimguuid}*{sheet.sheetBookimgname}|">
+                                                    </div>
                                                 </div>
                                                 <div class="bk-back"></div>
                                                 <div class="bk-left"></div>
@@ -80,10 +83,12 @@
                                         <span class="col-sm-4" style="padding-left: 0"><strong class="text-black text-truncate">출판사</strong></span>
                                         <span class="col-sm-8 author clamp-3" th:text="${sheet.sheetBookpublisher}" style="padding-left: 0">출판사이름</span>
                                     </div>
-                                    <div class="row my-3 position-absolute bottom-0 end-0 bg-light rounded-1 me-3">
+
+                                    <div id="hi" class="row my-3 position-absolute bottom-0 end-0 bg-light rounded-1 me-4">
                                         <!--<span class="col-sm-3"><strong class="text-black text-truncate">가격</strong></span>-->
-                                        <span class="col-sm-12 author clamp-3 text-end" th:text="${#numbers.formatInteger(sheet.sheetPrice, 3, 'COMMA') + '원'}"></span>
+                                        <span class="author clamp-3 text-end" th:text="${#numbers.formatInteger(sheet.sheetPrice, 3, 'COMMA') + '원'}"></span>
                                     </div>
+                                        <div th:onclick="'cartAdd(\'' + ${sheet.sheetNo} + '\')'" class="my-3 position-absolute bottom-0 end-0" style="cursor: pointer;"><i class="fa-solid fs-sm-0 fa-cart-shopping"></i></div>
                                 </div>
                             </li>
                         </ul>
@@ -157,6 +162,46 @@
             document.getElementById("sortBtnInput").value = sortValue;
             document.getElementById("sheetListForm").submit();
         }
+
+
+        function cartAdd(sheetNo) {
+            fetch("/cart/cartAdd", {
+                method: 'POST',
+                body: new URLSearchParams({ sheetNo: sheetNo }),
+                headers: {'ajax':true}
+            })
+                .then((response) => {
+                    if (response.status === 200) {
+                        response.json().then((data) => {
+                            console.log(data);
+                            if (data.fail) {
+                                alert("이미 장바구니에 담겨있는 상품입니다.");
+                            } else if (data.bought) {
+                                alert("이미 구입한 상품입니다.");
+                            } else if (data.success) {
+                                if (confirm("추가에 성공하였습니다. 장바구니로 이동하시겠습니까?")) {
+                                    window.location.href = "/cart/cart";
+                                }
+                            } else {
+                                console.error('추가에 실패하였습니다.');
+                            }
+                        });
+                    } else if (response.status === 201) {
+                        console.log("토큰 재발급");
+                        cartAdd(sheetNo);
+                    } else if (response.status === 403) {
+                        if (confirm("로그인시에 이용 가능합니다. 로그인하시겠습니까?")) {
+                            window.location.href = "/member/login";
+                        }
+                    } else {
+                        console.error('추가 요청 중 에러 발생', response.status);
+                    }
+                }).catch(error => {
+                console.error('추가 요청 실패:', error);
+            });
+        }
+
+
 
     </script>
     <script>

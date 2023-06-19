@@ -221,16 +221,16 @@ public class SheetController {
         //그 사람 mysheet기록, fileUuid같은걸로 찾기
         Mysheet mysheet = mysheetService.canIDownloadSheet(fileUuid, member);
         if (mysheet == null) { //null이면 badrequest보내기.
-            String errorMessage = "구입 내역 없음";
+            String errorMessage = "구입 내역이 없습니다";
             Resource errorResource = new ByteArrayResource(errorMessage.getBytes());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResource);
+            return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(errorResource);
         }
 
         //아니면 날짜 체크하기
         if (!mysheetService.checkMySheetIsAvailable(mysheet)) {
-            String errorMessage = "다운로드 기간 만료";
+            String errorMessage = "다운로드 기간이 만료된 상품입니다";
             Resource errorResource = new ByteArrayResource(errorMessage.getBytes());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResource);
+            return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).body(errorResource);
         }
 
         //안지났으면 프로세스 진행

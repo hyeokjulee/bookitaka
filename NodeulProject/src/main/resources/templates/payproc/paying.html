@@ -66,6 +66,7 @@
 
         <div class="text-center">
             <button onclick="requestPay()" class="btn btn-secondary">결제하기</button>
+            <button onclick="goToBack()" class="btn btn-secondary">취소</button>
         </div>
 
     </div>
@@ -254,6 +255,10 @@
                 });
 
         }
+
+    function goToBack() {
+            history.back();
+    }
 
 
     </script>
