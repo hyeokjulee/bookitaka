@@ -21,19 +21,19 @@
                 <div class="col-6 col-sm-4 col-lg-2 mb-3 order-3 order-sm-2">
                     <h5 class="lh-lg fw-bold text-dark mb-4 font-sans-serif">알림마당</h5>
                     <ul class="list-unstyled mb-md-4 mb-lg-0">
-                        <li class="lh-lg"><a class="text-900" th:href="@{/index}">홈페이지소개</a></li>
                         <li class="lh-lg"><a class="text-900" th:href="@{/manual/list}">이용방법</a></li>
                         <li class="lh-lg"><a class="text-900" th:href="@{/notice/list}">공지사항</a></li>
+                        <li class="lh-lg"><a class="text-900" th:href="@{/faq/BEST}">자주묻는질문</a></li>
                     </ul>
                 </div>
-                <div class="col-6 col-sm-4 col-lg-2 mb-3 order-3 order-sm-2">
+                <div class="col-6 col-sm-4 col-lg-2 mb-3 order-3 order-sm-2" th:if="${#request.getRemoteUser() != null}">
                     <h5 class="lh-lg fw-bold text-dark mb-4 font-sans-serif"> 마이페이지</h5>
                     <ul class="list-unstyled mb-md-4 mb-lg-0">
-                        <li class="lh-lg"><a class="text-900" th:href="@{/member/me}">내 정보</a></li>
+                        <li class="lh-lg"><a class="text-900" th:href="@{/members/info}">내 정보</a></li>
                         <li class="lh-lg"><a class="text-900" th:href="@{/sheet/mysheet}">내 독후활동지</a></li>
-                        <li class="lh-lg"><a class="text-900" th:href="@{/sheet/myrequest}">내 출제요청</a></li>
-                        <li class="lh-lg"><a class="text-900" href="#">내 쿠폰</a></li>
-                        <li class="lh-lg"><a class="text-900" href="#">내 결제</a></li>
+                        <li class="lh-lg"><a class="text-900" th:href="@{/sheet/request/myrequest}">내 출제요청</a></li>
+                        <li class="lh-lg"><a class="text-900" th:href="@{/coupon/list}">내 쿠폰</a></li>
+                        <li class="lh-lg"><a class="text-900" th:href="@{/myPay}">내 결제</a></li>
                     </ul>
                 </div>
             </div>
