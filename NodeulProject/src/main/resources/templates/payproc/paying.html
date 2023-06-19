@@ -66,6 +66,7 @@
 
         <div class="text-center">
             <button onclick="requestPay()" class="btn btn-secondary">결제하기</button>
+            <button onclick="goToBack()" class="btn btn-secondary">취소</button>
         </div>
 
     </div>
@@ -236,6 +237,7 @@
             })
                 .then(response => {
                     if (response.status == 200) {
+                        deleteSelectedCart()
                         window.location.href = "/payproc/complete?sInfo=" + sInfo;
                     } else if (response.status == 201) {
                         console.log("토큰 재발급");
@@ -253,6 +255,10 @@
                 });
 
         }
+
+    function goToBack() {
+            history.back();
+    }
 
 
     </script>

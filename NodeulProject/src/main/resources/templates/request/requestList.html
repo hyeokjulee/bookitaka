@@ -33,8 +33,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="req : ${requestList}">
-                <td th:text="${req.requestBooktitle}">책 제목</td>
+            <tr th:each="req : ${requestList}" th:onclick="'window.location.href = \'' + @{/sheet/request/detail/{requestNo}(requestNo=${req.requestNo})} + '\''">
+            <td th:text="${req.requestBooktitle}">책 제목</td>
                 <td th:text="${req.requestName + ' / ' + req.requestEmail}">신청자</td>
                 <td th:text="${req.requestHopedate}">희망일</td>
                 <td th:utext="${req.requestIsdone} == 0 ? '&lt;span class=&quot;badge badge-pink&quot;&gt;답변 안함&lt;/span&gt;' : '&lt;span class=&quot;badge badge-gray&quot;&gt;답변 완료&lt;/span&gt;'">요청일</td>

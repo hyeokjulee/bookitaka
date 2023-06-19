@@ -47,11 +47,16 @@ public class SheetServiceImpl implements SheetService{
         sheet.setSheetBookisbn(sheetRegDto.getSheetBookisbn());
         sheet.setSheetPrice(sheetRegDto.getSheetPrice());
 
-        sheet.setSheetBookimguuid(uploadBookImg.uuid);
-        sheet.setSheetBookimgname(uploadBookImg.fileName);
+        if (uploadBookImg != null) {
+            sheet.setSheetBookimguuid(uploadBookImg.uuid);
+            sheet.setSheetBookimgname(uploadBookImg.fileName);
+        }
 
-        sheet.setSheetFileuuid(uploadSheetFile.uuid);
-        sheet.setSheetFilename(uploadSheetFile.fileName);
+        if (uploadSheetFile != null) {
+            sheet.setSheetFileuuid(uploadSheetFile.uuid);
+            sheet.setSheetFilename(uploadSheetFile.fileName);
+        }
+
 
         log.info("-----------------------");
         sheet.setSheetGenre(genreRepository.findTopBySheetGenreName(sheetRegDto.getSheetGenreName()));

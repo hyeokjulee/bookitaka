@@ -17,17 +17,19 @@
                 <h1 class="fs-5 fs-xl-5 mb-5">개별출제요청</h1>
             </div>
         </div>
-        <form action="/sheet/request" method="post">
+        <form action="/sheet/request" method="post" th:action="@{/sheet/request}" th:object="${requestDto}">
             <div class="mb-4">
                 <div class="d-flex align-items-center">
                     <span class="sheetinput-title">이메일</span>
                     <input type="text" th:value="${currentMember.memberEmail}" id="requestEmail" name="requestEmail" class="form-control my-1" placeholder="이메일을 입력하세요" style="width: 300px;">
+                    <div class="errorMsg" th:errors="*{requestEmail}">이메일 오류</div>
                 </div>
             </div>
             <div class="mb-4">
                 <div class="d-flex align-items-center">
                 <span class="sheetinput-title">이름</span>
                 <input type="text" th:value="${currentMember.memberName}" id="requestName" name="requestName" class="form-control my-1" placeholder="이름을 입력하세요" style="width:300px;">
+                    <div class="errorMsg" th:errors="*{requestName}">이름 오류</div>
                 </div>
             </div>
             <div class="mb-4">
@@ -62,6 +64,7 @@
                 <div class="d-flex align-items-center">
                 <span class="sheetinput-title">책 제목</span>
                 <input type="text" id="sheetBooktitle" name="requestBooktitle" class="form-control" placeholder="책 제목을 입력하세요" readonly>
+                    <div class="errorMsg" th:errors="*{requestBooktitle}">책 제목 오류</div>
                 </div>
             </div>
             <div class="mb-4">
@@ -91,7 +94,8 @@
             <div class="mb-4">
                 <div class="d-flex align-items-center">
                 <span class="sheetinput-title">희망일</span>
-                <input type="date" id="requestHopedate" th:min="${T(java.time.LocalDate).now()}" name="requestHopedate" class="form-control" placeholder="희망하는 날짜를 입력하세요">
+                <input type="date" id="requestHopedate" th:min="${T(java.time.LocalDate).now()}"
+                       th:value="${T(java.time.LocalDate).now().plusDays(14)}" name="requestHopedate" class="form-control" placeholder="희망하는 날짜를 입력하세요">
                 </div>
             </div>
             <div class="d-flex justify-content-end">
@@ -113,6 +117,18 @@
                 modal.style.display = "none";
             }
         }
+
+        window.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                // 모달창이 띄워져 있는지 확인
+                if (document.querySelector('#bookSearchModal').style.display === 'block') {
+                    // search 함수 호출
+                    search();
+                    // form submit 방지
+                    event.preventDefault();
+                }
+            }
+        });
 
         function search(pageNum) {
             var keyword = $("#keyword").val();
@@ -167,6 +183,7 @@
 
             $("#bookSearchModal").css("display", "none");
         }
+
 
     </script>
 </mainSection>

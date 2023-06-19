@@ -25,8 +25,10 @@ public class FaqRepositoryTest {
         faq1.setFaqCategory("category1");
         faq1.setFaqBest(1);
         Faq faq2 = new Faq(null, "question2", "answer2", "category2", 0, null, null);
-        repository.saveAndFlush(faq1);
-        repository.saveAndFlush(faq2);
+//        repository.saveAndFlush(faq1);
+//        repository.saveAndFlush(faq2);
+        repository.save(faq1);
+        repository.save(faq2);
 
         // 단건 조회
         Faq findFaq1 = repository.findById(faq1.getFaqNo()).get();
@@ -65,7 +67,7 @@ public class FaqRepositoryTest {
 
 //        repository.save(findFaq1);
 //        repository.save(findFaq2);
-        repository.flush();
+//        repository.flush();
 
         Faq updateFaq1 = repository.findById(faq1.getFaqNo()).get();
         Faq updateFaq2 = repository.findById(faq2.getFaqNo()).get();

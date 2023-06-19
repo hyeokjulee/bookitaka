@@ -174,7 +174,7 @@
                         console.log("사후 검증 완료");
                         console.log(response);
 
-                        window.location.href = "/coupon/couponPayComplete";
+                        window.location.href = "/coupon/list";
                     } else if (response.status == 201) {
                         console.log("토큰 재발급");
                         afterPayProc(rsp);

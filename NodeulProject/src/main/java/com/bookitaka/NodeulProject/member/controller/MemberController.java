@@ -57,6 +57,7 @@ public class MemberController {
     public String edit(Model model, HttpServletRequest request) {
         log.info("=====================MemberController - edit");
         MemberResponseDTO userResponseDTO = modelMapper.map(memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN), MemberResponseDTO.class);
+        log.info(userResponseDTO.getMemberJoindate().toString());
         model.addAttribute("member", userResponseDTO);
         return "member/my-info";
     }
