@@ -21,7 +21,11 @@ function showCarts(callback) {
                     var sheet = sheets[i];
                     var row = $('<tr></tr>');
                     row.append('<td><input  class="form-check-input mx-2" type="checkbox" name="selectedItem" value="' + cart.sheetNo + '" data-price="' + sheet.sheetPrice + '" checked></td>');
-                    row.append('<td><img src="/sheet/bookImg/' + sheet.sheetBookimguuid + sheet.sheetBookimgname + '" width="150" height="150" style="object-fit: contain"></td>');
+                    if (sheet.sheetBookimguuid === null) {
+                        row.append('<td><img src="/assets/img/defaultImg.jpeg" width="150" height="150" style="object-fit: contain"></td>');
+                    } else {
+                        row.append('<td><img src="/sheet/bookImg/' + sheet.sheetBookimguuid + sheet.sheetBookimgname + '" width="150" height="150" style="object-fit: contain"></td>');
+                    }
                     row.append('<td><a href="/sheet/' + cart.sheetNo + '" class="fw-bold fs-1">' + sheet.sheetBooktitle + '</a></td>');
                     row.append('<td>' + sheet.sheetPrice.toLocaleString() + '원</td>');
                     row.append('<td><button type="button" class="btn btn-sm btn-primary btn-payingOne" value="' + cart.sheetNo + '">구매</button> <button type="button" class="btn btn-sm btn-outline-danger btn-delete" data-no="' + cart.sheetNo + '">삭제</button></td>');
