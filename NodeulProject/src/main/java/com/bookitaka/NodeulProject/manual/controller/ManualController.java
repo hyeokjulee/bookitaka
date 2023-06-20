@@ -64,14 +64,14 @@ public class ManualController {
     }
 
     @GetMapping("/post")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String write(Model model) {
         model.addAttribute("manualDto", new ManualDto());
         return "manual/write.html";
     }
 
     @PostMapping("/post")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String write(@Validated @ModelAttribute ManualDto manualDto, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
@@ -92,7 +92,7 @@ public class ManualController {
     }
 
     @GetMapping("/post/edit/{manualNo}")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String edit(@PathVariable("manualNo") Integer manualNo, Model model) {
         ManualDto manualDto = manualService.getManual(manualNo);
         model.addAttribute("manualDto", manualDto);
@@ -101,7 +101,7 @@ public class ManualController {
     }
 
     @PostMapping("/post/edit/{manualNo}")
-//@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String updateManual(@Validated @ModelAttribute("manualDto") ManualDto manualDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "manual/update.html";
@@ -111,7 +111,7 @@ public class ManualController {
     }
 
     @DeleteMapping("/post/{manualNo}")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String delete(@PathVariable("manualNo") Integer manualNo) {
         manualService.deleteManual(manualNo);
 
