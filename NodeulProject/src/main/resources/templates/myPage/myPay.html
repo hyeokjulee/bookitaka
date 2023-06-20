@@ -33,7 +33,7 @@
                 <td th:text="${pay.paymentUuid}">결제고유번호</td>
                 <td th:text="${pay.paymentInfo}">결제정보</td>
                 <td th:text="${pay.paymentPrice}">10000</td>
-                <td th:text="${pay.paymentDate}">결제날짜</td>
+                <td th:text="${#temporals.format(pay.paymentDate.toLocalDateTime(), 'yyyy.MM.dd HH:mm')}">결제날짜</td>
                 <td></td>
             </tr>
             </tbody>

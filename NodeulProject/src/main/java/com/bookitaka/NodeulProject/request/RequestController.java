@@ -37,6 +37,8 @@ public class RequestController {
     private final MemberService memberService;
     private final ModelMapper modelMapper;
 
+    int size = 10;
+
     // 도서 검색 open api
     @GetMapping("/booksearch")
     @ResponseBody
@@ -45,8 +47,8 @@ public class RequestController {
                                           @RequestParam("authorSearch") String authorSearch,
                                           @RequestParam(name = "pageNum", defaultValue = "1") Integer pageNum,
                                           Model model ) {
-//        log.info("keyword = {}", keyword);
-//        log.info("authorSearch = {}", authorSearch);
+        log.info("keyword = {}", keyword);
+        log.info("authorSearch = {}", authorSearch);
         log.info("pageNum = {}", pageNum);
 
         String currentPageNum = "";
@@ -73,10 +75,7 @@ public class RequestController {
                               HttpServletRequest httpServletRequest,
                               @Validated @ModelAttribute RequestDto requestDto,
                               BindingResult bindingResult) {
-//        log.info("requestDto = {}", requestDto);
-        Request request = modelMapper.map(requestDto, Request.class);
-        log.info("request = {}", request);
-        requestService.registerRequest(request);
+        log.info("requestDto = {}", requestDto);
 
         // validation 오류
         if(bindingResult.hasErrors()){
@@ -85,6 +84,10 @@ public class RequestController {
             model.addAttribute("currentMember", currentMember);
             return "request/requestForm";
         }
+
+        Request request = modelMapper.map(requestDto, Request.class);
+        log.info("request = {}", request);
+        requestService.registerRequest(request);
 
         // 등록 실패 오류
 //        if (!result) {
@@ -103,8 +106,7 @@ public class RequestController {
         Member currentMember = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
         model.addAttribute("currentMember", currentMember);
 
-        int pageSize = 10;
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "requestRegdate"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "requestRegdate"));
 
         Page<Request> myRequest = requestService.getMyRequest(currentMember, pageable);
         model.addAttribute("myRequest", myRequest);
@@ -143,8 +145,7 @@ public class RequestController {
     public String listRequestForAdmin(@RequestParam(name = "requestIsdone", defaultValue = "0") int requestIsdone,
                                       @RequestParam(name = "page", defaultValue = "0") int page,
                                       Model model) {
-        int pageSize = 10;
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "requestRegdate"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "requestRegdate"));
         Page<Request> requestList = requestService.getAllRequestByRequestIsdone(requestIsdone, pageable);
         model.addAttribute("requestList", requestList);
         model.addAttribute("requestIsdone", requestIsdone);
