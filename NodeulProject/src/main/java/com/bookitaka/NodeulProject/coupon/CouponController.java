@@ -7,6 +7,7 @@ import com.bookitaka.NodeulProject.member.security.Token;
 import com.bookitaka.NodeulProject.member.service.MemberService;
 import com.bookitaka.NodeulProject.sheet.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,6 +25,7 @@ import java.util.Map;
 @Controller
 @RequestMapping("/coupon")
 @RequiredArgsConstructor
+@Slf4j
 public class CouponController {
     private final MemberService memberService;
     private final CouponService couponService;
@@ -38,7 +40,10 @@ public class CouponController {
     @PostMapping("/check")
     public ResponseEntity<String> checkCoupon() {
         String memberEmail = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN).getMemberEmail();
-        if (couponService.couponCheck(memberEmail)) { // 사용가능한 쿠폰이 있는 경우
+
+        int couponCnt = couponService.getValidCouponCntByMemberEmail(memberEmail);
+        log.info("couponCnt = {}", couponCnt);
+        if (couponCnt > 0) { // 사용가능한 쿠폰이 있는 경우
             return ResponseEntity.status(HttpStatus.OK).body("{\"coupon\": \"have\"}");
         } else {
             return ResponseEntity.status(HttpStatus.OK).body("{\"coupon\": \"no\"}");

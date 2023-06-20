@@ -46,18 +46,18 @@
 
             <div class="mb-4">
                 <label for="sheetBooktitle">책 제목</label>
-                <span class="errorMsg" th:errors="*{sheetBooktitle}">책 제목 오류</span>
                 <input type="text" id="sheetBooktitle" th:field="*{sheetBooktitle}" class="form-control" placeholder="책 제목을 입력하세요">
+                <span class="errorMsg" th:errors="*{sheetBooktitle}">책 제목 오류</span>
             </div>
             <div class="mb-4">
                 <label for="sheetBookauthor">작가</label>
-                <span class="errorMsg" th:errors="*{sheetBookauthor}">작가 오류</span>
                 <input type="text" id="sheetBookauthor" th:field="*{sheetBookauthor}" class="form-control" placeholder="작가를 입력하세요">
+                <span class="errorMsg" th:errors="*{sheetBookauthor}">작가 오류</span>
             </div>
             <div class="mb-4">
                 <label for="sheetBookpublisher">출판사</label>
-                <span class="errorMsg" th:errors="*{sheetBookpublisher}">출판사 오류</span>
                 <input type="text" id="sheetBookpublisher" th:field="*{sheetBookpublisher}" class="form-control" placeholder="출판사를 입력하세요">
+                <span class="errorMsg" th:errors="*{sheetBookpublisher}">출판사 오류</span>
             </div>
             <div class="mb-4">
                 <label class="form-label">ISBN</label>
@@ -65,8 +65,8 @@
             </div>
             <div class="mb-4">
                 <label for="sheetPrice">가격</label>
-                <span class="errorMsg" th:errors="*{sheetPrice}">가격 오류</span>
                 <input type="number" id="sheetPrice" th:field="*{sheetPrice}" class="form-control" placeholder="가격을 입력하세요">
+                <span class="errorMsg" th:errors="*{sheetPrice}">가격 오류</span>
             </div>
             <div class="mb-4">
                 <label for="sheetBookImg">표지 이미지</label>
@@ -74,9 +74,9 @@
             </div>
             <div class="mb-4">
                 <label for="sheetFile">독후활동지 파일</label>
+                <input type="file" id="sheetFile" name="sheetFile" class="form-control" accept="application/pdf" placeholder="pdf파일을 업로드해주세요">
                 <div th:if="${#fields.hasGlobalErrors()}">
                     <span th:class="errorMsg" class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</span> </div>
-                <input type="file" id="sheetFile" name="sheetFile" class="form-control" accept="application/pdf" placeholder="pdf파일을 업로드해주세요">
             </div>
             <div class="mb-4">
                 <label for="sheetContent">설명</label>
@@ -99,7 +99,6 @@
                 <!-- radio button -->
                 <div>
                     <div>장르</div>
-                    <span class="errorMsg" th:errors="*{sheetGenreName}">장르 오류</span>
                     <div th:each="gn : ${genre}" class="form-check form-check-inline">
                         <input type="radio" th:field="*{sheetGenreName}" th:value="${gn.sheetGenreName}" class="form-check-input">
                         <label th:for="${#ids.prev('sheetGenreName')}" th:text="${gn.getSheetGenreName()}" class="form-check-label">
@@ -107,6 +106,7 @@
                         </label>
                     </div>
                 </div>
+                <span class="errorMsg" th:errors="*{sheetGenreName}">장르 오류</span>
                 <hr class="my-4">
                 <!-- radio button -->
                 <div>
