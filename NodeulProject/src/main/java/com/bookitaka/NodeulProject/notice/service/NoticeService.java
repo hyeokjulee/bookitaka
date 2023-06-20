@@ -22,9 +22,19 @@ public class NoticeService {
 
     @Transactional
     //게시글 리스트 처리
-    public Page<NoticeDto> getNoticeList(Pageable pageable) {
-        Page<Notice> noticeEntities = noticeRepository.findAll(pageable);
-        return noticeEntities.map(this::convertEntityToDto);
+    public Page<NoticeDto> getNoticeList(Pageable pageable, String keyword) {
+        if (keyword != null) {
+            Page<Notice> noticeEntities = noticeRepository.findByNoticeTitleContainingOrNoticeContentContaining(keyword, keyword, pageable);
+
+            if (noticeEntities.isEmpty()) {
+                return Page.empty(); // 빈 페이지 반환
+            }
+
+            return noticeEntities.map(this::convertEntityToDto);
+        } else {
+            Page<Notice> noticeEntities = noticeRepository.findAll(pageable);
+            return noticeEntities.map(this::convertEntityToDto);
+        }
     }
 
     /*게시글 생성*/
@@ -61,18 +71,6 @@ public class NoticeService {
     public void removeNotice(Integer noticeNo) {
         noticeRepository.deleteById(noticeNo);
     }
-
-    @Transactional
-    public Page<NoticeDto> searchNotice(String keyword, Pageable pageable) {
-        Page<Notice> noticeEntities = noticeRepository.findByNoticeTitleContainingOrNoticeContentContaining(keyword, keyword, pageable);
-
-        if (noticeEntities.isEmpty()) {
-            return Page.empty(); // 빈 페이지 반환
-        }
-
-        return noticeEntities.map(this::convertEntityToDto);
-    }
-
 
     @Transactional    //조회수
     public int updateHit(Integer noticeNo) {

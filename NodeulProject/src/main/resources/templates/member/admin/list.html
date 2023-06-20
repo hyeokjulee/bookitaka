@@ -61,9 +61,6 @@
                     </select>
                 </td>
             </tr>
-            <tr th:if="${members.isEmpty()}">
-                <td colspan="7" style="text-align: center;">일치하는 검색 결과가 없습니다.</td>
-            </tr>
             </tbody>
         </table>
 
@@ -98,6 +95,13 @@
             </ul>
         </nav>
     </div>
+    <div class="row pt-1">
+        <div class="col-md">
+            <p class="my-2" th:if="${members.isEmpty() && keyword!=''}" style="text-align: center">일치하는 검색 결과가 없습니다.</p>
+            <p class="my-2" th:if="${members.isEmpty() && keyword.isEmpty()}" style="text-align: center">등록된 회원이 없습니다.</p>
+        </div>
+    </div>
+    <hr class="my-4" th:if="${members.isEmpty()}">
     <script th:inline="javascript">
         // detail
         function goDetail(element) {

@@ -10,7 +10,14 @@
 <mainSection>
 
 <form th:object="${member}">
-    <h3><span th:text="*{memberName}"></span>님의 회원 정보</h3>
+    <div class="row g-0 justify-content-between">
+        <div class="col-sm-9 text-start text-truncate">
+            <h1 class="fs-5 fs-xl-5 mb-5"><span th:text="*{memberName}"></span>님의 회원정보</h1>
+        </div>
+        <div class="col-sm-3 text-end">
+            <a class="badge badge-pink" id="delMemberBtn" style="cursor: pointer; font-size: x-small;">회원 탈퇴</a>
+        </div>
+    </div>
     <hr>
     <div class="row">
         <span class="col-3 text-truncate"><i class="fa-solid fa-envelope px-2"></i><label th:for="memberEmail">이메일</label></span>
@@ -105,13 +112,15 @@
     </div>
     <hr>
     <div class="row">
-        <span class="col-3 text-truncate"><i class="fa-solid fa-cake-candles px-2"></i><label>생년월일</label></span>
-        <span class="col-9 text-truncate" id="memberJoinDate">
-        <input class="form-control-sm" type="date" id="memberBirthday" name="memberBirthday" th:value="${member.member}"/>
+        <span class="col-3 text-truncate"><i class="fa-solid fa-calendar-days px-2"></i><label>가입일</label></span>
+        <span class="col-9 text-truncate">
+            <div class="row">
+                <span class="col-12" th:text="${#dates.format(member.memberJoindate, 'yyyy-MM-dd (HH시 mm분)')}"></span>
+            </div>
         </span>
     </div>
     <hr>
-    <div class="row">
+    <div class="row mb-5">
         <span class="col-12 text-center"><a class="btn btn-primary" id="editBtn" style="display: none">저장하기</a></span>
     </div>
 </form>
@@ -269,6 +278,40 @@
             window.location.href = "/members/changePw"
         }
     });
+
+    // 회원 탈퇴
+    document.getElementById("delMemberBtn").addEventListener("click", function(event) {
+       if (confirm("회원 탈퇴하시겠습니까? \n(그동안 결제한 독후활동지/쿠폰 등의 내역이 모두 사라집니다.)")) {
+           if (confirm("정말로 회원 탈퇴하시겠습니까? \n(그동안 결제한 독후활동지/쿠폰 등의 내역이 모두 사라집니다.)")) {
+               delMember();
+           }
+       }
+    });
+    function delMember() {
+        fetch("/member/" + /*[[${member.memberEmail}]]*/ '', {
+            method: 'DELETE',
+            headers: {'ajax':true}
+        })
+            .then((response) => {
+                console.log("response.status : " + response.status);
+                if (response.status === 200) {
+                    // 성공적인 응답 처리
+                    window.location.href = '/member/signout';
+                } else if (response.status === 201) {
+                    console.log("refreshed")
+                    delMember();
+                } else if (response.status === 404) {
+                    alert("존재하지 않는 회원입니다.")
+                } else if (response.status === 400) {
+                    alert("잘못된 요청입니다.")
+                } else {
+                    // 기타 상태 코드에 대한 처리
+                    response.text().then(data => {
+                        console.log(data);
+                    });
+                }
+            })
+    }
 </script>
 </mainSection>
 </body>

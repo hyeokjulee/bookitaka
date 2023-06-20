@@ -1,8 +1,16 @@
 package com.bookitaka.NodeulProject;
 
+import com.bookitaka.NodeulProject.manual.dto.ManualDto;
+import com.bookitaka.NodeulProject.manual.service.ManualService;
+import com.bookitaka.NodeulProject.notice.dto.NoticeDto;
+import com.bookitaka.NodeulProject.notice.service.NoticeService;
 import com.bookitaka.NodeulProject.sheet.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +25,8 @@ import java.util.List;
 public class MainController {
 
     private final SheetService sheetService;
+    private final ManualService manualService;
+    private final NoticeService noticeService;
 
     @GetMapping()
     public String indexPage(Model model) {
@@ -28,8 +38,15 @@ public class MainController {
         List<Sheet> topSheets = sheetService.getAllSheets("", "", buyCri);
         log.info("topSheets = {}", topSheets);
 
+        Page<ManualDto> manualList = manualService.getManualList(PageRequest.of(0, 5 , Sort.by("manualNo").descending()),null);
+
+        Page<NoticeDto> noticeList = noticeService.getNoticeList(PageRequest.of(0, 5, Sort.by("noticeRegdate").descending()),null);
+
         model.addAttribute("newSheets", newSheets);
         model.addAttribute("topSheets", topSheets);
+        model.addAttribute("manuals",manualList);
+        model.addAttribute("notices", noticeList);
+
         return "index";
     }
 

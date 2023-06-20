@@ -8,6 +8,7 @@ import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -34,4 +35,6 @@ public class Member implements Serializable {
     private String memberRole;
 
     private String memberRtoken;
+
+    private Date memberJoindate;
 }

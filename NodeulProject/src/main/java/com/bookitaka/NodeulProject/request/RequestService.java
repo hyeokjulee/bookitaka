@@ -19,6 +19,8 @@ public interface RequestService {
     Page<Request> getAllRequestByRequestIsdone(int requestIsdone, Pageable pageable);
     Page<Request> getMyRequest(Member member, Pageable pageable);
 
-    public Map<String, Object> searchBook(String keyword, String authorSearch, Integer pageNum);
+    boolean changestatus(Long requestNo, int requestIsdone);
+
+    Map<String, Object> searchBook(String keyword, String authorSearch, Integer pageNum);
 
 }

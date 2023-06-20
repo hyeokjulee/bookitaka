@@ -23,16 +23,44 @@ import java.util.List;
 @RequestMapping("/notice")
 public class NoticeController {
 
-    private static final int PAGE_SIZE = 5;
+    private static final int PAGE_SIZE = 10;
     private NoticeService noticeService;
 
     @GetMapping("/list")
-    public String list(Model model, @RequestParam(name="page", defaultValue = "0") int page) {
+    public String list(Model model,
+                       @RequestParam(name="page", defaultValue = "0") int page,
+                       @RequestParam(name = "keyword", defaultValue = "") String keyword) {
         Sort sort = Sort.by("noticeRegdate").descending();
         Pageable pageable = PageRequest.of(page, PAGE_SIZE,sort);
-        Page<NoticeDto> noticeList = noticeService.getNoticeList(pageable);
-        model.addAttribute("noticeList", noticeList);
+        Page<NoticeDto> noticeList = noticeService.getNoticeList(pageable, keyword);
 
+        model.addAttribute("noticeList", noticeList);
+        model.addAttribute("keyword", keyword);
+
+        model.addAttribute("totalPages", noticeList.getTotalPages());
+        model.addAttribute("currentPage", page);
+        int size = 10;
+        int currentGroup = page / size;
+        int startPage = currentGroup * size;
+        int totalPages = noticeList.getTotalPages();
+        int endPage = Math.min(startPage + size, noticeList.getTotalPages()) - 1;
+
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        // 이전 그룹의 첫 번째 페이지로 이동
+        int previousGroupStartPage = (currentGroup == 0) ? 0 : (currentGroup - 1) * size;
+        model.addAttribute("previousGroupStartPage", previousGroupStartPage);
+
+        // 다음 그룹의 첫 번째 페이지로 이동
+        int nextGroupStartPage = (currentGroup + 1) * size;
+
+        if (totalPages % size == 0 && startPage == totalPages - size) {
+            nextGroupStartPage = endPage;
+        } else if (nextGroupStartPage > endPage + 1) {
+            nextGroupStartPage = endPage;
+        }
+        model.addAttribute("nextGroupStartPage", nextGroupStartPage);
         return "notice/list.html";
     }
 
@@ -87,16 +115,4 @@ public class NoticeController {
 
         return "redirect:/notice/list";
     }
-
-    @GetMapping("/search")
-    public String search(@RequestParam(value = "keyword") String keyword, @RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-        Sort sort = Sort.by("noticeRegdate").descending();
-        Pageable pageable = PageRequest.of(page, PAGE_SIZE, sort);
-        Page<NoticeDto> noticeDtoPage = noticeService.searchNotice(keyword, pageable);
-        model.addAttribute("noticeList", noticeDtoPage);
-        model.addAttribute("keyword", keyword); // 검색어 전달
-        return "notice/list.html";
-    }
-
-
 }

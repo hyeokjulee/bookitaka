@@ -1,9 +1,12 @@
 package com.bookitaka.NodeulProject.request;
 
+import com.bookitaka.NodeulProject.member.dto.MemberUpdateAdminDTO;
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.security.Token;
 import com.bookitaka.NodeulProject.member.service.MemberService;
 import com.bookitaka.NodeulProject.sheet.SheetRegDto;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -34,7 +37,7 @@ public class RequestController {
     private final MemberService memberService;
     private final ModelMapper modelMapper;
 
-
+    // 도서 검색 open api
     @GetMapping("/booksearch")
     @ResponseBody
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
@@ -52,7 +55,7 @@ public class RequestController {
         return requestService.searchBook(keyword, authorSearch, pageNum);
     }
 
-
+    // 활동지 요청 폼
     @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
     public String requestForm(Model model,
@@ -63,6 +66,7 @@ public class RequestController {
         return "request/requestForm";
     }
 
+    // 활동지 요청 폼 전송 POST
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
     public String requestProc(Model model,
@@ -90,6 +94,7 @@ public class RequestController {
         return "redirect:/sheet/request/myrequest";
     }
 
+    // 내가 보낸 요청 목록 (회원)
     @GetMapping("/myrequest")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
     public String listMyRequest(Model model,
@@ -106,6 +111,7 @@ public class RequestController {
         return "request/myRequest";
     }
 
+    // 받은 요청 목록 (관리자)
     @GetMapping("/list")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String listRequestForAdmin(@RequestParam(name = "requestIsdone", defaultValue = "0") int requestIsdone,
@@ -119,6 +125,7 @@ public class RequestController {
         return "request/requestList";
     }
 
+    // 요청 상세보기
     @GetMapping("/detail/{requestNo}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
     public String requestDetail(@PathVariable Long requestNo, Model model){
@@ -127,5 +134,27 @@ public class RequestController {
         model.addAttribute("request", request);
         return "request/requestDetail";
     }
+
+    // 답변 상태 변경
+    @PutMapping("/changestatus/{requestNo}/{requestIsdone}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ApiResponses(value = {//
+            @ApiResponse(code = 400, message = "Something went wrong"), //
+            @ApiResponse(code = 403, message = "Access denied"), //
+            @ApiResponse(code = 404, message = "The user doesn't exist"), //
+            @ApiResponse(code = 500, message = "Member edit failed")})
+    public ResponseEntity<?> changestatus(@PathVariable Long requestNo,
+                                          @PathVariable int requestIsdone) {
+        log.info("================================ RequestController : changestatus");
+        log.info("requestIsdone = {}", requestIsdone);
+        if(requestService.changestatus(requestNo, requestIsdone)) {
+            // 수정 성공시
+            return ResponseEntity.ok().build();
+        } else {
+            // 수정 실패 시
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
 
 }

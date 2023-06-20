@@ -65,7 +65,9 @@
           <div class="row">
             <h1 class="text-center mb-5"> 최근 나온 독후활동지 </h1>
             <div th:each="newsheet : ${newSheets}" class="col-md-3 mb-4">
-              <div class="card h-100"><img class="card-img-top h-100 w-100 img-contained" th:src="|/sheet/bookImg/*{newsheet.sheetBookimguuid}*{newsheet.sheetBookimgname}|" src="/assets/img/gallery/design.png" alt="courses" />
+              <div class="card h-100">
+                <img th:if="${newsheet.sheetBookimguuid == null}" class="card-img-top h-100 w-100 img-contained" th:src="|/assets/img/defaultImg.jpeg|" />
+                <img th:if="${newsheet.sheetBookimguuid != null}" class="card-img-top h-100 w-100 img-contained" th:src="|/sheet/bookImg/*{newsheet.sheetBookimguuid}*{newsheet.sheetBookimgname}|" src="/assets/img/gallery/design.png" alt="courses" />
                 <div class="card-body">
                   <h5 th:text="${newsheet.sheetBooktitle}" class="font-sans-serif fw-bold fs-md-0 fs-lg-1">User Research for User Experience Design</h5><a th:href="@{|/sheet/${newsheet.sheetNo}/|}"><div th:text="|${newsheet.sheetBookauthor} / ${newsheet.sheetBookpublisher}|" class="text-muted fs--1 stretched-link text-decoration-none" href="#!">The Museum of Modern Art</div></a>
                 </div>
@@ -80,7 +82,9 @@
           <div class="row">
             <h1 class="text-center mb-5"> 베스트셀러 독후활동지 </h1>
             <div th:each="topSheet : ${topSheets}" class="col-md-3 mb-4">
-              <div class="card h-100"><img class="card-img-top h-100 w-100 img-contained" th:src="|/sheet/bookImg/*{topSheet.sheetBookimguuid}*{topSheet.sheetBookimgname}|" src="/assets/img/gallery/design.png" alt="courses" />
+              <div class="card h-100">
+                <img th:if="${topSheet.sheetBookimguuid == null}" class="card-img-top h-100 w-100 img-contained" th:src="|/assets/img/defaultImg.jpeg|" />
+                <img th:if="${topSheet.sheetBookimguuid != null}" class="card-img-top h-100 w-100 img-contained" th:src="|/sheet/bookImg/*{topSheet.sheetBookimguuid}*{topSheet.sheetBookimgname}|" src="/assets/img/gallery/design.png" alt="courses" />
                 <div class="card-body">
                   <h5 th:text="${topSheet.sheetBooktitle}" class="font-sans-serif fw-bold fs-md-0 fs-lg-1">User Research for User Experience Design</h5><a th:href="@{|/sheet/${topSheet.sheetNo}/|}"><div th:text="|${topSheet.sheetBookauthor} / ${topSheet.sheetBookpublisher}|" class="text-muted fs--1 stretched-link text-decoration-none" href="#!">The Museum of Modern Art</div></a>
                 </div>
@@ -89,6 +93,66 @@
           </div>
         </div>
         <!-- end of .container-->
+
+      </section>
+      <!-- <section> close ============================-->
+      <!-- ============================================-->
+
+      <section class="pt-6 bg-600">
+        <div class="container">
+          <div class="row">
+
+        <div class="col-md-6 mb-4">
+          <div class="card">
+            <div class="d-flex justify-content-between mt-2">
+              <h4 class="text-info fw-bold m-4 text-center">이용방법</h4>
+                <a href="/manual/list" class="m-4">더보기 &gt;&gt;</a>
+            </div>
+            <div class="card-body">
+              <table class="table">
+                <tbody>
+                  <div th:each="manual : ${manuals}" class="">
+                    <tr>
+                      <td>
+                        <a th:href="@{'/manual/post/' + ${manual.manualNo}}">
+                            <span th:text="${manual.manualTitle}"></span>
+                        </a>
+                      </td>
+                    </tr>
+                  </div>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+            <div class="col-md-6 mb-4">
+              <div class="card">
+                <div class="d-flex justify-content-between mt-2">
+                  <h4 class="text-info fw-bold m-4 text-center">공지사항</h4>
+                  <a href="/notice/list" class="m-4">더보기 &gt;&gt;</a>
+                </div>
+                <div class="card-body">
+                  <table class="table">
+                    <tbody>
+                    <div th:each="notice : ${notices}" class="">
+                      <tr>
+                        <td>
+                          <a th:href="@{'/notice/post/' + ${notice.noticeTitle}}">
+                            <span th:text="${notice.noticeTitle}"></span>
+                          </a>
+                        </td>
+                      </tr>
+                    </div>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </div>
+      </div>
+      <!-- end of .container-->
 
       </section>
       <!-- <section> close ============================-->

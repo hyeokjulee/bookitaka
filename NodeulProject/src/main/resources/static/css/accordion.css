@@ -1,6 +1,21 @@
-body {font-family: helvetica}
-.container {width: 100%; margin: 0 auto; overflow: hidden}
 a{text-decoration: none}
+
+.custom-border {
+    border: 1px solid darkgray;
+}
+
+.accordion-collapse {
+    border-top: none;
+}
+
+#accordionItem0 {
+    border-radius: 5px 5px 0 0;
+}
+
+.accordion-button.py-3.custom-border[aria-expanded="true"] {
+    background-color: #FFEBF1;
+}
+
 
 #faq-links {padding: 10px 20px}
 

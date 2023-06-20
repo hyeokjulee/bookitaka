@@ -2,6 +2,9 @@ package com.bookitaka.NodeulProject.member.controller;
 
 import com.bookitaka.NodeulProject.faq.Faq;
 import com.bookitaka.NodeulProject.faq.FaqRepository;
+import com.bookitaka.NodeulProject.manual.domain.entity.Manual;
+import com.bookitaka.NodeulProject.manual.dto.ManualDto;
+import com.bookitaka.NodeulProject.manual.repository.ManualRepository;
 import com.bookitaka.NodeulProject.member.dto.*;
 import com.bookitaka.NodeulProject.member.exception.CustomException;
 import com.bookitaka.NodeulProject.member.model.Member;
@@ -9,6 +12,7 @@ import com.bookitaka.NodeulProject.member.security.Token;
 import com.bookitaka.NodeulProject.member.service.MemberService;
 import com.bookitaka.NodeulProject.notice.domain.entity.Notice;
 import com.bookitaka.NodeulProject.notice.dto.NoticeDto;
+import com.bookitaka.NodeulProject.notice.repository.NoticeRepository;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +41,8 @@ public class MemberTestController {
 
   private final MemberService memberService;
   private final FaqRepository faqRepository;
+  private final ManualRepository manualRepository;
+  private final NoticeRepository noticeRepository;
 
   // 회원가입
   @GetMapping("/signup")
@@ -53,16 +59,24 @@ public class MemberTestController {
     }
   }
 
-  @GetMapping("/faq")
+  @GetMapping("/manual")
   public void faq() {
 
     for (int i = 1; i <= 50; i++) {
-      Faq faq = new Faq();
-      faq.setFaqAnswer("AAA"+i);
-      faq.setFaqCategory("회원");
-      faq.setFaqQuestion("QQQ"+i);
-      faq.setFaqRegdate(new Date());
-      faqRepository.save(faq);
+      ManualDto m = new ManualDto();
+      m.setManualContent("AAA" + i);
+      m.setManualTitle("회원");
+      manualRepository.save(m.toEntity());
+    }
+  }
+  @GetMapping("/notice")
+  public void notice() {
+
+    for (int i = 1; i <= 50; i++) {
+      NoticeDto m = new NoticeDto();
+      m.setNoticeContent("AAA"+i);
+      m.setNoticeTitle("회원");
+      noticeRepository.save(m.toEntity());
     }
   }
 }

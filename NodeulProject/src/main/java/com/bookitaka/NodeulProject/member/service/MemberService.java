@@ -181,13 +181,13 @@ public class MemberService {
     public Page<Member> getAllMembersPaging(Pageable pageable, String keyword, String method, Cookie[] cookies) {
         String excludeMemberEmail = jwtTokenProvider.getMemberEmail(jwtTokenProvider.resolveToken(cookies, Token.ACCESS_TOKEN));
         if (method.equals("이름")) {
-            return memberRepository.findByMemberNameContainingAndMemberEmailNotOrderByMemberNo(keyword, excludeMemberEmail, pageable);
+            return memberRepository.findByMemberNameContainingAndMemberEmailNot(keyword, excludeMemberEmail, pageable);
         } else if (method.equals("이메일")) {
-            return memberRepository.findByMemberEmailContainingAndMemberEmailNotOrderByMemberNo(keyword, excludeMemberEmail, pageable);
+            return memberRepository.findByMemberEmailContainingAndMemberEmailNot(keyword, excludeMemberEmail, pageable);
         } else if (method.equals("이메일/이름")) {
-            return memberRepository.findByMemberEmailContainingAndMemberNameContainingAndMemberEmailNotOrderByMemberNo(keyword, keyword, excludeMemberEmail, pageable);
+            return memberRepository.findByMemberEmailContainingAndMemberNameContainingAndMemberEmailNot(keyword, keyword, excludeMemberEmail, pageable);
         } else {
-            return memberRepository.findByMemberEmailNotOrderByMemberNo(excludeMemberEmail, pageable);
+            return memberRepository.findByMemberEmailNot(excludeMemberEmail, pageable);
         }
 
     }
@@ -228,6 +228,9 @@ public class MemberService {
 
     public String refresh(Cookie[] cookies, Member member) {
         String req_rToken = jwtTokenProvider.resolveToken(cookies, Token.REFRESH_TOKEN);
+        if (member.getMemberRtoken() == null) {
+            return null;
+        }
         String db_rToken = member.getMemberRtoken();
         if (req_rToken != null && req_rToken.equals(db_rToken)) {
             return jwtTokenProvider.createToken(member.getMemberEmail(), member.getMemberRole());

@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -52,7 +53,7 @@ public class FaqController {
         model.addAttribute("faqAllCategory", service.getAllFaqCategory());
         model.addAttribute("currentPage", page);
         model.addAttribute("pageSize", size);
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "faqRegdate"));
 
         log.info("================================================ keyword : {}", keyword);
         int currentGroup = page / size;
@@ -89,13 +90,6 @@ public class FaqController {
             nextGroupStartPage = endPage;
         }
         model.addAttribute("nextGroupStartPage", nextGroupStartPage);
-
-        // 관리자 확인
-        Member whoami = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
-        if (whoami != null && whoami.getMemberRole().equals(MemberRoles.ADMIN)) {
-            model.addAttribute("role",  whoami.getMemberRole());
-            log.info("================================================ memberRole : {}", whoami.getMemberRole());
-        }
 
         return "/faq/faqList";
     }

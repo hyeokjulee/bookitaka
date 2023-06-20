@@ -1,14 +1,11 @@
 <!DOCTYPE HTML>
 <html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-<menuTitle>알림마당</menuTitle>
-    <sidebar class="list-group-item"><a th:href="@{/sheet/list?ageGroup=유아용}">연령별</a></sidebar>
-    <sidebar class="list-group-item"><a th:href="@{/sheet/list?genre=그림책}">장르별</a></sidebar>
-    <sidebar class="list-group-item"><a th:href="@{/sheet/list?genre=독서토론논제은행}">논제은행</a></sidebar>
-    <sidebar class="list-group-item"><a th:href="@{/sheet/request}">개별출제요청</a></sidebar>
+<menuTitle>개별출제요청</menuTitle>
+<sidebar><th:block th:replace="layout/sidebar/sheet-sidebar :: sheet"></th:block></sidebar>
 
 <mainSection>
     <div id="wrap">
@@ -42,7 +39,7 @@
             <hr class="my-4">
 
             <div class="mb-4">
-                <span class="sheetinput-title">요청 도서 검색하기</span>
+                <span class="sheetinput-title" style="width: 250px;">요청 도서 검색하기</span>
                 <button type="button" class="btn btn-primary" onclick="openModal()">도서검색</button>
             </div>
 
@@ -51,9 +48,17 @@
             <!--    도서 검색 모달 창  -->
             <div id="bookSearchModal" class="modal">
                 <div class="modal-content">
-                    <h2>도서 검색</h2>
-                    제목 <input type="text" id="keyword" class="form-control"><br>
-                    작가 <input type="text" id="authorSearch" class="form-control"><br>
+                    <h2 class="mb-5 mt-5">도서 검색</h2>
+                    <div class="d-flex align-items-center mb-4">
+                        <span class="sheetinput-title">책 제목</span>
+                        <input type="text" id="keyword" class="form-control " placeholder="제목을 입력해주세요" style="width: 400px;">
+                    </div>
+                    <div class="d-flex align-items-center mb-4">
+                        <span class="sheetinput-title">작가</span>
+                        <input type="text" id="authorSearch" class="form-control" placeholder="제목을 입력해주세요" style="width: 400px;">
+                    </div>
+                    <!--<span>제목:</span><input type="text" id="keyword" class="form-control" placeholder="제목을 입력해주세요" style="width: 400px;"><br>-->
+                    <!--<span>작가:</span><input type="text" id="authorSearch" placeholder="작가를 입력해주세요" class="form-control" style="width: 400px;"><br>-->
                     <button type="button" class="btn btn-primary" onclick="search()">검색</button><br><br>
                     <div id="searchResult"></div>
                 </div>
@@ -63,39 +68,41 @@
             <div class="mb-4">
                 <div class="d-flex align-items-center">
                 <span class="sheetinput-title">책 제목</span>
-                <input type="text" id="sheetBooktitle" name="requestBooktitle" class="form-control" placeholder="책 제목을 입력하세요" readonly>
+                <input type="text" id="sheetBooktitle" name="requestBooktitle" class="form-control ms-3" placeholder="책 제목을 입력하세요" readonly>
                     <div class="errorMsg" th:errors="*{requestBooktitle}">책 제목 오류</div>
                 </div>
             </div>
             <div class="mb-4">
                 <div class="d-flex align-items-center">
                 <span class="sheetinput-title">작가</span>
-                <input type="text" id="sheetBookauthor" name="requestBookauthor" class="form-control" placeholder="작가를 입력하세요" readonly >
+                <input type="text" id="sheetBookauthor" name="requestBookauthor" class="form-control ms-3" placeholder="작가를 입력하세요" readonly >
                 </div>
             </div>
             <div class="mb-4">
                 <div class="d-flex align-items-center">
                 <span class="sheetinput-title">출판사</span>
-                <input type="text" id="sheetBookpublisher" name="requestBookpublisher" class="form-control" placeholder="출판사를 입력하세요" readonly >
+                <input type="text" id="sheetBookpublisher" name="requestBookpublisher" class="form-control ms-3" placeholder="출판사를 입력하세요" readonly >
                 </div>
             </div>
             <div class="mb-4">
                 <div class="d-flex align-items-center">
                 <span class="sheetinput-title">ISBN</span>
-                <input type="text" id="sheetBookisbn" name="requestBookisbn" class="form-control" placeholder="isbn을 입력하세요" readonly >
+                <input type="text" id="sheetBookisbn" name="requestBookisbn" class="form-control ms-3" placeholder="isbn을 입력하세요" readonly >
                 </div>
             </div>
+
+            <hr class="my-4">
+
             <div class="mb-4">
                 <div class="d-flex align-items-center">
-                <span class="sheetinput-title">요구사항</span>
-                <textarea type="text" id="sheetContent" name="requestContent" class="form-control" rows="3" placeholder="설명을 입력하세요"></textarea>
+                <span class="sheetinput-title">요청내용</span>
+                <textarea type="text" id="sheetContent" name="requestContent" class="form-control ms-3" rows="3" placeholder="요청내용을 작성해주세요. (문항수/사용목적/원하는형식 등)"></textarea>
                 </div>
             </div>
             <div class="mb-4">
                 <div class="d-flex align-items-center">
                 <span class="sheetinput-title">희망일</span>
-                <input type="date" id="requestHopedate" th:min="${T(java.time.LocalDate).now()}"
-                       th:value="${T(java.time.LocalDate).now().plusDays(14)}" name="requestHopedate" class="form-control" placeholder="희망하는 날짜를 입력하세요">
+                <input type="date" id="requestHopedate" th:min="${T(java.time.LocalDate).now()}" name="requestHopedate" class="form-control" style="width: 300px;" ><label class="align-items-center mb-0 p-3" >작업은 최소 2-3일 정도 소요됩니다.</label>
                 </div>
             </div>
             <div class="d-flex justify-content-end">
@@ -108,6 +115,7 @@
     <script>
         var modal = document.getElementById("bookSearchModal");
 
+        // 모달 창 보이게
         function openModal() {
             modal.style.display = "block";
         }
@@ -118,6 +126,7 @@
             }
         }
 
+        // 모달창 띄워져 있을 때 엔터 누르면 도서 검색 버튼 클릭 되도록 설정
         window.addEventListener('keydown', function(event) {
             if (event.key === 'Enter') {
                 // 모달창이 띄워져 있는지 확인
@@ -130,6 +139,7 @@
             }
         });
 
+        // 도서 검색 open api
         function search(pageNum) {
             var keyword = $("#keyword").val();
             var authorSearch = $("#authorSearch").val();
@@ -171,6 +181,7 @@
             });
         }
 
+        // 검색 리스트 클릭 시 도서 정보 폼으로 이동
         function getBookValue(element) {
             var title = $(element).children(".sheetBooktitle").text();
             var author = $(element).children(".sheetBookauthor").text();

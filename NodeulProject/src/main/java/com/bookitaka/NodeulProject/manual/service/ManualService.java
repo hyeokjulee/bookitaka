@@ -23,10 +23,20 @@ public class ManualService {
     private ManualRepository manualRepository;
 
     @Transactional
-    public Page<ManualDto> getManualList(Pageable pageable) {
-        Page<Manual> manualEntities = manualRepository.findAll(pageable);
-        return manualEntities.map(this::convertEntityToDto);
+    public Page<ManualDto> getManualList(Pageable pageable, String keyword) {
+        if (keyword != null) {
+            Page<Manual> manualEntities = manualRepository.findByManualTitleContainingOrManualContentContaining(keyword, keyword, pageable);
+            if (manualEntities.isEmpty()) {
+                return Page.empty(); // 빈 페이지 반환
+            }
+            return manualEntities.map(this::convertEntityToDto);
+        } else {
+            Page<Manual> manualEntities = manualRepository.findAll(pageable);
+            return manualEntities.map(this::convertEntityToDto);
+        }
     }
+
+
 
 /*    public List<ManualDto> getManualList(){
         List<Manual> manualEntites = manualRepository.findAll(Sort.by(Sort.Direction.DESC, "manualNo"));
@@ -45,13 +55,13 @@ public class ManualService {
     }*/
 
     @Transactional
-    public Integer registerManual(ManualDto manualDto){
+    public Integer registerManual(ManualDto manualDto) {
         return manualRepository.save(manualDto.toEntity()).getManualNo();
 
     }
 
     @Transactional
-    public ManualDto getManual(Integer manualNo){
+    public ManualDto getManual(Integer manualNo) {
 
         Optional<Manual> manualEntityWrapper = manualRepository.findById(manualNo);
         Manual manual = manualEntityWrapper.get();
@@ -77,7 +87,7 @@ public class ManualService {
     }
 
     @Transactional
-    public void deleteManual(Integer manualNo){
+    public void deleteManual(Integer manualNo) {
         manualRepository.deleteById(manualNo);
     }
 
