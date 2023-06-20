@@ -41,9 +41,11 @@ public class MainController {
         Page<ManualDto> manualList = manualService.getManualList(PageRequest.of(0, 5 , Sort.by("manualNo").descending()),null);
 
         Page<NoticeDto> noticeList = noticeService.getNoticeList(PageRequest.of(0, 5, Sort.by("noticeRegdate").descending()),null);
+        Long sheetCnt = sheetService.getSheetCnt("", "", SearchTypes.TITLE, "");
 
         model.addAttribute("newSheets", newSheets);
         model.addAttribute("topSheets", topSheets);
+        model.addAttribute("sheetCnt", sheetCnt);
         model.addAttribute("manuals",manualList);
         model.addAttribute("notices", noticeList);
 

@@ -480,6 +480,7 @@
             .then((response) => {
                 if (response.ok) {
                     // 회원 가입 성공 시
+                    alert("회원 가입에 성공했습니다.");
                     location.href = "/members/login";
                 } else if (response.status === 402) {
                     document.getElementById("alertDiv").style.display = "block";

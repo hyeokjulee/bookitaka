@@ -107,7 +107,7 @@
                 <ul class="pagination justify-content-center">
                     <li class="page-item">
                         <a class="page-link" th:if="${pageInfo.getPageNum() > 0}"
-                           th:href="@{/sheet/list(pageNum=${pageInfo.getPreviousGroupStartPage()} + 1,  amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort}, genre=${genre}, ageGroup=${ageGroup})}">&lt;&lt;</a>
+                           th:href="@{/sheet/list(pageNum=${pageInfo.getPreviousGroupStartPage()} + 1,  amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort}, genre=${genre}, ageGroup=${ageGroup})}">&laquo;</a>
                     </li>
                     <li class="page-item" th:if="${pageInfo.hasPreviousPage}">
                         <a class="page-link" th:href="@{/sheet/list(genre=${genre}, ageGroup=${ageGroup}, pageNum=${pageInfo.pageNum}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort})}">&lt;</a>
@@ -120,7 +120,7 @@
                     </li>
                     <li class="page-item">
                         <a class="page-link" th:if="${pageInfo.getPageNum() + 1 < pageInfo.getTotalPage()}"
-                           th:href="@{/sheet/list(pageNum=${pageInfo.getNextGroupStartPage()},  amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort}, genre=${genre}, ageGroup=${ageGroup})}">&gt;&gt;</a>
+                           th:href="@{/sheet/list(pageNum=${pageInfo.getNextGroupStartPage()},  amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort}, genre=${genre}, ageGroup=${ageGroup})}">&raquo;</a>
                     </li>
                 </ul>
             </div>

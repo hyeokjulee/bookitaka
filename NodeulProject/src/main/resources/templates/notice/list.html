@@ -76,7 +76,7 @@
                 <ul class="pagination justify-content-center">
                     <li class="page-item">
                         <a class="page-link" th:if="${currentPage > 0}"
-                           th:href="@{/notice/list(page=${previousGroupStartPage}, keyword=${keyword})}">&lt;&lt;</a>
+                           th:href="@{/notice/list(page=${previousGroupStartPage}, keyword=${keyword})}">&laquo;</a>
                     </li>
                     <li class="page-item">
                         <a class="page-link" th:if="${currentPage > 0}"
@@ -97,7 +97,7 @@
                     <li class="page-item">
                         <a class="page-link" th:if="${currentPage + 1 < totalPages}"
                            th:href="@{/notice/list(page=${nextGroupStartPage},  keyword=${keyword})}">
-                            &gt;&gt; </a>
+                            &raquo; </a>
                     </li>
                 </ul>
             </nav>
