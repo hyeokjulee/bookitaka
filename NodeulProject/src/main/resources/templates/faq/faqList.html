@@ -69,7 +69,7 @@
                                 <form th:action="@{/faq/remove/{faqNo}(faqNo=${faq.faqNo})}" method="post"
                                       th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
                                     <input class="btn btn-primary me-2" id="deleteBtn" type="submit" value="삭제"
-                                           onclick="deleteConfirm()">
+                                           onclick="deleteConfirm(event)">
                                 </form>
                                 <a th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="btn btn-primary"
                                    th:href="@{/faq/edit/{faqNo}(faqNo=${faq.faqNo})}">수정</a>
@@ -114,10 +114,12 @@
                 </ul>
             </nav>
             <script th:inline="javascript">
-                function deleteConfirm() {
+                function deleteConfirm(event) {
                     // 삭제 확인 후, 확인 시 삭제처리
                     if (confirm('정말 삭제하시겠습니까?')) {
-                        this.closest('form').submit();
+                        event.target.closest('form').submit();
+                    } else {
+                        event.preventDefault(); // 기본 동작을 막음
                     }
                 }
             </script>
