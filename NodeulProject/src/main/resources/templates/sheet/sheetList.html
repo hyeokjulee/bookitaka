@@ -105,14 +105,22 @@
             </div>
             <div class="pagination mt-3 justify-content-center">
                 <ul class="pagination justify-content-center">
-                    <li class="page-item" th:if="${pageInfo.hasPreviousPage}">
-                        <a class="page-link" th:href="@{/sheet/list(genre=${genre}, ageGroup=${ageGroup}, pageNum=${pageInfo.pageNum - 1}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort})}">&laquo;</a>
+                    <li class="page-item">
+                        <a class="page-link" th:if="${pageInfo.getPageNum() > 0}"
+                           th:href="@{/sheet/list(pageNum=${pageInfo.getPreviousGroupStartPage()} + 1,  amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort}, genre=${genre}, ageGroup=${ageGroup})}">&lt;&lt;</a>
                     </li>
-                    <li th:each="pageNum : ${pageInfo.getPageList()}" th:class="${pageNum} == ${pageInfo.pageNum} ? 'page-item page-disabled active' : 'page-item'">
-                        <a class="page-link" th:href="@{/sheet/list(genre=${genre}, ageGroup=${ageGroup}, pageNum=${pageNum}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort})}" th:text="${pageNum}"></a>
+                    <li class="page-item" th:if="${pageInfo.hasPreviousPage}">
+                        <a class="page-link" th:href="@{/sheet/list(genre=${genre}, ageGroup=${ageGroup}, pageNum=${pageInfo.pageNum}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort})}">&lt;</a>
+                    </li>
+                    <li th:each="pageNumber : ${#numbers.sequence(pageInfo.getStartPage(), pageInfo.getEndPage()-1)}" th:class="${pageNumber} == ${pageInfo.pageNum} ? 'page-item page-disabled active' : 'page-item'">
+                        <a class="page-link" th:href="@{/sheet/list(genre=${genre}, ageGroup=${ageGroup}, pageNum=${pageNumber} + 1, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort})}" th:text="${pageNumber} + 1"></a>
                     </li>
                     <li class="page-item" th:if="${pageInfo.hasNextPage}">
-                        <a class="page-link" th:href="@{/sheet/list(genre=${genre}, ageGroup=${ageGroup}, pageNum=${pageInfo.pageNum + 1}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort})}">&raquo;</a>
+                        <a class="page-link" th:href="@{/sheet/list(genre=${genre}, ageGroup=${ageGroup}, pageNum=${pageInfo.pageNum + 2}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort})}">&gt;</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:if="${pageInfo.getPageNum() + 1 < pageInfo.getTotalPage()}"
+                           th:href="@{/sheet/list(pageNum=${pageInfo.getNextGroupStartPage()},  amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort}, genre=${genre}, ageGroup=${ageGroup})}">&gt;&gt;</a>
                     </li>
                 </ul>
             </div>

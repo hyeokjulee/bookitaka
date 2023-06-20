@@ -35,14 +35,11 @@
                  <input type="text" th:value="${currentMember.memberPhone}" id="requestPhone" name="requestPhone" class="form-control my-1" placeholder="연락처를 입력하세요" style="width: 300px;">
                  </div>
             </div>
-
             <hr class="my-4">
-
             <div class="mb-4">
                 <span class="sheetinput-title" style="width: 250px;">요청 도서 검색하기</span>
                 <button type="button" class="btn btn-primary" onclick="openModal()">도서검색</button>
             </div>
-
             <hr class="my-4">
 
             <!--    도서 검색 모달 창  -->
@@ -66,7 +63,7 @@
                     <div id="searchResult"></div>
                 </div>
             </div>
-
+            <!--    END 도서 검색 모달 창  -->
 
             <div class="mb-4">
                 <div class="d-flex align-items-center">
@@ -171,10 +168,10 @@
                         result += `<img class='sheetBookimgname' src='${bookList[i].sheetBookimgname}'>`;
                         result += `</div>`;
                         result += `<div class='col-5 text-start'>`;
-                        result += `<p class='sheetBooktitle'><span class="sheetdetail-title">책 제목: </span>${bookList[i].sheetBooktitle}</p>`;
-                        result += `<p class='sheetBookauthor'><span class="sheetdetail-title">작가: </span>${bookList[i].sheetBookauthor}</p>`;
-                        result += `<p class='sheetBookpublisher'><span class="sheetdetail-title">출판사: </span>${bookList[i].sheetBookpublisher}</p>`;
-                        result += `<p class='sheetBookisbn'><span class="sheetdetail-title">ISBN: </span>${bookList[i].sheetBookisbn}</p>`;
+                        result += `<p class='sheetBooktitle'><span class="sheetdetail-title">책 제목 : </span>${bookList[i].sheetBooktitle}</p>`;
+                        result += `<p class='sheetBookauthor'><span class="sheetdetail-title">작가 : </span>${bookList[i].sheetBookauthor}</p>`;
+                        result += `<p class='sheetBookpublisher'><span class="sheetdetail-title">출판사 : </span>${bookList[i].sheetBookpublisher}</p>`;
+                        result += `<p class='sheetBookisbn'><span class="sheetdetail-title">ISBN : </span>${bookList[i].sheetBookisbn}</p>`;
                         result += `</div>`;
                         result += `</div>`;
                         result += `</div><hr>`;
@@ -197,10 +194,10 @@
 
         // 검색 리스트 클릭 시 도서 정보 폼으로 이동
         function getBookValue(element) {
-            var title = $(element).children(".sheetBooktitle").text();
-            var author = $(element).children(".sheetBookauthor").text();
-            var pub = $(element).children(".sheetBookpublisher").text();
-            var isbn = $(element).children(".sheetBookisbn").text();
+            var title = $(element).find(".sheetBooktitle").text();
+            var author = $(element).find(".sheetBookauthor").text();
+            var pub = $(element).find(".sheetBookpublisher").text();
+            var isbn = $(element).find(".sheetBookisbn").text();
             $("#sheetBooktitle").val(title);
             $("#sheetBookauthor").val(author);
             $("#sheetBookpublisher").val(pub);
