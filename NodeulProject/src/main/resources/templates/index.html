@@ -61,15 +61,16 @@
       <!-- <section> begin ============================-->
       <section>
 
-        <div class="container">
+        <div class="container mb-8">
           <div class="row">
-            <h1 class="text-center mb-5"> 최근 나온 독후활동지 </h1>
+            <h1 class="text-center mb-5 fw-bold fs-4"> 신규 독후활동지 </h1>
             <div th:each="newsheet : ${newSheets}" class="col-md-3 mb-4">
-              <div class="card h-100">
+              <div class="card border-0" style="height: 250px">
                 <img th:if="${newsheet.sheetBookimguuid == null}" class="card-img-top h-100 w-100 img-contained" th:src="|/assets/img/defaultImg.jpeg|" />
                 <img th:if="${newsheet.sheetBookimguuid != null}" class="card-img-top h-100 w-100 img-contained" th:src="|/sheet/bookImg/*{newsheet.sheetBookimguuid}*{newsheet.sheetBookimgname}|" src="/assets/img/gallery/design.png" alt="courses" />
                 <div class="card-body">
-                  <h5 th:text="${newsheet.sheetBooktitle}" class="font-sans-serif fw-bold fs-md-0 fs-lg-1">User Research for User Experience Design</h5><a th:href="@{|/sheet/${newsheet.sheetNo}/|}"><div th:text="|${newsheet.sheetBookauthor} / ${newsheet.sheetBookpublisher}|" class="text-muted fs--1 stretched-link text-decoration-none" href="#!">The Museum of Modern Art</div></a>
+                  <h5 th:text="${newsheet.sheetBooktitle}" class="font-sans-serif fw-bold fs-md-0 fs-lg-1">User Research for User Experience Design</h5>
+                  <a th:href="@{|/sheet/${newsheet.sheetNo}/|}"><div th:text="|${newsheet.sheetBookauthor} / ${newsheet.sheetBookpublisher}|" class="text-muted fs--1 stretched-link text-decoration-none" href="#!">The Museum of Modern Art</div></a>
                 </div>
               </div>
             </div>
@@ -80,12 +81,12 @@
 
         <div class="container">
           <div class="row">
-            <h1 class="text-center mb-5"> 베스트셀러 독후활동지 </h1>
+            <h1 class="text-center mb-5 fw-bold fs-4"> 베스트셀러 독후활동지 </h1>
             <div th:each="topSheet : ${topSheets}" class="col-md-3 mb-4">
-              <div class="card h-100">
+              <div class="card border-0" style="height: 250px">
                 <img th:if="${topSheet.sheetBookimguuid == null}" class="card-img-top h-100 w-100 img-contained" th:src="|/assets/img/defaultImg.jpeg|" />
                 <img th:if="${topSheet.sheetBookimguuid != null}" class="card-img-top h-100 w-100 img-contained" th:src="|/sheet/bookImg/*{topSheet.sheetBookimguuid}*{topSheet.sheetBookimgname}|" src="/assets/img/gallery/design.png" alt="courses" />
-                <div class="card-body">
+                <div class="card-body" style="height: 250px">
                   <h5 th:text="${topSheet.sheetBooktitle}" class="font-sans-serif fw-bold fs-md-0 fs-lg-1">User Research for User Experience Design</h5><a th:href="@{|/sheet/${topSheet.sheetNo}/|}"><div th:text="|${topSheet.sheetBookauthor} / ${topSheet.sheetBookpublisher}|" class="text-muted fs--1 stretched-link text-decoration-none" href="#!">The Museum of Modern Art</div></a>
                 </div>
               </div>
@@ -103,12 +104,12 @@
           <div class="row">
 
         <div class="col-md-6 mb-4">
-          <div class="card">
+          <div class="card shadow">
             <div class="d-flex justify-content-between mt-2">
               <h4 class="text-info fw-bold m-4 text-center">이용방법</h4>
                 <a href="/manual/list" class="m-4">더보기 &gt;&gt;</a>
             </div>
-            <div class="card-body">
+            <div class="card-body" style="height: 250px">
               <table class="table">
                 <tbody>
                   <div th:each="manual : ${manuals}" class="">
@@ -127,12 +128,12 @@
         </div>
 
             <div class="col-md-6 mb-4">
-              <div class="card">
+              <div class="card shadow">
                 <div class="d-flex justify-content-between mt-2">
                   <h4 class="text-info fw-bold m-4 text-center">공지사항</h4>
                   <a href="/notice/list" class="m-4">더보기 &gt;&gt;</a>
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="height: 250px">
                   <table class="table">
                     <tbody>
                     <div th:each="notice : ${notices}" class="">
