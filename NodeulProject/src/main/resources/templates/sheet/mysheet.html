@@ -60,14 +60,32 @@
 
   <div class="pagination">
     <ul class="pagination justify-content-center">
-      <li class="page-item" th:if="${pageInfo.hasPreviousPage}">
-        <a class="page-link" th:href="@{/sheet/mysheet(pageNum=${pageInfo.pageNum - 1}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}">&laquo;</a>
+<!--      <li class="page-item" th:if="${pageInfo.hasPreviousPage}">-->
+<!--        <a class="page-link" th:href="@{/sheet/mysheet(pageNum=${pageInfo.pageNum - 1}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}">&laquo;</a>-->
+<!--      </li>-->
+<!--      <li class="page-item" th:each="pageNum : ${pageInfo.getPageList()}" th:class="${pageNum} == ${pageInfo.pageNum} ? 'page-disabled active' : ''">-->
+<!--        <a class="page-link" th:href="@{/sheet/mysheet(pageNum=${pageNum}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}" th:text="${pageNum}"></a>-->
+<!--      </li>-->
+<!--      <li class="page-item" th:if="${pageInfo.hasNextPage}">-->
+<!--        <a class="page-link" th:href="@{/sheet/mysheet(pageNum=${pageInfo.pageNum + 1}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}">&raquo;</a>-->
+<!--      </li>-->
+
+      <li class="page-item">
+        <a class="page-link" th:if="${pageInfo.getPageNum() > 0}"
+           th:href="@{/sheet/mysheet(pageNum=${pageInfo.getPreviousGroupStartPage()} + 1,  amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort}, genre=${genre}, ageGroup=${ageGroup})}">&lt;&lt;</a>
       </li>
-      <li class="page-item" th:each="pageNum : ${pageInfo.getPageList()}" th:class="${pageNum} == ${pageInfo.pageNum} ? 'page-disabled active' : ''">
-        <a class="page-link" th:href="@{/sheet/mysheet(pageNum=${pageNum}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}" th:text="${pageNum}"></a>
+      <li class="page-item" th:if="${pageInfo.hasPreviousPage}">
+        <a class="page-link" th:href="@{/sheet/mysheet(pageNum=${pageInfo.pageNum}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}">&lt;</a>
+      </li>
+      <li th:each="pageNumber : ${#numbers.sequence(pageInfo.getStartPage(), pageInfo.getEndPage()-1)}" th:class="${pageNumber} == ${pageInfo.pageNum} ? 'page-item page-disabled active' : 'page-item'">
+        <a class="page-link" th:href="@{/sheet/mysheet(pageNum=${pageNumber} + 1, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}" th:text="${pageNumber} + 1"></a>
       </li>
       <li class="page-item" th:if="${pageInfo.hasNextPage}">
-        <a class="page-link" th:href="@{/sheet/mysheet(pageNum=${pageInfo.pageNum + 1}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}">&raquo;</a>
+        <a class="page-link" th:href="@{/sheet/mysheet(pageNum=${pageInfo.pageNum + 2}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}">&gt;</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" th:if="${pageInfo.getPageNum() + 1 < pageInfo.getTotalPage()}"
+           th:href="@{/sheet/mysheet(pageNum=${pageInfo.getNextGroupStartPage()},  amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}">&gt;&gt;</a>
       </li>
     </ul>
   </div>

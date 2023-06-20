@@ -15,6 +15,10 @@ import com.bookitaka.NodeulProject.notice.dto.NoticeDto;
 import com.bookitaka.NodeulProject.notice.repository.NoticeRepository;
 import com.bookitaka.NodeulProject.request.Request;
 import com.bookitaka.NodeulProject.request.RequestRepository;
+import com.bookitaka.NodeulProject.sheet.Sheet;
+import com.bookitaka.NodeulProject.sheet.SheetRepository;
+import com.bookitaka.NodeulProject.sheet.mysheet.Mysheet;
+import com.bookitaka.NodeulProject.sheet.mysheet.MysheetRepository;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +50,8 @@ public class MemberTestController {
   private final ManualRepository manualRepository;
   private final NoticeRepository noticeRepository;
   private final RequestRepository requestRepository;
+  private final SheetRepository sheetRepository;
+  private final MysheetRepository mysheetRepository;
 
   // 회원가입
   @GetMapping("/signup")
@@ -80,6 +86,30 @@ public class MemberTestController {
       m.setNoticeContent("AAA"+i);
       m.setNoticeTitle("회원");
       noticeRepository.save(m.toEntity());
+    }
+  }
+
+  @GetMapping("/sheet")
+  public void sheet() {
+
+    for (int i = 1; i <= 50; i++) {
+      Sheet sheet = new Sheet();
+      sheet.setSheetBooktitle("title" + i);
+      sheet.setSheetBookauthor("author" + i);
+      sheet.setSheetBookpublisher("publisher" + i);
+      sheet.setSheetPrice(10000);
+      sheetRepository.createSheet(sheet);
+    }
+  }
+
+  @GetMapping("/mysheet")
+  public void mysheet(HttpServletRequest request) {
+
+    for (int i = 1; i <= 50; i++) {
+      Mysheet mysheet = new Mysheet();
+      mysheet.setMember(memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN));
+
+      mysheetRepository.save(mysheet);
     }
   }
 
