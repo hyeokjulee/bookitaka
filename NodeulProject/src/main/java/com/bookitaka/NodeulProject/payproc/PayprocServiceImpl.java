@@ -15,6 +15,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -119,6 +121,17 @@ public class PayprocServiceImpl implements PayprocService {
         //coupon 생성.
         Coupon coupon = new Coupon();
         coupon.setMemberEmail(member.getMemberEmail());
+
+        // 현재 날짜와 시간을 가져옵니다.
+        LocalDateTime now = LocalDateTime.now();
+
+        // 현재로부터 1년을 더합니다.
+        LocalDateTime oneYearLater = now.plusYears(1);
+
+        // 시간을 11시 59분으로 설정합니다.
+        LocalDateTime result = oneYearLater.withHour(11).withMinute(59);
+
+        coupon.setCouponEnddate(result);
 
         log.info("Payproc member = {}", member);
 

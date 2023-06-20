@@ -36,9 +36,14 @@
             </tr>
             <tr class="row">
                 <th class="col-2 text-center table-light">요청 등록 날짜</th>
-                <th class="col-4" style="font-weight: normal;" th:text="${request.requestRegdate}"></th>
+                <th th:if="${request.requestRegdate != null}" class="col-4" style="font-weight: normal;"
+                    th:with="isToday=${#temporals.format(request.requestRegdate.toLocalDateTime(), 'yyyy-MM-dd').equals(T(java.time.LocalDate).now().toString())}">
+                    <span th:if="${isToday}" th:text="${#temporals.format(request.requestRegdate.toLocalDateTime(), 'a hh:mm')}">요청일</span>
+                    <span th:unless="${isToday}" th:text="${#temporals.format(request.requestRegdate.toLocalDateTime(), 'yyyy.MM.dd')}">요청일</span>
+                </th>
+
                 <th class="col-2 text-center table-light">요청 희망 날짜</th>
-                <th class="col-4" style="font-weight: normal;" th:text="${request.requestHopedate}"></th>
+                <th class="col-4" style="font-weight: normal;" th:text="${#strings.replace(request.requestHopedate, '-', '.')}"></th>
             </tr>
         </table>
         <table class="table table-bordered mt-0">

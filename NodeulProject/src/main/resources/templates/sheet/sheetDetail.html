@@ -18,7 +18,7 @@
             <p class="p-detail">북키타카 독후활동지</p>
             <div class="position-absolute top-0 end-0 m-2">
                 <div class="text-end"><span class="desc" id="sheetRegdate" th:text="${#dates.format(sheet.sheetRegdate, 'yyyy.MM.dd')}">등록 날짜</span><span class="p-detail mx-1">등록</span></div>
-                <div th:if="${sheet.sheetModdate} != null" class="text-end"><span class="desc" id="sheetModdate" th:text="${#dates.format(sheet.sheetModdate, 'yyyy-MM-dd')}">수정 날짜</span><span class="p-detail">수정됨</span></div>
+                <div th:if="${sheet.sheetModdate} != null" class="text-end"><span class="desc" id="sheetModdate" th:text="${#dates.format(sheet.sheetModdate, 'yyyy.MM.dd')}">수정 날짜</span><span class="p-detail">수정됨</span></div>
                 <div class="text-end"><span class="desc" id="sheetHit" th:text="*{sheet.sheetHit}">조회수</span><span class="p-detail mx-1">조회</span></div>
             </div>
             <h1 class="clamp-2"><strong id="sheetBooktitle" th:text="*{sheet.sheetBooktitle}">제목</strong><span class="p-detail px-2">의 활동지</span></h1>
