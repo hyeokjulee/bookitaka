@@ -47,8 +47,8 @@ public class RequestController {
                                           @RequestParam("authorSearch") String authorSearch,
                                           @RequestParam(name = "pageNum", defaultValue = "1") Integer pageNum,
                                           Model model ) {
-//        log.info("keyword = {}", keyword);
-//        log.info("authorSearch = {}", authorSearch);
+        log.info("keyword = {}", keyword);
+        log.info("authorSearch = {}", authorSearch);
         log.info("pageNum = {}", pageNum);
 
         String currentPageNum = "";
@@ -75,10 +75,7 @@ public class RequestController {
                               HttpServletRequest httpServletRequest,
                               @Validated @ModelAttribute RequestDto requestDto,
                               BindingResult bindingResult) {
-//        log.info("requestDto = {}", requestDto);
-        Request request = modelMapper.map(requestDto, Request.class);
-        log.info("request = {}", request);
-        requestService.registerRequest(request);
+        log.info("requestDto = {}", requestDto);
 
         // validation 오류
         if(bindingResult.hasErrors()){
@@ -87,6 +84,10 @@ public class RequestController {
             model.addAttribute("currentMember", currentMember);
             return "request/requestForm";
         }
+
+        Request request = modelMapper.map(requestDto, Request.class);
+        log.info("request = {}", request);
+        requestService.registerRequest(request);
 
         // 등록 실패 오류
 //        if (!result) {
