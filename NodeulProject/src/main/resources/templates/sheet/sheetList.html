@@ -10,10 +10,10 @@
 <mainSection>
     <link rel="stylesheet" href="/css/sheet.css">
     <div id="wrap">
-        <div class="text-start fs-xl-5 mb-5">
-            <h3 th:if="${genre == '' and ageGroup == ''}" th:text="전체보기" ></h3>
-            <h3 th:if="${genre != ''}" th:text="|장르별로 보기 - ${genre}|" ></h3>
-            <h3 th:if="${ageGroup != ''}" th:text="|연령별로 보기 - ${ageGroup}|" ></h3>
+        <div class="text-start">
+            <h1 class="fs-5 fs-xl-5 mb-5" th:if="${genre == '' and ageGroup == ''}" th:text="전체보기" ></h1>
+            <h1 class="fs-5 fs-xl-5 mb-5" th:if="${genre != ''}" th:text="|장르별로 보기 - ${genre}|" ></h1>
+            <h1 class="fs-5 fs-xl-5 mb-5" th:if="${ageGroup != ''}" th:text="|연령별로 보기 - ${ageGroup}|" ></h1>
         </div>
     </div>
     <div id="main-container" class="main-container nav-effect-1">
