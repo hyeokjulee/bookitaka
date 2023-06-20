@@ -66,13 +66,13 @@ public class NoticeController {
 
 
     @GetMapping("/post")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String write(Model model){
         model.addAttribute("noticeDto", new NoticeDto()); // noticeDto 객체를 요청 속성에 추가
         return "notice/write.html"; }
 
     @PostMapping("/post")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String write(@Validated @ModelAttribute NoticeDto noticeDto, BindingResult bindingResult, Model model){
         if (bindingResult.hasErrors()) {
 
@@ -91,7 +91,7 @@ public class NoticeController {
     }
 
     @GetMapping("/post/edit/{noticeNo}")
-//@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String edit(@PathVariable("noticeNo") Integer noticeNo, Model model) {
         NoticeDto noticeDto = noticeService.getNotice(noticeNo);
         model.addAttribute("noticeDto", noticeDto);
@@ -99,7 +99,7 @@ public class NoticeController {
     }
 
     @PostMapping("/post/edit/{noticeNo}")
-//@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String updateNotice(@PathVariable("noticeNo") Integer noticeNo, @Validated @ModelAttribute("noticeDto") NoticeDto noticeDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "notice/update.html";
@@ -109,7 +109,7 @@ public class NoticeController {
     }
 
     @DeleteMapping("/post/{noticeNo}")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public String delete(@PathVariable("noticeNo") Integer noticeNo) {
         noticeService.removeNotice(noticeNo);
 

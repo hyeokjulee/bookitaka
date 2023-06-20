@@ -50,16 +50,19 @@
                 <div class="modal-content">
                     <h2 class="mb-5 mt-5">도서 검색</h2>
                     <div class="d-flex align-items-center mb-4">
-                        <span class="sheetinput-title">책 제목</span>
+                        <span class="request-title">책 제목</span>
                         <input type="text" id="keyword" class="form-control " placeholder="제목을 입력해주세요" style="width: 400px;">
                     </div>
                     <div class="d-flex align-items-center mb-4">
-                        <span class="sheetinput-title">작가</span>
-                        <input type="text" id="authorSearch" class="form-control" placeholder="제목을 입력해주세요" style="width: 400px;">
+                        <span class="request-title">작가</span>
+                        <input type="text" id="authorSearch" class="form-control" placeholder="작가를 입력해주세요" style="width: 400px;">
                     </div>
-                    <!--<span>제목:</span><input type="text" id="keyword" class="form-control" placeholder="제목을 입력해주세요" style="width: 400px;"><br>-->
-                    <!--<span>작가:</span><input type="text" id="authorSearch" placeholder="작가를 입력해주세요" class="form-control" style="width: 400px;"><br>-->
-                    <button type="button" class="btn btn-primary" onclick="search()">검색</button><br><br>
+                    <div class="align-items-center mb-4 fs-sm--1">
+                        <span>* 책 제목 또는 작가만 입력하셔도 검색 가능합니다. *</span>
+                    </div>
+                     <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary" onclick="search()">검색</button>
+                    </div>
                     <div id="searchResult"></div>
                 </div>
             </div>
@@ -67,9 +70,11 @@
 
             <div class="mb-4">
                 <div class="d-flex align-items-center">
-                <span class="sheetinput-title">책 제목</span>
-                <input type="text" id="sheetBooktitle" name="requestBooktitle" class="form-control ms-3" placeholder="책 제목을 입력하세요" readonly>
-                    <div class="errorMsg" th:errors="*{requestBooktitle}">책 제목 오류</div>
+                    <span class="sheetinput-title">책 제목</span>
+                    <input type="text" id="sheetBooktitle" name="requestBooktitle" class="form-control ms-3" placeholder="책 제목을 입력하세요" readonly>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="errorMsg ms-10" th:errors="*{requestBooktitle}">책 제목 오류</div>
                 </div>
             </div>
             <div class="mb-4">
@@ -158,22 +163,31 @@
                     var currentPageNum = parseInt(data.currentPageNum);
 
                     var result = "";
-                    result += `<div><p>검색 결과 : ${total}개</p></div>`;
+                    result += `<hr><div class="d-flex align-items-center mb-4 fs-sm--1"><span>검색 결과 : ${total}개</span></div>`;
                     for (var i = 0; i < bookList.length; i++) {
                         result += `<div class='eachBook' onclick='getBookValue(this)'>`;
+                        result += `<div class='row align-items-center justify-content-center'>`;
+                        result += `<div class='col-3 text-center'>`;
                         result += `<img class='sheetBookimgname' src='${bookList[i].sheetBookimgname}'>`;
-                        result += `<p class='sheetBooktitle'>${bookList[i].sheetBooktitle}</p>`;
-                        result += `<p class='sheetBookauthor'>${bookList[i].sheetBookauthor}</p>`;
-                        result += `<p class='sheetBookpublisher'>${bookList[i].sheetBookpublisher}</p>`;
-                        result += `<p class='sheetBookisbn'>${bookList[i].sheetBookisbn}</p>`;
+                        result += `</div>`;
+                        result += `<div class='col-5 text-start'>`;
+                        result += `<p class='sheetBooktitle'><span class="sheetdetail-title">책 제목: </span>${bookList[i].sheetBooktitle}</p>`;
+                        result += `<p class='sheetBookauthor'><span class="sheetdetail-title">작가: </span>${bookList[i].sheetBookauthor}</p>`;
+                        result += `<p class='sheetBookpublisher'><span class="sheetdetail-title">출판사: </span>${bookList[i].sheetBookpublisher}</p>`;
+                        result += `<p class='sheetBookisbn'><span class="sheetdetail-title">ISBN: </span>${bookList[i].sheetBookisbn}</p>`;
+                        result += `</div>`;
+                        result += `</div>`;
                         result += `</div><hr>`;
                     }
-                    result += `<div>Page: ${currentPageNum} / ${totalPageNum}`;
+                    result += `<div>`;
                     if (currentPageNum > 1) {
-                        result += `<button type="button" onclick="search(${currentPageNum - 1})">이전페이지</button>`;
+                        result += `<button type="button" class="btn btn-primary" onclick="search(${currentPageNum - 1})"><<</button>`;
                     }
+
+                    result += `${currentPageNum} / ${totalPageNum}`;
+
                     if (currentPageNum < totalPageNum) {
-                        result += `<button type="button" onclick="search(${currentPageNum + 1})">다음페이지</button>`;
+                        result += `<button type="button" class="btn btn-primary ms-1" onclick="search(${currentPageNum + 1})">>></button>`;
                     }
                     result += `</div>`;
                     $("#searchResult").html(result);
