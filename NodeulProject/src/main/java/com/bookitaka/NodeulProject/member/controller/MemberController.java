@@ -75,7 +75,9 @@ public class MemberController {
         log.info("================================Members : detailAdmin");
         Member searchMember = memberService.search(memberEmail);
         MemberResponseDTO memberResponseDTO = modelMapper.map(searchMember, MemberResponseDTO.class);
+        int couponCnt = couponService.getValidCouponCntByMemberEmail(searchMember.getMemberEmail());
         model.addAttribute("member", memberResponseDTO);
+        model.addAttribute("couponCnt", couponCnt);
         return "member/admin/detail";
     }
 
