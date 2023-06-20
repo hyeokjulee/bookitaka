@@ -59,7 +59,7 @@ public class MemberController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
     public String edit(Model model, HttpServletRequest request) {
         log.info("=====================MemberController - edit");
-        Member member = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN;
+        Member member = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
         MemberResponseDTO userResponseDTO = modelMapper.map(member, MemberResponseDTO.class);
         log.info(userResponseDTO.getMemberJoindate().toString());
         int couponCnt = couponService.getValidCouponCntByMemberEmail(member.getMemberEmail());
