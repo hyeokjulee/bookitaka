@@ -1,5 +1,6 @@
 package com.bookitaka.NodeulProject.member.controller;
 
+import com.bookitaka.NodeulProject.coupon.CouponService;
 import com.bookitaka.NodeulProject.member.dto.MemberDataDTO;
 import com.bookitaka.NodeulProject.member.dto.MemberResponseDTO;
 import com.bookitaka.NodeulProject.member.model.Member;
@@ -24,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 public class MemberController {
     private final MemberService memberService;
     private final ModelMapper modelMapper;
+    private final CouponService couponService;
 
     @GetMapping("/login")
     public String login(HttpServletRequest request) {
@@ -57,9 +59,12 @@ public class MemberController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
     public String edit(Model model, HttpServletRequest request) {
         log.info("=====================MemberController - edit");
-        MemberResponseDTO userResponseDTO = modelMapper.map(memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN), MemberResponseDTO.class);
+        Member member = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
+        MemberResponseDTO userResponseDTO = modelMapper.map(member, MemberResponseDTO.class);
         log.info(userResponseDTO.getMemberJoindate().toString());
+        int couponCnt = couponService.getValidCouponCntByMemberEmail(member.getMemberEmail());
         model.addAttribute("member", userResponseDTO);
+        model.addAttribute("couponCnt", couponCnt);
         return "member/my-info";
     }
 

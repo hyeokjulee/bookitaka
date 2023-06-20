@@ -7294,9 +7294,21 @@ fieldset:disabled .btn {
   border-color: #ffe3ea;
 }
 
+.eachBook:hover {
+  /* 마우스 호버 시 적용되는 스타일 */
+  background-color: #fff5fa;
+  cursor: pointer;
+}
 
 .sheetdetail-title{
   font-weight: 600;
+}
+
+.request-title{
+  display: inline-block;
+  width: 200px;
+  font-weight: 600;
+  padding-inline: 20px;
 }
 
 .sheetinput-title{
