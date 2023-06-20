@@ -38,6 +38,7 @@ public class RequestController {
     private final ModelMapper modelMapper;
 
     int size = 10;
+    int pageSize = 10;
 
     // 도서 검색 open api
     @GetMapping("/booksearch")
