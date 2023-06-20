@@ -139,7 +139,7 @@
                     <div th:each="notice : ${notices}" class="">
                       <tr>
                         <td>
-                          <a th:href="@{'/notice/post/' + ${notice.noticeTitle}}">
+                          <a th:href="@{'/notice/post/' + ${notice.noticeNo}}">
                             <span th:text="${notice.noticeTitle}"></span>
                           </a>
                         </td>

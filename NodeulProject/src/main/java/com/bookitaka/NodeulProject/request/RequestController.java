@@ -103,11 +103,37 @@ public class RequestController {
         Member currentMember = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
         model.addAttribute("currentMember", currentMember);
 
-        int size = 3;
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "requestRegdate"));
+        int pageSize = 10;
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "requestRegdate"));
 
         Page<Request> myRequest = requestService.getMyRequest(currentMember, pageable);
         model.addAttribute("myRequest", myRequest);
+
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", myRequest.getTotalPages());
+
+        int currentGroup = page / pageSize;
+        int startPage = currentGroup * pageSize;
+        int totalPages = myRequest.getTotalPages();
+        int endPage = Math.min(startPage + pageSize, myRequest.getTotalPages()) - 1;
+
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        // 이전 그룹의 첫 번째 페이지로 이동
+        int previousGroupStartPage = (currentGroup == 0) ? 0 : (currentGroup - 1) * pageSize;
+        model.addAttribute("previousGroupStartPage", previousGroupStartPage);
+
+        // 다음 그룹의 첫 번째 페이지로 이동
+        int nextGroupStartPage = (currentGroup + 1) * pageSize;
+
+        if (totalPages % 10 == 0 && startPage == totalPages - 10) {
+            nextGroupStartPage = endPage;
+        } else if (nextGroupStartPage > endPage + 1) {
+            nextGroupStartPage = endPage;
+        }
+        model.addAttribute("nextGroupStartPage", nextGroupStartPage);
+
         return "request/myRequest";
     }
 
@@ -117,11 +143,36 @@ public class RequestController {
     public String listRequestForAdmin(@RequestParam(name = "requestIsdone", defaultValue = "0") int requestIsdone,
                                       @RequestParam(name = "page", defaultValue = "0") int page,
                                       Model model) {
-        int size = 3;
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "requestRegdate"));
+        int pageSize = 10;
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "requestRegdate"));
         Page<Request> requestList = requestService.getAllRequestByRequestIsdone(requestIsdone, pageable);
         model.addAttribute("requestList", requestList);
         model.addAttribute("requestIsdone", requestIsdone);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", requestList.getTotalPages());
+
+        int currentGroup = page / pageSize;
+        int startPage = currentGroup * pageSize;
+        int totalPages = requestList.getTotalPages();
+        int endPage = Math.min(startPage + pageSize, requestList.getTotalPages()) - 1;
+
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        // 이전 그룹의 첫 번째 페이지로 이동
+        int previousGroupStartPage = (currentGroup == 0) ? 0 : (currentGroup - 1) * pageSize;
+        model.addAttribute("previousGroupStartPage", previousGroupStartPage);
+
+        // 다음 그룹의 첫 번째 페이지로 이동
+        int nextGroupStartPage = (currentGroup + 1) * pageSize;
+
+        if (totalPages % 10 == 0 && startPage == totalPages - 10) {
+            nextGroupStartPage = endPage;
+        } else if (nextGroupStartPage > endPage + 1) {
+            nextGroupStartPage = endPage;
+        }
+        model.addAttribute("nextGroupStartPage", nextGroupStartPage);
+
         return "request/requestList";
     }
 

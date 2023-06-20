@@ -94,9 +94,14 @@
                             </li>
                         </ul>
                     </div>
+                    <div class="row pt-3">
+                        <div class="col-md">
+                            <p class="my-2" th:if="${sheetList.isEmpty()}" style="text-align: center">등록된 활동지가 없습니다.</p>
+                        </div>
+                    </div>
 
                 </div>
-            <hr>
+            <hr th:class="${sheetList.isEmpty()}? 'my-5' : ''">
             </div>
             <div class="pagination mt-3 justify-content-center">
                 <ul class="pagination justify-content-center">
