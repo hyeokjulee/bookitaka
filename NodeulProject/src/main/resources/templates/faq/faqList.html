@@ -47,7 +47,7 @@
         </div>
 
         <!---------아코디언형식------------>
-        <div class="accordion pt-2" id="accordionPanelsStayOpenExample">
+        <div class="accordion pt-2" id="accordionPanelsStayOpenExample" >
             <div class="accordion-item" th:each="faq, stat : ${faqAll.content}">
                 <div th:id="'accordionItem' + ${stat.index}" >
                         <h2 class="accordion-header " th:id="'panelsStayOpen-heading' + ${stat.index}">
