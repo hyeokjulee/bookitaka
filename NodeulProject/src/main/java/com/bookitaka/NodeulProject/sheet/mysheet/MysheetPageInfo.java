@@ -80,12 +80,12 @@ public class MysheetPageInfo {
 
     // 이전 페이지 여부를 확인하는 메서드
     public boolean hasPreviousPage() {
-        return pageNum > 1;
+        return pageNum > 0;
     }
 
     // 다음 페이지 여부를 확인하는 메서드
     public boolean hasNextPage() {
-        return pageNum < totalPage;
+        return pageNum < totalPage - 1;
     }
 
     // 페이지 번호 리스트를 반환하는 메서드

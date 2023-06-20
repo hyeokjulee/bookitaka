@@ -54,7 +54,7 @@
         <ul class="pagination justify-content-center">
             <li class="page-item">
                 <a class="page-link" th:if="${currentPage > 0}"
-                   th:href="@{/sheet/request/list(page=${previousGroupStartPage})}">&lt;&lt;</a>
+                   th:href="@{/sheet/request/list(page=${previousGroupStartPage})}">&laquo;</a>
             </li>
             <li class="page-item">
                 <a class="page-link" th:if="${currentPage > 0}"
@@ -75,7 +75,7 @@
             <li class="page-item">
                 <a class="page-link" th:if="${currentPage + 1 < totalPages}"
                    th:href="@{/sheet/request/list(page=${nextGroupStartPage})}">
-                    &gt;&gt; </a>
+                    &raquo; </a>
             </li>
         </ul>
     </nav>
