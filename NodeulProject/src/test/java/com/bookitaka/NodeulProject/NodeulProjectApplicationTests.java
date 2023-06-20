@@ -9,5 +9,4 @@ class NodeulProjectApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }

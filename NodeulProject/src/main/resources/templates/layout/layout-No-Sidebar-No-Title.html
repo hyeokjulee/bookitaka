@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html th:fragment="layout (mainSection)" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <!-- ===============================================-->
+  <!--    Document Title-->
+  <!-- ===============================================-->
+  <title>북키타카</title>
+
+  <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+
+  <!-- ===============================================-->
+  <!--    Stylesheets-->
+  <!-- ===============================================-->
+  <link th:href="@{/assets/css/theme.css}" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/carticon.css">
+</head>
+
+
+<body>
+
+<!-- ===============================================-->
+<!--    Main Content-->
+<!-- ===============================================-->
+<main class="main" id="top">
+
+  <!---------------nav start------------------>
+  <div th:replace="layout/navbar :: navbar"></div>
+  <!---------------nav end-------------------->
+
+  <br><hr class="my-4">
+
+  <!-- ============================================-->
+  <!-- <section> begin ============================-->
+  <section class="py-5">
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+        <div th:replace="${mainSection}"><img class="w-100" src="/assets/img/gallery/ux-designer.png" alt="..." />
+        </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of .container-->
+
+  </section>
+  <!-- <section> close ============================-->
+  <!-- ============================================-->
+
+  <!-- ================footer start====================-->
+  <div th:replace="layout/footer :: footer"></div>
+  <!-- ================footer end======================-->
+</body>
+
+</html>

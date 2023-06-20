@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<menuTitle>알림마당</menuTitle>
+<sidebar><th:block th:replace="layout/sidebar/notification-sidebar :: notification"></th:block></sidebar>
+
+<mainSection>
+    <div id="wrap">
+        <div class="row g-0 align-items-center">
+            <div class="col-auto">
+                <h1 class="fs-5 fs-xl-5 mb-5">이용안내</h1>
+            </div>
+        </div>
+
+    <div class="card" style="border-radius: 20px; overflow: hidden; border: 3px solid #ffe3ea;">
+        <div class="card-body p-0">
+          <table class="table table-bordered mb-0 table-babypink">
+            <tr>
+                <th class="col-1 text-center table-light" style="background-color: #ffedf2">제목</th>
+                <th class="col-10" style="font-weight: normal;" th:text="${manualDto.manualTitle}"></th>
+            </tr>
+          </table>
+            <div class="py-4 px-4" style="overflow: auto;">
+                <div class="text-lg mb-8" th:utext="${manualDto.manualContent}">
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- 수정/삭제 -->
+        <div class="d-flex justify-content-end mt-5">
+            <a th:href="@{/manual/list}">
+                <button class="btn btn-primary">목록으로</button>
+            </a>
+            <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+            <a th:href="@{'/manual/post/edit/' + ${manualDto.manualNo}}">
+                <button class="btn btn-primary">수정</button>
+            </a>
+            <form id="delete-form" th:action="@{'/manual/post/' + ${manualDto.manualNo}}" method="post" style="display: inline-block;">
+                <input type="hidden" name="_method" value="delete"/>
+                <button class="btn btn-primary" id="delete-btn" onclick="deleteConfirm(event)">삭제</button>
+            </form>
+            </div>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        function deleteConfirm(event) {
+            // 삭제 확인 후, 확인 시 삭제처리
+            if (confirm('정말 삭제하시겠습니까?')) {
+                event.target.closest('form').submit();
+            } else {
+                event.preventDefault(); // 기본 동작을 막음
+            }
+        }
+    </script>
+
+</mainSection>
+</body>
+</html>

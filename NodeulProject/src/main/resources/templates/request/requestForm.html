@@ -1,0 +1,213 @@
+<!DOCTYPE HTML>
+<html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<menuTitle>개별출제요청</menuTitle>
+<sidebar><th:block th:replace="layout/sidebar/sheet-sidebar :: sheet"></th:block></sidebar>
+
+<mainSection>
+    <div id="wrap">
+        <div class="row g-0 align-items-center">
+            <div class="col-auto">
+                <h1 class="fs-5 fs-xl-5 mb-5">개별출제요청</h1>
+            </div>
+        </div>
+        <form action="/sheet/request" method="post" th:action="@{/sheet/request}" th:object="${requestDto}">
+            <div class="mb-4">
+                <div class="d-flex align-items-center">
+                    <span class="sheetinput-title">이메일</span>
+                    <input type="text" th:value="${currentMember.memberEmail}" id="requestEmail" name="requestEmail" class="form-control my-1" placeholder="이메일을 입력하세요" style="width: 300px;">
+                    <div class="errorMsg" th:errors="*{requestEmail}">이메일 오류</div>
+                </div>
+            </div>
+            <div class="mb-4">
+                <div class="d-flex align-items-center">
+                <span class="sheetinput-title">이름</span>
+                <input type="text" th:value="${currentMember.memberName}" id="requestName" name="requestName" class="form-control my-1" placeholder="이름을 입력하세요" style="width:300px;">
+                    <div class="errorMsg" th:errors="*{requestName}">이름 오류</div>
+                </div>
+            </div>
+            <div class="mb-4">
+                 <div class="d-flex align-items-center">
+                 <span class="sheetinput-title">연락처</span>
+                 <input type="text" th:value="${currentMember.memberPhone}" id="requestPhone" name="requestPhone" class="form-control my-1" placeholder="연락처를 입력하세요" style="width: 300px;">
+                 </div>
+            </div>
+            <hr class="my-4">
+            <div class="mb-4">
+                <span class="sheetinput-title" style="width: 250px;">요청 도서 검색하기</span>
+                <button type="button" class="btn btn-primary" onclick="openModal()">도서검색</button>
+            </div>
+            <hr class="my-4">
+
+            <!--    도서 검색 모달 창  -->
+            <div id="bookSearchModal" class="modal">
+                <div class="modal-content">
+                    <h2 class="mb-5 mt-5">도서 검색</h2>
+                    <div class="d-flex align-items-center mb-4">
+                        <span class="request-title">책 제목</span>
+                        <input type="text" id="keyword" class="form-control " placeholder="제목을 입력해주세요" style="width: 400px;">
+                    </div>
+                    <div class="d-flex align-items-center mb-4">
+                        <span class="request-title">작가</span>
+                        <input type="text" id="authorSearch" class="form-control" placeholder="작가를 입력해주세요" style="width: 400px;">
+                    </div>
+                    <div class="align-items-center mb-4 fs-sm--1">
+                        <span>* 책 제목 또는 작가만 입력하셔도 검색 가능합니다. *</span>
+                    </div>
+                     <div class="d-flex justify-content-end">
+                        <button type="button" class="btn btn-primary" onclick="search()">검색</button>
+                    </div>
+                    <div id="searchResult"></div>
+                </div>
+            </div>
+            <!--    END 도서 검색 모달 창  -->
+
+            <div class="mb-4">
+                <div class="d-flex align-items-center">
+                    <span class="sheetinput-title">책 제목</span>
+                    <input type="text" id="sheetBooktitle" name="requestBooktitle" class="form-control ms-3" placeholder="책 제목을 입력하세요" readonly>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="errorMsg ms-10" th:errors="*{requestBooktitle}">책 제목 오류</div>
+                </div>
+            </div>
+            <div class="mb-4">
+                <div class="d-flex align-items-center">
+                <span class="sheetinput-title">작가</span>
+                <input type="text" id="sheetBookauthor" name="requestBookauthor" class="form-control ms-3" placeholder="작가를 입력하세요" readonly >
+                </div>
+            </div>
+            <div class="mb-4">
+                <div class="d-flex align-items-center">
+                <span class="sheetinput-title">출판사</span>
+                <input type="text" id="sheetBookpublisher" name="requestBookpublisher" class="form-control ms-3" placeholder="출판사를 입력하세요" readonly >
+                </div>
+            </div>
+            <div class="mb-4">
+                <div class="d-flex align-items-center">
+                <span class="sheetinput-title">ISBN</span>
+                <input type="text" id="sheetBookisbn" name="requestBookisbn" class="form-control ms-3" placeholder="isbn을 입력하세요" readonly >
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="mb-4">
+                <div class="d-flex align-items-center">
+                <span class="sheetinput-title">요청내용</span>
+                <textarea type="text" id="sheetContent" name="requestContent" class="form-control ms-3" rows="3" placeholder="요청내용을 작성해주세요. (문항수/사용목적/원하는형식 등)"></textarea>
+                </div>
+            </div>
+            <div class="mb-4">
+                <div class="d-flex align-items-center">
+                <span class="sheetinput-title">희망일</span>
+                <input type="date" id="requestHopedate" th:min="${T(java.time.LocalDate).now()}" name="requestHopedate" class="form-control" style="width: 300px;" ><label class="align-items-center mb-0 p-3" >작업은 최소 2-3일 정도 소요됩니다.</label>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary" type="submit">요청하기</button>
+                <button class="btn btn-primary" type="button" onclick="window.history.back()">취소</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        var modal = document.getElementById("bookSearchModal");
+
+        // 모달 창 보이게
+        function openModal() {
+            modal.style.display = "block";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // 모달창 띄워져 있을 때 엔터 누르면 도서 검색 버튼 클릭 되도록 설정
+        window.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                // 모달창이 띄워져 있는지 확인
+                if (document.querySelector('#bookSearchModal').style.display === 'block') {
+                    // search 함수 호출
+                    search();
+                    // form submit 방지
+                    event.preventDefault();
+                }
+            }
+        });
+
+        // 도서 검색 open api
+        function search(pageNum) {
+            var keyword = $("#keyword").val();
+            var authorSearch = $("#authorSearch").val();
+            $.ajax({
+                url: "/sheet/request/booksearch",
+                type: "GET",
+                data: {
+                    keyword: keyword,
+                    authorSearch: authorSearch,
+                    pageNum: pageNum,
+                },
+                success: function(data) {
+                    var bookList = data.bookList;
+                    var total = data.total;
+                    var totalPageNum = parseInt(data.totalPageNum);
+                    var currentPageNum = parseInt(data.currentPageNum);
+
+                    var result = "";
+                    result += `<hr><div class="d-flex align-items-center mb-4 fs-sm--1"><span>검색 결과 : ${total}개</span></div>`;
+                    for (var i = 0; i < bookList.length; i++) {
+                        result += `<div class='eachBook' onclick='getBookValue(this)'>`;
+                        result += `<div class='row align-items-center justify-content-center'>`;
+                        result += `<div class='col-3 text-center'>`;
+                        result += `<img class='sheetBookimgname' src='${bookList[i].sheetBookimgname}'>`;
+                        result += `</div>`;
+                        result += `<div class='col-5 text-start'>`;
+                        result += `<p class='sheetBooktitle'><span class="sheetdetail-title">책 제목 : </span>${bookList[i].sheetBooktitle}</p>`;
+                        result += `<p class='sheetBookauthor'><span class="sheetdetail-title">작가 : </span>${bookList[i].sheetBookauthor}</p>`;
+                        result += `<p class='sheetBookpublisher'><span class="sheetdetail-title">출판사 : </span>${bookList[i].sheetBookpublisher}</p>`;
+                        result += `<p class='sheetBookisbn'><span class="sheetdetail-title">ISBN : </span>${bookList[i].sheetBookisbn}</p>`;
+                        result += `</div>`;
+                        result += `</div>`;
+                        result += `</div><hr>`;
+                    }
+                    result += `<div>`;
+                    if (currentPageNum > 1) {
+                        result += `<button type="button" class="btn btn-primary" onclick="search(${currentPageNum - 1})"><<</button>`;
+                    }
+
+                    result += `${currentPageNum} / ${totalPageNum}`;
+
+                    if (currentPageNum < totalPageNum) {
+                        result += `<button type="button" class="btn btn-primary ms-1" onclick="search(${currentPageNum + 1})">>></button>`;
+                    }
+                    result += `</div>`;
+                    $("#searchResult").html(result);
+                }
+            });
+        }
+
+        // 검색 리스트 클릭 시 도서 정보 폼으로 이동
+        function getBookValue(element) {
+            var title = $(element).find(".sheetBooktitle").text();
+            var author = $(element).find(".sheetBookauthor").text();
+            var pub = $(element).find(".sheetBookpublisher").text();
+            var isbn = $(element).find(".sheetBookisbn").text();
+            $("#sheetBooktitle").val(title);
+            $("#sheetBookauthor").val(author);
+            $("#sheetBookpublisher").val(pub);
+            $("#sheetBookisbn").val(isbn);
+
+            $("#bookSearchModal").css("display", "none");
+        }
+
+
+    </script>
+</mainSection>
+</body>
+</html>

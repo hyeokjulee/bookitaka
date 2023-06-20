@@ -1,0 +1,136 @@
+<!DOCTYPE HTML>
+<html th:replace="~{/layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+<body>
+
+<menuTitle>알림마당</menuTitle>
+<sidebar><th:block th:replace="layout/sidebar/admin-sidebar :: admin"></th:block></sidebar>
+
+<mainSection>
+    <div id="wrap">
+        <div class="row g-0 align-items-center">
+            <div class="col-auto">
+                <h1 class="fs-5 fs-xl-5 mb-5">자주묻는질문 등록</h1>
+            </div>
+        </div>
+        <form th:object="${faqRegisterDto}">
+            <div class="mb-3">
+                <div class="row">
+                    <span class="col-auto">
+                        <label class="form-label" for="faqQuestion">자주묻는 질문</label>
+                    </span>
+                    <span class="errorDiv col-3" error="faqQuestion" style="color: red"></span>
+                    <span class="col-auto ms-auto">
+                        <label class="form-check-label" for="faqBest">BEST</label>
+                        <input type="checkbox" name="faqBest" id="faqBest" class="form-check-input form-check-inline" role="switch">
+                    </span>
+                    <span class="col-auto">
+                        <label for="faqCategory">카테고리</label>
+                        <select name="faqCategory" id="faqCategory" class="form-select-sm">
+                            <option th:each="category, stat : ${faqAllCategory}"
+                                    th:if="${stat.index >= 2}" th:value="${category}" th:text="${category}"></option>
+                        </select>
+                    </span>
+                </div>
+                <textarea name="faqQuestion" id="faqQuestion" th:field="*{faqQuestion}" class="form-control my-2"
+                          rows="3"></textarea>
+            </div>
+            <div class="mb-3">
+                <div class="row">
+                    <span class="col-auto">
+                        <label class="form-label" for="faqAnswer">답변</label>
+                    </span>
+                    <span class="errorDiv col-auto" error="faqAnswer" style="color: red"></span>
+
+                </div>
+                    <textarea name="faqAnswer" id="faqAnswer" th:field="*{faqAnswer}" class="form-control my-2"
+                              rows="10"></textarea>
+            </div>
+
+            <hr class="my-4">
+            <div class="d-flex justify-content-end">
+                <button class="btn btn-primary" type="submit" id="addBtn">FAQ 등록</button>
+                <button class="btn btn-primary cancelBtn" type="button">취소</button>
+            </div>
+        </form>
+    </div>
+
+    <script th:inline="javascript">
+        document.querySelector('.cancelBtn').addEventListener('click', function () {
+            window.history.back();
+        });
+    </script>
+
+    <script th:inline="javascript">
+        document.getElementById("addBtn").addEventListener("click", sendForm);
+
+        function sendForm(event) {
+            event.preventDefault(); // 기본 동작(폼 제출) 막기
+            let faqQuestion = document.getElementById("faqQuestion").value;
+            let faqAnswer = document.getElementById("faqAnswer").value;
+            let faqCategory = document.getElementById("faqCategory").value;
+            let faqBest = document.getElementById("faqBest").checked ? 1 : 0;
+
+            let formData = new URLSearchParams({
+                faqQuestion: faqQuestion,
+                faqAnswer: faqAnswer,
+                faqCategory: faqCategory,
+                faqBest: faqBest
+            });
+            fetch("/faq/add", {
+                method: 'POST',
+                body: formData,
+                credentials: 'include',
+                header: {'ajax': true}
+            })
+                .then((response) => {
+                    console.log("response.status : " + response.status);
+                    if (response.status === 200) {
+                        for (let errorDiv of document.querySelectorAll(".errorDiv")) {
+                            errorDiv.innerText = "";
+                        }
+                        // 성공적인 응답 처리
+                        alert("등록이 완료되었습니다.")
+                        window.location.href = "/faq/전체";
+                    } else if (response.status === 201) {
+                        sendForm();
+                    } else if (response.status === 400) {
+                        // 예외 발생 시
+                        response.json().then(data => {
+                            // 에러 메시지 초기화
+                            for (let errorDiv of document.querySelectorAll(".errorDiv")) {
+                                errorDiv.innerText = "";
+                            }
+                            // 응답 데이터를 파싱하여 에러 메시지 표시
+                            console.log(data);
+                            for (const error of data) {
+                                let errorElement = null;
+                                if (error.field == null) {
+                                    errorElement = document.querySelector(`[error="${error.code}"]`);
+                                } else {
+                                    // 해당 입력 필드 아래에 에러 메시지 표시
+                                    errorElement = document.querySelector(`[error="${error.field}"]`);
+                                }
+                                errorElement.innerText = error.defaultMessage;
+                                // inputField.parentNode.appendChild(errorElement);
+                            }
+                        });
+                    } else if (response.status === 422) {
+                        response.json().then(data => {
+                            // 에러 메시지 초기화
+                            for (let errorDiv of document.querySelectorAll(".errorDiv")) {
+                                errorDiv.innerText = "";
+                            }
+                            alert("등록에 실패하였습니다.");
+                            window.location.reload();
+                        });
+                    } else {
+                        // 기타 상태 코드에 대한 처리
+                    }
+                })
+        }
+    </script>
+</mainSection>
+</body>
+</html>
