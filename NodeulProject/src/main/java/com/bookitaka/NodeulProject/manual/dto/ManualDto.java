@@ -12,9 +12,9 @@ import javax.validation.constraints.NotBlank;
 public class ManualDto {
 
     private Integer manualNo;
-    @NotBlank(message = "제목은 필수입니다.")
+    @NotBlank(message = "제목을 입력해주세요.")
     private String manualTitle;
-    @NotBlank(message = "내용은 필수입니다.")
+    @NotBlank(message = "내용은 입력해주세요.")
     private String manualContent;
 
 
