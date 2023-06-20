@@ -24,27 +24,28 @@
       </div>
     </div>
   <div>
-    <table class="table">
+    <table class="table" style="table-layout: fixed;">
       <thead>
-      <tr>
-        <th>책 이미지</th>
-        <th>책 제목</th>
-        <th>작가 / 출판사 </th>
-        <th>다운로드 만료일</th>
-        <th>다운로드</th>
-      </tr>
+        <tr>
+          <th>책 이미지</th>
+          <th>책 제목</th>
+          <th>작가 / 출판사 </th>
+          <th>다운로드 만료일</th>
+          <th>다운로드</th>
+        </tr>
       </thead>
-      <tbody>
-      <tr th:each="sheet : ${sheetList}">
-        <td><img th:src="|/sheet/bookImg/*{sheet.sheetBookImgFullName}|"style="object-fit: contain" width="150" height="150"></td>
-        <td><a th:text="${sheet.sheetBooktitle}" th:href="|/sheet/*{sheet.sheetNo}|">북타이틀</a></td>
-        <td th:text="|*{sheet.sheetBookauthor} / *{sheet.sheetBookpublisher}|">작가 / 출판사</td>
-        <td th:text="${sheet.mysheetEndDate}"> 다운로드 만료일 </td>
-        <td>
-          <a th:if="${sheet.timeLimit}" th:href="|/sheet/sheetFile/*{sheet.sheetFileUuid}|" class="btn btn-primary">다운로드</a>
-          <button th:if="${not sheet.timeLimit}" th:data-sheetNo="${sheet.sheetNo}" th:onclick="|buyExpired(*{sheet.sheetNo})|" class="expireBtn btn btn-secondary">기한 만료</button>
-        </td>
-      </tr>
+      <tbody style="word-break: break-word;">
+        <tr th:each="sheet : ${sheetList}">
+          <td><img th:src="|/sheet/bookImg/*{sheet.sheetBookImgFullName}|"style="object-fit: contain" width="150" height="150"></td>
+          <td><a th:text="${sheet.sheetBooktitle}" th:href="|/sheet/*{sheet.sheetNo}|">북타이틀</a></td>
+          <td th:text="|*{sheet.sheetBookauthor} / *{sheet.sheetBookpublisher}|">작가 / 출판사</td>
+          <td th:style="${#temporals.format(sheet.mysheetEndDate.toLocalDateTime(), 'yyyy.MM.dd') == #temporals.format(#temporals.createNow(), 'yyyy.MM.dd')} ? 'color:red' : ''"
+              th:text="${#temporals.format(sheet.mysheetEndDate.toLocalDateTime(), 'yyyy.MM.dd HH:mm')}"> 다운로드 만료일 </td>
+          <td>
+            <a th:if="${sheet.timeLimit}" th:href="|/sheet/sheetFile/*{sheet.sheetFileUuid}|" class="btn btn-primary">다운로드</a>
+            <button th:if="${not sheet.timeLimit}" th:data-sheetNo="${sheet.sheetNo}" th:onclick="|buyExpired(*{sheet.sheetNo})|" class="expireBtn btn btn-secondary">기한 만료</button>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
