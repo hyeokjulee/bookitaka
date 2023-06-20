@@ -25,18 +25,21 @@
               <table class="table table-bordered mt-0 table-babypink">
                   <tr>
                       <th class="col-1 text-center" style="background-color: #ffedf2">등록일</th>
-                      <th th:if="${noticeDto.noticeModdate != noticeDto.noticeRegdate}" class="col-3" style="font-weight: normal;" th:inline="text" th:with="isToday=${#temporals.format(noticeDto.noticeRegdate, 'yyyy-MM-dd').equals(T(java.time.LocalDate).now().toString())}">
-                      <th th:unless="${noticeDto.noticeModdate != noticeDto.noticeRegdate}" class="col-7" style="font-weight: normal;" th:inline="text" th:with="isToday=${#temporals.format(noticeDto.noticeRegdate, 'yyyy-MM-dd').equals(T(java.time.LocalDate).now().toString())}">
+                      <th th:if="${noticeDto.noticeRegdate != null}" th:class="${noticeDto.noticeModdate != noticeDto.noticeRegdate}?'col-3':'col-7'" style="font-weight: normal;" th:inline="text" th:with="isToday=${#temporals.format(noticeDto.noticeRegdate, 'yyyy-MM-dd').equals(T(java.time.LocalDate).now().toString())}">
                           <span th:if="${isToday}" th:text="${#temporals.format(noticeDto.noticeRegdate, 'a hh:mm')}">요청일</span>
                           <span th:unless="${isToday}" th:text="${#temporals.format(noticeDto.noticeRegdate, 'yyyy.MM.dd')}">요청일</span>
                       </th>
+<!--                      <th th:if="${noticeDto.noticeRegdate != null && noticeDto.noticeModdate == noticeDto.noticeRegdate}" class="col-7" style="font-weight: normal;" th:inline="text" th:with="isToday=${#temporals.format(noticeDto.noticeRegdate, 'yyyy-MM-dd').equals(T(java.time.LocalDate).now().toString())}">-->
+<!--                          <span th:if="${isToday}" th:text="${#temporals.format(noticeDto.noticeRegdate, 'a hh:mm')}">요청일</span>-->
+<!--                          <span th:unless="${isToday}" th:text="${#temporals.format(noticeDto.noticeRegdate, 'yyyy.MM.dd')}">요청일</span>-->
+<!--                      </th>-->
 
-                      <td th:if="${noticeDto.noticeModdate != noticeDto.noticeRegdate}" class="col-1 text-center" style="background-color: #ffedf2">수정일</td>
-                      <td th:if="${noticeDto.noticeModdate != noticeDto.noticeRegdate}" class="col-3" style="font-weight: normal;" th:inline="text" th:with="isToday=${#temporals.format(noticeDto.noticeModdate, 'yyyy-MM-dd').equals(T(java.time.LocalDate).now().toString())}">
+                      <th th:if="${noticeDto.noticeModdate != noticeDto.noticeRegdate}" class="col-1 text-center" style="background-color: #ffedf2">수정일</th>
+                      <th th:if="${noticeDto.noticeModdate != noticeDto.noticeRegdate}" class="col-3" style="font-weight: normal;" th:inline="text" th:with="isToday=${#temporals.format(noticeDto.noticeModdate, 'yyyy-MM-dd').equals(T(java.time.LocalDate).now().toString())}">
 <!--                          <span th:text="${#temporals.format(noticeDto.noticeModdate, 'yyyy.MM.dd HH:mm')}"></span>-->
                           <span th:if="${isToday}" th:text="${#temporals.format(noticeDto.noticeModdate, 'a hh:mm')}">수정일</span>
                           <span th:unless="${isToday}" th:text="${#temporals.format(noticeDto.noticeModdate, 'yyyy.MM.dd')}">수정일</span>
-                      </td>
+                      </th>
 
                       <th class="col-1 text-center" style="background-color: #ffedf2">조회수</th>
                       <th class="col-2" style="font-weight: normal;" th:text="${noticeDto.noticeHit}"></th>
