@@ -63,7 +63,7 @@
 
       <li class="page-item">
         <a class="page-link" th:if="${pageInfo.getPageNum() > 0}"
-           th:href="@{/sheet/mysheet(pageNum=${pageInfo.getPreviousGroupStartPage()} + 1,  amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort}, genre=${genre}, ageGroup=${ageGroup})}">&lt;&lt;</a>
+           th:href="@{/sheet/mysheet(pageNum=${pageInfo.getPreviousGroupStartPage()} + 1,  amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}">&laquo;</a>
       </li>
       <li class="page-item" th:if="${pageInfo.hasPreviousPage}">
         <a class="page-link" th:href="@{/sheet/mysheet(pageNum=${pageInfo.pageNum}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}">&lt;</a>
@@ -76,7 +76,7 @@
       </li>
       <li class="page-item">
         <a class="page-link" th:if="${pageInfo.getPageNum() + 1 < pageInfo.getTotalPage()}"
-           th:href="@{/sheet/mysheet(pageNum=${pageInfo.getNextGroupStartPage()},  amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}">&gt;&gt;</a>
+           th:href="@{/sheet/mysheet(pageNum=${pageInfo.getNextGroupStartPage()},  amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}">&raquo;</a>
       </li>
     </ul>
 

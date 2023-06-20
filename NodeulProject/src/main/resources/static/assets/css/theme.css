@@ -2400,6 +2400,7 @@ progress {
 .table-hover > tbody > tr:hover {
   --bs-table-accent-bg: var(--bs-table-hover-bg);
   color: var(--bs-table-hover-color);
+  cursor:pointer;
 }
 
 .table-primary {
@@ -2493,7 +2494,7 @@ progress {
   --bs-table-active-bg: #393a3f;
   --bs-table-active-color: #FFFEFE;
   --bs-table-hover-bg: #34343a;
-  --bs-table-hover-color: #FFFEFE;
+  --bs-table-hover-color: #616161;
   color: #FFFEFE;
   border-color: #393a3f;
 }

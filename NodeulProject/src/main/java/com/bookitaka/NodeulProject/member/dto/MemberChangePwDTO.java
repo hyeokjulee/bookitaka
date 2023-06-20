@@ -13,14 +13,14 @@ import javax.validation.constraints.Pattern;
 public class MemberChangePwDTO {
 
   @ApiModelProperty(position = 0)
-  @NotBlank(message = "비밀번호를 입력해 주세요.")
+  @NotBlank(message = "비밀번호를 입력해주세요.")
   private String oldMemberPassword;
   @ApiModelProperty(position = 1)
-  @NotBlank(message = "비밀번호를 입력해 주세요.")
+  @NotBlank(message = "비밀번호를 입력해주세요.")
   @Password(passwordPatterns = { "^.{8,}$|^.{0,0}$", "^(?=.*[A-Za-z]).*$", "^(?=.*\\d).*$", "^(?=.*[@$!%*?&.]).*$" },
           passwordMessages = { "비밀번호는 최소 8자 이상이어야 합니다.", "영문자", "숫자", "특수문자" })
   private String newMemberPassword;
   @ApiModelProperty(position = 2)
-  @NotBlank(message = "비밀번호(확인)를 입력해 주세요.")
+  @NotBlank(message = "비밀번호(확인)를 입력해주세요.")
   private String newMemberPasswordCheck;
 }

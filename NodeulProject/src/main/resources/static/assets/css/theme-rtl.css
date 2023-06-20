@@ -2305,7 +2305,7 @@ progress {
   --bs-table-striped-bg: rgba(0, 0, 0, 0.05);
   --bs-table-active-color: #402B2B;
   --bs-table-active-bg: rgba(0, 0, 0, 0.1);
-  --bs-table-hover-color: #402B2B;
+  --bs-table-hover-color: #616161;
   --bs-table-hover-bg: rgba(0, 0, 0, 0.075);
   width: 100%;
   margin-bottom: 1rem;
@@ -2436,7 +2436,7 @@ progress {
   --bs-table-active-bg: #edcfce;
   --bs-table-active-color: #616161;
   --bs-table-hover-bg: #f0d2d1;
-  --bs-table-hover-color: #616161;
+  --bs-table-hover-color: #ffe9f1;
   color: #616161;
   border-color: #edcfce;
 }

@@ -47,7 +47,7 @@
         </div>
 
         <!---------아코디언형식------------>
-        <div class="accordion pt-2" id="accordionPanelsStayOpenExample">
+        <div class="accordion pt-2" id="accordionPanelsStayOpenExample" >
             <div class="accordion-item" th:each="faq, stat : ${faqAll.content}">
                 <div th:id="'accordionItem' + ${stat.index}" >
                         <h2 class="accordion-header " th:id="'panelsStayOpen-heading' + ${stat.index}">
@@ -88,7 +88,7 @@
                 <ul class="pagination justify-content-center">
                     <li class="page-item">
                         <a class="page-link" th:if="${currentPage > 0}"
-                           th:href="@{/faq/{category}(category=${faqCategory}, page=${previousGroupStartPage}, keyword=${keyword})}">&lt;&lt;</a>
+                           th:href="@{/faq/{category}(category=${faqCategory}, page=${previousGroupStartPage}, keyword=${keyword})}">&laquo;</a>
                     </li>
                     <li class="page-item">
                         <a class="page-link" th:if="${currentPage > 0}"
@@ -109,7 +109,7 @@
                     <li class="page-item">
                         <a class="page-link" th:if="${currentPage + 1 < totalPages}"
                            th:href="@{/faq/{category}(category=${faqCategory}, page=${nextGroupStartPage}, keyword=${keyword})}">
-                            &gt;&gt; </a>
+                            &raquo; </a>
                     </li>
                 </ul>
             </nav>
