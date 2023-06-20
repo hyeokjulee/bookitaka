@@ -120,6 +120,15 @@
         </span>
     </div>
     <hr>
+    <div class="row">
+        <span class="col-3 text-truncate"><i class="fa-sharp fa-solid fa-ticket px-2"></i><label>쿠폰 갯수</label></span>
+        <span class="col-9 text-truncate">
+            <div class="row">
+                <span class="col-12" th:text="${couponCnt} + '개'"></span>
+            </div>
+        </span>
+    </div>
+    <hr>
     <div class="row mb-5">
         <span class="col-12 text-center"><a class="btn btn-primary" id="editBtn" style="display: none">저장하기</a></span>
     </div>

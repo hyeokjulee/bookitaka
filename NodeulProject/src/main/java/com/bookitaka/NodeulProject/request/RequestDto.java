@@ -13,11 +13,11 @@ import java.util.Date;
 @AllArgsConstructor
 public class RequestDto {
 
-    @NotBlank(message = "이메일은 비워둘 수 없습니다.")
+    @NotBlank(message = "이메일을 입력해주세요.")
     @Email(message = "이메일 형식이 아닙니다.")
     private String requestEmail;
 
-    @NotBlank(message = "이름은 비워둘 수 없습니다.")
+    @NotBlank(message = "이름을 입력해주세요.")
     private String requestName;
 
     private String requestPhone;

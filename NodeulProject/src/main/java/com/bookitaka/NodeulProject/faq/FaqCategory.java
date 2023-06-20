@@ -11,7 +11,8 @@ public interface FaqCategory {
             "회원",
             "활동지",
             "결제",
-            "기타"
+            "기타",
+            "추가"
     };
 
     List<String> faqAllCategory = List.of(faqCategoryArr);

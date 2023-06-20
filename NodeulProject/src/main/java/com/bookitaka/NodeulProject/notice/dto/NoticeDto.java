@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class NoticeDto {
     private Integer noticeNo;
-    @NotBlank(message = "제목은 필수입니다.")
+    @NotBlank(message = "제목을 입력해주세요.")
     private String noticeTitle;
-    @NotBlank(message = "내용은 필수입니다.")
+    @NotBlank(message = "내용을 입력해주세요.")
     private String noticeContent;
     private Integer noticeHit;
     private LocalDateTime noticeRegdate;

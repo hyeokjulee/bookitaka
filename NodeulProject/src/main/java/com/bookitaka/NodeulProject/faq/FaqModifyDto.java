@@ -15,7 +15,7 @@ public class FaqModifyDto {
 
     private Long faqNo;
 
-    @NotBlank(message = "질문을 입력주세요.")
+    @NotBlank(message = "질문을 입력해주세요.")
     private String faqQuestion;
 
     @NotBlank(message = "답변을 입력해주세요.")
