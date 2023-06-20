@@ -90,7 +90,8 @@ public class MemberController {
         log.info(method);
         log.info(keyword);
         int pageSize = 10;
-        PageRequest pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.ASC, "memberNo"));
+        int amount = 10;
+        PageRequest pageable = PageRequest.of(page, amount, Sort.by(Sort.Direction.ASC, "memberNo"));
         Page<Member> memberPage = memberService.getAllMembersPaging(pageable, keyword, method, request.getCookies());
         model.addAttribute("members", memberPage.getContent());
         model.addAttribute("totalPages", memberPage.getTotalPages());
