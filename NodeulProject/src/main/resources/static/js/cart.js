@@ -203,7 +203,7 @@ $(document).on('change', '[name="selectedItem"]', function() {
 // 구매하기 버튼 클릭 시 결제하기 페이지로 이동 처리
 $(document).on('click', '.btn-paying', function() {
 
-    // 선택된 체크박스들을 수집합니다.
+  // 선택된 체크박스들을 수집합니다.
   var selectedItems = [];
   $('input[name="selectedItem"]:checked').each(function() {
     selectedItems.push($(this).val());

@@ -18,12 +18,12 @@
 
         <table class="table my-5" id="payingTable">
             <thead>
-            <tr>
-                <th scope="col"></th>
-                <th scope="col">자료명</th>
-                <th id="couponLeft" th:data-left="${couponCnt}" th:text="|쿠폰사용 : (남은갯수 ${couponCnt})|" scope="col">쿠폰사용 : (남은갯수 0)</th>
-                <th scope="col">금액</th>
-            </tr>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">자료명</th>
+                    <th id="couponLeft" th:data-left="${couponCnt}" th:text="|쿠폰사용 : (남은갯수 ${couponCnt})|" scope="col">쿠폰사용 : (남은갯수 0)</th>
+                    <th scope="col">금액</th>
+                </tr>
             </thead>
 
             <tbody class="table-group-divider" id="sheets">
@@ -31,36 +31,36 @@
             </tbody>
 
             <tfoot>
-            <tr>
-                <th id="totalcnt"></th>
-                <th></th>
-                <th>쿠폰 전체 적용 <input id="couponAll" type="checkbox"></th>
-                <th id="totalprice"></th>
-            </tr>
+                <tr>
+                    <th id="totalcnt"></th>
+                    <th></th>
+                    <th>쿠폰 전체 적용 <input id="couponAll" type="checkbox"></th>
+                    <th id="totalprice"></th>
+                </tr>
             </tfoot>
         </table>
 
         <table class="table my-5" id="myInfoTable">
             <thead>
-            <tr>
-                <th scope="col">구매자 정보</th>
-                <th></th>
-            </tr>
+                <tr>
+                    <th scope="col">구매자 정보</th>
+                    <th></th>
+                </tr>
             </thead>
 
             <tbody class="table-group-divider" id="infos">
-            <tr>
-                <th scope="row">이메일</th>
-                <td th:text="${member.memberEmail}"></td>
-            </tr>
-            <tr>
-                <th scope="row">이름</th>
-                <td th:text="${member.memberName}"></td>
-            </tr>
-            <tr>
-                <th scope="row">전화번호</th>
-                <td th:text="${member.memberPhone}"></td>
-            </tr>
+                <tr>
+                    <th scope="row">이메일</th>
+                    <td th:text="${member.memberEmail}"></td>
+                </tr>
+                <tr>
+                    <th scope="row">이름</th>
+                    <td th:text="${member.memberName}"></td>
+                </tr>
+                <tr>
+                    <th scope="row">전화번호</th>
+                    <td th:text="${member.memberPhone}"></td>
+                </tr>
             </tbody>
         </table>
 
