@@ -50,19 +50,42 @@
         </table>
     </div>
 
-<!--        <div class="pagination">-->
-<!--            <ul class="pagination justify-content-center">-->
-<!--                <li class="page-item" th:if="${pageInfo.hasPreviousPage}">-->
-<!--                    <a class="page-link" th:href="@{/myPay(pageNum=${pageInfo.pageNum - 1}, amount=${pageInfo.amount})}">&laquo;</a>-->
-<!--                </li>-->
-<!--                <li class="page-item" th:each="pageNum : ${pageInfo.getPageList()}" th:class="${pageNum} == ${pageInfo.pageNum} ? 'page-disabled active' : ''">-->
-<!--                    <a class="page-link" th:href="@{/myPay(pageNum=${pageNum}, amount=${pageInfo.amount})}" th:text="${pageNum}"></a>-->
-<!--                </li>-->
-<!--                <li class="page-item" th:if="${pageInfo.hasNextPage}">-->
-<!--                    <a class="page-link" th:href="@{/myPay(pageNum=${pageInfo.pageNum + 1}, amount=${pageInfo.amount})}">&raquo;</a>-->
-<!--                </li>-->
-<!--            </ul>-->
-<!--        </div>-->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" th:if="${currentPage > 0}"
+                   th:href="@{/sheet/request/list(page=${previousGroupStartPage})}">&lt;&lt;</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" th:if="${currentPage > 0}"
+                   th:href="@{/sheet/request/list(page=${currentPage - 1})}">&lt;</a>
+            </li>
+            <th:block th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}">
+                <li th:class="page-item" th:classappend="${pageNumber == currentPage ? 'active' : ''}">
+                    <a th:if="${not #lists.isEmpty(requestList.getContent())}"
+                       th:href="@{/sheet/request/list(page=${pageNumber})}"
+                       th:text="${pageNumber + 1}" th:class="page-link"></a>
+                </li>
+            </th:block>
+            <li class="page-item">
+                <a class="page-link" th:if="${currentPage + 1 < totalPages}"
+                   th:href="@{/sheet/request/list(page=${currentPage + 1})}">
+                    &gt; </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" th:if="${currentPage + 1 < totalPages}"
+                   th:href="@{/sheet/request/list(page=${nextGroupStartPage})}">
+                    &gt;&gt; </a>
+            </li>
+        </ul>
+    </nav>
+    <div class="row">
+        <div class="col-md">
+            <p class="my-2" th:if="${requestList.isEmpty()}" style="text-align: center">받은 출제 요청이 없습니다.</p>
+        </div>
+    </div>
+    <hr class="my-4" th:if="${requestList.isEmpty()}">
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     <script th:inline="javascript">

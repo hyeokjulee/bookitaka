@@ -13,6 +13,8 @@ import com.bookitaka.NodeulProject.member.service.MemberService;
 import com.bookitaka.NodeulProject.notice.domain.entity.Notice;
 import com.bookitaka.NodeulProject.notice.dto.NoticeDto;
 import com.bookitaka.NodeulProject.notice.repository.NoticeRepository;
+import com.bookitaka.NodeulProject.request.Request;
+import com.bookitaka.NodeulProject.request.RequestRepository;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +45,7 @@ public class MemberTestController {
   private final FaqRepository faqRepository;
   private final ManualRepository manualRepository;
   private final NoticeRepository noticeRepository;
+  private final RequestRepository requestRepository;
 
   // 회원가입
   @GetMapping("/signup")
@@ -79,4 +82,22 @@ public class MemberTestController {
       noticeRepository.save(m.toEntity());
     }
   }
+
+  @GetMapping("/request")
+  public void request() {
+
+    for (int i = 1; i <= 50; i++) {
+      Request request = new Request();
+      request.setRequestBookauthor("author" + i);
+      request.setRequestBookpublisher("publisher" + i);
+      request.setRequestBooktitle("Booktitle" + i);
+      request.setRequestEmail("admin@gmail.com");
+      request.setRequestContent("content" + i);
+      request.setRequestName("name" + i);
+      request.setRequestPhone("phone" + i);
+      requestRepository.save(request);
+    }
+  }
+
+
 }
