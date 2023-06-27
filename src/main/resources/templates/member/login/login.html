@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/layout-No-Sidebar-No-Title :: layout(~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<mainSection>
+    <style>
+        input::placeholder {
+            color: transparent;
+        }
+    </style>
+    <section style="padding-top: 0;">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="card col-md-6 col-lg-4 shadow">
+                    <div class="card-body p-0 mt-4" style="margin: 0 auto; width: 100%;">
+                        <h3 class="mb-4 text-center">로그인</h3>
+                        <form class="signin-form">
+                            <div class="alert alert-danger text-center" id="alertDiv" style="display: none;">
+                                아이디 또는 비밀번호를 확인해 주세요.
+                            </div><div class="alert alert-danger text-center" id="emptyAlertDiv" style="display: none;">
+                                아이디 또는 비밀번호를 입력해 주새요.
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="email" id="memberEmail" name="memberEmail" class="form-control" placeholder=" ">
+                                <label for="memberEmail">이메일</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="password" id="memberPassword" name="memberPassword" class="form-control" placeholder=" ">
+                                <label for="memberPassword">비밀번호</label>
+                            </div>
+                            <div class="form-group mb-3">
+                                <button button type="button" id="loginBtn" class="form-control btn btn-primary px-3 mb-3">로그인</button>
+                            </div>
+                            <!--<div>
+                                <button type="button" class="btn btn-primary" id="checkSignBtn">토큰 확인</button>
+                                <button type="button" class="btn btn-primary" id="removeTokenBtn">토큰 제거 (로그아웃)</button>
+                                <button type="button" class="btn btn-primary" id="testTokenBtn">토큰 인가 확인 페이지 이동</button>
+                            </div>
+                            <hr>
+                            <div id="tokenDiv"></div>
+                            <div id="statusDiv"></div>-->
+                        </form>
+                        <div class="form-group d-sm-flex justify-content-between mb-4">
+                            <div>
+                                <a th:href="@{/members/signup}">회원가입</a>
+                            </div>
+                            <div>
+                                <a th:href="@{/members/find-email}">아이디찾기 </a>|
+                                <a th:href="@{/members/find-pw}"> 비밀번호찾기</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        const loginProcess = function() {
+            document.getElementById("alertDiv").style.display = "none";
+            document.getElementById("emptyAlertDiv").style.display = "none";
+
+            let memberEmail = document.getElementById("memberEmail").value;
+            let memberPassword = document.getElementById("memberPassword").value;
+            if (memberEmail.trim() === '' || memberPassword.trim() === '') {
+                document.getElementById("emptyAlertDiv").style.display = "block";
+                return;
+            }
+
+            let formData = {
+                memberEmail: memberEmail,
+                memberPassword: memberPassword
+            }
+
+            fetch("/member/signin", {
+                method: 'POST',
+                body: new URLSearchParams(formData)
+            })
+            .then((response) => {
+                if (response.ok) {
+                    window.location.href = '/';
+                } else if (response.status === 422) {
+                    document.getElementById("alertDiv").style.display = "block";
+                } else {
+                    response.text().then(data => {
+                        console.log(data);
+                    });
+                }
+            });
+        }
+        document.getElementById("loginBtn").addEventListener("click", loginProcess);
+        document.getElementById("memberEmail").addEventListener("keyup", function (e) {
+            if (e.key === 'Enter') {
+                loginProcess();
+            }
+        });
+        document.getElementById("memberPassword").addEventListener("keyup", function (e) {
+            if (e.key === 'Enter') {
+                loginProcess();
+            }
+        });
+
+    </script>
+</mainSection>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE HTML>
+<html th:replace="~{layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<menuTitle>회원 목록</menuTitle>
+<sidebar><th:block th:replace="layout/sidebar/admin-sidebar :: admin"></th:block></sidebar>
+<mainsection>
+    <div id="wrap">
+        <h1 class="fs-5 fs-xl-5 mb-5">회원 관리</h1>
+        <div class="row g-0 align-items-center">
+            <form class="form-inline text-end" action="/members/list" method="GET">
+                <select name="method" class="form-select-inline" style="width: 180px">
+                    <option selected>이메일/이름</option>
+                    <option>이메일</option>
+                    <option>이름</option>
+                </select>
+                <span>
+                    <input class="form-control-inline" name="keyword" type="text" placeholder="검색어를 입력해주세요"
+                           id="keyword" th:if="${keyword != null}" th:value="${keyword}"/>
+                    <span>
+                        <button class="btn btn-primary" type="submit" id="searchButton">검색</button>
+                    </span>
+                </span>
+            </form>
+        </div>
+    </div>
+    <hr class="my-4">
+    <div class="row g-0 align-items-center">
+        <table class="table table-hover text-center">
+            <thead>
+            <tr>
+                <th>이름</th>
+                <th>이메일</th>
+                <th>번호</th>
+                <th>생년월일</th>
+                <th>성별</th>
+                <th>회원삭제</th>
+                <th>권한수정</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="member : ${members}">
+                <td id="name" th:text="${member.memberName}" onclick="goDetail(this)"></td>
+                <td id="email" th:text="${member.memberEmail}" onclick="goDetail(this)"></td>
+                <td id="phone" th:text="${member.memberPhone}" onclick="goDetail(this)"></td>
+                <td id="birthday" th:text="${member.memberBirthday}" onclick="goDetail(this)"></td>
+                <td id="gender" onclick="goDetail()">
+                            <span class="col-6" th:if="${member.memberGender != ''}"
+                                  th:text="${member.memberGender}"></span>
+                    <span class="col-6" th:if="${member.memberGender == ''}" th:text="미선택"></span>
+                </td>
+                <td>
+                    <button type="button" id="delBtn" class="btn btn-outline-danger btn-sm">delete</button>
+                </td>
+                <td>
+                    <select class="roleSelect form-select-inline">
+                        <option value="ROLE_MEMBER" th:selected="${member.memberRole == 'ROLE_MEMBER'}">회원</option>
+                        <option value="ROLE_ADMIN" th:selected="${member.memberRole == 'ROLE_ADMIN'}">관리자</option>
+                    </select>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!--페이징-->
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                    <a class="page-link" th:if="${currentPage > 0}"
+                       th:href="@{/members/list(page=${previousGroupStartPage}, method=${method}, keyword=${keyword})}">&laquo;</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" th:if="${currentPage > 0}"
+                       th:href="@{/members/list(page=${currentPage - 1}, method=${method}, keyword=${keyword})}">&lt;</a>
+                </li>
+                <th:block th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}">
+                    <li th:class="page-item" th:classappend="${pageNumber == currentPage ? 'active' : ''}">
+                        <a th:if="${not #lists.isEmpty(members)}"
+                           th:href="@{/members/list(page=${pageNumber}, method=${method}, keyword=${keyword})}"
+                           th:text="${pageNumber + 1}" th:class="page-link"></a>
+                    </li>
+                </th:block>
+                <li class="page-item">
+                    <a class="page-link" th:if="${currentPage + 1 < totalPages}"
+                       th:href="@{/members/list(page=${currentPage + 1}, method=${method}, keyword=${keyword})}">
+                        &gt; </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" th:if="${currentPage + 1 < totalPages}"
+                       th:href="@{/members/list(page=${nextGroupStartPage}, method=${method}, keyword=${keyword})}">
+                        &raquo; </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <div class="row pt-1">
+        <div class="col-md">
+            <p class="my-2" th:if="${members.isEmpty() && keyword!=''}" style="text-align: center">일치하는 검색 결과가 없습니다.</p>
+            <p class="my-2" th:if="${members.isEmpty() && keyword.isEmpty()}" style="text-align: center">등록된 회원이 없습니다.</p>
+        </div>
+    </div>
+    <hr class="my-4" th:if="${members.isEmpty()}">
+    <script th:inline="javascript">
+        // detail
+        function goDetail(element) {
+            var emailElement = element.parentNode.querySelector('#email');
+            var memberEmail = emailElement.textContent;
+            window.location.href = "/members/" + memberEmail;
+        }
+
+        // 삭제 버튼
+        var delButtons = document.querySelectorAll("#delBtn");
+        delButtons.forEach(function (button) {
+            button.addEventListener("click", deleteMember);
+        });
+
+        function deleteMember(event) {
+            if (confirm("삭제하시겠습니까??")) {
+                event.preventDefault(); // 폼의 기본 동작(페이지 새로고침) 방지
+
+                var email = this.closest('tr').querySelector('#email').textContent; // 해당 행의 이메일 값을 가져옴
+                var url = "/member/admin/" + email; // 이메일을 주소에 추가
+
+                fetch(url, {
+                    method: 'DELETE',
+                    header: {'ajax': true}
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            alert("삭제 완료")
+                            location.reload();
+                        } else if (response.status === 201) {
+                            deleteMember();
+                        } else {
+                            // 기타 상태 코드에 대한 처리
+                        }
+                    })
+            }
+
+        }
+
+        // 권한 수정
+        document.addEventListener('DOMContentLoaded', sendForm);
+
+        function sendForm() {
+            let selectElements = document.querySelectorAll('.roleSelect'); // 모든 select 요소 선택
+            selectElements.forEach(function (selectElement) {
+                // var updateBtn = selectElement.nextElementSibling; // 다음 sibling 요소인 updateBtn 버튼 선택
+                selectElement.addEventListener('change', function () {
+
+                    // Update the selected value when the option changes
+                    let memberEmail = selectElement.closest('tr').querySelector('#email').innerText;
+                    let memberName = selectElement.closest('tr').querySelector('#name').innerText;
+                    let memberPhone = selectElement.closest('tr').querySelector('#phone').innerText;
+                    let memberGender = selectElement.closest('tr').querySelector('#gender').innerText;
+                    let memberBirthday = selectElement.closest('tr').querySelector('#birthday').innerText;
+                    let selectedValue = this.options[this.selectedIndex].value;
+
+                    let formData = new URLSearchParams({
+                        memberEmail: memberEmail,
+                        memberName: memberName,
+                        memberPhone: memberPhone,
+                        memberGender: memberGender,
+                        memberBirthday: memberBirthday,
+                        memberRole: selectedValue
+                    });
+                    fetch("/member/admin/" + memberEmail, {
+                        method: 'PUT',
+                        body: formData
+                    })
+                        .then((response) => {
+                            if (response.status === 200) {
+                                alert('권한 수정이 완료되었습니다');
+                                location.reload();
+                            } else if (response.status === 201) {
+                                sendForm();
+                            } else {
+                                // 기타 상태 코드에 대한 처리
+                            }
+                        })
+                });
+            });
+        }
+
+    </script>
+</mainsection>
+
+</body>
+</html>
