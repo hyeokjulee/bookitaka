@@ -1,6 +1,0 @@
-.title-grad {
-    background-clip: text;
-    background-image: linear-gradient(160deg,#12c2e9,pink,#f64f59);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}

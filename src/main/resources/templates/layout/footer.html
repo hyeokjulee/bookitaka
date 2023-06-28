@@ -1,0 +1,83 @@
+<!-- footer.html -->
+<th:block th:fragment="footer">
+    <!-- ============================================-->
+    <!-- <section> begin ============================-->
+    <section class="bg-secondary">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-sm-12 col-lg-6 mb-4 order-0 order-sm-0"><a class="text-decoration-none" th:href="@{/index}"><img src="/assets/img/gallery/logo-n.png" height="80" alt="" /></a>
+                    <p class="text-dark my-4"> <i class="fas fa-map-marker-alt me-3"></i><span class="text-dark">문의시  &nbsp;</span><a class="text-dark" href="tel:+604-680-9785">+604-680-9785</a><br /></p>
+                    <p class="text-dark"> <i class="fas fa-envelope me-3"> </i><a class="text-dark" href="mailto:vctung@outlook.com">vctung@outlook.com </a></p></div>
+                <div class="col-6 col-sm-4 col-lg-2 mb-3 order-2 order-sm-1">
+                    <h5 class="lh-lg fw-bold mb-4 text-dark font-sans-serif">독후활동지 </h5>
+                    <ul class="list-unstyled mb-md-4 mb-lg-0">
+                        <li class="lh-lg"><a class="text-900" th:href="@{/sheet/list?ageGroup=유아용}">연령별</a></li>
+                        <li class="lh-lg"><a class="text-900" th:href="@{/sheet/list?genre=그림책}">장르별</a></li>
+                        <li class="lh-lg"><a class="text-900" th:href="@{/sheet/list?genre=독서토론논제은행}">독서토론 논제은행</a></li>
+                        <li class="lh-lg"><a class="text-900" th:href="@{/sheet/request}">개별출제요청</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-sm-4 col-lg-2 mb-3 order-3 order-sm-2">
+                    <h5 class="lh-lg fw-bold text-dark mb-4 font-sans-serif">알림마당</h5>
+                    <ul class="list-unstyled mb-md-4 mb-lg-0">
+                        <li class="lh-lg"><a class="text-900" th:href="@{/manual/list}">이용방법</a></li>
+                        <li class="lh-lg"><a class="text-900" th:href="@{/notice/list}">공지사항</a></li>
+                        <li class="lh-lg"><a class="text-900" th:href="@{/faq/BEST}">자주묻는질문</a></li>
+                    </ul>
+                </div>
+                <div class="col-6 col-sm-4 col-lg-2 mb-3 order-3 order-sm-2" th:if="${#request.getRemoteUser() != null}">
+                    <h5 class="lh-lg fw-bold text-dark mb-4 font-sans-serif"> 마이페이지</h5>
+                    <ul class="list-unstyled mb-md-4 mb-lg-0">
+                        <li class="lh-lg"><a class="text-900" th:href="@{/members/info}">내 정보</a></li>
+                        <li class="lh-lg"><a class="text-900" th:href="@{/sheet/mysheet}">내 독후활동지</a></li>
+                        <li class="lh-lg"><a class="text-900" th:href="@{/sheet/request/myrequest}">내 출제요청</a></li>
+                        <li class="lh-lg"><a class="text-900" th:href="@{/coupon/list}">내 쿠폰</a></li>
+                        <li class="lh-lg"><a class="text-900" th:href="@{/myPay}">내 결제</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- end of .container-->
+
+    </section>
+    <!-- <section> close ============================-->
+    <!-- ============================================-->
+
+
+    <section class="py-0 bg-primary" style="margin-top: -5.8rem;">
+        <div class="container">
+            <div class="row justify-content-md-between justify-content-evenly py-4">
+                <div class="col-12 col-sm-8 col-md-6 col-lg-auto text-center text-md-start">
+                    <p class="fs--1 my-2 fw-bold">All rights Reserved &copy; Bookitaka</p>
+                </div>
+                <div class="col-12 col-sm-8 col-md-6 text-end">
+                    <p class="fs--1 my-2 text-md-end" href="#"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+    </main>
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
+
+
+
+
+    <!-- ===============================================-->
+    <!--    JavaScripts-->
+    <!-- ===============================================-->
+    <script src="/vendors/@popperjs/popper.min.js"></script>
+    <script src="/vendors/bootstrap/bootstrap.min.js"></script>
+    <script src="/vendors/is/is.min.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
+    <script src="/vendors/fontawesome/all.min.js"></script>
+    <script src="/assets/js/theme.js"></script>
+    <script src="/js/carticon.js"></script>
+
+    <!--아이콘 넣는 cdn ===============================================-->
+    <script src="https://kit.fontawesome.com/95c212c5c0.js" crossorigin="anonymous"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&amp;family=Rubik:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+</th:block>

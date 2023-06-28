@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/layout-No-Sidebar :: layout(~{::menuTitle}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<menuTitle>이메일 찾기</menuTitle>
+<mainSection>
+
+<form class="container">
+    <p><i class="fa-solid fa-circle-exclamation"></i> 아래의 회원정보를 입력해 가입한 이메일 정보가 있는지 확인하세요.</p>
+    <hr style="height: 2px; color: black">
+    <div class="row">
+        <span class="offset-1 col-2 text-truncate"><label for="memberName">이름</label></span>
+        <span class="col-9">
+            <input class="form-control-inline" type="text" name="memberName" id="memberName"/>
+            <div class="errorDiv" error="memberName" style="color: red"></div>
+        </span>
+    </div>
+    <hr>
+    <div class="row">
+        <span class="offset-1 col-2 text-truncate"><label for="memberBirthday">생년월일</label></span>
+        <span class="col-9">
+            <input class="form-control-inline" type="date" name="memberBirthday" id="memberBirthday"/>
+            <div class="errorDiv" error="memberBirthday" style="color: red"></div>
+        </span>
+    </div>
+    <hr>
+    <div id="findSuccess" style="display: none">
+        <hr style="height: 2px; color: black">
+        <div class="offset-1 mb-3">
+            <h5><strong>가입한 이메일 정보</strong></h5>
+        </div>
+        <div class="offset-1" id="members">
+        </div>
+        <hr>
+    </div>
+    <div class="text-center">
+        <a class="btn-primary btn-lg" id="findBtn">이메일 찾기</a>
+    </div>
+</form>
+<script th:inline="javascript">
+    // jQuery를 사용하여 폼을 제출하는 함수
+    document.getElementById("findBtn").addEventListener("click", function(event) {
+        event.preventDefault(); // 기본 동작(폼 제출) 막기
+        document.getElementById('members').innerHTML = ""; // 이전 값 지우기
+        document.getElementById('findSuccess').style.display = "none";
+        for (let errorDiv of document.querySelectorAll(".errorDiv")){
+            errorDiv.innerText = "";
+        }
+        // 사용자가 입력한  값 가져오기
+        let memberName = document.getElementById("memberName").value;
+        let memberBirthday = document.getElementById("memberBirthday").value;
+        let formData = new URLSearchParams({
+            memberName: memberName,
+            memberBirthday: memberBirthday
+        });
+        fetch("/member/findEmail", {
+            method: 'POST',
+            body: formData
+        })
+            .then((response) => {
+                if (response.ok) {
+                    let result = response.json();
+                    // console.log(result);
+                    result.then((data) => {
+                        // 배열의 각 요소에 접근하여 처리
+                        data.forEach((email) => {
+                            // console.log(email);
+                            // 여기에 각 이메일 주소에 대한 작업을 수행하면 됩니다.
+                            const membersDiv = document.getElementById('members');
+                            const paragraph = document.createElement('p');
+                            paragraph.textContent = maskEmail(email);
+                            membersDiv.appendChild(paragraph);
+                            document.getElementById('findSuccess').style.display = "block";
+                        });
+                    }).catch((error) => {
+                        // 처리 중에 오류가 발생한 경우
+                        console.error(error);
+                    });
+                } else if (response.status === 400) {
+                    response.json().then(data => {
+                        // 에러 메시지 초기화
+                        for (let errorDiv of document.querySelectorAll(".errorDiv")){
+                            errorDiv.innerText = "";
+                        }
+                        // 응답 데이터를 파싱하여 에러 메시지 표시
+                        // console.log(data);
+                        for (const error of data) {
+                            // 해당 입력 필드 아래에 에러 메시지 표시
+                            let errorElement = document.querySelector(`[error="${error.field}"]`);
+                            errorElement.innerText = error.defaultMessage;
+                        }
+                    });
+                } else if (response.status === 422) {
+                    response.json().then(data => {
+                        // 에러 메시지 초기화
+                        for (let errorDiv of document.querySelectorAll(".errorDiv")){
+                            errorDiv.innerText = "";
+                        }
+                        // 응답 데이터를 파싱하여 에러 메시지 표시
+                        // console.log(data);
+                        for (const error of data) {
+                            let errorElement = null;
+                            if (error.field == null) {
+                                errorElement = document.querySelector(`[error="${error.code}"]`);
+                            } else {
+                                // 해당 입력 필드 아래에 에러 메시지 표시
+                                errorElement = document.querySelector(`[error="${error.field}"]`);
+                            }
+                            errorElement.innerText = error.defaultMessage;
+                            // inputField.parentNode.appendChild(errorElement);
+                        }
+                    });
+                } else {
+                    // 기타 상태 코드에 대한 처리
+                }
+            })
+        });
+
+    // 이메일 주소를 마스킹하는 함수
+    function maskEmail(email) {
+        // 이메일 문자열을 @ 기준으로 분리
+        const [username, domain] = email.split("@");
+        // username의 길이가 5 이상인 경우 첫 번째, 두 번째, 마지막 글자를 제외한 나머지를 *로 대체
+        const maskedUsername =
+            username.length >= 5
+                ? username.charAt(0) +
+                username.charAt(1) +
+                username.charAt(2) +
+                "*".repeat(username.length - 3)
+                : username.charAt(0) + username.charAt(1) + "*".repeat(username.length - 2);
+
+        // 마스킹된 username과 domain을 합쳐서 반환
+        return maskedUsername + "@" + domain;
+    }
+
+
+</script>
+</mainSection>
+</body>
+</html>

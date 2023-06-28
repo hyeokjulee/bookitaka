@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<menuTitle>내 출제요청</menuTitle>
+<sidebar><th:block th:replace="layout/sidebar/mypage-sidebar :: mypage"></th:block></sidebar>
+<mainSection>
+    <div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th>책 제목</th>
+                <th>작가</th>
+                <th>출판사</th>
+                <th>희망일</th>
+                <th>요청일</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="req : ${myRequest}" th:onclick="'window.location.href = \'' + @{/sheet/request/detail/{requestNo}(requestNo=${req.requestNo})} + '\''">
+                <td th:text="${req.requestBooktitle}">책 제목</td>
+                <td th:text="${req.requestBookauthor}">작가</td>
+                <td th:text="${req.requestBookpublisher}">출판사</td>
+                <td th:text="${#strings.replace(req.requestHopedate, '-', '.')}">희망일</td>
+                <td th:if="${req.requestRegdate != null}" th:with="isToday=${#temporals.format(req.requestRegdate.toLocalDateTime(), 'yyyy-MM-dd').equals(T(java.time.LocalDate).now().toString())}">
+                    <span th:if="${isToday}" th:text="${#temporals.format(req.requestRegdate.toLocalDateTime(), 'a hh:mm')}">요청일</span>
+                    <span th:unless="${isToday}" th:text="${#temporals.format(req.requestRegdate.toLocalDateTime(), 'yyyy.MM.dd')}">요청일</span>
+                </td>
+                <td th:if="${req.requestRegdate == null}" th:text="-">요청일</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <a class="page-link" th:if="${currentPage > 0}"
+                   th:href="@{/sheet/request/myrequest(page=${previousGroupStartPage})}">&laquo;</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" th:if="${currentPage > 0}"
+                   th:href="@{/sheet/request/myrequest(page=${currentPage - 1})}">&lt;</a>
+            </li>
+            <th:block th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}">
+                <li th:class="page-item" th:classappend="${pageNumber == currentPage ? 'active' : ''}">
+                    <a th:if="${not #lists.isEmpty(myRequest.getContent())}"
+                       th:href="@{/sheet/request/myrequest(page=${pageNumber})}"
+                       th:text="${pageNumber + 1}" th:class="page-link"></a>
+                </li>
+            </th:block>
+            <li class="page-item">
+                <a class="page-link" th:if="${currentPage + 1 < totalPages}"
+                   th:href="@{/sheet/request/myrequest(page=${currentPage + 1})}">
+                    &gt; </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" th:if="${currentPage + 1 < totalPages}"
+                   th:href="@{/sheet/request/myrequest(page=${nextGroupStartPage})}">
+                    &raquo; </a>
+            </li>
+        </ul>
+    </nav>
+    <div class="row">
+        <div class="col-md">
+            <p class="my-2" th:if="${myRequest.isEmpty()}" style="text-align: center">보낸 출제 요청이 없습니다.</p>
+        </div>
+    </div>
+    <hr class="my-4" th:if="${myRequest.isEmpty()}">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+
+
+
+</mainSection>
+
+</body>
+</html>

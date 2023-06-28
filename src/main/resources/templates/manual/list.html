@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html th:replace="~{layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<menuTitle>알림마당</menuTitle>
+<sidebar><th:block th:replace="layout/sidebar/notification-sidebar :: notification"></th:block></sidebar>
+
+<mainSection>
+    <div id="wrap">
+        <div class="row g-0 align-items-center">
+            <div class="col-auto">
+                <h1 class="fs-5 fs-xl-5 mb-5">이용안내</h1>
+            </div>
+            <div class="col-auto ms-auto align-self-end">
+                <form class="form-inline" action="/manual/list" method="GET">
+                    <div class="input-group">
+                        <input class="form-control-inline" name="keyword" type="text" placeholder="검색어를 입력해주세요"
+                               id="keyword" th:if="${keyword != null}" th:value="${keyword}"/>
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">검색</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <hr class="my-4">
+        <div>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th class="col-1">No.</th>
+                    <th class="col-5">제목</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <!-- CONTENTS !-->
+                <tr th:each="manual : ${manualList}" onclick="detail(this)">
+                    <td class="col-1">
+                        <span th:text="${manual.manualNo}" id="manualNo"></span>
+                    </td>
+                    <td class="col-5">
+                        <span th:text="${manual.manualTitle}"></span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="row pt-3">
+                <div class="col-md">
+                    <p class="my-2" th:if="${manualList.isEmpty() && keyword != ''}" style="text-align: center">일치하는 검색 결과가 없습니다.</p>
+                    <p class="my-2" th:if="${manualList.isEmpty() && keyword.isEmpty()}" style="text-align: center">등록된 게시물이 없습니다.</p>
+                </div>
+            </div>
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item">
+                        <a class="page-link" th:if="${currentPage > 0}"
+                           th:href="@{/manual/list(page=${previousGroupStartPage}, keyword=${keyword})}">&laquo;</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:if="${currentPage > 0}"
+                           th:href="@{/manual/list(page=${currentPage - 1}, keyword=${keyword})}">&lt;</a>
+                    </li>
+                    <th:block th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}">
+                        <li th:class="page-item" th:classappend="${pageNumber == currentPage ? 'active' : ''}">
+                            <a th:if="${not #lists.isEmpty(manualList.getContent())}"
+                               th:href="@{/manual/list(page=${pageNumber},  keyword=${keyword})}"
+                               th:text="${pageNumber + 1}" th:class="page-link"></a>
+                        </li>
+                    </th:block>
+                    <li class="page-item">
+                        <a class="page-link" th:if="${currentPage + 1 < totalPages}"
+                           th:href="@{/manual/list(page=${currentPage + 1},  keyword=${keyword})}">
+                            &gt; </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:if="${currentPage + 1 < totalPages}"
+                           th:href="@{/manual/list(page=${nextGroupStartPage},  keyword=${keyword})}">
+                            &raquo; </a>
+                    </li>
+                </ul>
+            </nav>
+            <hr class="my-4" th:if="${manualList.isEmpty()}">
+            <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="d-flex justify-content-end">
+                <a class="btn btn-primary" th:href="@{/manual/post}">글쓰기</a>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        function detail(element) {
+            let manualNo = element.querySelector('#manualNo').textContent;
+            window.location.href = "/manual/post/" + manualNo;
+        }
+    </script>
+</mainSection>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html th:fragment="layout (menuTitle, mainSection)" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <!-- ===============================================-->
+  <!--    Document Title-->
+  <!-- ===============================================-->
+  <title>북키타카</title>
+
+  <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+
+  <!-- ===============================================-->
+  <!--    Stylesheets-->
+  <!-- ===============================================-->
+  <link th:href="@{/assets/css/theme.css}" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/carticon.css">
+  <link rel="stylesheet" href="/css/sidebar.css">
+  <link rel="stylesheet" href="/css/paper.css">
+</head>
+
+
+<body>
+
+<!-- ===============================================-->
+<!--    Main Content-->
+<!-- ===============================================-->
+<main class="main" id="top">
+
+  <!---------------nav start------------------>
+  <div th:replace="layout/navbar :: navbar"></div>
+  <!---------------nav end-------------------->
+
+
+  <!-- ============================================-->
+  <!-- <section> begin ============================-->
+  <div class="paper">
+    <div class="lines">
+      <!--  <div class="bg-light">-->
+      <div class="container pt-5 pb-6">
+        <h6 class="font-sans-serif text-primary fw-bold">북키타카</h6>
+        <h1  class="fs-6 fs-xl-6 fw-bold"><div th:replace="${menuTitle}" >알림마당</div></h1>
+      </div>
+      <!-- end of .container-->
+      <!--  </div>-->
+    </div>
+  </div>
+  <!-- <section> close ============================-->
+  <!-- ============================================-->
+
+
+  <br><hr class="my-4">
+
+  <!-- ============================================-->
+  <!-- <section> begin ============================-->
+  <section class="py-5">
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+        <div th:replace="${mainSection}"><img class="w-100" src="/assets/img/gallery/ux-designer.png" alt="..." />
+        </div>
+        </div>
+      </div>
+    </div>
+    <!-- end of .container-->
+
+  </section>
+  <!-- <section> close ============================-->
+  <!-- ============================================-->
+
+  <!-- ================footer start====================-->
+  <div th:replace="layout/footer :: footer"></div>
+  <!-- ================footer end======================-->
+</body>
+
+</html>

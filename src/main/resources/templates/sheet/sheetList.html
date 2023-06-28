@@ -1,0 +1,455 @@
+<!DOCTYPE HTML>
+<html th:replace="~{layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<menuTitle>독후활동지</menuTitle>
+<sidebar><th:block th:replace="layout/sidebar/sheet-sidebar :: sheet"></th:block></sidebar>
+
+<mainSection>
+    <link rel="stylesheet" href="/css/sheet.css">
+    <div id="wrap">
+        <div class="text-start">
+            <h1 class="fs-5 fs-xl-5 mb-5" th:if="${genre == '' and ageGroup == ''}" th:text="전체보기" ></h1>
+            <h1 class="fs-5 fs-xl-5 mb-5" th:if="${genre != ''}" th:text="|장르별로 보기 - ${genre}|" ></h1>
+            <h1 class="fs-5 fs-xl-5 mb-5" th:if="${ageGroup != ''}" th:text="|연령별로 보기 - ${ageGroup}|" ></h1>
+        </div>
+    </div>
+    <div id="main-container" class="main-container nav-effect-1">
+        <div class="main clearfix">
+
+            <!-- Main Section -->
+            <div class="page-container">
+
+                <div class="page-title category-title">
+                    <!-- <h1>Book Viewer</h1> -->
+                </div>
+
+                <div id="book_list my-5">
+                    <div class="row">
+                        <div class="col-12">
+                            <form id="sheetListForm" th:action="@{/sheet/list}" method="get" class="text-end">
+                                <div class="input-group justify-content-end">
+                                    <select class="form-select-inline" id="inputCategories" name="searchType">
+                                        <option value="제목" th:selected="${cri.searchType == '제목'}">제목</option>
+                                        <option value="작가" th:selected="${cri.searchType == '작가'}">작가</option>
+                                        <option value="출판사" th:selected="${cri.searchType == '출판사'}">출판사</option>
+                                    </select>
+                                    <input th:value="${cri.searchWord}" type="text" class="form-control-inline" name="searchWord" placeholder="검색어를 입력하세요"/>
+                                    <button class="btn btn-primary" type="submit">검색</button>
+                                </div>
+                                <input type="hidden" name="genre" th:value="${genre}">
+                                <input type="hidden" name="ageGroup" th:value="${ageGroup}">
+                                <input type="hidden" id="sortBtnInput" name="sort" th:value="${cri.sort}" />
+                            </form>
+                        </div>
+                        <div class="toolbar row justify-content-end ms-3">
+                            <div class="filter-options col-12 text-end">
+                                <a onclick="handleSortBtn('최신순')" th:class="${cri.sort == '최신순' ? 'filter-item active' : 'filter-item'}" style="cursor: pointer">최신순</a>
+                                <a onclick="handleSortBtn('조회순')" th:class="${cri.sort == '조회순' ? 'filter-item active' : 'filter-item'}" style="cursor: pointer">조회순</a>
+                                <a onclick="handleSortBtn('구매순')" th:class="${cri.sort == '구매순' ? 'filter-item active' : 'filter-item'}" style="cursor: pointer">구매순</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-shuffle">
+                        <ul id="grid" class="row">
+                            <li th:each="sheet : ${sheetList}" class="book-item col-md-12 col-lg-6">
+                                <a th:href="@{|/sheet/${sheet.sheetNo}/?genre=${genre}&ageGroup=${ageGroup}&pageNum=${cri.pageNum}&amount=${cri.amount}&searchType=${cri.searchType}&searchWord=${cri.searchWord}&sort=${cri.sort}|}">
+                                    <div class="bk-img">
+                                        <div class="bk-wrapper">
+                                            <div class="bk-book bk-bookdefault">
+                                                <div class="bk-front">
+                                                    <div class="bk-cover">
+                                                        <img class="img-fluid" th:if="${sheet.sheetBookimguuid == null}" th:src="|/assets/img/defaultImg.jpeg|">
+                                                        <img class="img-fluid" th:if="${sheet.sheetBookimguuid != null}" th:src="|/sheet/bookImg/*{sheet.sheetBookimguuid}*{sheet.sheetBookimgname}|">
+                                                    </div>
+                                                </div>
+                                                <div class="bk-back"></div>
+                                                <div class="bk-left"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="item-details h-100 position-relative">
+                                    <a th:href="@{|/sheet/${sheet.sheetNo}/?genre=${genre}&ageGroup=${ageGroup}&pageNum=${cri.pageNum}&amount=${cri.amount}&searchType=${cri.searchType}&searchWord=${cri.searchWord}&sort=${cri.sort}|}">
+                                        <h3 class="book-item_title"><span class="text-truncate" th:text="${sheet.sheetBooktitle}"></span></h3>
+                                    </a>
+                                    <div class="row my-3">
+                                        <span class="col-sm-4 text-start" style="padding-left: 0"><strong class="text-black text-truncate">작가</strong></span>
+                                        <span class="col-sm-8 author clamp-3" th:text="${sheet.sheetBookauthor}" style="padding-left: 0">작가이름</span>
+                                    </div>
+                                    <div class="row my-3">
+                                        <span class="col-sm-4" style="padding-left: 0"><strong class="text-black text-truncate">출판사</strong></span>
+                                        <span class="col-sm-8 author clamp-3" th:text="${sheet.sheetBookpublisher}" style="padding-left: 0">출판사이름</span>
+                                    </div>
+
+                                    <div id="hi" class="row my-3 position-absolute bottom-0 end-0 bg-light rounded-1 me-4">
+                                        <!--<span class="col-sm-3"><strong class="text-black text-truncate">가격</strong></span>-->
+                                        <span class="author clamp-3 text-end" th:text="${#numbers.formatInteger(sheet.sheetPrice, 3, 'COMMA') + '원'}"></span>
+                                    </div>
+                                        <div th:onclick="'cartAdd(\'' + ${sheet.sheetNo} + '\')'" class="my-3 position-absolute bottom-0 end-0" style="cursor: pointer;"><i class="fa-solid fs-sm-0 fa-cart-shopping"></i></div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="row pt-3">
+                        <div class="col-md">
+                            <p class="my-2" th:if="${sheetList.isEmpty()}" style="text-align: center">등록된 활동지가 없습니다.</p>
+                        </div>
+                    </div>
+
+                </div>
+            <hr th:class="${sheetList.isEmpty()}? 'my-5' : ''">
+            </div>
+            <div class="pagination mt-3 justify-content-center">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item">
+                        <a class="page-link" th:if="${pageInfo.getPageNum() > 0}"
+                           th:href="@{/sheet/list(pageNum=${pageInfo.getPreviousGroupStartPage()} + 1,  amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort}, genre=${genre}, ageGroup=${ageGroup})}">&laquo;</a>
+                    </li>
+                    <li class="page-item" th:if="${pageInfo.hasPreviousPage}">
+                        <a class="page-link" th:href="@{/sheet/list(genre=${genre}, ageGroup=${ageGroup}, pageNum=${pageInfo.pageNum}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort})}">&lt;</a>
+                    </li>
+                    <li th:each="pageNumber : ${#numbers.sequence(pageInfo.getStartPage(), pageInfo.getEndPage()-1)}" th:class="${pageNumber} == ${pageInfo.pageNum} ? 'page-item page-disabled active' : 'page-item'">
+                        <a class="page-link" th:href="@{/sheet/list(genre=${genre}, ageGroup=${ageGroup}, pageNum=${pageNumber} + 1, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort})}" th:text="${pageNumber} + 1"></a>
+                    </li>
+                    <li class="page-item" th:if="${pageInfo.hasNextPage}">
+                        <a class="page-link" th:href="@{/sheet/list(genre=${genre}, ageGroup=${ageGroup}, pageNum=${pageInfo.pageNum + 2}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort})}">&gt;</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:if="${pageInfo.getPageNum() + 1 < pageInfo.getTotalPage()}"
+                           th:href="@{/sheet/list(pageNum=${pageInfo.getNextGroupStartPage()},  amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord}, sort=${cri.sort}, genre=${genre}, ageGroup=${ageGroup})}">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- /main -->
+
+        <div class="main-overlay">
+            <div class="overlay-full"></div>
+        </div>
+
+    </div>
+    <!-- /main-container -->
+<!--    <div>-->
+<!--                <div class="row">-->
+<!--                    <div th:each="sheet : ${sheetList}" class="col-md-6 border-bottom border-bottom-gray" style="padding-top: 25px; padding-bottom: 25px;">-->
+<!--                        <div class="row">-->
+<!--                        <div class="col-md-4">-->
+<!--                        <a th:href="@{|/sheet/${sheet.sheetNo}/?genre=${genre}&ageGroup=${ageGroup}&pageNum=${cri.pageNum}&amount=${cri.amount}&searchType=${cri.searchType}&searchWord=${cri.searchWord}&sort=${cri.sort}|}">-->
+<!--                            <img th:src="|/sheet/bookImg/*{sheet.sheetBookimguuid}*{sheet.sheetBookimgname}|" class="h-100 w-100" style="object-fit: contain" alt="Book Image">-->
+<!--                        </a>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-8 mr-0">-->
+<!--                        <ul style="list-style-type: none;">-->
+<!--                            <li>-->
+<!--                                <h5 class="mt-2">-->
+<!--                                    <a th:href="@{|/sheet/${sheet.sheetNo}/?genre=${genre}&ageGroup=${ageGroup}&pageNum=${cri.pageNum}&amount=${cri.amount}&searchType=${cri.searchType}&searchWord=${cri.searchWord}&sort=${cri.sort}|}">-->
+<!--                                        <span th:text="${#strings.length(sheet.sheetBooktitle) &lt;= 7 ? sheet.sheetBooktitle : sheet.sheetBooktitle.substring(0, 7) + '...'}"></span>-->
+<!--                                    </a>-->
+<!--                                </h5>-->
+<!--                            </li>-->
+<!--                            <li>-->
+<!--                                <h6>ㆍ작가: <span th:text="${sheet.sheetBookauthor}">작가이름</span></h6>-->
+<!--                            </li>-->
+<!--                            <li>-->
+<!--                                <h6>ㆍ출판사: <span th:text="${sheet.sheetBookpublisher}">출판사이름</span></h6>-->
+<!--                            </li>-->
+<!--                            <li>-->
+<!--                                <h6>ㆍ가격: <span th:text="${sheet.sheetPrice}">10000</span></h6>-->
+<!--                            </li>-->
+<!--                        </ul>-->
+<!--                    </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+
+<!--    </div>-->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <script>
+
+        function handleSortBtn(sortValue) {
+            document.getElementById("sortBtnInput").value = sortValue;
+            document.getElementById("sheetListForm").submit();
+        }
+
+
+        function cartAdd(sheetNo) {
+            fetch("/cart/cartAdd", {
+                method: 'POST',
+                body: new URLSearchParams({ sheetNo: sheetNo }),
+                headers: {'ajax':true}
+            })
+                .then((response) => {
+                    if (response.status === 200) {
+                        response.json().then((data) => {
+                            console.log(data);
+                            if (data.fail) {
+                                alert("이미 장바구니에 담겨있는 상품입니다.");
+                            } else if (data.bought) {
+                                alert("이미 구입한 상품입니다.");
+                            } else if (data.success) {
+                                showCartCount();
+                                if (confirm("추가에 성공하였습니다. 장바구니로 이동하시겠습니까?")) {
+                                    window.location.href = "/cart/cart";
+                                }
+                            } else {
+                                console.error('추가에 실패하였습니다.');
+                            }
+                        });
+                    } else if (response.status === 201) {
+                        console.log("토큰 재발급");
+                        cartAdd(sheetNo);
+                    } else if (response.status === 403) {
+                        if (confirm("로그인시에 이용 가능합니다. 로그인하시겠습니까?")) {
+                            window.location.href = "/member/login";
+                        }
+                    } else {
+                        console.error('추가 요청 중 에러 발생', response.status);
+                    }
+                }).catch(error => {
+                console.error('추가 요청 실패:', error);
+            });
+        }
+
+
+
+    </script>
+    <script>
+        // Get Color Attribute
+        // Set the background book color
+        $("li.book-item").each(function() {
+            var $this = $(this);
+
+            $this.find(".bk-front > div").css('background-color', $(this).data("color"));
+            $this.find(".bk-left").css('background-color', $(this).data("color"));
+            $this.find(".back-color").css('background-color', $(this).data("color"));
+
+            $this.find(".item-details a.button").on('click', function() {
+                displayBookDetails($this);
+            });
+        });
+
+        function displayBookDetails(el) {
+            var $this = $(el);
+            $('.main-container').addClass('prevent-scroll');
+            $('.main-overlay').fadeIn();
+
+            $this.find('.overlay-details').clone().prependTo('.main-overlay');
+
+            $('a.close-overlay-btn').on('click', function(e) {
+                e.preventDefault();
+                $('.main-container').removeClass('prevent-scroll');
+                $('.main-overlay').fadeOut();
+                $('.main-overlay').find('.overlay-details').remove();
+            });
+
+            $('.main-overlay a.preview').on('click', function() {
+                $('.main-overlay .overlay-desc').toggleClass('activated');
+                $('.main-overlay .overlay-preview').toggleClass('activated');
+            });
+
+            $('.main-overlay a.back-preview-btn').on('click', function() {
+                $('.main-overlay .overlay-desc').toggleClass('activated');
+                $('.main-overlay .overlay-preview').toggleClass('activated');
+            });
+        }
+
+        /*
+         *  Offcanvas Menu
+         */
+        // Open Offcanvas Menu
+        $('.main-navigation a').on('click', function() {
+            $('.main-container').addClass('nav-menu-open');
+            $('.main-overlay').fadeIn();
+        });
+
+        // Close Offcanvas Menu
+        $('.overlay-full').on('click', function() {
+            $('.main-container').removeClass('nav-menu-open');
+            $('.main-container').removeClass('prevent-scroll');
+            $(this).parent().fadeOut();
+            $(this).parent().find('.overlay-details').remove();
+        });
+
+        /*
+         *  Shuffle.js for Search, Catagory filter and Sort
+         */
+
+        // Initiate Shuffle.js
+        var Shuffle = window.shuffle;
+
+        var bookList = function(element) {
+            this.element = element;
+
+            this.shuffle = new Shuffle(element, {
+                itemSelector: '.book-item',
+            });
+
+            this._activeFilters = [];
+            this.addFilterButtons();
+            this.addSorting();
+            this.addSearchFilter();
+            this.mode = 'exclusive';
+        };
+
+        bookList.prototype.toArray = function(arrayLike) {
+            return Array.prototype.slice.call(arrayLike);
+        };
+
+        // Catagory Filter Functions
+        // Toggle mode for the Catagory filters
+        bookList.prototype.toggleMode = function() {
+            if (this.mode === 'additive') {
+                this.mode = 'exclusive';
+            } else {
+                this.mode = 'additive';
+            }
+        };
+
+        // Filter buttons eventlisteners
+        bookList.prototype.addFilterButtons = function() {
+            var options = document.querySelector('.filter-options');
+            if (!options) {
+                return;
+            }
+            var filterButtons = this.toArray(options.children);
+
+            filterButtons.forEach(function(button) {
+                button.addEventListener('click', this._handleFilterClick.bind(this), false);
+            }, this);
+        };
+
+        // Function for the Catagory Filter
+        bookList.prototype._handleFilterClick = function(evt) {
+            var btn = evt.currentTarget;
+            var isActive = btn.classList.contains('active');
+            var btnGroup = btn.getAttribute('data-group');
+
+            if (this.mode === 'additive') {
+                if (isActive) {
+                    this._activeFilters.splice(this._activeFilters.indexOf(btnGroup));
+                } else {
+                    this._activeFilters.push(btnGroup);
+                }
+
+                btn.classList.toggle('active');
+                this.shuffle.filter(this._activeFilters);
+
+            } else {
+                this._removeActiveClassFromChildren(btn.parentNode);
+
+                var filterGroup;
+                if (isActive) {
+                    btn.classList.remove('active');
+                    filterGroup = Shuffle.ALL_ITEMS;
+                } else {
+                    btn.classList.add('active');
+                    filterGroup = btnGroup;
+                }
+
+                this.shuffle.filter(filterGroup);
+            }
+        };
+
+        // Remove classes for active states
+        bookList.prototype._removeActiveClassFromChildren = function(parent) {
+            var children = parent.children;
+            for (var i = children.length - 1; i >= 0; i--) {
+                children[i].classList.remove('active');
+            }
+        };
+
+        // Sort By
+        // Watching for the select box to change to run
+        bookList.prototype.addSorting = function() {
+            var menu = document.querySelector('.sort-options');
+            if (!menu) {
+                return;
+            }
+            menu.addEventListener('change', this._handleSortChange.bind(this));
+        };
+
+        // Sort By function Handler runs on change
+        bookList.prototype._handleSortChange = function(evt) {
+            var value = evt.target.value;
+            var options = {};
+
+            function sortByDate(element) {
+                return element.getAttribute('data-created');
+            }
+
+            function sortByTitle(element) {
+                return element.getAttribute('data-title').toLowerCase();
+            }
+
+            if (value === 'date-created') {
+                options = {
+                    reverse: true,
+                    by: sortByDate,
+                };
+            } else if (value === 'title') {
+                options = {
+                    by: sortByTitle,
+                };
+            }
+
+            this.shuffle.sort(options);
+        };
+
+        // Searching the Data-attribute Title
+        // Advanced filtering
+        // Waiting for input into the search field
+        bookList.prototype.addSearchFilter = function() {
+            var searchInput = document.querySelector('.shuffle-search');
+            if (!searchInput) {
+                return;
+            }
+            searchInput.addEventListener('keyup', this._handleSearchKeyup.bind(this));
+        };
+
+        // Search function Handler to search list
+        bookList.prototype._handleSearchKeyup = function(evt) {
+            var searchInput = document.querySelector('.shuffle-search');
+            var searchText = evt.target.value.toLowerCase();
+
+            // Check if Search input has value to toggle class
+            if (searchInput && searchInput.value) {
+                $('.catalog-search').addClass('input--filled');
+            } else {
+                $('.catalog-search').removeClass('input--filled');
+            }
+
+            this.shuffle.filter(function(element, shuffle) {
+
+                // If there is a current filter applied, ignore elements that don't match it.
+                if (shuffle.group !== Shuffle.ALL_ITEMS) {
+                    // Get the item's groups.
+                    var groups = JSON.parse(element.getAttribute('data-groups'));
+                    var isElementInCurrentGroup = groups.indexOf(shuffle.group) !== -1;
+
+                    // Only search elements in the current group
+                    if (!isElementInCurrentGroup) {
+                        return false;
+                    }
+                }
+
+                var titleElement = element.querySelector('.book-item_title');
+                var titleText = titleElement.textContent.toLowerCase().trim();
+
+                return titleText.indexOf(searchText) !== -1;
+            });
+        };
+
+        // Wait till dom load to start the Shuffle js funtionality
+        document.addEventListener('DOMContentLoaded', function() {
+            window.book_list = new bookList(document.getElementById('grid'));
+        });
+    </script>
+</mainSection>
+</body>
+</html>

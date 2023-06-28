@@ -1,0 +1,11 @@
+<!--
+이거 달아주면 적용됩니다.
+<sidebar><th:block th:replace="layout/sidebar/mypage-sidebar :: mypage"></th:block></sidebar>
+-->
+<th:block th:fragment="mypage">
+    <list class="list-group-item"><a th:href="@{/members/info}">내 정보</a></list>
+    <list class="list-group-item"><a th:href="@{/sheet/mysheet}">내 독후활동지</a></list>
+    <list class="list-group-item"><a th:href="@{/sheet/request/myrequest}">내 출제요청</a></list>
+    <list class="list-group-item"><a th:href="@{/coupon/list}">내 쿠폰</a></list>
+    <list class="list-group-item"><a th:href="@{/myPay}">내 결제</a></list>
+</th:block>

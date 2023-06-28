@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html th:replace="~{layout/defaultLayout :: layout(~{::menuTitle}, ~{::sidebar}, ~{::mainSection})}" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+
+<menuTitle>알림마당</menuTitle>
+<sidebar><th:block th:replace="layout/sidebar/notification-sidebar :: notification"></th:block></sidebar>
+
+<mainSection>
+    <div id="wrap">
+        <div class="row g-0 align-items-center">
+            <div class="col-auto">
+                <h1 class="fs-5 fs-xl-5 mb-5">공지사항</h1>
+            </div>
+            <div class="col-auto ms-auto align-self-end">
+                <form class="form-inline" action="/notice/list" method="GET">
+                    <div class="input-group">
+                        <input class="form-control-inline" name="keyword" type="text" placeholder="검색어를 입력해주세요"
+                               id="keyword" th:if="${keyword != null}" th:value="${keyword}"/>
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" type="submit">검색</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <hr class="my-4">
+        <div>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th class="col-1">번호</th>
+                    <th class="col-4">제목</th>
+                    <th class="col-2">작성일</th>
+                    <th class="col-1">조회수</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <!-- CONTENTS !-->
+                <tr th:each="notice : ${noticeList}" onclick="detail(this)">
+                    <td>
+                        <span th:text="${notice.noticeNo}" id="noticeNo"></span>
+                    </td>
+                    <td>
+                        <span th:text="${notice.noticeTitle}"></span>
+                    </td>
+                    <td th:if="${notice.noticeRegdate != null}" th:with="isToday=${#temporals.format(notice.noticeRegdate, 'yyyy-MM-dd').equals(T(java.time.LocalDate).now().toString())}">
+                        <span th:if="${isToday}" th:text="${#temporals.format(notice.noticeRegdate, 'a hh:mm')}">요청일</span>
+                        <span th:unless="${isToday}" th:text="${#temporals.format(notice.noticeRegdate, 'yyyy.MM.dd')}">요청일</span>
+                    </td>
+<!--                    <td>-->
+<!--                        <span th:if="${#temporals.format(notice.noticeRegdate, 'yyyyMMdd') == #temporals.format(#temporals.createNow(), 'yyyyMMdd')}">-->
+<!--                            <span th:text="'오늘 ' +${#temporals.format(notice.noticeRegdate, 'HH:mm')}"></span>-->
+<!--                        </span>-->
+<!--                        <span th:unless="${#temporals.format(notice.noticeRegdate, 'yyyyMMdd') == #temporals.format(#temporals.createNow(), 'yyyyMMdd')}">-->
+<!--                            <span th:text="${#temporals.format(notice.noticeRegdate, 'yyyy.MM.dd')}"></span>-->
+<!--                        </span>-->
+<!--                    </td>-->
+                    <td>
+                        <span th:text="${notice.noticeHit}"></span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="row pt-3">
+                <div class="col-md">
+                    <p class="my-2" th:if="${noticeList.isEmpty() && keyword != ''}" style="text-align: center">일치하는 검색 결과가 없습니다.</p>
+                    <p class="my-2" th:if="${noticeList.isEmpty() && keyword.isEmpty()}" style="text-align: center">등록된 게시물이 없습니다.</p>
+                </div>
+            </div>
+
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item">
+                        <a class="page-link" th:if="${currentPage > 0}"
+                           th:href="@{/notice/list(page=${previousGroupStartPage}, keyword=${keyword})}">&laquo;</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:if="${currentPage > 0}"
+                           th:href="@{/notice/list(page=${currentPage - 1}, keyword=${keyword})}">&lt;</a>
+                    </li>
+                    <th:block th:each="pageNumber : ${#numbers.sequence(startPage, endPage)}">
+                        <li th:class="page-item" th:classappend="${pageNumber == currentPage ? 'active' : ''}">
+                            <a th:if="${not #lists.isEmpty(noticeList.getContent())}"
+                               th:href="@{/notice/list(page=${pageNumber},  keyword=${keyword})}"
+                               th:text="${pageNumber + 1}" th:class="page-link"></a>
+                        </li>
+                    </th:block>
+                    <li class="page-item">
+                        <a class="page-link" th:if="${currentPage + 1 < totalPages}"
+                           th:href="@{/notice/list(page=${currentPage + 1},  keyword=${keyword})}">
+                            &gt; </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" th:if="${currentPage + 1 < totalPages}"
+                           th:href="@{/notice/list(page=${nextGroupStartPage},  keyword=${keyword})}">
+                            &raquo; </a>
+                    </li>
+                </ul>
+            </nav>
+            <hr class="my-4" th:if="${noticeList.isEmpty()}">
+            <div th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" class="d-flex justify-content-end">
+                <a class="btn btn-primary" th:href="@{/notice/post}">글쓰기</a>
+            </div>
+        </div>
+    </div>
+    <script th:inline="javascript">
+        function detail(element) {
+            let noticeNo = element.querySelector('#noticeNo').textContent;
+            window.location.href = "/notice/post/" + noticeNo;
+        }
+    </script>
+</mainSection>
+</body>
+</html>
