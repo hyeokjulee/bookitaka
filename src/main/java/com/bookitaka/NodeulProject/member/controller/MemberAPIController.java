@@ -195,8 +195,8 @@ public class MemberAPIController {
   @PutMapping("/changePw")
   @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
   public ResponseEntity<?> modifyPw(@Validated @ModelAttribute MemberChangePwDTO memberChangePwDTO,
-                                         HttpServletRequest request,
-                                         BindingResult bindingResult) {
+                                         BindingResult bindingResult,
+                                         HttpServletRequest request) {
     log.info("================================ Member : modifyPw");
     Member member = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
     int result = memberService.modifyPassword(member, memberChangePwDTO);
