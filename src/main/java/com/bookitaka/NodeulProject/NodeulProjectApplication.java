@@ -10,7 +10,6 @@ import org.springframework.context.annotation.Bean;
 //@ImportAutoConfiguration
 @EnableJpaAuditing
 @SpringBootApplication
-@PropertySource("classpath:application-KEY.properties")
 public class NodeulProjectApplication {
 
 	public static void main(String[] args) {
