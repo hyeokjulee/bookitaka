@@ -68,7 +68,7 @@
       <li class="page-item" th:if="${pageInfo.hasPreviousPage}">
         <a class="page-link" th:href="@{/sheet/mysheet(pageNum=${pageInfo.pageNum}, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}">&lt;</a>
       </li>
-      <li th:each="pageNumber : ${#numbers.sequence(pageInfo.getStartPage(), pageInfo.getEndPage()-1)}" th:class="${pageNumber} == ${pageInfo.pageNum} ? 'page-item page-disabled active' : 'page-item'">
+      <li th:unless="${sheetList.isEmpty()}" th:each="pageNumber : ${#numbers.sequence(pageInfo.getStartPage(), pageInfo.getEndPage()-1)}" th:class="${pageNumber} == ${pageInfo.pageNum} ? 'page-item page-disabled active' : 'page-item'">
         <a class="page-link" th:href="@{/sheet/mysheet(pageNum=${pageNumber} + 1, amount=${pageInfo.amount}, searchType=${cri.searchType}, searchWord=${cri.searchWord})}" th:text="${pageNumber} + 1"></a>
       </li>
       <li class="page-item" th:if="${pageInfo.hasNextPage}">
