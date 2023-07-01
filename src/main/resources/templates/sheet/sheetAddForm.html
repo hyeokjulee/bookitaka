@@ -197,10 +197,10 @@
                         result += `<img class='sheetBookimgname' src='${bookList[i].sheetBookimgname}'>`;
                         result += `</div>`;
                         result += `<div class='col-5 text-start'>`;
-                        result += `<p class='sheetBooktitle'><span class="sheetdetail-title">책 제목 : </span>${bookList[i].sheetBooktitle}</p>`;
-                        result += `<p class='sheetBookauthor'><span class="sheetdetail-title">작가 : </span>${bookList[i].sheetBookauthor}</p>`;
-                        result += `<p class='sheetBookpublisher'><span class="sheetdetail-title">출판사 : </span>${bookList[i].sheetBookpublisher}</p>`;
-                        result += `<p class='sheetBookisbn'><span class="sheetdetail-title">ISBN : </span>${bookList[i].sheetBookisbn}</p>`;
+                        result += `<p class='sheetBooktitle'>책 제목 : <span class="sheetdetail-Booktitle">${bookList[i].sheetBooktitle}</span></p>`;
+                        result += `<p class='sheetBookauthor'>작가 : <span class="sheetdetail-Bookauthor">${bookList[i].sheetBookauthor}</span></p>`;
+                        result += `<p class='sheetBookpublisher'>출판사 : <span class="sheetdetail-Bookpublisher">${bookList[i].sheetBookpublisher}</span></p>`;
+                        result += `<p class='sheetBookisbn'>ISBN : <span class="sheetdetail-Bookisbn">${bookList[i].sheetBookisbn}</span></p>`;
                         result += `</div>`;
                         result += `</div>`;
                         result += `</div><hr>`;
@@ -223,10 +223,10 @@
 
         // 검색 리스트 클릭 시 도서 정보 폼으로 이동
         function getBookValue(element) {
-            var title = $(element).find(".sheetBooktitle").text();
-            var author = $(element).find(".sheetBookauthor").text();
-            var pub = $(element).find(".sheetBookpublisher").text();
-            var isbn = $(element).find(".sheetBookisbn").text();
+            var title = $(element).find(".sheetdetail-Booktitle").text();
+            var author = $(element).find(".sheetdetail-Bookauthor").text();
+            var pub = $(element).find(".sheetdetail-Bookpublisher").text();
+            var isbn = $(element).find(".sheetdetail-Bookisbn").text();
             $("#sheetBooktitle").val(title);
             $("#sheetBookauthor").val(author);
             $("#sheetBookpublisher").val(pub);
