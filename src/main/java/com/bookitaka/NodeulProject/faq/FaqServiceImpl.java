@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class FaqServiceImpl implements FaqService{
+public class FaqServiceImpl implements FaqService {
 
     private final FaqRepository faqRepository;
 
@@ -25,10 +25,10 @@ public class FaqServiceImpl implements FaqService{
         return false;
     }
 
-//    @Override
-//    public List<Faq> getAllFaq() {
-//        return faqRepository.findAll();
-//    }
+    @Override
+    public List<Faq> getAllFaq() {
+        return faqRepository.findAll();
+    }
 
     @Override
     public Optional<Faq> getOneFaq(Long faqNo) {
@@ -62,10 +62,9 @@ public class FaqServiceImpl implements FaqService{
     }
 
 
-
     @Override
     public Page<Faq> getAllFaqByFaqCategory(String faqCategory, Pageable pageable) {
-        if(faqCategory.equals("BEST")) {
+        if (faqCategory.equals("BEST")) {
             return faqRepository.findAllByFaqBest(1, pageable);
         } else if (faqCategory.equals("전체")) {
             return faqRepository.findAll(pageable);
@@ -79,6 +78,4 @@ public class FaqServiceImpl implements FaqService{
         return faqRepository.findAllByFaqQuestionContaining(keyword, pageable);
 //        return null;
     }
-
-
 }

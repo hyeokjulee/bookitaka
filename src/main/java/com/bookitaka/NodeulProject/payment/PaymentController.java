@@ -40,7 +40,7 @@ public class PaymentController {
         model.addAttribute("myPayList", paymentList);
         model.addAttribute("pageInfo", new PaymentPageInfo(paymentCri, myAllPaymentPage.getTotalPages()));
 
-        return "myPage/myPay";
+        return "myPay";
     }
 
 }

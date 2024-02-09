@@ -1,6 +1,5 @@
 package com.bookitaka.NodeulProject.sheet;
 
-import com.bookitaka.NodeulProject.request.BookDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -11,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
+import java.io.InputStream;
 import java.util.*;
 
 @Service
@@ -34,8 +33,8 @@ public class SheetServiceImpl implements SheetService{
     private String previewDir;
 
 
-    @Value("${isbn-api-key}")
-    private String isbn_api_key;
+//    @Value("${isbn-api-key}")
+//    private String isbn_api_key;
 
     @Override
     public Sheet registerSheet(SheetRegDto sheetRegDto, UploadFile uploadBookImg, UploadFile uploadSheetFile) {
@@ -69,11 +68,14 @@ public class SheetServiceImpl implements SheetService{
 
     @Override
     public UploadFile storeBookImg(MultipartFile sheetBookImg) throws IOException {
+
         String bookImgName = sheetBookImg.getOriginalFilename();
 
         String uuid = UUID.randomUUID().toString();
+
         String bookImgFullPath = bookImgDir + uuid + bookImgName;
         log.info("bookImg 저장 fullPath={}", bookImgFullPath);
+
         sheetBookImg.transferTo(new File(bookImgFullPath));
 
         //테스트 데이터 넣기용
@@ -95,7 +97,8 @@ public class SheetServiceImpl implements SheetService{
 
         //미리보기 따로 저장을 위한 코드 시작
         // PDF 파일을 PDDocument로 로드
-        PDDocument document = PDDocument.load(sheetFile.getInputStream());
+        InputStream is = sheetFile.getInputStream();
+        PDDocument document = PDDocument.load(is);
         int numberOfPages = document.getNumberOfPages();
 
         if (numberOfPages < 3) {
@@ -121,9 +124,11 @@ public class SheetServiceImpl implements SheetService{
 
             // 문서 닫기
             newDocument.close();
-            document.close();
-            //미리보기 따로 저장을 위한 코드 끝
         }
+        document.close();
+        //미리보기 따로 저장을 위한 코드 끝
+        is.close();
+
         sheetFile.transferTo(new File(sheetFileFullPath));
         //테스트 데이터 넣기용
 //        Files.copy(sheetFile.getInputStream(), Paths.get(sheetFileFullPath), StandardCopyOption.REPLACE_EXISTING);
@@ -146,9 +151,9 @@ public class SheetServiceImpl implements SheetService{
         log.info("service cnt genre = {}", genre);
         log.info("service cnt ageGroup = {}", ageGroup);
 
-        if (!genre.equals("")) {
+        if (!genre.isEmpty()) {
             return sheetRepository.countSheetByGenre(genre, searchType, searchWord);
-        } else if (!ageGroup.equals("")) {
+        } else if (!ageGroup.isEmpty()) {
             return sheetRepository.countSheetByAgeGroup(ageGroup, searchType, searchWord);
         } else {
             return sheetRepository.countSheet(searchType, searchWord);
@@ -161,9 +166,9 @@ public class SheetServiceImpl implements SheetService{
         log.info("service sheet genre = {}", genre);
         log.info("service sheet ageGroup = {}", ageGroup);
 
-        if (!genre.equals("")) {
+        if (!genre.isEmpty()) {
             return sheetRepository.findAllSheetByGenre(genre, cri);
-        } else if (!ageGroup.equals("")) {
+        } else if (!ageGroup.isEmpty()) {
             return sheetRepository.findAllSheetByAgeGroup(ageGroup, cri);
         } else {
             return sheetRepository.findAllSheet(cri);

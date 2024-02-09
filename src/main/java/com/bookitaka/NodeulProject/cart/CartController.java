@@ -5,8 +5,7 @@ import com.bookitaka.NodeulProject.member.security.Token;
 import com.bookitaka.NodeulProject.member.service.MemberService;
 import com.bookitaka.NodeulProject.sheet.Sheet;
 import com.bookitaka.NodeulProject.sheet.SheetService;
-import com.bookitaka.NodeulProject.sheet.mysheet.MysheetRepository;
-import com.bookitaka.NodeulProject.sheet.mysheet.MysheetService;
+import com.bookitaka.NodeulProject.mysheet.MysheetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,7 +31,7 @@ public class CartController {
 
     @GetMapping("/cart") // 목록 페이지
     public String cart() {
-        return "cart/cart"; // 뷰 이름을 반환
+        return "cart"; // 뷰 이름을 반환
     }
 
     @GetMapping("/getCarts") // 목록 반환

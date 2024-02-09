@@ -1,7 +1,7 @@
 //package com.bookitaka.NodeulProject.notice;
 //
-//import com.bookitaka.NodeulProject.notice.domain.entity.Notice;
-//import com.bookitaka.NodeulProject.notice.repository.NoticeRepository;
+//import com.bookitaka.NodeulProject.notice.Notice;
+//import com.bookitaka.NodeulProject.notice.NoticeRepository;
 //import org.assertj.core.api.Assertions;
 //import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;

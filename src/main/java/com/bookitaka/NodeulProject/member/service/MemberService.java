@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
+import java.security.SecureRandom;
 import java.util.*;
 
 @Slf4j
@@ -161,7 +162,7 @@ public class MemberService {
         if (memberRepository.existsByMemberEmailAndMemberName(memberEmail, memberName)) {
             String newPw = generateRandomPassword();
             // 메일전송
-            if (emailService.sendEmailWithTemplate(memberEmail, "templates/member/mail/temp-password-email-template.html", "[북키타카] 임시비밀번호 발송", newPw)) {
+            if (emailService.sendEmailWithTemplate(memberEmail, "templates/member/temp-password-email-template.html", "[북키타카] 임시비밀번호 발송", newPw)) {
                 // 메일전송 성공 시
                 // 임시 비밀번호로 비밀번호 변경 후 디비에 저장
                 log.info("================================== newPw : {}", newPw);
@@ -198,11 +199,11 @@ public class MemberService {
         // 이 예시에서는 간단하게 8자리의 랜덤한 숫자와 문자 조합으로 비밀번호를 생성하는 방식을 사용한다.
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         StringBuilder password = new StringBuilder();
-        Random random = new Random();
+        SecureRandom sr = new SecureRandom();
         int passwordLength = 8;
 
         for (int i = 0; i < passwordLength; i++) {
-            int index = random.nextInt(characters.length());
+            int index = sr.nextInt(characters.length());
             password.append(characters.charAt(index));
         }
 

@@ -235,25 +235,24 @@
                 },
                 body: JSON.stringify(payMakeDto)
             })
-                .then(response => {
-                    if (response.status == 200) {
-                        deleteSelectedCart()
-                        window.location.href = "/payproc/complete?sInfo=" + sInfo;
-                    } else if (response.status == 201) {
-                        console.log("토큰 재발급");
-                        freePayProc(uuid);
-                    }
-                    else {
-                        response.text().then(errorMsg => {
-                            alert("결제 요청 실패" + errorMsg);
-                            throw new Error(errorMsg); });
-                    }
-                }).catch(error => {
-                    // 요청 실패 시 오류 처리
-                    console.error('결제 요청 실패:', error);
-                    throw error;
-                });
-
+            .then(response => {
+                if (response.status == 200) {
+                    deleteSelectedCart()
+                    window.location.href = "/payproc/complete?sInfo=" + sInfo;
+                } else if (response.status == 201) {
+                    console.log("토큰 재발급");
+                    freePayProc(uuid);
+                }
+                else {
+                    response.text().then(errorMsg => {
+                        alert("결제 요청 실패" + errorMsg);
+                        throw new Error(errorMsg); });
+                }
+            }).catch(error => {
+                // 요청 실패 시 오류 처리
+                console.error('결제 요청 실패:', error);
+                throw error;
+            });
         }
 
     function goToBack() {

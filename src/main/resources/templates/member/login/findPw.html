@@ -44,59 +44,59 @@
             method: 'POST',
             body: formData
         })
-            .then((response) => {
-                if (response.ok) {
+        .then((response) => {
+            if (response.ok) {
 
-                    for (let errorDiv of document.querySelectorAll(".errorDiv")){
+                for (let errorDiv of document.querySelectorAll(".errorDiv")){
+                    errorDiv.innerText = "";
+                }
+                alert("임시 비밀번호가 이메일로 전송되었습니다. " +
+                    "\n - 임시 비밀번호 발급은 1분 정도 소요될 수도 있습니다." +
+                    "\n - 메일이 오지 않을 경우, 스팸 메일함과 차단내역을 확인부탁드립니다.")
+            } else if (response.status === 400) {
+                response.json().then(data => {
+                    // 에러 메시지 초기화
+                    for (let errorDiv of document.querySelectorAll(".errorDiv")) {
                         errorDiv.innerText = "";
                     }
-                    alert("임시 비밀번호가 이메일로 전송되었습니다. " +
-                        "\n - 임시 비밀번호 발급은 1분 정도 소요될 수도 있습니다." +
-                        "\n - 메일이 오지 않을 경우, 스팸 메일함과 차단내역을 확인부탁드립니다.")
-                } else if (response.status === 400) {
-                    response.json().then(data => {
-                        // 에러 메시지 초기화
-                        for (let errorDiv of document.querySelectorAll(".errorDiv")) {
-                            errorDiv.innerText = "";
+                    // 응답 데이터를 파싱하여 에러 메시지 표시
+                    // console.log(data);
+                    for (const error of data) {
+                        let errorElement = null;
+                        if (error.field == null) {
+                            errorElement = document.querySelector(`[error="${error.code}"]`);
+                        } else {
+                            // 해당 입력 필드 아래에 에러 메시지 표시
+                            errorElement = document.querySelector(`[error="${error.field}"]`);
                         }
-                        // 응답 데이터를 파싱하여 에러 메시지 표시
-                        // console.log(data);
-                        for (const error of data) {
-                            let errorElement = null;
-                            if (error.field == null) {
-                                errorElement = document.querySelector(`[error="${error.code}"]`);
-                            } else {
-                                // 해당 입력 필드 아래에 에러 메시지 표시
-                                errorElement = document.querySelector(`[error="${error.field}"]`);
-                            }
-                            errorElement.innerText = error.defaultMessage;
-                            // inputField.parentNode.appendChild(errorElement);
+                        errorElement.innerText = error.defaultMessage;
+                        // inputField.parentNode.appendChild(errorElement);
+                    }
+                });
+            } else if (response.status === 422) {
+                response.json().then(data => {
+                    // 에러 메시지 초기화
+                    for (let errorDiv of document.querySelectorAll(".errorDiv")) {
+                        errorDiv.innerText = "";
+                    }
+                    // 응답 데이터를 파싱하여 에러 메시지 표시
+                    // console.log(data);
+                    for (const error of data) {
+                        let errorElement = null;
+                        if (error.field == null) {
+                            errorElement = document.querySelector(`[error="${error.code}"]`);
+                        } else {
+                            // 해당 입력 필드 아래에 에러 메시지 표시
+                            errorElement = document.querySelector(`[error="${error.field}"]`);
                         }
-                    });
-                } else if (response.status === 422) {
-                    response.json().then(data => {
-                        // 에러 메시지 초기화
-                        for (let errorDiv of document.querySelectorAll(".errorDiv")) {
-                            errorDiv.innerText = "";
-                        }
-                        // 응답 데이터를 파싱하여 에러 메시지 표시
-                        // console.log(data);
-                        for (const error of data) {
-                            let errorElement = null;
-                            if (error.field == null) {
-                                errorElement = document.querySelector(`[error="${error.code}"]`);
-                            } else {
-                                // 해당 입력 필드 아래에 에러 메시지 표시
-                                errorElement = document.querySelector(`[error="${error.field}"]`);
-                            }
-                            errorElement.innerText = error.defaultMessage;
-                            // inputField.parentNode.appendChild(errorElement);
-                        }
-                    });
-                } else {
-                    // 기타 상태 코드에 대한 처리
-                }
-            })
+                        errorElement.innerText = error.defaultMessage;
+                        // inputField.parentNode.appendChild(errorElement);
+                    }
+                });
+            } else {
+                // 기타 상태 코드에 대한 처리
+            }
+        })
     });
 </script>
 </mainSection>

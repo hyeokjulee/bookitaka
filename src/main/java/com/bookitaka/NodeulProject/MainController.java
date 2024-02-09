@@ -1,9 +1,9 @@
 package com.bookitaka.NodeulProject;
 
-import com.bookitaka.NodeulProject.manual.dto.ManualDto;
-import com.bookitaka.NodeulProject.manual.service.ManualService;
-import com.bookitaka.NodeulProject.notice.dto.NoticeDto;
-import com.bookitaka.NodeulProject.notice.service.NoticeService;
+import com.bookitaka.NodeulProject.manual.ManualDto;
+import com.bookitaka.NodeulProject.manual.ManualService;
+import com.bookitaka.NodeulProject.notice.NoticeDto;
+import com.bookitaka.NodeulProject.notice.NoticeService;
 import com.bookitaka.NodeulProject.sheet.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

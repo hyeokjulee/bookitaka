@@ -8,15 +8,14 @@ import com.bookitaka.NodeulProject.member.repository.MemberRepository;
 import com.bookitaka.NodeulProject.payment.Payment;
 import com.bookitaka.NodeulProject.payment.PaymentRepository;
 import com.bookitaka.NodeulProject.sheet.SheetRepository;
-import com.bookitaka.NodeulProject.sheet.mysheet.Mysheet;
-import com.bookitaka.NodeulProject.sheet.mysheet.MysheetRepository;
+import com.bookitaka.NodeulProject.mysheet.Mysheet;
+import com.bookitaka.NodeulProject.mysheet.MysheetRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -33,7 +32,6 @@ public class PayprocServiceImpl implements PayprocService {
     private final MysheetRepository mysheetRepository;
     private final MemberRepository memberRepository;
 
-
     @Override
     @Transactional
     public boolean makePay(PayMakeDto payMakeDto) {
@@ -49,7 +47,6 @@ public class PayprocServiceImpl implements PayprocService {
 
         Payment save = paymentRepository.save(payment);
         log.info("makePay pay = {}", save);
-
 
         //쿠폰 사용하기
         List<Coupon> coupons = couponRepositoryCustom.findAllValidCouponByMemberEmail(payMakeDto.getMemberEmail());
@@ -68,7 +65,6 @@ public class PayprocServiceImpl implements PayprocService {
                 usedCouponCnt -= leftCoupon; //남은 숫자
                 couponRepository.save(coupon);
             }
-
         }
         
         // 현재 시간
@@ -97,9 +93,7 @@ public class PayprocServiceImpl implements PayprocService {
             sheetRepository.plusOneSheetBuyCnt(sheetNo.intValue());
 
             mysheetRepository.save(mysheet);
-
         }
-
 
         return true;
     }
