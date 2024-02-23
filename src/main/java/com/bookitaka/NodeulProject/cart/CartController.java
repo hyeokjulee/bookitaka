@@ -87,9 +87,11 @@ public class CartController {
         Member member = memberService.whoami(request.getCookies(), Token.ACCESS_TOKEN);
         String email = member.getMemberEmail();
 
+        // 사용자가 보유한 독후활동지라면
         if (mysheetService.canIDownloadSheet(sheetService.getSheet(sheetNo).getSheetFileuuid(), member) != null) {
             response.put("bought", true);
         }
+        // 사용자의 장바구니에 독후활동지가 없다면
         else if(cartService.getCartByMemberEmailAndSheetNo(email, sheetNo).isEmpty()) {
             Cart cart = new Cart();
             cart.setMemberEmail(email);
