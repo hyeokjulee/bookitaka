@@ -10,7 +10,7 @@ public interface FaqService {
 
     boolean registerFaq(Faq faq);
 
-    List<Faq> getAllFaq();
+//    List<Faq> getAllFaq();
 
     Optional<Faq> getOneFaq(Long faqNo);
 

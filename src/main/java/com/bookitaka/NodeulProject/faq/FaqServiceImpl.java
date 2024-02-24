@@ -25,10 +25,10 @@ public class FaqServiceImpl implements FaqService {
         return false;
     }
 
-    @Override
-    public List<Faq> getAllFaq() {
-        return faqRepository.findAll();
-    }
+//    @Override
+//    public List<Faq> getAllFaq() {
+//        return faqRepository.findAll();
+//    }
 
     @Override
     public Optional<Faq> getOneFaq(Long faqNo) {
