@@ -5,7 +5,6 @@ import com.bookitaka.NodeulProject.member.model.MemberRoles;
 import com.bookitaka.NodeulProject.member.repository.MemberRepository;
 import com.bookitaka.NodeulProject.member.security.JwtTokenProvider;
 import com.bookitaka.NodeulProject.member.security.Token;
-import com.bookitaka.NodeulProject.member.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,9 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import javax.servlet.http.Cookie;
-import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -30,8 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class MemberControllerTest {
 
-    @Autowired
-    MemberService memberService;
     @Autowired
     MemberRepository memberRepository;
     @Autowired
@@ -77,14 +72,38 @@ class MemberControllerTest {
         result.andExpect(status().isOk());
 
         // 응답 뷰 및 뷰 이름 검증
-        result.andExpect(view().name("login/login"));
+        result.andExpect(view().name("member/login/login"));
+    }
+
+    @Test
+    void signup() throws Exception {
+        // 테스트하고자 하는 URL 및 파라미터 설정
+        String url = "/members/signup";
+
+        // MockMvc를 사용하여 GET 요청 보내고 응답 결과를 검증
+        ResultActions result = mockMvc.perform(get(url));
+
+        // 응답 상태 코드 검증
+        result.andExpect(status().isOk());
+
+        // 응답 뷰 및 뷰 이름 검증
+        result.andExpect(view().name("member/login/signup"));
+
+        // MockMvc를 사용하여 GET 요청 보내고 응답 결과를 검증
+        result = mockMvc.perform(get(url)
+                .cookie(aTokenCookie)
+                .cookie(rTokenCookie));
+        // 응답 상태 코드 검증
+        result.andExpect(status().is3xxRedirection());
+        // 응답 뷰 및 뷰 이름 검증
+        result.andExpect(view().name("redirect:/"));
     }
 
     @Test
     @DisplayName("멤버 컨트롤러 - 회원 수정 뷰")
     void edit() throws Exception {
         // 테스트하고자 하는 URL 및 파라미터 설정
-        String url = "/members/edit";
+        String url = "/members/info";
 
         // MockMvc를 사용하여 GET 요청 보내고 응답 결과를 검증
         ResultActions result = mockMvc.perform(get(url)
@@ -95,33 +114,98 @@ class MemberControllerTest {
         result.andExpect(status().isOk());
 
         // 응답 뷰 및 뷰 이름 검증
-        result.andExpect(view().name("login/edit"));
+        result.andExpect(view().name("member/my-info"));
 
         // 뷰에서 전달하는 모델 속성 검증
         result.andExpect(model().attributeExists("member"));
     }
 
     @Test
-    void list() {
+    void list() throws Exception {
+        // 테스트하고자 하는 URL 및 파라미터 설정
+        String url = "/members/list";
+
+        // MockMvc를 사용하여 GET 요청 보내고 응답 결과를 검증
+        ResultActions result = mockMvc.perform(get(url)
+                .cookie(aTokenCookie)
+                .cookie(rTokenCookie));
+
+        // 응답 상태 코드 검증
+        result.andExpect(status().isOk());
+
+        // 응답 뷰 및 뷰 이름 검증
+        result.andExpect(view().name("member/admin/list"));
+
+        // 뷰에서 전달하는 모델 속성 검증
+        result.andExpect(model().attributeExists("members"));
     }
 
     @Test
-    void findId() {
+    void findEmail() throws Exception {
+        // 테스트하고자 하는 URL 및 파라미터 설정
+        String url = "/members/find-email";
+
+        // MockMvc를 사용하여 GET 요청 보내고 응답 결과를 검증
+        ResultActions result = mockMvc.perform(get(url));
+
+        // 응답 상태 코드 검증
+        result.andExpect(status().isOk());
+
+        // 응답 뷰 및 뷰 이름 검증
+        result.andExpect(view().name("member/login/findEmail"));
+
+        // MockMvc를 사용하여 GET 요청 보내고 응답 결과를 검증
+        result = mockMvc.perform(get(url)
+                .cookie(aTokenCookie)
+                .cookie(rTokenCookie));
+        // 응답 상태 코드 검증
+        result.andExpect(status().is3xxRedirection());
+        // 응답 뷰 및 뷰 이름 검증
+        result.andExpect(view().name("redirect:/"));
+    }
+
+//    @Test
+//    void findEmailResult() throws Exception {
+//    }
+
+    @Test
+    void findPw() throws Exception {
+        // 테스트하고자 하는 URL 및 파라미터 설정
+        String url = "/members/find-pw";
+
+        // MockMvc를 사용하여 GET 요청 보내고 응답 결과를 검증
+        ResultActions result = mockMvc.perform(get(url));
+
+        // 응답 상태 코드 검증
+        result.andExpect(status().isOk());
+
+        // 응답 뷰 및 뷰 이름 검증
+        result.andExpect(view().name("member/login/findPw"));
+
+        // MockMvc를 사용하여 GET 요청 보내고 응답 결과를 검증
+        result = mockMvc.perform(get(url)
+                .cookie(aTokenCookie)
+                .cookie(rTokenCookie));
+        // 응답 상태 코드 검증
+        result.andExpect(status().is3xxRedirection());
+        // 응답 뷰 및 뷰 이름 검증
+        result.andExpect(view().name("redirect:/"));
     }
 
     @Test
-    void findEmailResult() {
-    }
+    void changePw() throws Exception {
+        // 테스트하고자 하는 URL 및 파라미터 설정
+        String url = "/members/changePw";
 
-    @Test
-    void findPw() {
-    }
+        // MockMvc를 사용하여 GET 요청 보내고 응답 결과를 검증
+        ResultActions result = mockMvc.perform(get(url)
+                .cookie(aTokenCookie)
+                .cookie(rTokenCookie));
 
-    @Test
-    void signup() {
-    }
+        // 응답 상태 코드 검증
+        result.andExpect(status().isOk());
 
-    @Test
-    void changePw() {
+        // 응답 뷰 및 뷰 이름 검증
+        result.andExpect(view().name("member/changePw"));
     }
 }

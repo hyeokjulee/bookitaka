@@ -15,9 +15,9 @@ class CartServiceTest {
     @Autowired
     CartService cartService;
 
-    final String testingEmail = "user@example.com";
-    final int testingSheetNo = 1001;
-    final int n = 5;
+    private final String testingEmail = "user@example.com";
+    private final int testingSheetNo = 1001;
+    private final int n = 5;
     // DB 내에 member_email 이 "user@example.com" 인 member 가 존재해야하며
     // 1001 ~ 1005 의 sheet_no를 가진 sheet 들이 존재해야함
 

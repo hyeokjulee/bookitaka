@@ -13,11 +13,11 @@ class FaqServiceTest {
     @Autowired
     FaqService faqService;
 
-    final String question = "question";
-    final String answer = "answer";
-    final String category = "category";
-    final String update = "update";
-    final int insertNum = 2;
+    private final String question = "question";
+    private final String answer = "answer";
+    private final String category = "category";
+    private final String update = "update";
+    private final int insertNum = 2;
 
     @Test
     public void registerFaq_getOneFaq_modifyFaq_countFaq_removeFaq() {
