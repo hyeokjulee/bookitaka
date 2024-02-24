@@ -12,11 +12,11 @@ public interface CartService {
 
     List<Cart> getCartByMemberEmailAndSheetNo(String memberEmail, int sheetNo);
 
-    void deleteAllCartsByMemberEmail(String memberEmail);
-
     void deleteCartByMemberEmailAndSheetNo(String memberEmail, int sheetNo);
 
     void deleteCartsByMemberEmailAndSheetNos(String memberEmail, List<Integer> sheetNos);
+
+    void deleteAllCartsByMemberEmail(String memberEmail);
 
     int getCountByMemberEmail(String memberEmail);
 }
