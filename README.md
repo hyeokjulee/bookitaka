@@ -17,6 +17,7 @@
 - Deployment : Docker, AWS EC2(Ubuntu 22.04), AWS RDS(MySQL 8.0)
 - Collaboration tool : Discord, Notion, Google Workspace
 - Git branching strategy : GitLab Flow
+- Development tools : Postman, MySQL Workbench, HeidiSQL, Visual Studio Code, Docker, etc.
 
 
 <br><br>
