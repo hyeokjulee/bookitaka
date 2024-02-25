@@ -27,8 +27,7 @@
   - 비밀번호가 유출되지 않도록 mysql_config_editor로 로그인 정보를 저장한 후 그 로그인 정보로 mysqldump를 실행하는 쉘 스크립트 파일을 작성하였습니다.
   - 크론 작업이 실행되지 않았을 경우를 대비해 EC2 인스턴스 내에 anacron를 설치한 후 쉘 스크립트 파일을 /etc/cron.daily에 넣었습니다.
 - 보안을 위해 RDS로의 접근은 EC2에서만 가능하도록 프라이빗 서브넷을 사용했고 EC2로의 SSH 접속은 특정 IP 주소에서만 가능하도록 보안 그룹에 인바운드 규칙을 추가했습니다.
-<img width="700" src="https://github.com/hyeokjulee/bookitaka/assets/122426157/65d769b4-f768-4c30-820b-f33c1dbded5c">
-
+<img width="700" src="https://github.com/hyeokjulee/bookitaka/assets/122426157/41c2cbb2-7cb7-4455-9a60-45f7c1e63b6f">
 
 
 <br><br>
@@ -40,14 +39,14 @@
   - coupon : 보유한 쿠폰
   - sheet_genre : 책의 장르
   - sheet_agegroup : 책의 권장 연령
-<img width="700" src="https://github.com/hyeokjulee/Nodeul-Project/assets/122426157/a4dfc292-f29b-4752-9cf3-e7dd0a802771">
+<img width="700" src="https://github.com/hyeokjulee/bookitaka/assets/122426157/d1fec635-dcde-4972-a401-eba9198c7c27">
 
 
 <br><br>
 
 
 ## 5. IA
-<img width="700" src="https://github.com/hyeokjulee/bookitaka/assets/122426157/c71432e9-2e2a-4f20-b84f-bdc51790d773">
+<img width="700" src="https://github.com/hyeokjulee/bookitaka/assets/122426157/fa52480f-0bb6-4229-8a28-dfe18f04844d">
 
 
 <br><br>
