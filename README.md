@@ -8,14 +8,14 @@
 
 
 ## 2. Tech Stack
-- 백엔드 : Java 11, Spring Framework 5.3, Spring Boot 2.7, Spring Data JPA 2.7, QueryDSL 5.0
-- 빌드 도구 : Gradle
-- 단위 테스트 : JUnit4(with AssertJ)
-- 템플릿 엔진 : Thymeleaf 3.0
-- 프론트엔드 : JavaScript, HTML, CSS
-- 깃 브랜치 전략 : GitLab Flow
-- 협업 도구 : Discord, Notion, Google Workspace
-- 배포 : AWS EC2(Ubuntu 22.04), AWS RDS(MySQL 8.0), Docker
+- Backend : Java 11, Spring Framework 5.3, Spring Boot 2.7, Spring Data JPA 2.7, QueryDSL 5.0
+- Build tool : Gradle
+- Unit test : JUnit4(with AssertJ)
+- Template engine : Thymeleaf 3.0
+- Frontend : JavaScript, HTML, CSS
+- Git branch strategy : GitLab Flow
+- Collaboration tool : Discord, Notion, Google Workspace
+- Deployment : AWS EC2(Ubuntu 22.04), AWS RDS(MySQL 8.0), Docker
 
 
 <br><br>
