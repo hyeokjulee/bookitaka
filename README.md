@@ -13,6 +13,7 @@
 - Unit test : JUnit4(with AssertJ)
 - Template engine : Thymeleaf 3.0
 - Frontend : JavaScript, HTML, CSS
+- RDBMS : MySQL 8.0
 - Git branch strategy : GitLab Flow
 - Collaboration tool : Discord, Notion, Google Workspace
 - Deployment : AWS EC2(Ubuntu 22.04), AWS RDS(MySQL 8.0), Docker
