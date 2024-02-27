@@ -1,5 +1,6 @@
 package com.bookitaka.NodeulProject.member.dto;
 
+import com.bookitaka.NodeulProject.member.validation.EmailCheck;
 import com.bookitaka.NodeulProject.member.validation.Password;
 import com.bookitaka.NodeulProject.member.validation.PasswordMatch;
 import io.swagger.annotations.ApiModelProperty;
@@ -15,6 +16,7 @@ import javax.validation.constraints.Pattern;
 public class MemberDataDTO {
   @NotBlank(message = "이메일을 입력해주세요.")
   @Pattern(regexp = "^(?:[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})?$", message = "이메일 형식이 맞는지 확인해 주세요.")
+//  @EmailCheck
   @ApiModelProperty(position = 1)
   private String memberEmail;
 

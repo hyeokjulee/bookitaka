@@ -280,4 +280,25 @@ class MemberAPIControllerTest {
                 .andExpect(status()
                         .is3xxRedirection());
     }
+
+    @Test
+    @Transactional
+    @DisplayName("Member API 컨트롤러 - 회원가입 - 이메일 중복 체크")
+    void emailCheck() throws Exception {
+        //given
+        //when
+        mockMvc.perform(post("/member/signup")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                        .param("memberEmail", "aaa@aaa.com")
+                        .param("memberPassword", "aaaa0000!!!!")
+                        .param("memberPasswordCheck", "aaaa0000!!!!")
+                        .param("memberName", "Signup")
+                        .param("memberPhone", "010-0101-0101")
+                        .param("memberGender", "남성")
+                        .param("memberBirthday", "2023-05-23")
+                        .param("agree1", "true")
+                        .param("agree2", "true"))
+                //then
+                .andExpect(status().isBadRequest());
+    }
 }
