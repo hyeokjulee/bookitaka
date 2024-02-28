@@ -112,6 +112,7 @@
 - 게시물 등록 시 작성의 편의성을 높이기 위해 Summernote를 활용했습니다.
 
 
-### 유효성 검사
+### 기타 사항
   
 - 입력 데이터의 유효성 검사를 위해 Bean Validation과 정규 표현식을 활용하였고 필요한 경우 Custom Validator를 만들어 적용하였습니다.
+- 예외 처리를 위해 @ExceptionHandler를 사용했습니다.
