@@ -52,10 +52,10 @@ class MemberAPIControllerTest {
 
     @BeforeEach
     void beforeTest() {
-        testMember = new Member(null, testEmail, passwordEncoder.encode(testPassword), "tester",
-                "010-0101-0101", "F", "2222-22-22", MemberRoles.ADMIN, Token.REFRESH_TOKEN, null);
-        memberRepository.save(testMember);
         testToken = jwtTokenProvider.createToken(testEmail, MemberRoles.ADMIN);
+        testMember = new Member(null, testEmail, passwordEncoder.encode(testPassword), "tester",
+                "010-0101-0101", "F", "2222-22-22", MemberRoles.ADMIN, testToken, null);
+        memberRepository.save(testMember);
 
         aTokenCookie = new Cookie(Token.ACCESS_TOKEN, testToken);
         rTokenCookie = new Cookie(Token.REFRESH_TOKEN, testToken);
@@ -129,8 +129,8 @@ class MemberAPIControllerTest {
         //given
 //        Cookie aTokenCookie = new Cookie(Token.ACCESS_TOKEN, testToken);
 //        Cookie rTokenCookie = new Cookie(Token.REFRESH_TOKEN, testToken);
-        aTokenCookie.setHttpOnly(true);
-        rTokenCookie.setHttpOnly(true);
+//        aTokenCookie.setHttpOnly(true);
+//        rTokenCookie.setHttpOnly(true);
         MockHttpServletRequestBuilder requestBuilder = delete("/member/{memberEmail}", testEmail)
                 .cookie(aTokenCookie)
                 .cookie(rTokenCookie);
@@ -148,8 +148,8 @@ class MemberAPIControllerTest {
         //given
 //        Cookie aTokenCookie = new Cookie(Token.ACCESS_TOKEN, testToken);
 //        Cookie rTokenCookie = new Cookie(Token.REFRESH_TOKEN, testToken);
-        aTokenCookie.setHttpOnly(true);
-        rTokenCookie.setHttpOnly(true);
+//        aTokenCookie.setHttpOnly(true);
+//        rTokenCookie.setHttpOnly(true);
         MockHttpServletRequestBuilder requestBuilder = get("/member/{memberEmail}", testEmail)
                 .cookie(aTokenCookie)
                 .cookie(rTokenCookie);
@@ -173,8 +173,8 @@ class MemberAPIControllerTest {
         //given
 //        Cookie aTokenCookie = new Cookie(Token.ACCESS_TOKEN, testToken);
 //        Cookie rTokenCookie = new Cookie(Token.REFRESH_TOKEN, testToken);
-        aTokenCookie.setHttpOnly(true);
-        rTokenCookie.setHttpOnly(true);
+//        aTokenCookie.setHttpOnly(true);
+//        rTokenCookie.setHttpOnly(true);
         MockHttpServletRequestBuilder requestBuilder = get("/member/me")
                 .cookie(aTokenCookie)
                 .cookie(rTokenCookie);
@@ -198,8 +198,8 @@ class MemberAPIControllerTest {
         //given
 //        Cookie aTokenCookie = new Cookie(Token.ACCESS_TOKEN, testToken);
 //        Cookie rTokenCookie = new Cookie(Token.REFRESH_TOKEN, testToken);
-        aTokenCookie.setHttpOnly(true);
-        rTokenCookie.setHttpOnly(true);
+//        aTokenCookie.setHttpOnly(true);
+//        rTokenCookie.setHttpOnly(true);
         MockHttpServletRequestBuilder requestBuilder1 = put("/member/{memberEmail}", testEmail)
                 .cookie(aTokenCookie)
                 .cookie(rTokenCookie)
@@ -235,8 +235,8 @@ class MemberAPIControllerTest {
         //given
 //        Cookie aTokenCookie = new Cookie(Token.ACCESS_TOKEN, testToken);
 //        Cookie rTokenCookie = new Cookie(Token.REFRESH_TOKEN, testToken);
-        aTokenCookie.setHttpOnly(true);
-        rTokenCookie.setHttpOnly(true);
+//        aTokenCookie.setHttpOnly(true);
+//        rTokenCookie.setHttpOnly(true);
         MockHttpServletRequestBuilder requestBuilder = get("/member/token")
                 .cookie(aTokenCookie)
                 .cookie(rTokenCookie);
@@ -258,19 +258,15 @@ class MemberAPIControllerTest {
         //given
 //        Cookie aTokenCookie = new Cookie(Token.ACCESS_TOKEN, testToken);
 //        Cookie rTokenCookie = new Cookie(Token.REFRESH_TOKEN, testToken);
-        aTokenCookie.setHttpOnly(true);
-        rTokenCookie.setHttpOnly(true);
+//        aTokenCookie.setHttpOnly(true);
+//        rTokenCookie.setHttpOnly(true);
         MockHttpServletRequestBuilder requestBuilder = get("/member/refresh")
                 .cookie(aTokenCookie)
                 .cookie(rTokenCookie);
         //when
         ResultActions resultActions = mockMvc.perform(requestBuilder);
-        ResultActions resultActionsRedirect = mockMvc
-                .perform(get(Objects
-                    .requireNonNull(resultActions
-                            .andReturn()
-                                    .getResponse()
-                                    .getRedirectedUrl())));
+        ResultActions resultActionsRedirect =
+                mockMvc.perform(get(Objects.requireNonNull(resultActions.andReturn().getResponse().getRedirectedUrl())));
         Collection<String> tokens = resultActionsRedirect
                 .andReturn()
                 .getResponse()
@@ -299,6 +295,6 @@ class MemberAPIControllerTest {
                         .param("agree1", "true")
                         .param("agree2", "true"))
                 //then
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnprocessableEntity());
     }
 }
