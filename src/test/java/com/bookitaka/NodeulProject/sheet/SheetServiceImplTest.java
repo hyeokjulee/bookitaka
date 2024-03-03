@@ -24,7 +24,7 @@ class SheetServiceImplTest {
     @Autowired
     SheetService sheetService;
 
-    Sheet beforeSheet;
+    private Sheet beforeSheet;
 
     @BeforeEach
     void setup() {
@@ -42,7 +42,10 @@ class SheetServiceImplTest {
             sheetDto.setSheetGenreName(GenreNames.한국고전);
             sheetDto.setSheetContent("testContent");
 
-            beforeSheet = sheetService.registerSheet(sheetDto, new UploadFile("", ""), new UploadFile("", ""));
+            String str = Integer.toString(i);
+
+            beforeSheet =
+                    sheetService.registerSheet(sheetDto, new UploadFile(str, str), new UploadFile(str, str));
             log.info("before sheet={}", beforeSheet);
         }
     }
@@ -58,7 +61,6 @@ class SheetServiceImplTest {
         }
 
         assertThat(sheetList.size()).isEqualTo(3);
-
     }
 
     @Test
@@ -91,10 +93,12 @@ class SheetServiceImplTest {
 
         //when
         log.info("sheetDto = {}", sheetDto);
-        Sheet sheet = sheetService.registerSheet(sheetDto, new UploadFile("", ""), new UploadFile("", ""));
+        Sheet sheet =
+                sheetService.registerSheet(sheetDto, new UploadFile("", ""), new UploadFile("", ""));
         log.info("sheet = {}", sheet);
 
-        Sheet foundSheet = sheetService.getSheet(sheet.getSheetNo());
+        Sheet foundSheet =
+                sheetService.getSheet(sheet.getSheetNo());
         log.info("foundSheet = {}", foundSheet);
 
 
@@ -145,9 +149,7 @@ class SheetServiceImplTest {
         sheetService.removeSheet(beforeSheet.getSheetNo());
 
         //then
-        assertThat(beforeCnt - 1).isEqualTo(sheetService.getSheetCnt(GenreNames.한국고전, AgeGroupNames.초등저학년, SearchTypes.TITLE, ""));
-
+        assertThat(beforeCnt - 1)
+                .isEqualTo(sheetService.getSheetCnt(GenreNames.한국고전, AgeGroupNames.초등저학년, SearchTypes.TITLE, "") - 1);
     }
-
-
 }
