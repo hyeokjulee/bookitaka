@@ -16,4 +16,5 @@ public interface NoticeRepository extends PagingAndSortingRepository<Notice,Inte
 
    Page<Notice> findByNoticeTitleContainingOrNoticeContentContaining(String titleKeyword, String contentKeyword, Pageable pageable);
 
+   Notice findByNoticeTitle (String noticeTitle);
 }
