@@ -1,7 +1,6 @@
 package com.bookitaka.NodeulProject.sheet;
 
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +12,14 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
 @Slf4j
-class SheetRepositoryImplTest {
+class SheetRepositoryTest {
 
     @Autowired
-    SheetRepositoryImpl sheetRepository;
+    SheetRepository sheetRepository;
 
     @Autowired
     EntityManager em;

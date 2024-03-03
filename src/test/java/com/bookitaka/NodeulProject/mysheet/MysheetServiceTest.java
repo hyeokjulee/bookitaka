@@ -2,8 +2,6 @@ package com.bookitaka.NodeulProject.mysheet;
 
 import com.bookitaka.NodeulProject.member.model.Member;
 import com.bookitaka.NodeulProject.member.repository.MemberRepository;
-import com.bookitaka.NodeulProject.mysheet.Mysheet;
-import com.bookitaka.NodeulProject.mysheet.MysheetService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @Slf4j
-class MysheetServiceImplTest {
+class MysheetServiceTest {
 
     @Autowired
     MysheetService mysheetService;

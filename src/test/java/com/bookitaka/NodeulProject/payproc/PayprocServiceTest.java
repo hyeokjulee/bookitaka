@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Slf4j
-class PayprocServiceImplTest {
+class PayprocServiceTest {
 
     @Autowired
     PayprocService payprocService;
