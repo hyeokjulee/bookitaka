@@ -100,8 +100,6 @@ class SheetRepositoryImplTest {
 
         //then
         assertThat(createdSheet).isEqualTo(findedSheet);
-
-
     }
 
     @Test
@@ -142,16 +140,14 @@ class SheetRepositoryImplTest {
     void findAllByAgeGroupTest() {
         SheetCri cri = new SheetCri(1,5, SearchTypes.AUTHOR, "test", SortCries.HIT);
 
-        List<Sheet> sheetList = sheetRepository.findAllSheetByGenre("testAgegroup", cri);
+        List<Sheet> sheetList = sheetRepository.findAllSheetByAgeGroup("testAgegroup", cri);
 
         for (Sheet sheet : sheetList) {
             log.info("sheet = {}", sheet);
         }
 
         assertThat(sheetList.size()).isEqualTo(3);
-
     }
-
 
     @Test
     void updateSheetTest() {
@@ -189,8 +185,6 @@ class SheetRepositoryImplTest {
         sheetRepository.deleteSheet(lastSheet.getSheetNo());
 
         //then
-        assertThat(sheetRepository.countSheet(SearchTypes.TITLE, "")).isEqualTo(2);
-
-
+        assertThat(sheetRepository.countSheet(SearchTypes.TITLE, "testTitle")).isEqualTo(2);
     }
 }
