@@ -15,6 +15,7 @@
 - Frontend : JavaScript, HTML, CSS
 - RDBMS : MySQL 8.0
 - Git branch strategy : GitLab Flow
+  - 인원별로 역할 분담을 하여 각자 구현해야 할 기능이 구분되어 있기 때문에 기능별로 브랜치를 만드는 대신에 인원별로 브랜치를 만들었습니다. 그리고 최종적으로 마스터 브랜치에 머지하기 전에 테스트할 브랜치를 따로 만들었습니다. 다시 말해 각자의 브랜치 안에서 작업한 후 브랜치를 합쳐야 할 경우에 테스트할 브랜치로 머지하여 그 안에서 테스트한 후 마스터 브랜치로 머지하는 식으로 개발을 진행했습니다.
 - Collaboration tool : Discord, Notion, Google Workspace
 - Deployment : AWS EC2(Ubuntu 22.04), AWS RDS(MySQL 8.0), Docker
 
