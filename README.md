@@ -8,7 +8,7 @@
 
 
 ## 2. Tech Stack
-- Backend : Java 11, Spring Framework 5.3, Spring Boot 2.7, Spring Data JPA 2.7, QueryDSL 5.0, Thymeleaf 3.0, JUnit4(with AssertJ), Gradle
+- Backend : Java 11, Spring Framework 5.3, Spring Boot 2.7, Spring Data JPA 2.7, QueryDSL 5.0, Thymeleaf 3.0, JUnit4, Gradle
 - RDBMS : MySQL 8.0
 - Deployment : AWS EC2(Ubuntu 22.04), AWS RDS(MySQL 8.0), Docker
 - Git branch strategy : GitLab Flow
