@@ -179,3 +179,5 @@ gradle-app.setting
 application-KEY.properties
 
 NodeulProject/src/main/generated/**
+
+nohup.out
