@@ -1,7 +1,5 @@
 ## 1. Introduction
 독후활동지를 구매, 다운로드할 수 있는 웹 애플리케이션입니다.
-<br>
-링크 : https://bookitaka.store
 
 
 <br><br>
