@@ -6,7 +6,7 @@
 
 
 ## 2. Tech Stack
-- Backend : Java 11, Spring Framework 5.3, Spring Boot 2.7, Spring Data JPA 2.7, QueryDSL 5.0, JUnit 4, Thymeleaf 3.0, Gradle
+- Backend : Java 11, Spring Framework 5.3, Spring Boot 2.7, Spring Data JPA 2.7, QueryDSL 5.0, JUnit 4, Gradle, Thymeleaf 3.0
 - DevOps : AWS EC2(Ubuntu 22.04), AWS RDS(MySQL 8.0), Docker
 - Git branch strategy : GitLab Flow
   - 인원별로 역할 분담을 하여 각자 구현해야 할 기능이 구분되어 있기 때문에 기능별로 브랜치를 나누는 대신에 인원별로 브랜치를 나누었습니다. 브랜치를 합쳐야 할 경우에는 먼저 테스트할 브랜치로 머지하여 그 안에서 테스트 후 문제가 없다면 최종적으로 마스터 브랜치로 머지하는 식으로 진행하였습니다.
