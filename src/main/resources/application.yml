@@ -6,11 +6,9 @@ spring:
   profiles:
     active: local # 기본 환경 선택
     group:
-      set1: real-db
-      set2: real-db
+      set1: real-db, real-db2
+      set2: real-db, real-db2
 
-      real-db: real-db2
-    include: KEY # include application-API-KEY.properties
   mvc:
     hiddenmethod:
       filter:
@@ -60,6 +58,7 @@ spring:
       on-profile: local
   datasource:
     url: jdbc:h2:mem:test-db
+    driver-class-name: org.h2.Driver
   jpa:
     show-sql: true
     hibernate:
@@ -94,20 +93,12 @@ spring:
 server:
   port: 8082
 
-# real-db
+# real-db2
 ---
 spring:
   config:
     activate:
       on-profile: real-db2
-#  datasource: # Database
-##    url: jdbc:mariadb://${DB_HOST}:${DB_PORT}/${DB_NAME}
-##    username: ${DB_ID}
-##    password: ${DB_PW}
-#    url: jdbc:mariadb://localhost/bookitaka
-#    username: root
-#    password: 1111
-#    driver-class-name: org.mariadb.jdbc.Driver
   jpa: # set JPA
     show-sql: false # show JPA sql
     hibernate:
