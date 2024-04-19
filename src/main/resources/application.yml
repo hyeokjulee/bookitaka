@@ -1,0 +1,135 @@
+server:
+  servlet:
+    encoding:
+      force-response: true
+spring:
+  profiles:
+    active: local # 기본 환경 선택
+    group:
+      set1: real-db
+      set2: real-db
+
+      real-db: real-db2
+    include: KEY # include application-API-KEY.properties
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+    pathmatch:
+      matching-strategy: ant_path_matcher # swagger error
+  thymeleaf: # Thymeleaf view
+    cache: true
+    enabled: true
+    check-template-location: true
+    prefix: classpath:/templates/
+    suffix: .html
+  mail:
+    host: smtp.naver.com # Naver SMTP server host
+    port: 465 # Naver SMTP server port
+    username: ${NAVER_ID}
+    password: ${NAVER_PW}
+    properties: # Naver SMTP connection settings
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtps
+  servlet: # file max size
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+security: # JWT expire time
+  jwt:
+    token:
+      access:
+        expire-length: 3600000
+      refresh:
+        expire-length: 86400000
+      secret-key: ${JWT_SECRET_KEY} # Key Setting
+isbn-api-key: ${ISBN_API_KEY}
+pay-sign-key: ${PAY_SIGN_KEY}
+portone-rest-api-key: ${PORTONE_API_KEY}
+portone-rest-api-secret: ${PORTONE_SECRET_KEY}
+
+# local 환경
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:h2:mem:test-db
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    defer-datasource-initialization: true
+  h2:
+    console:
+      enabled: true
+
+file: # file upload path
+  bookImg:
+    dir: upload/bookImg/
+  sheetFile:
+    dir: upload/sheetFile/
+  preview:
+    dir: upload/preview/
+
+# 운영 환경
+---
+spring:
+  config:
+    activate:
+      on-profile: set1
+server:
+  port: 8081
+
+---
+spring:
+  config:
+    activate:
+      on-profile: set2
+server:
+  port: 8082
+
+# real-db
+---
+spring:
+  config:
+    activate:
+      on-profile: real-db2
+#  datasource: # Database
+##    url: jdbc:mariadb://${DB_HOST}:${DB_PORT}/${DB_NAME}
+##    username: ${DB_ID}
+##    password: ${DB_PW}
+#    url: jdbc:mariadb://localhost/bookitaka
+#    username: root
+#    password: 1111
+#    driver-class-name: org.mariadb.jdbc.Driver
+  jpa: # set JPA
+    show-sql: false # show JPA sql
+    hibernate:
+      ddl-auto: none # JAP DDL(create, alter, drop) set
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MariaDBDialect
+        format_sql: true
+        jdbc:
+          time_zone: Asia/Seoul
+    database: mysql
+    generate-ddl: false
+    open-in-view: false
+    data:
+      jpa:
+        repositories:
+          auditing:
+            enabled: true
+file: # file upload path
+  bookImg:
+    dir: ${PATH_BOOKIMG}
+  sheetFile:
+    dir: ${PATH_SHEETFILE}
+  preview:
+    dir: ${PATH_PREVIEW}

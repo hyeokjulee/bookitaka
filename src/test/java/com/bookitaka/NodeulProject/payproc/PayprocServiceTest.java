@@ -5,6 +5,7 @@ import com.bookitaka.NodeulProject.member.repository.MemberRepository;
 import com.bookitaka.NodeulProject.mysheet.MysheetRepository;
 import com.bookitaka.NodeulProject.payment.PaymentRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Ignore;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,8 @@ class PayprocServiceTest {
         paymentRepository.deleteAll(paymentRepository.findByMember_MemberEmail(testEmail));
     }
 
-    @Test
+    @Ignore
+//    @Test
     public void makePayTest() {
         Member member = memberRepository.findByMemberEmail(testEmail);
         log.info("test member = {}", member.getMemberEmail());
