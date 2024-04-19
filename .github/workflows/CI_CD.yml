@@ -22,7 +22,7 @@ jobs:
         distribution: 'temurin'
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew build -x test
+      run: ./gradlew build
       
     - name: Make zip file
       run: zip -r ./$GITHUB_SHA.zip .
