@@ -21,6 +21,12 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
+    - name: application-KEY.properties 파일 생성
+      run: touch ./src/main/resources/application-KEY.properties
+
+    - name: application-KEY.properties 파일 입력
+      run: echo "${{ secrets.APPLICATION_KEY }}" > ./src/main/resources/application-KEY.properties
+
     - name: Build with Gradle Wrapper
       run: ./gradlew build
       
