@@ -121,3 +121,8 @@ file: # file upload path
     dir: ${PATH_SHEETFILE}
   preview:
     dir: ${PATH_PREVIEW}
+
+management:
+  endpoint:
+    health:
+      show-details: always
