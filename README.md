@@ -1,6 +1,6 @@
 ## 1. 소개
 독후활동지를 구매하고 다운로드할 수 있는 웹 애플리케이션입니다.
-- 링크 : https://bookitaka.store
+- 링크 : https://bookitaka.shop
 - 기존 깃허브 : https://github.com/dawnpoems/Nodeul-Project
 
 <br><br>
