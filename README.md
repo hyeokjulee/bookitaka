@@ -6,7 +6,7 @@
 
 
 ## 2. 기술
-- 개발
+- 백엔드
   - Java 17
   - Spring Framework 5.3
   - Spring Boot 2.7
@@ -15,9 +15,17 @@
   - JUnit 4.13
   - Gradle 8.0
   - Thymeleaf 3.0
-- 운영
+- 데브옵스
   - Ubuntu 22.04
   - MariaDB 10.11
+  - Nginx, Tomcat
+  - AWS(EC2, RDS, S3, CodeDeploy, Route53)
+  - Github Actions
+- 협업 도구
+  - Git
+  - Discord
+  - Notion
+  - Google Workspace
 - 외부 서비스 연동
   - 포트원(구 아임포트) PG사(KG이니시스) 결제 모듈
   - 국립중앙도서관 ISBN 서지정보 API
