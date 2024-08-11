@@ -1,37 +1,73 @@
-## 1. Introduction
-독후활동지를 구매, 다운로드할 수 있는 웹 애플리케이션입니다.
-
+## 1. 소개
+백엔드 프로젝트 - 독후활동지 PDF 판매 플랫폼
+- 독후활동지를 구매하고 다운로드할 수 있는 서비스입니다.
+- 링크 : https://bookitaka.shop
 
 <br><br>
 
 
-## 2. Tech Stack
-- Backend : Java 11, Spring Framework 5.3, Spring Boot 2.7, Spring Data JPA 2.7, QueryDSL 5.0, JUnit 4, Gradle, Thymeleaf 3.0
-- DevOps : AWS EC2(Ubuntu 22.04), AWS RDS(MariaDB 10.11), Gabia, Docker
-- Git branch strategy : GitLab Flow
+## 2. 개발 및 운영 환경
+- 백엔드
+  - Java 17
+  - Spring Framework 5.3
+  - Spring Boot 2.7
+  - Spring Data JPA 2.7
+  - JUnit 4.13
+  - Gradle 8.0
+  - Thymeleaf 3.0
+  - QueryDSL 5.0
+  - Swagger
+- 데브옵스 / 인프라
+  - AWS EC2 (Ubuntu 22.04)
+  - AWS RDS (MariaDB 10.11)
+  - AWS S3
+  - AWS CodeDeploy
+  - Github Actions
+  - Nginx
+  - Pinpoint Cloud
+- 협업 도구
+  - Git
+  - GitHub
+  - Discord
+  - Notion
+  - Google Workspace
+- 외부 서비스 연동
+  - 포트원(구 아임포트) PG사(KG이니시스) 결제 모듈
+  - 국립중앙도서관 ISBN 서지정보 API
+  - 네이버 메일 SMTP 서버
+- 깃 브랜치 전략
+  - GitLab Flow
   - 인원별로 역할 분담을 하여 각자 구현해야 할 기능이 구분되어 있기 때문에 기능별로 브랜치를 나누는 대신에 인원별로 브랜치를 나누었습니다. 브랜치를 합쳐야 할 경우에는 먼저 테스트할 브랜치로 머지하여 그 안에서 테스트 후 문제가 없다면 최종적으로 마스터 브랜치로 머지하는 식으로 진행하였습니다.
-  - 애초에 필요하다고 생각했던 브랜치들이 있으므로 Github Flow는 고려 대상에서 제외했고 해당 프로젝트의 크기에 비해 Git Flow는 너무 방대하다고 판단하였습니다.
 
 
 <br><br>
 
 
-## 3. Architecture
-- EC2 인스턴스 내에서 직접 데이터베이스 백업을 자동화했습니다. 크론 작업이 실행되지 않았을 경우를 대비해 EC2 인스턴스 내에 anacron를 설치한 후 쉘 스크립트 파일을 작성해 /etc/cron.daily에 넣었습니다.
-- t2.micro 인스턴스의 RAM이 1GB밖에 되지 않아 EC2 내에서 빌드를 할 시 다운되는 문제가 발생했기 때문에 EC2 내에서 스왑 파일을 생성하고 생성한 스왑 파일을 스왑 공간에 추가해 문제를 해결했습니다.
+## 3. 인프라 구축
+- CI/CD 툴은 다른 선택지들이 있었지만 AWS 프리 티어를 이용하는 입장에서 깃허브 액션을 사용하는 것이 경제적이고 효율적이라고 생각하여 선택했습니다.
+- 무중단 배포는 Nginx를 이용한 Blue/Green 방식으로 구축했습니다. 신버전에서 문제 발생 시 빠른 롤백이 가능하도록 구버전 종료는 신버전 배포 직전에 되도록 했습니다. 이때 구버전 종료 시에는 graceful하게 종료될 수 있도록 SIGTERM 신호가 보내지도록 처리하였습니다.
+- EC2 인스턴스 내에서 직접 데이터베이스 백업을 자동화했습니다. 크론 작업이 실행되지 않았을 경우를 대비해 EC2 인스턴스 내에 anacron를 설치한 후 쉘 스크립트 파일을 작성해 /etc/cron.daily에 넣어두었습니다.
+- Let's encrypt 인증서는 만료되기 전에 자동으로 갱신될 수 있도록 크론탭을 이용했습니다.(크론 실행 주기가 Let's encrypt 인증서의 유효기간인 3개월이기 때문에 크론탭을 직접 이용했습니다.)
+- t2.micro 인스턴스의 RAM이 1GB밖에 되지 않아 EC2 내에서 빌드를 할 시 다운되는 현상이 발생했었습니다. EC2 내에서 스왑 파일을 생성하고 생성한 스왑 파일을 스왑 공간에 추가해 가상 메모리를 만들어 문제를 해결했습니다.
 <img width="650" src="Architecture.png">
 
 
 <br><br>
 
 
-## 4. ERD
-- 각 테이블에 담기는 데이터
-  - mysheet : 보유한 독후활동지
-  - coupon : 보유한 쿠폰
-  - sheet_genre : 책의 장르
-  - sheet_agegroup : 책의 권장 연령
+## 4. 데이터 모델링 / DB 및 ERD 설계
+- mysheet : 보유한 독후활동지
+- coupon : 보유한 쿠폰
+- sheet_genre : 책의 장르
+- sheet_agegroup : 책의 권장 연령
 <img width="650" src="ERD.png">
+
+- 독후활동지 구매 완료 시 다루어지는 테이블
+  - mysheet : 보유 독후활동지 테이블에 새 행 추가
+  - payment : 결제 정보 테이블에 새 행 추가
+  - cart : 구매한 독후활동지에 해당하는 행은 장바구니 테이블에서 삭제
+  - sheet : 구매한 독후활동지에 해당하는 행의 sheet_buycnt 값 1 증가
+  - coupon : 쿠폰으로 구매한 독후활동지 수만큼 coupon_left 값 감소
 
 
 <br><br>
@@ -44,7 +80,7 @@
 <br><br>
 
 
-## 6. Description
+## 6. 상세 내용
 
 ### 사용자
   
@@ -70,7 +106,7 @@
 
 ### 구매
 
-- 포트원(구 아임포트)을 사용해 PG사 결제 모듈 연동을 했습니다.
+- 포트원(구 아임포트)을 사용해 PG사(KG이니시스) 결제 모듈 연동을 했습니다.
 - 구매한 독후활동지, 쿠폰에는 유효 기간이 있습니다.
   - 독후활동지 파일을 분실하였는데 만료일이 지났다면 다시 구매를 해야만 다운로드가 가능합니다.
   - 독후활동지의 유효 기간은 7일, 쿠폰의 유효 기간은 1년입니다.
