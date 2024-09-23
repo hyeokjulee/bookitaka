@@ -17,7 +17,7 @@ import java.time.Duration;
 @EnableCaching // Spring Boot의 캐싱 설정을 활성화
 public class RedisCacheConfig {
     @Bean
-    public CacheManager boardCacheManager(RedisConnectionFactory redisConnectionFactory) {
+    public CacheManager sheetCacheManager(RedisConnectionFactory redisConnectionFactory) {
         RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration
                 .defaultCacheConfig()
                 // Redis에 Key를 저장할 때 String으로 직렬화(변환)해서 저장

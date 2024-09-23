@@ -1,5 +1,6 @@
 package com.bookitaka.NodeulProject.sheet;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,7 +22,7 @@ public interface SheetService {
 
     public Long getSheetCnt(String genre, String ageGroup, String searchType, String searchWord);
 
-
+    @Cacheable(cacheNames = "getAllSheets", key = "'sheets:genre:' + #genre + ':ageGroup:' + #ageGroup + ':pageNum:' + #cri.pageNum + ':amount:' + #cri.amount + ':searchType:' + #cri.searchType + ':searchWord:' + #cri.searchWord + ':sort:' + #cri.sort", cacheManager = "sheetCacheManager")
     public List<Sheet> getAllSheets(String genre, String ageGroup, SheetCri cri);
 
     public boolean modifySheet(int sheetNo, SheetUpdateDto sheetUpdateDto);
