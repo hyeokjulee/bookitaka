@@ -34,6 +34,13 @@ spring:
     multipart:
       max-file-size: 50MB
       max-request-size: 50MB
+  data:
+    redis:
+      host: localhost
+      port: 6379
+logging:
+  level:
+    org.springframework.cache: trace
 security: # JWT expire time
   jwt:
     token:
