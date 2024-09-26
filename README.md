@@ -20,11 +20,12 @@
 - 데브옵스 / 인프라
   - AWS EC2 (Ubuntu 22.04)
   - AWS RDS (MariaDB 10.11)
+  - AWS ElastiCache (Redis 7.1)
   - AWS S3
   - AWS CodeDeploy
   - Github Actions
   - Nginx
-  - Pinpoint Cloud
+  - Grafana k6
 - 협업 도구
   - Git
   - GitHub
@@ -49,6 +50,7 @@
 - EC2 인스턴스 내에서 직접 데이터베이스 백업을 자동화했습니다. 크론 작업이 실행되지 않았을 경우를 대비해 EC2 인스턴스 내에 anacron를 설치한 후 쉘 스크립트 파일을 작성해 /etc/cron.daily에 넣어두었습니다.
 - Let's encrypt 인증서는 만료되기 전에 자동으로 갱신될 수 있도록 크론탭을 이용했습니다.(크론 실행 주기가 Let's encrypt 인증서의 유효기간인 3개월이기 때문에 크론탭을 직접 이용했습니다.)
 - t2.micro 인스턴스의 RAM이 1GB밖에 되지 않아 EC2 내에서 빌드를 할 시 다운되는 현상이 발생했었습니다. EC2 내에서 스왑 파일을 생성하고 생성한 스왑 파일을 스왑 공간에 추가해 가상 메모리를 만들어 문제를 해결했습니다.
+- Redis 캐시를 적용해 조회 성능을 개선하였습니다. 캐시 적용 전과 비교하면 독후활동지 조회 시 Throughput이 약 2배 이상 증가하였습니다.(부하 테스트는 k6를 이용했습니다.)
 <img width="650" src="Architecture.png">
 
 
