@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 @Controller
 @RequestMapping("/sheet")
@@ -154,6 +155,19 @@ public class SheetController {
         model.addAttribute("ageGroup", ageGroup);
 
         return "sheet/sheetList";
+    }
+
+    @ResponseBody
+    @GetMapping("/listapi")
+    public List<Sheet> sheetListapi(@RequestParam(name = "genre", defaultValue = "") String genre,
+                                    @RequestParam(name = "ageGroup", defaultValue = "") String ageGroup,
+                                    @RequestParam(name = "pageNum", defaultValue = "1") int page,
+                                    @RequestParam(name = "amount", defaultValue = "10") int amount,
+                                    @RequestParam(name = "searchType", defaultValue = SearchTypes.TITLE) String searchType,
+                                    @RequestParam(name = "searchWord", defaultValue = "") String searchWord,
+                                    @RequestParam(name = "sort", defaultValue = SortCries.NEWEST) String sort) {
+        SheetCri cri = new SheetCri(page, amount, searchType, searchWord, sort);
+        return sheetService.getAllSheets(genre, ageGroup, cri);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MEMBER')")
