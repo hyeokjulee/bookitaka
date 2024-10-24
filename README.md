@@ -20,7 +20,7 @@
 - QueryDSL 5.0
 - Swagger
 
-### DevOps
+### Infra / DevOps
 
 - AWS EC2 (Ubuntu 22.04)
 - AWS RDS (MariaDB 10.11)
